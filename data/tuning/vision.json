@@ -250,6 +250,26 @@
 			"visibility": "client",
 			"kind": "param",
 			"note": "A.1 Vision cone: the blind area, drawn black even where lit"
+		},
+		"vision.turn_band_extra_s": {
+			"value": 0.05,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (NET-12)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-12: slack added to the round trip, input buffer and tick when sizing the turn band"
+		},
+		"vision.turn_band_max_deg": {
+			"value": 125,
+			"type": "float",
+			"unit": "deg",
+			"source": "Proposed (NET-12)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-12: the turn band never reaches further than this beyond each cone edge (125: the whole blind area at most)"
 		}
 	}
 }

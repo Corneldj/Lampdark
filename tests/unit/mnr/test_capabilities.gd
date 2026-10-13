@@ -42,11 +42,11 @@ func test_caught_turns_but_does_not_move() -> void:
 	s.step(2)
 	var at: Vector2 = s.run.registry.get_entity(ann.entity_id).position
 	ann.at(2).move(0.0, InputRecord.Gait.RUN, 20).face(90.0)
-	s.step(25)
+	s.step(35)  # the turn starts as the move ends, at the capped rate (NET-12)
 	assert_eq(s.run.registry.get_entity(ann.entity_id).position, at, "held in place")
 	assert_eq(s.run.movement.facing_of(ann.slot), 16384, "but turning")
 	s.run.miner_state.fall_unconscious(ann.entity_id, "blast")
 	s.step(2)
-	ann.at(29).face(270.0)
+	ann.at(s.run.tick).face(270.0)
 	s.step(5)
 	assert_eq(s.run.movement.facing_of(ann.slot), 16384, "the unconscious do not turn")

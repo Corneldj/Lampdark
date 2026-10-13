@@ -23,6 +23,24 @@ func _in_cone(s: Scenario, ann: MinerHandle, p: Vector2) -> bool:
 	return s.run.vision.native.in_cone(ann.slot, p)
 
 
+## NET-12: inside the cone widened by the turn band (what the miner can turn into before a frame
+## arrives); beyond it, the rest of the blind area, nothing is ever prefetched. Like VIS-03, a
+## moth counts by its 2x2 footprint's tile centres.
+func _in_turn_band(s: Scenario, ann: MinerHandle, p: Vector2) -> bool:
+	var at: Vector2 = s.run.registry.get_entity(ann.entity_id).position
+	var facing: Vector2 = ViewGeometry.facing_vector(s.run.movement.facing_of(ann.slot))
+	var limit: float = Tuning.f(&"vision.cone_deg") / 2.0 + VisionSystem.turn_band_deg(0.0) + 0.5
+	var lo: Vector2i = Vector2i(floori(p.x - 0.5), floori(p.y - 0.5))
+	for dy: int in 2:
+		for dx: int in 2:
+			var c: Vector2 = Vector2(lo.x + dx, lo.y + dy) + Vector2(0.5, 0.5)
+			if _in_cone(s, ann, c) or at.distance_to(c) <= 0.5:
+				return true
+			if rad_to_deg(absf(facing.angle_to(c - at))) <= limit:
+				return true
+	return false
+
+
 func test_normal_lamp_bands() -> void:
 	var setup: Array = _setup(41)
 	var s: Scenario = setup[0]
@@ -164,7 +182,7 @@ func test_property_raised_margins_never_blind_or_bite() -> void:
 			assert_false(bite.has(t), "never a bite: %s" % t)
 			checked += 1
 		for p: Vector2 in M.margin_positions(frame):
-			assert_true(_in_cone(s, ann, p), "no entity behind")
+			assert_true(_in_turn_band(s, ann, p), "no entity behind, beyond the turn band (NET-12)")
 			assert_false(bite.has(Vector2i(floori(p.x), floori(p.y))), "no entity in a bite")
 	assert_gt(checked, 200, "the property saw margins")
 	s.run.vision.native.set_params({"margin_geometry": Tuning.f(&"vision.margin_geometry_tiles"), "margin_entity": Tuning.f(&"vision.margin_entity_tiles")})

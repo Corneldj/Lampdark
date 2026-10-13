@@ -1,0 +1,33 @@
+# FND-04's lint stage: clang-format --dry-run over native/src and native/tests (never thirdparty
+# or godot-cpp). The project's own style: tabs, attached braces, indented case labels, and no
+# column limit, so lines are wrapped by hand where it reads best.
+BasedOnStyle: LLVM
+UseTab: ForContinuationAndIndentation
+IndentWidth: 4
+TabWidth: 4
+ContinuationIndentWidth: 8
+ColumnLimit: 0
+IndentCaseLabels: true
+AccessModifierOffset: -4
+NamespaceIndentation: None
+AllowShortFunctionsOnASingleLine: All
+AllowShortEnumsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Always
+AllowShortCaseLabelsOnASingleLine: true
+AlignAfterOpenBracket: DontAlign
+AlignOperands: DontAlign
+AlignTrailingComments:
+  Kind: Never
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+BreakBeforeBinaryOperators: None
+Cpp11BracedListStyle: true
+SortIncludes: Never
+SpaceAfterCStyleCast: false
+PointerAlignment: Right
+ReferenceAlignment: Right
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2
+FixNamespaceComments: true

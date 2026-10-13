@@ -1,0 +1,18 @@
+name: LFS pull (cached)
+description: >-
+  Pulls the Git LFS objects (Steam Audio's libraries, fonts, images and voice clips) through a cache
+  keyed by the object list, so a run spends no LFS bandwidth unless an LFS file changed.
+runs:
+  using: composite
+  steps:
+    - name: List LFS objects
+      shell: bash
+      run: git lfs ls-files --long | cut -d ' ' -f1 | sort > "$RUNNER_TEMP/lfs-ids.txt"
+    - name: Restore LFS cache
+      uses: actions/cache@v4
+      with:
+        path: .git/lfs
+        key: lfs-${{ hashFiles(format('{0}/lfs-ids.txt', runner.temp)) }}
+    - name: Pull LFS objects
+      shell: bash
+      run: git lfs pull

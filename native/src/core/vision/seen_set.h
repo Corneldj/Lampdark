@@ -104,6 +104,10 @@ public:
 	bool has_observer(uint32_t id) const { return observers_.count(id) != 0; }
 	void set_blinded(uint32_t id, bool on);
 	void set_radius_clamp(uint32_t id, double tiles); // <= 0 clears it
+	// NET-12's turn band (degrees, each side): the miner can turn this far before a frame computed
+	// now reaches its client, so entities lit and in sight within the cone widened by it are sent as
+	// hidden margin tokens, drawn only when the client's own predicted cone and light reach them.
+	void set_turn_band(uint32_t id, double degrees);
 	void set_bite_tiles(uint32_t id, std::set<world::Coord> tiles);
 	void set_identity_threshold(uint32_t entity, int64_t thousandths); // < 0 clears it
 	void set_decals(world::Coord tile, uint8_t bits);
@@ -159,6 +163,7 @@ private:
 		uint32_t facing = 0;
 		bool blinded = false;
 		double clamp = 0.0;
+		double turn_band = 0.0;
 		std::set<world::Coord> bite;
 		LosField los;
 	};

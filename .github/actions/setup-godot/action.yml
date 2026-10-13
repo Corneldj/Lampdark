@@ -1,0 +1,32 @@
+name: Set up the pinned Godot
+description: >-
+  Fetches the editor (and optionally the export templates) named in versions.json, verifies their
+  SHA-512 with tools/build/fetch_godot.py, and sets GODOT. Cached by versions.json, never across pins.
+inputs:
+  templates:
+    description: Also install the export templates.
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - name: Restore the engine cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/lampblack/godot
+        key: godot-editor-${{ runner.os }}-${{ hashFiles('versions.json') }}
+    - name: Restore the export templates cache
+      if: inputs.templates == 'true'
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.local/share/godot/export_templates
+          ~/AppData/Roaming/Godot/export_templates
+        key: godot-templates-${{ runner.os }}-${{ hashFiles('versions.json') }}
+    - name: Fetch and verify
+      shell: bash
+      run: |
+        platform=linux
+        [ "$RUNNER_OS" = "Windows" ] && platform=windows
+        extra=()
+        [ "${{ inputs.templates }}" = "true" ] && extra=(--templates)
+        python3 tools/build/fetch_godot.py --platform "$platform" --dest "$RUNNER_TEMP/godot" "${extra[@]}" --github-env

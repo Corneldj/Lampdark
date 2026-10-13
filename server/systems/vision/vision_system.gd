@@ -12,6 +12,8 @@ const SIZES: Dictionary = {"none": 0, "miner": 1, "large": 2, "small": 4}
 var native: LbVision = LbVision.new()
 ## slot -> the frame computed this tick (LbVision.compute's dictionary).
 var frames: Dictionary = {}
+## NET-12: (slot) -> the client's round trip in ms (ServerSystems wires it to the transport).
+var rtt_ms: Callable = func(_slot: int) -> float: return 0.0
 ## slot -> the miner's entity id; slot -> the last facing used.
 var _watched: Dictionary = {}
 var _facing: Dictionary = {}
@@ -90,7 +92,17 @@ func tick(run: RunState) -> void:
 			if consumed != null:
 				_facing[slot] = consumed.record.facing
 		native.set_observer(slot, entity.id, entity.position, int(Variants.number(_facing[slot])))
+		native.set_turn_band(slot, turn_band_deg(float(Variants.number(rtt_ms.call(slot)))))
 		frames[slot] = native.compute(slot)
+
+
+## NET-12's turn band for a client with this round trip: how far its miner can turn (at
+## movement.turn_rate_deg_s) before a frame computed now reaches it: the round trip, the input
+## buffer, a tick and vision.turn_band_extra_s; at most vision.turn_band_max_deg each side.
+static func turn_band_deg(rtt: float) -> float:
+	var hz: float = Tuning.f(&"net.tick_hz")
+	var lag_s: float = rtt / 1000.0 + Tuning.f(&"net.input_buffer_target_ticks") / hz + 1.0 / hz + Tuning.f(&"vision.turn_band_extra_s")
+	return minf(Tuning.f(&"movement.turn_rate_deg_s") * lag_s, Tuning.f(&"vision.turn_band_max_deg"))
 
 
 ## This tick's frame for a slot, or {} if it has none.

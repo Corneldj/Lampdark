@@ -15,7 +15,9 @@ const CLIENT_TABLE: String = "res://data/tuning/_client.json"
 const PROFILES_DIR: String = "res://data/tuning/profiles"
 const LAYERS: Array[String] = ["base", "profile", "bundle", "dev"]
 ## Fields an overlay entry may carry. Anything but "value" must match the base entry.
-const OVERLAY_FIELDS: Array[String] = ["value", "type", "unit", "visibility", "source", "starting", "kind", "min", "max", "exclusive_min", "exclusive_max", "options", "note"]
+const OVERLAY_FIELDS: Array[String] = [
+	"value", "type", "unit", "visibility", "source", "starting", "kind", "min", "max", "exclusive_min", "exclusive_max", "options", "note",
+]
 const LOCKED_FIELDS: Array[String] = ["type", "unit", "visibility"]
 const TICK_KEY: String = "net.tick_hz"
 

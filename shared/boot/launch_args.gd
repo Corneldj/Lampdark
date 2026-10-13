@@ -12,7 +12,12 @@ extends RefCounted
 
 enum Kind { FLAG, INT, PORT, ENUM, STRING, HOST_PORT, U64 }
 
-const USAGE: String = "usage: lampblack [--server] [--mode friends|public|nightshift] [--transport enet|sdr|loopback] [--loopback] [--port <n>] [--offline] [--parent-pid <pid>] [--control-port <n>] [--resume <path>] [--connect <host:port>] [--no-steam] [--name <persona>] [--seed <u64>] [--qa-token <t>] [--bot <brain>] [--bot-seed <u64>] [--link <rtt_ms,loss_pct>] [--receive-log <path>] [--record-inputs <path>] [--stats-out <path>] [--exit-after-ticks <n>] [--tuning-profile <name>] [--tuning-hot-reload] [--log <path>] [--log-level debug|info|warn|error]"
+const USAGE: String = ("usage: lampblack [--server] [--mode friends|public|nightshift] [--transport enet|sdr|loopback]"
+	+ " [--loopback] [--port <n>] [--offline] [--parent-pid <pid>] [--control-port <n>] [--resume <path>]"
+	+ " [--connect <host:port>] [--no-steam] [--name <persona>] [--seed <u64>] [--qa-token <t>] [--bot <brain>]"
+	+ " [--bot-seed <u64>] [--link <rtt_ms,loss_pct>] [--receive-log <path>] [--record-inputs <path>]"
+	+ " [--stats-out <path>] [--exit-after-ticks <n>] [--tuning-profile <name>] [--tuning-hot-reload]"
+	+ " [--log <path>] [--log-level debug|info|warn|error]")
 
 const STEAM_CONNECT_LOBBY: String = "+connect_lobby"
 

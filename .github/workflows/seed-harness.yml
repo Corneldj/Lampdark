@@ -1,0 +1,40 @@
+# FND-04: the seed harness (GEN-14) also runs on any change to the templates or the generator
+# (Gameplay §12.3, GDD §15.9). GEN-14 confirms the final paths.
+name: seed-harness
+on:
+  push:
+    paths:
+      - "data/templates/**"
+      - "native/src/gen/**"
+      - "server/world/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "data/templates/**"
+      - "native/src/gen/**"
+      - "server/world/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  native:
+    uses: ./.github/workflows/native.yml
+
+  seed_harness:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - name: Seed harness, 10,000 seeds (GEN-14)
+        run: tools/build/ci_nightly_slot.sh seed_harness

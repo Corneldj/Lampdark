@@ -21,7 +21,7 @@ static func tick(run: RunState, lamps: LampSystem) -> void:
 
 
 ## The seam's drink at the lamp's own tile (its holder's for a held lamp), §10.7.
-static func drink(run: RunState, lamps: LampSystem, l: GauzeLamp) -> float:
+static func drink(run: RunState, _lamps: LampSystem, l: GauzeLamp) -> float:
 	var at: Vector2 = l.at
 	if l.held() and run.registry.has(l.holder):
 		at = run.registry.get_entity(l.holder).position
@@ -63,7 +63,7 @@ static func pour_action(run: RunState, miner: int, source: Item, l: GauzeLamp, h
 
 
 ## A can tops a flask up (lamp.can_fill_time).
-static func fill_flask_action(run: RunState, miner: int, can: Item, flask: Item, hold_bit: int = InputRecord.HOLD_USE) -> TimedAction:
+static func fill_flask_action(_run: RunState, miner: int, can: Item, flask: Item, hold_bit: int = InputRecord.HOLD_USE) -> TimedAction:
 	var a: TimedAction = TimedAction.make(miner, &"fill_flask", Tuning.f(&"lamp.can_fill_time"), hold_bit)
 	a.needs_still = true
 	a.capability = &"belt"

@@ -1,0 +1,216 @@
+# FND-04's per-push pipeline. Every stage must pass; `ci-ok` is the one required check that
+# branch protection on main names, so any failure blocks the merge.
+name: ci
+on:
+  push:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install gdtoolkit and clang-format
+        run: |
+          python3 -m venv "$RUNNER_TEMP/lint"
+          "$RUNNER_TEMP/lint/bin/pip" install -q gdtoolkit==4.5.0 clang-format==18.1.8
+          echo "$RUNNER_TEMP/lint/bin" >> "$GITHUB_PATH"
+      - name: Lint
+        run: tools/build/ci_lint.sh "${{ github.event.pull_request.base.sha || github.event.before }}"
+
+  native:
+    uses: ./.github/workflows/native.yml
+
+  checks:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - name: Static checks, tuning, generated files, voices
+        run: tools/build/ci_checks.sh
+
+  gut-linux:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - name: GUT unit and scenario tests
+        run: tools/build/ci_tests.sh gut
+      - name: Test report
+        if: always()
+        uses: mikepenz/action-junit-report@v5
+        with:
+          report_paths: tests/reports/unit.xml
+          check_name: GUT (Linux)
+      - name: Keep the log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gut-linux-log
+          path: build/ci/
+          retention-days: 14
+
+  selftest-render:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - name: Bot self-test (under 90 s)
+        run: tools/build/ci_tests.sh selftest
+      - name: Render tests (Xvfb, Mesa)
+        run: tools/build/ci_tests.sh render
+      - name: Keep the logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selftest-logs
+          path: |
+            build/ci/
+            build/soaks/selftest/
+          retention-days: 14
+
+  exports:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
+        with:
+          templates: "true"
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - name: Export all presets; pack contents, release strip, Linux smoke
+        run: tools/build/ci_exports.sh
+      - name: Upload the exports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: exports
+          path: build/*-*/
+          retention-days: 14
+
+  windows:
+    needs: native
+    runs-on: windows-2022
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - name: Doctest, GUT unit and scenario tests
+        shell: pwsh
+        run: tools/build/ci_windows.ps1
+      - name: Debug-tool and bot-path checks, determinism digest
+        shell: bash
+        run: |
+          tools/build/check_debug_tools.sh
+          tools/build/check_bot_paths.sh
+          tools/build/determinism_digest.sh windows template_release
+      - name: Test reports
+        if: always()
+        uses: mikepenz/action-junit-report@v5
+        with:
+          report_paths: tests/reports/*.xml
+          check_name: doctest and GUT (Windows)
+      - name: Upload the Windows digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-windows
+          path: build/digest/windows.template_release.sha256
+          retention-days: 3
+      - name: Keep the logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-logs
+          path: tests/reports/
+          retention-days: 14
+
+  windows-smoke:
+    needs: exports
+    runs-on: windows-2022
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: exports
+          path: build
+      - name: Smoke the Windows QA exports
+        shell: pwsh
+        run: tools/build/smoke_exports.ps1
+
+  determinism:
+    needs: [native, windows]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: digest-*
+          merge-multiple: true
+          path: digests
+      - name: Compare the Linux and Windows digests
+        run: tools/build/ci_compare_digests.sh digests/linux.template_release.sha256 digests/windows.template_release.sha256
+
+  ci-ok:
+    if: always()
+    needs: [lint, native, checks, gut-linux, selftest-render, exports, windows, windows-smoke, determinism]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Every stage passed
+        env:
+          RESULTS: ${{ toJSON(needs.*.result) }}
+        run: |
+          echo "$RESULTS"
+          if echo "$RESULTS" | grep -qE '"(failure|cancelled|skipped)"'; then
+            echo "a stage did not pass"
+            exit 1
+          fi

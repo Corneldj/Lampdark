@@ -1,0 +1,125 @@
+# FND-04's nightly pipeline, 02:00 UTC: four slots. A slot whose tool does not exist yet reports
+# "not implemented yet" and passes; once filled, a failure fails the nightly, opens or updates
+# one tracking issue per slot, and posts to the team webhook when LB_NIGHTLY_WEBHOOK is set.
+name: nightly
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  checks: write
+
+jobs:
+  native:
+    uses: ./.github/workflows/native.yml
+
+  soak:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - run: chmod +x native/bin/* || true
+      - name: Bot soak (FND-09)
+        run: tools/build/ci_nightly_slot.sh soak
+      - name: Upload the soak
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-soak
+          path: build/soaks/nightly_m1/
+          if-no-files-found: ignore
+          retention-days: 30
+
+  stream_audit:
+    needs: soak
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: nightly-soak
+          path: build/soaks/nightly_m1
+      - name: Stream audit over the soak's run records (NET-08)
+        run: tools/build/ci_nightly_slot.sh stream_audit
+
+  seed_harness:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - name: Seed harness, 10,000 seeds (GEN-14)
+        run: tools/build/ci_nightly_slot.sh seed_harness
+
+  probes:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - name: Probes on emulated links, 40-250 ms, 2% loss (NET-12)
+        run: tools/build/ci_nightly_slot.sh probes
+      - name: Upload the reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-probes
+          path: build/probes/
+          if-no-files-found: ignore
+          retention-days: 30
+
+  notify:
+    if: failure()
+    needs: [native, soak, stream_audit, seed_harness, probes]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Open or update one issue per failing slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RESULTS: ${{ toJSON(needs) }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          WEBHOOK: ${{ secrets.LB_NIGHTLY_WEBHOOK }}
+        run: |
+          for slot in native soak stream_audit seed_harness probes; do
+            result="$(jq -r --arg s "$slot" '.[$s].result' <<<"$RESULTS")"
+            [ "$result" = "failure" ] || continue
+            title="Nightly: $slot failing"
+            body="The nightly $slot slot failed on $(date -u +%F): $RUN_URL"
+            number="$(gh issue list --state open --search "\"$title\" in:title" --json number --jq '.[0].number')"
+            if [ -n "$number" ]; then
+              gh issue comment "$number" --body "$body"
+            else
+              gh issue create --title "$title" --body "$body"
+            fi
+            if [ -n "$WEBHOOK" ]; then
+              curl -fsS -H 'Content-Type: application/json' -d "$(jq -n --arg t "$title: $RUN_URL" '{text: $t, content: $t}')" "$WEBHOOK" || true
+            fi
+          done

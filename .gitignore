@@ -6,10 +6,10 @@
 *.tmp
 # Test reports
 /tests/reports/
-# Native build intermediates
-/native/src/**/*.os
-/native/src/**/*.o
-/native/src/**/*.obj
+# Native build intermediates (our sources and the vendored libraries alike)
+/native/**/*.os
+/native/**/*.o
+/native/**/*.obj
 /native/src/core/version.gen.h
 /native/tests/*.o
 /native/.sconsign*.dblite

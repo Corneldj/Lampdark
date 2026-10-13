@@ -27,7 +27,7 @@ func test_next_frame_draws_held_walls() -> void:
 	var west_tiles: Array = ann.connection.view.tiles.keys().filter(func(t: Vector2i) -> bool: return t.x < 15)
 	assert_gt(west_tiles.size(), 4, "she saw the west end")
 	ann.at(s.run.tick).face(0.0)
-	s.step(6)
+	s.step(16)  # the about-turn takes 0.5 s at the capped rate (NET-12), then a frame's trip
 	var view: ReceivedView = ann.connection.view
 	var still_seen_west: int = view.tiles.keys().filter(func(t: Vector2i) -> bool: return t.x < 14).size()
 	assert_eq(still_seen_west, 0, "facing east, nothing west is in the seen set")

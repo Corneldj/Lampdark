@@ -33,6 +33,7 @@ void LbVision::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_decals", "tile", "bits"), &LbVision::set_decals);
 	ClassDB::bind_method(D_METHOD("set_shadow_params", "params"), &LbVision::set_shadow_params);
 	ClassDB::bind_method(D_METHOD("update_shadows"), &LbVision::update_shadows);
+	ClassDB::bind_method(D_METHOD("set_turn_band", "id", "degrees"), &LbVision::set_turn_band);
 	ClassDB::bind_method(D_METHOD("shade_at", "tile"), &LbVision::shade_at);
 	ClassDB::bind_method(D_METHOD("on_tiles_changed", "cell", "rect", "reason"), &LbVision::on_tiles_changed);
 	ClassDB::bind_method(D_METHOD("compute", "id"), &LbVision::compute);
@@ -192,6 +193,11 @@ void LbVision::set_shadow_params(const Dictionary &d) {
 			p.never_cast.insert(static_cast<uint16_t>(static_cast<int64_t>(kinds[i])));
 		}
 	}
+}
+
+void LbVision::set_turn_band(int64_t id, double degrees) {
+	REQUIRE_VISION();
+	vision_->set_turn_band(static_cast<uint32_t>(id), degrees);
 }
 
 void LbVision::update_shadows() {

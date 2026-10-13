@@ -3,8 +3,10 @@ extends SceneTree
 ## in data/tuning/_coverage.json, to existing keys or to {"none": reason} (FND-05). Also
 ## validates every domain file. Exits 1 on any failure.
 ## Usage: godot --headless --path <game> -s tools/build/check_tuning_coverage.gd
-##        [-- --gameplay <path> --gdd <path>]
-## The design documents default to ../../Docs/Design/ beside the game folder.
+##        [-- --gameplay <path> --gdd <path>] [-- --keys-only]
+## The design documents default to ../../Docs/Design/ beside the game folder. They live outside
+## the game repository, so CI (FND-04) passes --keys-only: every domain file and every key the
+## coverage file names are still validated; matching rows against the design is left to local runs.
 
 const COVERAGE: String = "res://data/tuning/_coverage.json"
 
@@ -14,6 +16,7 @@ func _init() -> void:
 	var gameplay: String = design_dir.path_join("LAMPBLACK - Gameplay.md")
 	var gdd: String = design_dir.path_join("LAMPBLACK - Game Design Document.md")
 	var args: PackedStringArray = OS.get_cmdline_user_args()
+	var keys_only: bool = args.has("--keys-only")
 	for index: int in args.size() - 1:
 		if args[index] == "--gameplay":
 			gameplay = args[index + 1]
@@ -25,19 +28,22 @@ func _init() -> void:
 	problems.append_array(tuning.load_directory(TuningSet.DATA_DIR))
 
 	var rows: Array[String] = []
-	rows.append_array(design_row_ids(gameplay, "## Appendix A", "## Appendix B", "A."))
-	rows.append_array(design_row_ids(gdd, "### C.12", "### C.13", "C.12"))
-	if rows.is_empty():
-		problems.append("no design rows found; check the document paths")
+	if not keys_only:
+		rows.append_array(design_row_ids(gameplay, "## Appendix A", "## Appendix B", "A."))
+		rows.append_array(design_row_ids(gdd, "### C.12", "### C.13", "C.12"))
+		if rows.is_empty():
+			problems.append("no design rows found; check the document paths")
 
 	var parsed: Variant = TuningSet.read_json(COVERAGE, problems)
 	var coverage: Dictionary = Variants.dict(Variants.dict(parsed).get("rows", {}))
+	if keys_only:
+		print("check_tuning_coverage: --keys-only, design rows not matched")
 	for row: String in rows:
 		if not coverage.has(row):
 			problems.append("unmapped design row: %s" % row)
 	for row: Variant in coverage.keys():
 		var mapping: Variant = coverage[row]
-		if not str(row) in rows:
+		if not keys_only and not str(row) in rows:
 			problems.append("coverage names a row the design does not have: %s" % row)
 		if mapping is Array:
 			if Variants.array(mapping).is_empty():
@@ -52,7 +58,10 @@ func _init() -> void:
 			problems.append("%s: mapping must be a key list or {\"none\": reason}" % row)
 
 	if problems.is_empty():
-		print("check_tuning_coverage: %d design rows mapped, %d keys valid" % [rows.size(), tuning.entries.size()])
+		if keys_only:
+			print("check_tuning_coverage: %d coverage rows name valid keys, %d keys valid" % [coverage.size(), tuning.entries.size()])
+		else:
+			print("check_tuning_coverage: %d design rows mapped, %d keys valid" % [rows.size(), tuning.entries.size()])
 		quit(0)
 	else:
 		for problem: String in problems:

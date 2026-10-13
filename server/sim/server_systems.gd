@@ -27,6 +27,11 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 		run.add_system(run.flame_states)
 		run.road_graph = RoadGraphService.new(mine, run.header.run_seed)
 		run.vision = VisionSystem.new(mine, run.light)
+		run.vision.rtt_ms = func(slot: int) -> float:
+			for session: Sessions.Session in net.sessions.welcomed():
+				if session.slot == slot:
+					return net.transport.stats(session.peer).rtt_ms
+			return 0.0
 		run.add_system(run.vision)
 	run.noise = NoiseSystem.new(run.road_graph)
 	run.add_system(run.noise)

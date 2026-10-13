@@ -23,6 +23,9 @@ var beds: AmbientBeds = null
 var listener: MinerListener = null
 var deafness: Deafness = null
 var audio_options: AudioOptions = null
+## SND-05: the microphone, open only while the mic mode allows it and voice is live (SND-06 and
+## SND-07 take its frames; SND-10 supplies the mode, Mute until its first-launch choice exists).
+var voice_capture: VoiceCapture = null
 var _events_played: int = 0
 ## NET-12: light-to-contents and about-turn probes on this client; a telemetry summary each minute
 ## (release builds keep no per-tile sample).
@@ -35,6 +38,9 @@ var debug: Node = null
 var world_view: WorldView = null
 var drawn: DrawnSet = DrawnSet.new()
 var _facing_seq: int = -1
+## NET-12: the facing as drawn and heard: it turns toward the wanted one (the input's) at
+## movement.turn_rate_deg_s, as the server and NET-05's prediction turn the miner.
+var _shown_facing: int = 0
 var _last_facing: int = -1
 var _input_frame: int = -1
 ## FND-09's headless bot (tools/bots/bot_client.gd), when started with --bot.
@@ -77,6 +83,9 @@ func _process(delta: float) -> void:
 		_report_connection()
 		_follow_camera(delta)
 		_play_audio()
+		if voice_capture != null:
+			voice_capture.voice_live = connection.state == ClientConnection.State.CONNECTED
+			voice_capture.tick(Time.get_ticks_usec())
 		if connection.state == ClientConnection.State.CONNECTED and connection.last_frame_tick > _input_frame:
 			_input_frame = connection.last_frame_tick
 			var stamp: PackedInt64Array = connection.stamp_for_send(Transport.now_usec())
@@ -97,6 +106,8 @@ func _process(delta: float) -> void:
 			Log.info("frames received %d, last frame tick %d, rtt %.1f ms, inputs sent %d" % [connection.frames_received,
 				connection.last_frame_tick, connection.clock.rtt_ms(), connection.inputs.packets_sent])
 			connection.close()
+		# SND-05: the device-open count for the session (never audio); Mute must leave it at 0.
+		Log.info("voice: the microphone opened %d times this session" % LbVoiceCapture.total_open_count())
 		Log.info("exit after %d ticks" % ticks)
 		Log.close()
 		get_tree().quit(ExitCode.OK)
@@ -127,6 +138,9 @@ func _start_input() -> void:
 	add_child(deafness)
 	audio_options = AudioOptions.load_from()
 	audio_options.apply(events_player.mixer)
+	voice_capture = VoiceCapture.new()
+	Log.info("voice: capture ready, backend %s, mic mode %s" % [voice_capture.backend,
+		VoiceCapture.MicMode.keys()[voice_capture.effective_mode()]])
 	_start_debug()
 
 
@@ -184,12 +198,14 @@ func _follow_camera(delta: float) -> void:
 		return
 	var own: Vector2 = connection.view.own["position"]
 	var squint: bool = (router.record.holds & (InputRecord.HOLD_SQUINT | InputRecord.HOLD_AIM)) != 0
-	camera.follow(own, router.record.facing, squint, delta)
+	var rate: float = Tuning.f(&"movement.turn_rate_deg_s") if Tuning.current.has_key(&"movement.turn_rate_deg_s") else 0.0
+	_shown_facing = MinerMotion.turn_toward(_shown_facing, router.record.facing, MinerMotion.turn_step(rate, delta))
+	camera.follow(own, _shown_facing, squint, delta)
 	source.own_screen = get_viewport().get_visible_rect().size / 2.0
 	# VIS-05: the drawn set and the darkness composite, from the live facing and the own lamp
 	# (NET-05's predicted pool replaces the server's radius once the client predicts).
 	var radius: float = float(Variants.number(connection.view.own.get("lamp_radius", 0.0)))
-	var predicted: Dictionary = {"position": own, "facing": router.record.facing,
+	var predicted: Dictionary = {"position": own, "facing": _shown_facing,
 		"lamp": {"position": own, "radius": radius} if radius > 0.0 else {}}
 	drawn.build(connection.view, predicted, connection.last_input_ack, _facing_seq)
 	# VIS-06: the own lamp blended over the server's light (the same lamp both sides until NET-05's
@@ -197,7 +213,7 @@ func _follow_camera(delta: float) -> void:
 	var server_lamp: Dictionary = {"position": own, "radius": radius}
 	var lights: Dictionary = OwnLampBlend.lights(drawn, connection.view, server_lamp, Variants.dict(predicted["lamp"]))
 	var own_light: float = float(Variants.number(lights.get(Vector2i(floori(own.x), floori(own.y)), 0.0)))
-	world_view.show_frame(drawn, connection.view, camera.view_rect(own).position, own, router.record.facing, own_light,
+	world_view.show_frame(drawn, connection.view, camera.view_rect(own).position, own, _shown_facing, own_light,
 		lights, Time.get_ticks_msec() / 1000.0)
 	_probe(predicted)
 
@@ -208,7 +224,7 @@ func _probe(predicted: Dictionary) -> void:
 		probes = ClientProbes.new()
 		probes.keep_samples = not config.build.is_release()
 		_probe_reported_usec = Time.get_ticks_usec()
-	probes.on_frame(Time.get_ticks_usec(), connection.view, Variants.dict(predicted["lamp"]), router.record.facing)
+	probes.on_frame(Time.get_ticks_usec(), connection.view, Variants.dict(predicted["lamp"]), _shown_facing)
 	if Time.get_ticks_usec() - _probe_reported_usec >= 60000000:
 		_probe_reported_usec = Time.get_ticks_usec()
 		var s: Dictionary = probes.summary()
@@ -225,7 +241,7 @@ func _play_audio() -> void:
 	if events_player == null or connection.view == null:
 		return
 	var own: Vector2 = connection.view.own["position"]
-	listener.follow(own, router.record.facing)
+	listener.follow(own, _shown_facing)
 	while _events_played < connection.events.size():
 		var ev: Dictionary = connection.events[_events_played]
 		var record: AudioRecord = AudioRecord.from_event(ev)

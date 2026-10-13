@@ -15,6 +15,10 @@ import SCons.Errors
 
 from SCons.Script import ARGUMENTS
 
+# FND-04: CI keeps compiled objects (godot-cpp's above all) in a cache between runs.
+if os.environ.get("LB_SCONS_CACHE"):
+    CacheDir(os.environ["LB_SCONS_CACHE"])
+
 env = SConscript("godot-cpp/SConstruct", {"api_version": "4.7"})
 
 # Cross-platform determinism (FND-06): no fused multiply-add, no fast-math, no native ISA.
@@ -62,9 +66,17 @@ version_stamp()
 if env["platform"] == "windows":
     env.Append(LIBS=["winmm"])  # timeBeginPeriod (NET-01's tick clock)
 
-env.Append(CPPPATH=["src/", "thirdparty/steamaudio/include", "thirdparty/opus/include"])
+# SND-05: the voice capture's libraries (WebRTC audio processing, SpeexDSP, miniaudio).
+VOICE_INCLUDES = ["thirdparty/webrtc-apm/webrtc", "thirdparty/webrtc-apm", "thirdparty/webrtc-apm/abseil",
+                  "thirdparty/speexdsp/include", "thirdparty/miniaudio"]
+# WebRTC's headers read the platform from these, in our code as in its own.
+WEBRTC_PLATFORM = (["WEBRTC_WIN", "NOMINMAX", "_USE_MATH_DEFINES"] if env["platform"] == "windows"
+                   else ["WEBRTC_POSIX", "WEBRTC_LINUX"])
+
+env.Append(CPPPATH=["src/", "thirdparty/steamaudio/include", "thirdparty/opus/include"] + VOICE_INCLUDES)
+env.Append(CPPDEFINES=WEBRTC_PLATFORM)
 if env["platform"] == "linux":
-    env.Append(LIBS=["dl"])  # SND-04: Steam Audio is loaded at run time
+    env.Append(LIBS=["dl", "pthread", "m"])  # SND-04: Steam Audio is loaded at run time; SND-05's threads
 core_sources = Glob("src/core/*.cpp") + Glob("src/core/*/*.cpp")
 
 
@@ -93,6 +105,54 @@ def opus_objects(base_env, suffix):
     return [o.SharedObject(f) if suffix == ".lib" else o.Object(f) for f in opus_sources()]
 
 
+def voice_objects(base_env, suffix):
+    """SND-05: WebRTC audio processing 2.1 (with the eight abseil files it links), SpeexDSP 1.2.1 and
+    miniaudio 0.11.25, compiled with `base_env`'s compiler: warnings off, NDEBUG in both targets (no
+    WebRTC debug checks, and its debug dumps compiled out), and WebRTC's AVX2/SSE2 kernels with their
+    own ISA flags behind its runtime CPU dispatch (thirdparty/webrtc-apm/sources.txt)."""
+    msvc = base_env.get("is_msvc", False)
+    objects = []
+
+    def compile_with(e, path):
+        return e.SharedObject(path) if suffix == ".lib" else e.Object(path)
+
+    w = base_env.Clone()
+    w.Append(CPPDEFINES=["NDEBUG", ("WEBRTC_APM_DEBUG_DUMP", "0"), "WEBRTC_ENABLE_AVX2", "WEBRTC_LIBRARY_IMPL",
+                         "__STDC_FORMAT_MACROS"] + (["_WINSOCKAPI_"] if env["platform"] == "windows" else []))
+    w.Append(CPPPATH=VOICE_INCLUDES)
+    if msvc:
+        w.Append(CXXFLAGS=["/FIcstdint"])
+    else:
+        w.Append(CCFLAGS=["-w", "-O2"], CXXFLAGS=["-include", "cstdint"])
+    w["OBJSUFFIX"] = suffix + ".apm" + w["OBJSUFFIX"]
+    listing = os.path.join(Dir("#").abspath, "thirdparty", "webrtc-apm", "sources.txt")
+    for line in open(listing):
+        parts = line.split()
+        if not parts or parts[0].startswith("#"):
+            continue
+        e = w
+        if len(parts) > 1 and not msvc:
+            e = w.Clone()
+            e.Append(CCFLAGS=parts[1:])
+        objects.append(compile_with(e, "thirdparty/webrtc-apm/" + parts[0]))
+
+    sp = base_env.Clone()
+    sp.Append(CPPDEFINES=["FLOATING_POINT", "USE_SMALLFT", ("EXPORT", "")])
+    sp.Append(CPPPATH=["thirdparty/speexdsp/include"])
+    if not msvc:
+        sp.Append(CFLAGS=["-w", "-O2"])
+    sp["OBJSUFFIX"] = suffix + ".spx" + sp["OBJSUFFIX"]
+    for f in ("mdf", "preprocess", "fftwrap", "smallft", "filterbank", "resample"):
+        objects.append(compile_with(sp, "thirdparty/speexdsp/libspeexdsp/%s.c" % f))
+
+    ma = base_env.Clone()
+    if not msvc:
+        ma.Append(CFLAGS=["-w", "-O2"])
+    ma["OBJSUFFIX"] = suffix + ".ma" + ma["OBJSUFFIX"]
+    objects.append(compile_with(ma, "thirdparty/miniaudio/lb_miniaudio_impl.c"))
+    return objects
+
+
 # SND-04: Steam Audio's runtime beside the core library (loaded, never linked).
 phonon = {"linux": "thirdparty/steamaudio/lib/linux-x64/libphonon.so",
           "windows": "thirdparty/steamaudio/lib/windows-x64/phonon.dll"}.get(env["platform"])
@@ -102,7 +162,7 @@ godot_sources = Glob("src/godot/*.cpp") + Glob("src/godot/*/*.cpp") + ["src/regi
 
 library = env.SharedLibrary(
     "bin/liblampblack_core{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-    source=core_sources + godot_sources + opus_objects(env, ".lib"),
+    source=core_sources + godot_sources + opus_objects(env, ".lib") + voice_objects(env, ".lib"),
 )
 env.NoCache(library)
 Default(library)
@@ -125,12 +185,15 @@ if ARGUMENTS.get("tests", "no") in ("yes", "true", "1"):
         for libdir in os.environ.get("LB_EXTRA_LIBPATH", "").split(os.pathsep):
             if libdir:
                 test_env.Append(LIBPATH=[libdir])
-    test_env.Append(CPPPATH=["src/", "thirdparty/doctest/", "thirdparty/steamaudio/include", "thirdparty/opus/include"])
+    test_env.Append(CPPPATH=["src/", "thirdparty/doctest/", "thirdparty/steamaudio/include", "thirdparty/opus/include"] + VOICE_INCLUDES)
+    test_env.Append(CPPDEFINES=WEBRTC_PLATFORM)
     if env["platform"] == "linux":
-        test_env.Append(LIBS=["dl"])
+        test_env.Append(LIBS=["dl", "pthread", "m"])
+    else:
+        test_env.Append(LIBS=["winmm"])
     test_env["OBJSUFFIX"] = ".tests" + env["suffix"] + test_env["OBJSUFFIX"]
     test_sources = [f for f in Glob("tests/*.cpp") if not f.name.endswith("digest_main.cpp")]
-    test_opus = opus_objects(test_env, ".tests" + env["suffix"])
+    test_opus = opus_objects(test_env, ".tests" + env["suffix"]) + voice_objects(test_env, ".tests" + env["suffix"])
     tests = test_env.Program(
         "bin/lampblack_core_tests{}{}".format(env["suffix"], test_env["PROGSUFFIX"]),
         source=test_sources + core_sources + test_opus,

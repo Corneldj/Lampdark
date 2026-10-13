@@ -1,8 +1,9 @@
 class_name MinerMotion
 extends RefCounted
 ## MNR-01's one movement step, run by the server (authority) and the owning client (NET-05's
-## prediction): fixed gait speeds reached and dropped in the tick, instant facing (unless
-## locked), slowdowns that multiply, and a circle of movement.body_radius sliding against solid
+## prediction): fixed gait speeds reached and dropped in the tick, facing turned toward the
+## input's at no more than movement.turn_rate_deg_s (NET-12: so the server can see a turn coming;
+## unless locked), slowdowns that multiply, and a circle of movement.body_radius sliding against solid
 ## tiles (x, then y). Pure: no nodes, no wall clock, and movement directions come from
 ## LbDetMath's bit-identical unit vectors, never GDScript's sin and cos.
 
@@ -69,6 +70,8 @@ class Params:
 	var walk_speed: float = 3.0
 	var run_speed: float = 5.5
 	var body_radius: float = 0.35
+	## NET-12: the fastest the facing turns, degrees a second; 0 turns at once.
+	var turn_rate_deg_s: float = 0.0
 	var step_interval: float = 0.5
 
 	static func from_tuning() -> Params:
@@ -79,6 +82,8 @@ class Params:
 		p.body_radius = Tuning.f(&"movement.body_radius")
 		if Tuning.current.has_key(&"movement.step_interval"):
 			p.step_interval = Tuning.f(&"movement.step_interval")
+		if Tuning.current.has_key(&"movement.turn_rate_deg_s"):
+			p.turn_rate_deg_s = Tuning.f(&"movement.turn_rate_deg_s")
 		return p
 
 
@@ -134,6 +139,21 @@ static func gait_speed(gait: int, p: Params) -> float:
 	return 0.0
 
 
+## The largest facing change (u16 units) in `dt` seconds at `rate_deg_s`; 65536 (any turn) at 0.
+static func turn_step(rate_deg_s: float, dt: float) -> int:
+	if rate_deg_s <= 0.0:
+		return 65536
+	return maxi(1, roundi(rate_deg_s * dt * 65536.0 / 360.0))
+
+
+## `from` turned toward `to` by at most `max_step` (u16 facings, the shorter way round).
+static func turn_toward(from: int, to: int, max_step: int) -> int:
+	var d: int = ((to - from + 32768) & 0xFFFF) - 32768
+	if absi(d) <= max_step:
+		return to & 0xFFFF
+	return (from + (max_step if d > 0 else -max_step)) & 0xFFFF
+
+
 ## One tick. `factor` is the product of the miner's speed modifiers (wound slot included);
 ## is_solid(tile: Vector2i) -> bool is GEN-01's solidity, doors and gates included.
 static func step(prev: State, input: InputRecord, c: Constraints, factor: float, is_solid: Callable, dt: float, p: Params) -> Result:
@@ -141,7 +161,7 @@ static func step(prev: State, input: InputRecord, c: Constraints, factor: float,
 	var out: Result = Result.new()
 	out.state = s
 	if input != null and not c.facing_lock:
-		s.facing = input.facing
+		s.facing = turn_toward(s.facing, input.facing, turn_step(p.turn_rate_deg_s, dt))
 	var gait: int = STILL
 	var speed: float = 0.0
 	if input != null and input.move_dir != InputRecord.NO_DIRECTION and not c.movement_off:

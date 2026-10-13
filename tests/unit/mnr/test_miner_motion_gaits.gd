@@ -63,10 +63,18 @@ func test_wounds_and_modifiers_multiply() -> void:
 	assert_almost_eq(_speed(_rec(0.0, InputRecord.Gait.WALK), mods.factor()), 2.4, 1e-9)
 
 
-func test_facing_is_instant_unless_locked() -> void:
+func test_facing_turns_at_the_capped_rate_unless_locked() -> void:
+	# NET-12: the facing turns toward the input's at movement.turn_rate_deg_s, the shorter way.
+	var step: int = MinerMotion.turn_step(p.turn_rate_deg_s, 0.05)
+	assert_gt(p.turn_rate_deg_s, 0.0, "a capped rate (movement.turn_rate_deg_s)")
 	var s: MinerMotion.State = MinerMotion.State.new()
 	s = MinerMotion.step(s, _rec(0.0, InputRecord.Gait.WALK, 20000), MinerMotion.Constraints.new(), 1.0, open, 0.05, p).state
-	assert_eq(s.facing, 20000, "the same tick")
+	assert_eq(s.facing, step, "one tick's turn toward it")
+	for _i: int in 20:
+		s = MinerMotion.step(s, _rec(0.0, InputRecord.Gait.WALK, 20000), MinerMotion.Constraints.new(), 1.0, open, 0.05, p).state
+	assert_eq(s.facing, 20000, "then exactly there")
+	assert_eq(MinerMotion.turn_toward(1000, 64536, 500), 500, "the shorter way round, through 0")
+	assert_eq(MinerMotion.turn_toward(1000, 5000, 65536), 5000, "uncapped: at once")
 	var lock: MinerMotion.Constraints = MinerMotion.Constraints.new()
 	lock.facing_lock = true
 	s = MinerMotion.step(s, _rec(0.0, InputRecord.Gait.WALK, 40000), lock, 1.0, open, 0.05, p).state
@@ -87,7 +95,7 @@ func test_constraint_stubs() -> void:
 	off.movement_off = true
 	var s: MinerMotion.State = MinerMotion.step(MinerMotion.State.new(), _rec(0.0, InputRecord.Gait.RUN, 12345), off, 1.0, open, 0.05, p).state
 	assert_eq([s.x, s.y], [0.0, 0.0], "movement off freezes position")
-	assert_eq(s.facing, 12345, "while facing still turns")
+	assert_eq(s.facing, MinerMotion.turn_toward(0, 12345, MinerMotion.turn_step(p.turn_rate_deg_s, 0.05)), "while facing still turns")
 	var merged: MinerMotion.Constraints = MinerMotion.Constraints.most_restrictive([carry, tired, walk_only])
 	assert_eq([merged.fixed_speed, merged.run_allowed, merged.walk_only], [1.5, false, true])
 

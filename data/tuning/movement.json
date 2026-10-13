@@ -310,6 +310,16 @@
 			"visibility": "client",
 			"kind": "param",
 			"note": "unit as written: factor; ticket MNR-01"
+		},
+		"movement.turn_rate_deg_s": {
+			"value": 360,
+			"type": "float",
+			"unit": "deg",
+			"source": "Proposed (NET-12, the user's ruling 2026-10-13: a capped turn rate lets the server see a turn coming)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-12: the facing turns toward the wanted one at no more than this; an about-turn takes 0.5 s"
 		}
 	}
 }

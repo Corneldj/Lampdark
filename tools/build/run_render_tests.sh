@@ -7,13 +7,18 @@ set -uo pipefail
 GAME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 GODOT="${GODOT:-godot}"
 GAMESCOPE="${GAMESCOPE:-gamescope}"
-if ! command -v "$GAMESCOPE" >/dev/null 2>&1; then
-	echo "run_render_tests: gamescope not found (set GAMESCOPE)" >&2
+# FND-04: CI runners have no gamescope; there an Xvfb display with Mesa's software GL stands in.
+if command -v "$GAMESCOPE" >/dev/null 2>&1; then
+	wrap=("$GAMESCOPE" --backend headless -W 1920 -H 1080 -w 1920 -h 1080 --)
+elif command -v xvfb-run >/dev/null 2>&1; then
+	wrap=(xvfb-run -a -s "-screen 0 1920x1080x24")
+else
+	echo "run_render_tests: neither gamescope nor xvfb-run found (set GAMESCOPE)" >&2
 	exit 2
 fi
 "$GODOT" --headless --path "$GAME_DIR" --import >/dev/null 2>&1 || true
 log="$(mktemp)"
-timeout 900 "$GAMESCOPE" --backend headless -W 1920 -H 1080 -w 1920 -h 1080 -- \
+timeout 900 "${wrap[@]}" \
 	"$GODOT" --path "$GAME_DIR" --rendering-driver opengl3 -s addons/gut/gut_cmdln.gd \
 	-gconfig=res://tools/build/gut_render.json > "$log" 2>&1
 grep -aE "^res://|^\* |Passing Tests|Failing Tests|Pending|\[Failed\]|renderer:" -A2 "$log" | grep -v "^\s*\[[0-9]\]" | grep -v "^--$"

@@ -61,5 +61,6 @@ func _draw_tags() -> void:
 		var dir: Vector2 = Variants.dict(t).get("direction", Vector2.ZERO)
 		var at: Vector2 = centre + (dir.normalized() * 220.0 if dir.length() > 0.01 else Vector2.ZERO)
 		_canvas.draw_arc(at, 18.0, 0.0, TAU, 32, Palette.QA_MAGENTA, 3.0)
-		_canvas.draw_string(font, Vector2(16, 60 + i * 20), "[illusion #%s: %s]" % [t["illusion_id"], NoiseTypes.id_of(int(Variants.number(t["type"])) as NoiseTypes.Type)],
+		var noise: NoiseTypes.Type = int(Variants.number(t["type"])) as NoiseTypes.Type
+		_canvas.draw_string(font, Vector2(16, 60 + i * 20), "[illusion #%s: %s]" % [t["illusion_id"], NoiseTypes.id_of(noise)],
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Palette.QA_MAGENTA)

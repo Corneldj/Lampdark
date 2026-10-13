@@ -17,9 +17,14 @@
 			"unit": "enum",
 			"source": "Proposed (GDD §15.13 fallback)",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
-			"note": "ticket SND-05"
+			"note": "ticket SND-05",
+			"options": [
+				"webrtc",
+				"speex",
+				"none"
+			]
 		},
 		"voice.aside_budget_s": {
 			"value": 15,
@@ -175,6 +180,18 @@
 			"kind": "param",
 			"note": "unit as written: × range; ticket SND-08"
 		},
+		"voice.device_poll_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (SND-05: no-device state and replugging within 1 s)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"min": 0.1,
+			"max": 1.0,
+			"note": "ticket SND-05: how often the client looks for a microphone while it has none"
+		},
 		"voice.edge_gain_db": {
 			"value": -12,
 			"type": "float",
@@ -205,13 +222,25 @@
 			"kind": "param",
 			"note": "ticket SND-15"
 		},
+		"voice.far_end_buffer_s": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"min": 0.05,
+			"max": 1.0,
+			"note": "ticket SND-05: the master bus capture holding the game's mix for the echo canceller between frames"
+		},
 		"voice.frame_ms": {
 			"value": 20,
 			"type": "float",
 			"unit": "ms",
 			"source": "GDD §15.5, C.3",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket SND-05"
 		},
@@ -291,9 +320,15 @@
 			"unit": "enum",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
-			"note": "ticket SND-05"
+			"note": "ticket SND-05",
+			"options": [
+				"low",
+				"moderate",
+				"high",
+				"very_high"
+			]
 		},
 		"voice.opus_bitrate_kbps": {
 			"value": 24,
@@ -371,7 +406,7 @@
 			"unit": "Hz",
 			"source": "GDD §15.5, C.3",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket SND-05"
 		},
@@ -414,6 +449,33 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "ticket SND-07"
+		},
+		"voice.speex_echo_tail_ms": {
+			"value": 100,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed (GDD §15.13 fallback)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"min": 20,
+			"max": 500,
+			"note": "ticket SND-05: SpeexDSP's echo filter length, used only with voice.apm_backend speex"
+		},
+		"voice.speex_noise_suppress_db": {
+			"value": [
+				-10,
+				-15,
+				-22,
+				-30
+			],
+			"type": "float_list",
+			"unit": "dB",
+			"source": "Proposed (GDD §15.13 fallback)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-05: SpeexDSP's noise suppression for voice.noise_suppression_level low, moderate, high and very_high"
 		},
 		"voice.stythe_loss": {
 			"value": 0.25,

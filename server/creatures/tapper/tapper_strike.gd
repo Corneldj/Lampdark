@@ -44,7 +44,8 @@ static func lure(run: RunState, t: Tapper, h: TapperHearing.HeardEvent, pin_tile
 	if d < Tuning.f(&"tapper.lure_min_tiles") - 1e-9 or d > Tuning.f(&"tapper.lure_max_tiles") + 1e-9 or d < 0.0:
 		return {}
 	var miner: int = int(Variants.number(truth.get("source", 0)))
-	if not _conscious_miner(run, miner) or run.registry.get_entity(miner).position.distance_to(Vector2(where) + Vector2(0.5, 0.5)) > Tuning.f(&"tapper.reach_tiles"):
+	var reach_from: Vector2 = Vector2(where) + Vector2(0.5, 0.5)
+	if not _conscious_miner(run, miner) or run.registry.get_entity(miner).position.distance_to(reach_from) > Tuning.f(&"tapper.reach_tiles"):
 		miner = 0
 	return {"miner": miner, "distance": d}
 

@@ -2,6 +2,7 @@
 
 #include "godot/audio/lb_audio_mixer.h"
 #include "godot/voice/lb_opus.h"
+#include "godot/voice/lb_voice_capture.h"
 #include "godot/lb_core_info.h"
 #include "godot/light/lb_light.h"
 #include "godot/vision/lb_vision.h"
@@ -49,6 +50,7 @@ void initialize_lampblack_core(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(lb::godot::LbAudioMixer);
 	GDREGISTER_CLASS(lb::godot::LbOpusEncoder);
 	GDREGISTER_CLASS(lb::godot::LbOpusDecoder);
+	GDREGISTER_CLASS(lb::godot::LbVoiceCapture);
 }
 
 void uninitialize_lampblack_core(ModuleInitializationLevel p_level) {

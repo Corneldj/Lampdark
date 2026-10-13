@@ -1,5 +1,7 @@
 #include "core/vision/seen_set.h"
 
+#include <algorithm>
+
 #include <cmath>
 
 #include <chrono>
@@ -63,6 +65,13 @@ void Vision::set_identity_threshold(uint32_t entity, int64_t thousandths) {
 		identity_override_.erase(entity);
 	} else {
 		identity_override_[entity] = thousandths;
+	}
+}
+
+void Vision::set_turn_band(uint32_t id, double degrees) {
+	Observer *o = observer(id);
+	if (o != nullptr) {
+		o->turn_band = degrees < 0.0 ? 0.0 : (degrees > 180.0 ? 180.0 : degrees);
 	}
 }
 
@@ -308,10 +317,22 @@ PerceptionFrame Vision::compute_frame(uint32_t id, const std::vector<sim::Mirror
 			frame.margin_tiles.push_back(t);
 		}
 	});
+	// NET-12's turn band: lit, in sight, just outside the cone but within what the miner can turn
+	// into before this frame arrives. Never a bite, never small things; hidden until revealed.
+	const bool banded = o->turn_band > 0.0 && !o->blinded;
+	const Cone wide = Cone::make(o->x, o->y, o->facing, std::min(360.0, params.cone_deg + 2.0 * o->turn_band));
 	for (const sim::MirrorEntity *e : unseen) {
 		const PerceptionClass c = table.get(e->kind);
+		const bool large = c.size == SizeClass::MINER || c.size == SizeClass::LARGE || c.size == SizeClass::LARGE_MOTIONLESS;
 		if ((c.size == SizeClass::MINER || c.size == SizeClass::LARGE) && margin_band(id, tile_of(e->x, e->y)) == 2) {
 			frame.margin_tokens.push_back(FrameToken{table.token_class(e->kind, e->flags), e->x, e->y, e->id});
+			continue;
+		}
+		if (banded && large) {
+			Unseen why = Unseen::UNKNOWN;
+			if (entity_light(*o, wide, *e, why) >= params.seen_min && why == Unseen::SEEN) {
+				frame.margin_tokens.push_back(FrameToken{table.token_class(e->kind, e->flags), e->x, e->y, e->id});
+			}
 		}
 	}
 	margin_nanos_ += std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now() - margin_start).count();

@@ -1,0 +1,54 @@
+# FND-04: the native build, shared by the per-push, seed-harness and nightly pipelines. Builds
+# lampblack_core for Linux and (MinGW cross, FND-02) Windows, both targets; runs the Linux doctests;
+# checks layering and Windows imports; writes the Linux determinism digest.
+name: native
+on:
+  workflow_call:
+
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      LB_SCONS_CACHE: ${{ github.workspace }}/../scons-cache
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: ./.github/actions/lfs-pull
+      - name: Install the toolchains
+        run: tools/build/ci_setup_linux.sh native
+      - name: Restore the SCons cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.LB_SCONS_CACHE }}
+          key: scons-${{ hashFiles('versions.json', 'native/SConstruct') }}-${{ github.sha }}
+          restore-keys: scons-${{ hashFiles('versions.json', 'native/SConstruct') }}-
+      - name: Build, doctest, layering, imports, digest
+        run: tools/build/ci_native.sh
+      - name: Doctest report
+        if: always()
+        uses: mikepenz/action-junit-report@v5
+        with:
+          report_paths: native/bin/doctest.linux.*.xml
+          check_name: doctest (Linux)
+      - name: Upload the native libraries
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-bin
+          path: |
+            native/bin/
+            !native/bin/symbols/
+          retention-days: 3
+      - name: Upload the release symbols
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-symbols
+          path: native/bin/symbols/
+          retention-days: 90
+      - name: Upload the Linux digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest-linux
+          path: build/digest/linux.template_release.sha256
+          retention-days: 3

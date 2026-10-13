@@ -1,5 +1,5 @@
 {
-	"hash": "818d0029a4b424e0b4620ad2672d2f795abc324c1b2b76cb62758945ff4c9217",
+	"hash": "f02ab43204c6b7d1918264fb9d757730612028845bbf9733f733607af3873fb2",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -493,6 +493,13 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"movement.turn_rate_deg_s": {
+			"value": 360.0,
+			"type": "float",
+			"unit": "deg",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"movement.walk_speed": {
 			"value": 3.0,
 			"type": "float",
@@ -940,6 +947,18 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"voice.apm_backend": {
+			"value": "webrtc",
+			"type": "string",
+			"unit": "enum",
+			"visibility": "client",
+			"kind": "param",
+			"options": [
+				"webrtc",
+				"speex",
+				"none"
+			]
+		},
 		"voice.band_hysteresis_s": {
 			"value": 0.3,
 			"type": "float",
@@ -983,6 +1002,72 @@
 			"unit": "s",
 			"min": 0.3,
 			"max": 1.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.device_poll_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"min": 0.1,
+			"max": 1.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.far_end_buffer_s": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "s",
+			"min": 0.05,
+			"max": 1.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.frame_ms": {
+			"value": 20.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.noise_suppression_level": {
+			"value": "moderate",
+			"type": "string",
+			"unit": "enum",
+			"visibility": "client",
+			"kind": "param",
+			"options": [
+				"low",
+				"moderate",
+				"high",
+				"very_high"
+			]
+		},
+		"voice.sample_rate_hz": {
+			"value": 48000,
+			"type": "int",
+			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.speex_echo_tail_ms": {
+			"value": 100.0,
+			"type": "float",
+			"unit": "ms",
+			"min": 20.0,
+			"max": 500.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.speex_noise_suppress_db": {
+			"value": [
+				-10.0,
+				-15.0,
+				-22.0,
+				-30.0
+			],
+			"type": "float_list",
+			"unit": "dB",
 			"visibility": "client",
 			"kind": "param"
 		},

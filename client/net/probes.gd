@@ -6,14 +6,15 @@ extends RefCounted
 ##     an entity token stands on that tile (drawn: a hidden margin token is revealed by that same
 ##     light), at 0 if one already does. Tiles nothing stands on within WINDOW never resolve and
 ##     are not counted (only tiles with contents count).
-##   about-turn: a turn of net.probe_about_turn_deg or more within 100 ms. Samples it starts are
-##     tagged "turn"; it also counts the frames until the held geometry of the tiles it lit is
-##     drawn (1: the next frame).
+##   about-turn: a turn of net.probe_about_turn_deg or more within the time the capped turn rate
+##     needs for it plus 100 ms (movement.turn_rate_deg_s; 100 ms alone at no cap). Samples it
+##     starts, until it ends, are tagged "turn"; it also counts the frames until the held geometry
+##     of the tiles it lit is drawn (1: the next frame).
 ##   bandwidth: bytes down and up per lane (voice is its own lane), from the connection.
 ## Each frame costs well under 0.1 ms (`cost_usec`). Release builds keep only the summaries
 ## (`keep_samples` false): no tile or token is kept.
 
-const TURN_WINDOW_USEC: int = 100000
+const TURN_SLACK_USEC: int = 100000
 const WINDOW_USEC: int = 1000000
 const SEEN_MILLI: int = 120
 
@@ -28,6 +29,8 @@ var frames: int = 0
 var cost_usec: int = 0
 var cone_deg: float = 110.0
 var turn_deg: float = 90.0
+## How long an about-turn may take to count (from the turn rate), microseconds.
+var turn_window_usec: int = TURN_SLACK_USEC
 var core_fraction: float = 0.6
 var core_value: float = 0.3
 var edge_value: float = 0.12
@@ -52,6 +55,9 @@ func _init() -> void:
 		edge_value = Tuning.f(&"light.edge_value")
 	if Tuning.current.has_key(&"net.probe_about_turn_deg"):
 		turn_deg = Tuning.f(&"net.probe_about_turn_deg")
+	var rate: float = Tuning.f(&"movement.turn_rate_deg_s") if Tuning.current.has_key(&"movement.turn_rate_deg_s") else 0.0
+	if rate > 0.0:
+		turn_window_usec = roundi(turn_deg / rate * 1000000.0) + TURN_SLACK_USEC
 
 
 ## One client frame: the view as held now, the predicted own lamp ({position, radius}) and the
@@ -66,7 +72,7 @@ func on_frame(now_usec: int, view: ReceivedView, lamp: Dictionary, facing: int) 
 		var e: Dictionary = raw
 		var p: Vector2 = e["position"]
 		occupied[Vector2i(floori(p.x), floori(p.y))] = true
-	var kind: String = "turn" if now_usec - _last_turn_usec <= TURN_WINDOW_USEC else "light"
+	var kind: String = "turn" if now_usec - _last_turn_usec <= turn_window_usec else "light"
 	for raw: Variant in lit.keys():
 		var tile: Vector2i = raw
 		if _lit.has(tile):
@@ -99,9 +105,9 @@ func on_frame(now_usec: int, view: ReceivedView, lamp: Dictionary, facing: int) 
 
 func _note_facing(now_usec: int, facing: int) -> bool:
 	_facings.append([now_usec, facing])
-	while _facings.size() > 1 and now_usec - int(Variants.number(_facings[0][0])) > TURN_WINDOW_USEC:
+	while _facings.size() > 1 and now_usec - int(Variants.number(_facings[0][0])) > turn_window_usec:
 		_facings.pop_front()
-	if now_usec - _last_turn_usec <= TURN_WINDOW_USEC:
+	if now_usec - _last_turn_usec <= turn_window_usec:
 		return false
 	var oldest: int = _facings[0][1]
 	var d: int = absi(((facing - oldest + 32768) & 0xFFFF) - 32768)

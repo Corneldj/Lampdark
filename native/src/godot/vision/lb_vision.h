@@ -40,6 +40,7 @@ public:
 	// VIS-09: {enabled, min_light (0-1), lit_min (0-1), levels, width, never_cast: [kinds]}.
 	void set_shadow_params(const ::godot::Dictionary &d);
 	void update_shadows();
+	void set_turn_band(int64_t id, double degrees);
 	int64_t shade_at(::godot::Vector2i tile) const;
 	void on_tiles_changed(::godot::Vector2i cell, ::godot::Rect2i rect, const ::godot::String &reason);
 

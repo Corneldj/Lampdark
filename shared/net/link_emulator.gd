@@ -163,7 +163,9 @@ func _release_out() -> void:
 
 
 static func _earlier(a: Array, b: Array) -> bool:
-	return int(Variants.number(a[0])) < int(Variants.number(b[0])) or (int(Variants.number(a[0])) == int(Variants.number(b[0])) and int(Variants.number(a[1])) < int(Variants.number(b[1])))
+	var at_a: int = int(Variants.number(a[0]))
+	var at_b: int = int(Variants.number(b[0]))
+	return at_a < at_b or (at_a == at_b and int(Variants.number(a[1])) < int(Variants.number(b[1])))
 
 
 func _advance_timeline() -> void:

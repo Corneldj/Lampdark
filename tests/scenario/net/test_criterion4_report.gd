@@ -31,9 +31,11 @@ func test_short_run_at_120() -> void:
 	gut.p("120 ms: light p95 %s ms, about-turn p95 %s ms, criterion 4 %s" % [light["p95"], turn["p95"], "pass" if Variants.flag(r["criterion4_pass"]) else "FAIL"])
 
 
-func test_planted_margin_delay_shows_in_the_light_probe() -> void:
+func test_planted_margin_delay_shows_in_the_probes() -> void:
 	var clean: Dictionary = R.run({"rtt_ms": 120, "loss": 0.02, "seconds": 20.0})
 	var planted: Dictionary = R.run({"rtt_ms": 120, "loss": 0.02, "seconds": 20.0, "plant_margin_delay_ms": 100.0})
-	var a: float = float(Variants.number(Variants.dict(clean["light_to_contents"])["p95"]))
-	var b: float = float(Variants.number(Variants.dict(planted["light_to_contents"])["p95"]))
-	assert_gt(b - a, 80.0, "the margin's 100 ms shows: %.0f ms to %.0f ms" % [a, b])
+	assert_true(Variants.flag(clean["criterion4_pass"]), "criterion 4 passes clean (NET-12's turn rate and band)")
+	# With the turn band, the margin carries the about-turns: the planted delay shows there.
+	var a: float = float(Variants.number(Variants.dict(clean["about_turn"])["p95"]))
+	var b: float = float(Variants.number(Variants.dict(planted["about_turn"])["p95"]))
+	assert_gt(b - a, 80.0, "the margin's 100 ms shows in the about-turn probe: %.0f ms to %.0f ms" % [a, b])

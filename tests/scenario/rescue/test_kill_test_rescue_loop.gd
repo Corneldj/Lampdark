@@ -61,7 +61,7 @@ func test_fall_carry_table_revive() -> void:
 	s.step(300)
 	var on_table: Vector2 = Vector2(table) + Vector2(0.5, 0.5)
 	_face(s, cat, on_table)
-	s.step(2)
+	s.step(16)  # NET-12: turning is rate-capped
 	cat.at(s.run.tick).hold(InputRecord.HOLD_INTERACT, 2)
 	s.step(4)
 	assert_true(s.run.ring.rings.has(cat.entity_id), "the ring opens on Bob")
