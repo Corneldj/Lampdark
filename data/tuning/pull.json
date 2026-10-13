@@ -1,0 +1,125 @@
+{
+	"domain": "pull",
+	"keys": {
+		"pull.ebb": {
+			"value": 30,
+			"type": "float",
+			"unit": "Pull",
+			"source": "Gameplay §10.5, §A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-03"
+		},
+		"pull.home_rate_per_min": {
+			"value": -20,
+			"type": "float",
+			"unit": "Pull/min",
+			"source": "Gameplay §10.5, §3.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-03"
+		},
+		"pull.home_rate_solo_per_min": {
+			"value": -10,
+			"type": "float",
+			"unit": "Pull/min",
+			"source": "Gameplay §10.5, §A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-03"
+		},
+		"pull.max": {
+			"value": 100,
+			"type": "float",
+			"unit": "Pull",
+			"source": "Gameplay §10.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-03"
+		},
+		"pull.rate_alone_per_min": {
+			"value": 6,
+			"type": "float",
+			"unit": "Pull/min",
+			"source": "Gameplay §10.5, §A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: Pull/min × D; ticket DIR-03"
+		},
+		"pull.rate_group_per_min": {
+			"value": -4,
+			"type": "float",
+			"unit": "Pull/min",
+			"source": "Gameplay §10.5, §A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-03"
+		},
+		"pull.rate_pair_per_min": {
+			"value": 2,
+			"type": "float",
+			"unit": "Pull/min",
+			"source": "Gameplay §10.5, §A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: Pull/min × D; ticket DIR-03"
+		},
+		"pull.solo_multiplier": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §10.5, §11.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-03"
+		},
+		"pull.threshold_anywhere": {
+			"value": 80,
+			"type": "float",
+			"unit": "Pull",
+			"source": "Gameplay §10.5, §A.7",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-03"
+		},
+		"pull.threshold_attend": {
+			"value": 30,
+			"type": "float",
+			"unit": "Pull",
+			"source": "Gameplay §10.5, §A.7",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-03"
+		},
+		"pull.threshold_marked": {
+			"value": 50,
+			"type": "float",
+			"unit": "Pull",
+			"source": "Gameplay §10.5, §A.7",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-03"
+		},
+		"pull.initial": {
+			"value": 0,
+			"type": "float",
+			"unit": "Pull",
+			"source": "Gameplay §10.5, §11.1, §A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.7 Pull range: starts at 0; a miner who comes round restarts at 0"
+		}
+	}
+}

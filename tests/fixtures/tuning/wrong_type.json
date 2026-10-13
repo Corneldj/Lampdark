@@ -1,0 +1,26 @@
+{
+	"expect": "whole number",
+	"units": [
+		"s",
+		"tiles",
+		"px",
+		"count",
+		"share"
+	],
+	"files": {
+		"moth.json": {
+			"domain": "moth",
+			"keys": {
+				"moth.a_s": {
+					"value": "three",
+					"type": "int",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,117 @@
+{
+	"domain": "camera",
+	"keys": {
+		"camera.check_lamp_panel_height": {
+			"value": 0.33,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: of screen height; ticket UI-01"
+		},
+		"camera.closeup_transition_s": {
+			"value": 0.15,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket UI-02"
+		},
+		"camera.lead_settle_s": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-01"
+		},
+		"camera.lead_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.1 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-01"
+		},
+		"camera.shake_max_tiles": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-01"
+		},
+		"camera.squint_lead_tiles": {
+			"value": 8,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.1, §4.7 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-01"
+		},
+		"camera.text_size_pct": {
+			"value": 100,
+			"type": "float",
+			"unit": "%",
+			"min": 100,
+			"max": 200,
+			"source": "GDD §14.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket UI-06"
+		},
+		"camera.tile_px_at_1080p": {
+			"value": 64,
+			"type": "int",
+			"unit": "px",
+			"source": "Gameplay §5.1 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-01"
+		},
+		"camera.ui_min_text_px_at_800p": {
+			"value": 16,
+			"type": "int",
+			"unit": "px",
+			"source": "Proposed (Deck legibility)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket UI-01"
+		},
+		"camera.view_tiles_high": {
+			"value": 16.875,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.1 (\"17\"); Proposed exact value",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-01"
+		},
+		"camera.view_tiles_wide": {
+			"value": 30,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.1 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-01"
+		}
+	}
+}

@@ -1,0 +1,1650 @@
+{
+	"domain": "mine",
+	"keys": {
+		"mine.air_door_initial_shut": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-15"
+		},
+		"mine.air_door_operate_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-15"
+		},
+		"mine.air_door_side_passage_probability": {
+			"value": 0.333,
+			"type": "float",
+			"unit": "probability",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-10"
+		},
+		"mine.band_tools_ring": {
+			"value": 1,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-08"
+		},
+		"mine.biome_block_cells": {
+			"value": 2,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-06"
+		},
+		"mine.biome_weights_ring0": {
+			"value": {
+				"pit_bottom": 1.0
+			},
+			"type": "table",
+			"unit": "share",
+			"source": "Gameplay §12.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-06"
+		},
+		"mine.biome_weights_ring1": {
+			"value": {
+				"seam": 0.8,
+				"old_workings": 0.2
+			},
+			"type": "table",
+			"unit": "share",
+			"source": "Gameplay §12.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-06"
+		},
+		"mine.biome_weights_ring2": {
+			"value": {
+				"seam": 0.5,
+				"old_workings": 0.5
+			},
+			"type": "table",
+			"unit": "share",
+			"source": "Gameplay §12.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-06"
+		},
+		"mine.biome_weights_ring3": {
+			"value": {
+				"old_workings": 0.6,
+				"black_seam": 0.4
+			},
+			"type": "table",
+			"unit": "share",
+			"source": "Gameplay §12.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-06"
+		},
+		"mine.biome_weights_ring4": {
+			"value": {
+				"old_mens": 1
+			},
+			"type": "table",
+			"unit": "share",
+			"source": "Gameplay §12.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-06"
+		},
+		"mine.blackdamp_old_workings_cells_per": {
+			"value": 3,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-10"
+		},
+		"mine.canary_max_per_run": {
+			"value": 1,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-09"
+		},
+		"mine.chamber_forbidden_width_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.chamber_max_tiles": {
+			"value": 8,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.chamber_min_tiles": {
+			"value": 5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.commit_budget_ms_per_tick": {
+			"value": 1,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-11"
+		},
+		"mine.commit_latency_p99_ms": {
+			"value": 250,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-11"
+		},
+		"mine.diff_log_save_budget_mb": {
+			"value": 8,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-13"
+		},
+		"mine.diff_replay_budget_ms": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: ms per cell; ticket GEN-13"
+		},
+		"mine.drum_gear_ring": {
+			"value": 3,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-08"
+		},
+		"mine.edge_open_probability": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "probability",
+			"source": "Gameplay §12.3, §A.11 (starting value)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-05"
+		},
+		"mine.eviction_radius_cells": {
+			"value": 6,
+			"type": "int",
+			"unit": "cells",
+			"source": "GDD §15.9, §C.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-11"
+		},
+		"mine.first_aid_regions_per": {
+			"value": 3,
+			"type": "int",
+			"unit": "regions",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-09"
+		},
+		"mine.generation_budget_ms_deck": {
+			"value": 3,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.9, §C.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: ms (p99); ticket GEN-11"
+		},
+		"mine.generation_budget_ms_server": {
+			"value": 1,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.9, §C.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: ms (p99); ticket GEN-11"
+		},
+		"mine.generation_radius_cells": {
+			"value": 4,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.3; GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-11"
+		},
+		"mine.harness_deck_sample_seeds": {
+			"value": 500,
+			"type": "int",
+			"unit": "seeds",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-14"
+		},
+		"mine.harness_fallback_rate_max": {
+			"value": 0.01,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: share of cells; ticket GEN-14"
+		},
+		"mine.harness_joined_min": {
+			"value": 0.85,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §12.3, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: share of ring 0–2 cells; ticket GEN-14"
+		},
+		"mine.harness_order_cells": {
+			"value": 400,
+			"type": "int",
+			"unit": "cells",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-14"
+		},
+		"mine.harness_orders": {
+			"value": 3,
+			"type": "float",
+			"unit": "orders",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-14"
+		},
+		"mine.harness_road_ratio_max": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §12.3, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: ratio; ticket GEN-14"
+		},
+		"mine.harness_seeds": {
+			"value": 10000,
+			"type": "int",
+			"unit": "seeds",
+			"source": "Gameplay §12.3, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-14"
+		},
+		"mine.harness_spine_reach_min": {
+			"value": 1,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §12.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-14"
+		},
+		"mine.harness_target_flares_ring2": {
+			"value": [
+				3,
+				6
+			],
+			"type": "range",
+			"unit": "flares",
+			"source": "Gameplay §4.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "ticket GEN-14"
+		},
+		"mine.harness_target_kits_standard": {
+			"value": [
+				4,
+				6
+			],
+			"type": "range",
+			"unit": "kits",
+			"source": "Gameplay §12.5, §4.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "ticket GEN-14"
+		},
+		"mine.harness_target_lamps_standard": {
+			"value": [
+				3,
+				6
+			],
+			"type": "range",
+			"unit": "lamps",
+			"source": "Gameplay §12.5",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "ticket GEN-14"
+		},
+		"mine.harness_target_tools_ring2": {
+			"value": [
+				1,
+				2
+			],
+			"type": "range",
+			"unit": "count",
+			"note": "each tool; 1 in ring 1; unit as written: tools; ticket GEN-14",
+			"source": "Gameplay §4.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target"
+		},
+		"mine.lair_min_bearing_from_hoard_deg": {
+			"value": 90,
+			"type": "float",
+			"unit": "deg",
+			"source": "Gameplay §8.1, §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: degrees; ticket GEN-08"
+		},
+		"mine.lamp_cabin_regions_per": {
+			"value": 3,
+			"type": "int",
+			"unit": "regions",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-09"
+		},
+		"mine.main_road_edge_offset_tiles": {
+			"value": 10,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-07"
+		},
+		"mine.main_road_max_ring": {
+			"value": 3,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §12.2 (they stop at the Deep)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-07"
+		},
+		"mine.main_road_run_max_tiles": {
+			"value": 40,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.3, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-07"
+		},
+		"mine.main_road_run_min_tiles": {
+			"value": 25,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.3, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-07"
+		},
+		"mine.main_road_spacing_cells": {
+			"value": 8,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.1, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-07"
+		},
+		"mine.main_road_width_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.2, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-07"
+		},
+		"mine.map_card_px": {
+			"value": 2048,
+			"type": "int",
+			"unit": "px",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: pixels square; ticket LFT-14"
+		},
+		"mine.map_table_save_budget_mb": {
+			"value": 4,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-13"
+		},
+		"mine.max_live_cells": {
+			"value": 700,
+			"type": "int",
+			"unit": "cells",
+			"source": "Proposed (within GDD §15.9's 80 MB)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-11"
+		},
+		"mine.max_planned_poi_per_region": {
+			"value": 2,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed (Gameplay §12.4: one or two per region)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-08"
+		},
+		"mine.old_fall_probability": {
+			"value": 0.1667,
+			"type": "float",
+			"unit": "count",
+			"source": "Gameplay §12.3 (about 1 in 6)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: per main-road cell; ticket GEN-07"
+		},
+		"mine.paraffin_max_ring": {
+			"value": 2,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-08"
+		},
+		"mine.paraffin_planned_factor": {
+			"value": 2,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: × tank need; ticket GEN-08"
+		},
+		"mine.paraffin_single_cells_per": {
+			"value": 8,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "rings 1–2; ticket GEN-10"
+		},
+		"mine.part_spare_probability": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "probability",
+			"source": "Gameplay §12.5, §4.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-08"
+		},
+		"mine.path_diagonal_cost": {
+			"value": 1.414,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-01"
+		},
+		"mine.path_query_max_tiles": {
+			"value": 160,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed (covers the 150-tile hunting range, Gameplay §8.1)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-01"
+		},
+		"mine.pencil_slow_cursor_scale": {
+			"value": 0.35,
+			"type": "float",
+			"unit": "×",
+			"source": "Proposed (GDD §14.5); client-visible",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: × cursor speed; ticket LFT-14"
+		},
+		"mine.placement_max_retries": {
+			"value": 20,
+			"type": "float",
+			"unit": "retries",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-12"
+		},
+		"mine.plan_max_retries": {
+			"value": 100,
+			"type": "int",
+			"unit": "tries",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-08"
+		},
+		"mine.pocket_book_map_pages": {
+			"value": 6,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: pages per book; ticket LFT-15"
+		},
+		"mine.pocket_book_map_pages_enabled": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "GDD §16.6 (cut 8)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-15"
+		},
+		"mine.pocket_book_max_strokes": {
+			"value": 8000,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed (GDD §15.9: 6 MB for five books)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: strokes per book; ticket LFT-15"
+		},
+		"mine.pocket_books_save_budget_mb": {
+			"value": 6,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-13"
+		},
+		"mine.pocket_page_area_fraction": {
+			"value": 0.0625,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: of the table sheet's area; ticket LFT-15"
+		},
+		"mine.poi_region_cells": {
+			"value": 5,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-09"
+		},
+		"mine.poi_two_per_region_probability": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "probability",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-09"
+		},
+		"mine.revolver_probability": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "probability",
+			"source": "Gameplay §4.7, §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-08"
+		},
+		"mine.rib_wander_max_tiles": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.rich_rock_min_thickness_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.rich_rock_per_region": {
+			"value": 2,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: masses; ticket GEN-10"
+		},
+		"mine.road_width_max_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.road_width_min_tiles": {
+			"value": 1,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.roost_min_from_shaft_staged_tiles": {
+			"value": 100,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-10"
+		},
+		"mine.sheet_label_max_chars": {
+			"value": 40,
+			"type": "float",
+			"unit": "characters",
+			"source": "Gameplay §A.11; GDD §15.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-14"
+		},
+		"mine.sheet_max_strokes": {
+			"value": 20000,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §A.11; GDD §15.3, §15.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: strokes per sheet; ticket LFT-14"
+		},
+		"mine.sheet_point_spacing_units": {
+			"value": 16,
+			"type": "float",
+			"unit": "sheet_units",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: sheet units, minimum; ticket LFT-14"
+		},
+		"mine.sheet_rubber_radius_units": {
+			"value": 48,
+			"type": "float",
+			"unit": "sheet_units",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: sheet units; ticket LFT-14"
+		},
+		"mine.sheet_stroke_max_points": {
+			"value": 64,
+			"type": "int",
+			"unit": "points",
+			"source": "Proposed (GDD §15.11 caps stroke length)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-14"
+		},
+		"mine.sheet_strokes_per_s": {
+			"value": 10,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Gameplay §A.11; GDD §15.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: strokes a second, per miner; ticket LFT-14"
+		},
+		"mine.socket_offsets_tiles": {
+			"value": [
+				5,
+				10,
+				15
+			],
+			"type": "int_list",
+			"unit": "tiles",
+			"source": "Gameplay §12.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-05"
+		},
+		"mine.socket_widths_tiles": {
+			"value": [
+				1,
+				2,
+				3
+			],
+			"type": "int_list",
+			"unit": "tiles",
+			"source": "Gameplay §12.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-05"
+		},
+		"mine.stub_throat_depth_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.timber_hook_spacing_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.v1_deep_biome_override": {
+			"value": "old_workings",
+			"type": "string",
+			"unit": "enum",
+			"source": "Proposed (removed by GEN-17)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-16"
+		},
+		"mine.validator_max_rerolls": {
+			"value": 20,
+			"type": "float",
+			"unit": "rerolls",
+			"source": "Gameplay §12.3, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-12"
+		},
+		"mine.biome_socket_widths_min": {
+			"value": {
+				"pit_bottom": 2,
+				"seam": 2,
+				"old_workings": 1,
+				"black_seam": 2,
+				"old_mens": 1,
+				"main_road": 3
+			},
+			"type": "table",
+			"unit": "tiles",
+			"source": "Proposed, from Gameplay §12.2 road widths",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "narrowest socket width each biome allows; with _max replaces mine.biome_socket_widths; ticket GEN-06"
+		},
+		"mine.biome_socket_widths_max": {
+			"value": {
+				"pit_bottom": 3,
+				"seam": 3,
+				"old_workings": 2,
+				"black_seam": 3,
+				"old_mens": 1,
+				"main_road": 3
+			},
+			"type": "table",
+			"unit": "tiles",
+			"source": "Proposed, from Gameplay §12.2 road widths",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "widest socket width each biome allows; ticket GEN-06"
+		},
+		"mine.electric_lamp_min_ring": {
+			"value": 2,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §4.4, §A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.1 Electric hand lamp: ring 2 or deeper (GEN-10 names this key)"
+		},
+		"mine.electric_lamp_per_run": {
+			"value": [
+				0,
+				1
+			],
+			"type": "range",
+			"unit": "lamps",
+			"source": "Gameplay §4.4, §A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.1 Electric hand lamp: 0-1 a run"
+		},
+		"mine.seam_sight_line_tiles": {
+			"value": [
+				25,
+				40
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.1 Sight lines: Seam pillar roads run straight 25-40 tiles"
+		},
+		"mine.old_workings_sight_max_tiles": {
+			"value": 12,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.1 Sight lines: Old Workings straight runs at most 12 tiles"
+		},
+		"mine.phones_near_gates": {
+			"value": 2,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §6.6, §12.5, §A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.3 Pit phone density (phones on the roads near the gates); name from GEN-10"
+		},
+		"mine.phones_near_gates_path_tiles": {
+			"value": 40,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.6, §12.5, §A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.3 Pit phone density (within 40 tiles of the gates); name from GEN-10"
+		},
+		"mine.phone_cells_per_ring12": {
+			"value": 6,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §6.6, §12.5, §A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.3 Pit phone density (about 1 per 6 cells in rings 1-2); name from GEN-10"
+		},
+		"mine.phone_cells_per_beyond": {
+			"value": 10,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §6.6, §12.5, §A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.3 Pit phone density (1 per 10 cells beyond ring 2); name from GEN-10"
+		},
+		"mine.phones_per_service_room": {
+			"value": 1,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §6.6, §12.5, §A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.3 Pit phone density (one in every substation, first-aid station, fitters' shop and lamp cabin)"
+		},
+		"mine.band_hoard_short": {
+			"value": [
+				100,
+				180
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Moth Hoard; tiles from the shaft, Short list; name from GEN-08"
+		},
+		"mine.band_hoard_standard": {
+			"value": [
+				120,
+				260
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Moth Hoard; tiles from the shaft, Standard list; name from GEN-08"
+		},
+		"mine.band_hoard_full": {
+			"value": [
+				120,
+				260
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Moth Hoard; tiles from the shaft, Full list; name from GEN-08"
+		},
+		"mine.roosts_min": {
+			"value": 2,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §7.2, §8.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Moth Roosts (2-4, the hoard counting as one); name from GEN-10"
+		},
+		"mine.roosts_max": {
+			"value": 4,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §7.2, §8.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Moth Roosts (2-4, the hoard counting as one); name from GEN-10"
+		},
+		"mine.roost_max_from_hoard_tiles": {
+			"value": 60,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, §8.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Moth Roosts; within 60 tiles of the hoard; name from GEN-10"
+		},
+		"mine.coat_heap_near_hoard_tiles": {
+			"value": 80,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Coat heaps; near band round the hoard; name from GEN-10"
+		},
+		"mine.coat_heap_chamber_probability_near": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "probability",
+			"source": "Gameplay §7.2, §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Coat heaps; about half the chambers within 80 tiles of the hoard; name from GEN-10"
+		},
+		"mine.coat_heap_chamber_probability_far": {
+			"value": 0.05,
+			"type": "float",
+			"unit": "probability",
+			"source": "Gameplay §7.2, §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Coat heaps; 5% of chambers elsewhere; name from GEN-10"
+		},
+		"mine.band_lair_short": {
+			"value": [
+				150,
+				250
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Stythe Lair; tiles from the shaft, Short list; name from GEN-08"
+		},
+		"mine.band_lair_standard": {
+			"value": [
+				220,
+				380
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Stythe Lair; tiles from the shaft, Standard list; name from GEN-08"
+		},
+		"mine.band_lair_full": {
+			"value": [
+				220,
+				380
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, §12.5, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Stythe Lair; tiles from the shaft, Full list; name from GEN-08"
+		},
+		"mine.lair_kits": {
+			"value": [
+				1,
+				2
+			],
+			"type": "range",
+			"unit": "kits",
+			"source": "Gameplay §7.4, §8.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Stythe Lair note; 1-2 healing kits in the lair (GEN-09/GEN-10 contents)"
+		},
+		"mine.staple_pit_old_workings_cells_per": {
+			"value": 6,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §8.2, §12.5, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.5 Staple pit: about 1 per 6 Old Workings cells; GEN-10 ticket name"
+		},
+		"mine.staple_pit_min_ring": {
+			"value": 2,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §8.2, §12.5, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.5 Staple pit: ring 2 and deeper; GEN-10 ticket name"
+		},
+		"mine.sump_mud_low_road_cells_per": {
+			"value": 5,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §8.2, §12.5, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.5 Sump mud: about 1 per 5 cells of low road; GEN-10 ticket name"
+		},
+		"mine.sump_mud_min_ring": {
+			"value": 1,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §8.2, §12.5, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.5 Sump mud: ring 1 and deeper; GEN-10 ticket name"
+		},
+		"mine.band_substation_short": {
+			"value": [
+				120,
+				200
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §3.3, §12.5, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Substation distance: Short; GEN-08 ticket name"
+		},
+		"mine.band_substation_standard": {
+			"value": [
+				200,
+				300
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §3.3, §12.5, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Substation distance: Standard; GEN-08 ticket name"
+		},
+		"mine.band_substation_full": {
+			"value": [
+				200,
+				300
+			],
+			"type": "range",
+			"unit": "tiles",
+			"source": "Gameplay §3.3, §12.5, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Substation distance: Full; GEN-08 ticket name"
+		},
+		"mine.band_parts_rings_short": {
+			"value": [
+				1,
+				1
+			],
+			"type": "range",
+			"unit": "ring",
+			"source": "Gameplay §3.3, §12.5, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Parts band: Short, ring 1; GEN-08 ticket name"
+		},
+		"mine.band_parts_rings_standard": {
+			"value": [
+				1,
+				2
+			],
+			"type": "range",
+			"unit": "ring",
+			"source": "Gameplay §3.3, §12.5, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Parts band: Standard, rings 1–2; GEN-08 ticket name"
+		},
+		"mine.band_parts_rings_full": {
+			"value": [
+				1,
+				3
+			],
+			"type": "range",
+			"unit": "ring",
+			"source": "Gameplay §3.3, §12.5, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Parts band: Full, rings 1–3 (drum gear is mine.drum_gear_ring); GEN-08 ticket name"
+		},
+		"mine.ammo_boxes_min": {
+			"value": 0,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §4.7, §12.5, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Revolver availability: 0-2 boxes of 6 in the band (min); unit as written: boxes; ticket GEN-08"
+		},
+		"mine.ammo_boxes_max": {
+			"value": 2,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §4.7, §12.5, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Revolver availability: 0-2 boxes of 6 in the band (max); unit as written: boxes; ticket GEN-08"
+		},
+		"mine.remains_cells_per": {
+			"value": 6,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.5, §A.9",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Remains: about 1 per 6 cells; ticket GEN-10"
+		},
+		"mine.remains_rings": {
+			"value": [
+				1,
+				3
+			],
+			"type": "range",
+			"unit": "rings",
+			"source": "Gameplay §12.5, §A.9",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Remains: in rings 1-3; ticket GEN-10"
+		},
+		"mine.remains_item_chances": {
+			"value": {
+				"lamp": 0.25,
+				"flare": 0.1,
+				"kit": 0.05,
+				"tool": 0.1,
+				"note": 0.1
+			},
+			"type": "table",
+			"unit": "probability",
+			"source": "Gameplay §12.5, §A.9",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Remains: item chances; ticket GEN-10"
+		},
+		"mine.remains_items_max": {
+			"value": 2,
+			"type": "int",
+			"unit": "items",
+			"source": "Gameplay §12.5, §A.9",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Remains: each 0-2 items; ticket GEN-10"
+		},
+		"mine.paraffin_single_rings": {
+			"value": [
+				1,
+				2
+			],
+			"type": "range",
+			"unit": "rings",
+			"source": "Gameplay §12.5, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Single paraffin cans: rings 1-2 (mine.paraffin_max_ring is the planned stores' band)"
+		},
+		"mine.deputy_report_min_ring": {
+			"value": 3,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §12.5, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Old deputy's report: ring 3 and deeper"
+		},
+		"mine.deputy_report_cells_per": {
+			"value": 10,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.5, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Old deputy's report: about 1 per 10 cells"
+		},
+		"mine.deputy_report_max_pages": {
+			"value": 3,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §12.5, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Old deputy's report: at most 3 pages a run, the rest torn-out stubs; unit as written: pages"
+		},
+		"mine.poi_contents_lamp_cabin": {
+			"value": {
+				"gauze_lamps_min": 2,
+				"gauze_lamps_max": 4,
+				"oil_flasks_min": 1,
+				"oil_flasks_max": 2,
+				"paraffin_cans": 1,
+				"pit_phones": 1
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Lamp cabin contents; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.fuel_store_cans_min": {
+			"value": 2,
+			"type": "int",
+			"unit": "cans",
+			"source": "Gameplay §12.4, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Fuel store: 2-4 cans (min); ticket GEN-08"
+		},
+		"mine.fuel_store_cans_max": {
+			"value": 4,
+			"type": "int",
+			"unit": "cans",
+			"source": "Gameplay §12.4, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Fuel store: 2-4 cans (max); ticket GEN-08"
+		},
+		"mine.poi_contents_powder_magazine": {
+			"value": {
+				"flares_min": 2,
+				"flares_max": 3
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Powder magazine; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_electricians_cabin": {
+			"value": {
+				"fuses_min": 2,
+				"fuses_max": 3,
+				"wire_cutters": 1
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Electricians' cabin; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.cell_tiles": {
+			"value": 20,
+			"type": "int",
+			"unit": "tiles",
+			"source": "Gameplay §12.1, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "fixed",
+			"note": "A.11 Cells: 20x20 tiles; mirrors FND-07's world constant"
+		},
+		"mine.target_cell_templates": {
+			"value": 120,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §12.2, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.11 Templates: about 120 cell templates"
+		},
+		"mine.target_poi_templates": {
+			"value": 20,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §12.4, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.11 Templates: about 20 for points of interest"
+		},
+		"mine.target_cell_templates_by_biome": {
+			"value": {
+				"pit_bottom": 12,
+				"seam": 30,
+				"old_workings": 30,
+				"black_seam": 14,
+				"old_mens": 14,
+				"main_road": 20
+			},
+			"type": "table",
+			"unit": "count",
+			"source": "Gameplay §12.2, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.11 Templates: the per-biome split (notes)"
+		},
+		"mine.poi_per_region_min": {
+			"value": 1,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §12.4, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Points of interest: one or two per region (min); ticket GEN-09"
+		},
+		"mine.poi_per_region_max": {
+			"value": 2,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §12.4, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Points of interest: one or two per region (max); ticket GEN-09"
+		},
+		"mine.poi_min_ring": {
+			"value": 1,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §12.1, §12.4, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Points of interest: none in ring 0"
+		},
+		"mine.firedamp_cells_per_ring2": {
+			"value": 4,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Firedamp: about 1 pocket per 4 cells in ring 2; ticket GEN-10"
+		},
+		"mine.firedamp_cells_per_beyond": {
+			"value": 2,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Firedamp: 1 per 2 cells beyond ring 2; ticket GEN-10"
+		},
+		"mine.firedamp_cells_per_black_seam": {
+			"value": 1,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Firedamp: about 1 per cell in the Black Seam; ticket GEN-10"
+		},
+		"mine.firedamp_min_ring": {
+			"value": 2,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Firedamp: pockets from ring 2"
+		},
+		"mine.collapse_cells_per": {
+			"value": 2,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Collapse points: about 1 per 2 cells; ticket GEN-10"
+		},
+		"mine.collapse_min_from_basecamp_tiles": {
+			"value": 20,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Collapse points: beyond 20 tiles of base camp; ticket GEN-10"
+		},
+		"mine.collapse_min_spacing_tiles": {
+			"value": 12,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Collapse points: 12 or more tiles apart; ticket GEN-10"
+		},
+		"mine.collapse_min_path_from_sites_tiles": {
+			"value": 7,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.5, §12.3, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Collapse points: at least 7 tiles by path from base camp, every POI door and every pit phone; ticket GEN-10"
+		},
+		"mine.landmarks_per_cell": {
+			"value": 1,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §12.7, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Landmarks: one per cell"
+		},
+		"mine.landmark_no_repeat_cells": {
+			"value": 2,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §12.7, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.11 Landmarks: never repeated within 2 cells; ticket GEN-10"
+		}
+	}
+}

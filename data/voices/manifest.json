@@ -1,0 +1,619 @@
+{
+	"note": "SND-13 (Gameplay §6.7, §6.8, §7.3, §13.2; GDD §14.2, §14.4): every recorded line. Eight character voices (four women's, four men's, Proposed) each speak every line below in every form; the lampman speaks only above ground (Lamp Check and the first-run line) and never in an illusion. No line is a name, and no player's real voice is ever recorded. copyable_by_tapper marks the five lines CRT-10's illusions copy. Files: client/audio/voices/<voice_id>/<line_id>.<form>.lbv (20 ms Opus); lampman: client/audio/lampman/<line_id>.<form>.ogg. Frame counts and durations: voice_index.json, written by tools/build/voice_import.",
+	"voices": [
+		{
+			"voice_id": "voice_1",
+			"label": "women's 1",
+			"placeholder": true
+		},
+		{
+			"voice_id": "voice_2",
+			"label": "women's 2",
+			"placeholder": true
+		},
+		{
+			"voice_id": "voice_3",
+			"label": "women's 3",
+			"placeholder": true
+		},
+		{
+			"voice_id": "voice_4",
+			"label": "women's 4",
+			"placeholder": true
+		},
+		{
+			"voice_id": "voice_5",
+			"label": "men's 1",
+			"placeholder": true
+		},
+		{
+			"voice_id": "voice_6",
+			"label": "men's 2",
+			"placeholder": true
+		},
+		{
+			"voice_id": "voice_7",
+			"label": "men's 3",
+			"placeholder": true
+		},
+		{
+			"voice_id": "voice_8",
+			"label": "men's 4",
+			"placeholder": true
+		}
+	],
+	"lines": [
+		{
+			"line_id": "moth",
+			"text_key": "callout.moth",
+			"kind": "warning",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "tapping",
+			"text_key": "callout.tapping",
+			"kind": "warning",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "stythe",
+			"text_key": "callout.stythe",
+			"kind": "warning",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "douse",
+			"text_key": "callout.douse",
+			"kind": "order",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": true,
+			"placeholder": true
+		},
+		{
+			"line_id": "light_up",
+			"text_key": "callout.light_up",
+			"kind": "order",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "quiet",
+			"text_key": "callout.quiet",
+			"kind": "order",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "count_off",
+			"text_key": "callout.count_off",
+			"kind": "order",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": true,
+			"placeholder": true
+		},
+		{
+			"line_id": "here",
+			"text_key": "callout.here",
+			"kind": "order",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": true,
+			"placeholder": true
+		},
+		{
+			"line_id": "help",
+			"text_key": "callout.help",
+			"kind": "order",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": true,
+			"placeholder": true
+		},
+		{
+			"line_id": "is_that_you",
+			"text_key": "callout.is_that_you",
+			"kind": "order",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": true,
+			"placeholder": true
+		},
+		{
+			"line_id": "gate",
+			"text_key": "callout.gate",
+			"kind": "order",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "oil",
+			"text_key": "callout.oil",
+			"kind": "order",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "now",
+			"text_key": "callout.now",
+			"kind": "job",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "left",
+			"text_key": "callout.left",
+			"kind": "job",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "right",
+			"text_key": "callout.right",
+			"kind": "job",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "stop",
+			"text_key": "callout.stop",
+			"kind": "job",
+			"forms": [
+				"whisper",
+				"talk",
+				"shout"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "digit_0",
+			"text_key": "voice.digit_0",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "digit_1",
+			"text_key": "voice.digit_1",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "digit_2",
+			"text_key": "voice.digit_2",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "digit_3",
+			"text_key": "voice.digit_3",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "digit_4",
+			"text_key": "voice.digit_4",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "digit_5",
+			"text_key": "voice.digit_5",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "digit_6",
+			"text_key": "voice.digit_6",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "digit_7",
+			"text_key": "voice.digit_7",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "digit_8",
+			"text_key": "voice.digit_8",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "digit_9",
+			"text_key": "voice.digit_9",
+			"kind": "digit",
+			"forms": [
+				"continuing",
+				"final"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "scream",
+			"text_key": "voice.scream",
+			"kind": "miner_sound",
+			"forms": [
+				"take_1"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "scream"
+		},
+		{
+			"line_id": "gasp",
+			"text_key": "voice.gasp",
+			"kind": "miner_sound",
+			"forms": [
+				"take_1"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "cough",
+			"text_key": "voice.cough",
+			"kind": "miner_sound",
+			"forms": [
+				"take_1"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "talk"
+		},
+		{
+			"line_id": "moan",
+			"text_key": "voice.moan",
+			"kind": "miner_sound",
+			"forms": [
+				"take_1"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "whisper"
+		},
+		{
+			"line_id": "panting",
+			"text_key": "voice.panting",
+			"kind": "miner_sound",
+			"forms": [
+				"take_1"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "whisper"
+		},
+		{
+			"line_id": "trapped_cry",
+			"text_key": "voice.trapped_cry",
+			"kind": "miner_sound",
+			"forms": [
+				"take_1"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true,
+			"band": "shout"
+		},
+		{
+			"line_id": "roll_lamp",
+			"text_key": "voice.roll_lamp",
+			"kind": "roll_call",
+			"forms": [
+				"talk"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		},
+		{
+			"line_id": "roll_all_right",
+			"text_key": "voice.roll_all_right",
+			"kind": "roll_call",
+			"forms": [
+				"talk"
+			],
+			"copyable_by_tapper": false,
+			"placeholder": true
+		}
+	],
+	"lampman": {
+		"lines": [
+			{
+				"line_id": "digit_0",
+				"text_key": "lampman.digit_0",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "digit_1",
+				"text_key": "lampman.digit_1",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "digit_2",
+				"text_key": "lampman.digit_2",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "digit_3",
+				"text_key": "lampman.digit_3",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "digit_4",
+				"text_key": "lampman.digit_4",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "digit_5",
+				"text_key": "lampman.digit_5",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "digit_6",
+				"text_key": "lampman.digit_6",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "digit_7",
+				"text_key": "lampman.digit_7",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "digit_8",
+				"text_key": "lampman.digit_8",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "digit_9",
+				"text_key": "lampman.digit_9",
+				"forms": [
+					"continuing",
+					"final"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "remark_moth_smother",
+				"text_key": "lampman.remark.moth_smother",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "remark_drag",
+				"text_key": "lampman.remark.drag",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "remark_pin",
+				"text_key": "lampman.remark.pin",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "remark_blast",
+				"text_key": "lampman.remark.blast",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "remark_blackdamp",
+				"text_key": "lampman.remark.blackdamp",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "remark_roof_fall",
+				"text_key": "lampman.remark.roof_fall",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "remark_hatch",
+				"text_key": "lampman.remark.hatch",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "remark_friendly_hit",
+				"text_key": "lampman.remark.friendly_hit",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "remark_shot_dead",
+				"text_key": "lampman.remark.shot_dead",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			},
+			{
+				"line_id": "first_run",
+				"text_key": "lampman.first_run",
+				"forms": [
+					"one"
+				],
+				"placeholder": true
+			}
+		]
+	}
+}

@@ -1,0 +1,198 @@
+{
+	"expect": "",
+	"units": [
+		"s",
+		"tiles",
+		"px",
+		"count",
+		"share"
+	],
+	"files": {
+		"moth.json": {
+			"domain": "moth",
+			"keys": {
+				"moth.windup_s": {
+					"value": 1.0,
+					"type": "float",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.tell_reach_tiles": {
+					"value": 10,
+					"type": "float",
+					"unit": "tiles",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.wake_ppm_share": {
+					"value": 0.6,
+					"type": "float",
+					"unit": "share",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.lamps": {
+					"value": 3,
+					"type": "int",
+					"unit": "count",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.on": {
+					"value": true,
+					"type": "bool",
+					"unit": "count",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.name_kind": {
+					"value": "brightest",
+					"type": "enum",
+					"unit": "count",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param",
+					"options": [
+						"brightest",
+						"widow"
+					]
+				},
+				"moth.label": {
+					"value": "heap",
+					"type": "string",
+					"unit": "count",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.ints": {
+					"value": [
+						1,
+						2,
+						3
+					],
+					"type": "int_list",
+					"unit": "count",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.floats": {
+					"value": [
+						0.5,
+						1.5
+					],
+					"type": "float_list",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.words": {
+					"value": [
+						"a",
+						"b"
+					],
+					"type": "string_list",
+					"unit": "count",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.window_s": {
+					"value": [
+						2,
+						4
+					],
+					"type": "range",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.per_ring_s": {
+					"value": [
+						60,
+						60,
+						45,
+						30,
+						30
+					],
+					"type": "by_ring",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.per_crew": {
+					"value": [
+						2,
+						3,
+						3,
+						3,
+						3
+					],
+					"type": "by_crew",
+					"unit": "count",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.weights": {
+					"value": {
+						"brightest": 1,
+						"widow": 2
+					},
+					"type": "table",
+					"unit": "share",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				},
+				"moth.client_radius_tiles": {
+					"value": 4,
+					"type": "float",
+					"unit": "tiles",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "client",
+					"kind": "param"
+				}
+			}
+		},
+		"net.json": {
+			"domain": "net",
+			"keys": {
+				"net.tick_hz": {
+					"value": 20,
+					"type": "int",
+					"unit": "count",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "client",
+					"kind": "fixed"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"note": "PLACEHOLDER (SND-13 for its recordings): one lampman remark per FallCause, never naming a variant. RSC-06 owns this bank and writes several lines per cause.",
+	"strings": {
+		"lampman.remark.moth_smother": "'Somebody's lamp drew it down on them. Keep them low.'",
+		"lampman.remark.drag": "'Nobody walks at the back alone.'",
+		"lampman.remark.pin": "'Off the walls when it taps.'",
+		"lampman.remark.blast": "'Naked flame where the gas lies. Gauze lamps, lads.'",
+		"lampman.remark.blackdamp": "'Watch your flame. When it shrinks, you get out.'",
+		"lampman.remark.roof_fall": "'Quiet under bad roof.'",
+		"lampman.remark.hatch": "'Leave the eggs be.'",
+		"lampman.remark.friendly_hit": "'Know what you're shooting at.'",
+		"lampman.remark.shot_dead": "'A gun below does more harm than good.'"
+	}
+}

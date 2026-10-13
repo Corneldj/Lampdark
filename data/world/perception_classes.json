@@ -1,0 +1,23 @@
+{
+	"format": 1,
+	"note": "VIS-03's perception classes by FND-07 entity kind (Gameplay §5.2). size: miner and large arrive as anonymous tokens in the fringe (0.12-0.30); small things need 0.30 and are never tokens; none is never perceived as an entity (gates, doors and collapse points are geometry). footprint: the square of tiles whose brightest seen tile lights a large entity. motionless: a large kind that always shares the motionless token class (the heap of coats); the Moth joins it while the motionless flag is set (asleep). identity_min overrides vision.identity_light_min for a kind. The Tapper itself is none: it lives in the rock and is never sent (CRT-08); only its arm leaves a wall face, as TAPPER_ARM (CRT-09), a small thing seen at 0.30. Tubs and the drum gear have no entity kind yet.",
+	"flags": {
+		"motionless": 1
+	},
+	"classes": {
+		"MINER": {"size": "miner"},
+		"STYTHE": {"size": "miner"},
+		"MOTH": {"size": "large", "footprint": 2},
+		"BESS": {"size": "large", "footprint": 2},
+		"COAT_HEAP": {"size": "large", "motionless": true},
+		"TAPPER": {"size": "none"},
+		"TAPPER_ARM": {"size": "small"},
+		"ITEM": {"size": "small"},
+		"TRAP": {"size": "small"},
+		"PHONE": {"size": "small"},
+		"FIXTURE": {"size": "small"},
+		"GATE": {"size": "none"},
+		"AIR_DOOR": {"size": "none"},
+		"COLLAPSE_POINT": {"size": "none"}
+	}
+}

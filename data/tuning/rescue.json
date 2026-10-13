@@ -1,0 +1,304 @@
+{
+	"domain": "rescue",
+	"keys": {
+		"rescue.clip_fps": {
+			"value": 30,
+			"type": "float",
+			"unit": "fps",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-08"
+		},
+		"rescue.clip_resolution": {
+			"value": [
+				1920,
+				1080
+			],
+			"type": "int_list",
+			"unit": "px",
+			"source": "GDD §14.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-08"
+		},
+		"rescue.clips_enabled": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "GDD §14.3; README cut order 1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-08"
+		},
+		"rescue.coming_round_interval_s": {
+			"value": [
+				60,
+				120
+			],
+			"type": "range",
+			"unit": "s",
+			"source": "Gameplay §11.8, §A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-04"
+		},
+		"rescue.coming_round_window_s": {
+			"value": 8,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.8, §A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-04"
+		},
+		"rescue.crawl_speed": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §11.8, §A.3",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-04"
+		},
+		"rescue.flagged_illusions_per_player": {
+			"value": 3,
+			"type": "float",
+			"unit": "illusions",
+			"source": "Gameplay §9.6, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-08"
+		},
+		"rescue.inquiry_warning_lookback_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-07"
+		},
+		"rescue.kit_use_s": {
+			"value": 5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.5, §A.8",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-02"
+		},
+		"rescue.lamp_check_card_px": {
+			"value": [
+				1920,
+				1080
+			],
+			"type": "int_list",
+			"unit": "px",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-06"
+		},
+		"rescue.lamp_check_public_s": {
+			"value": 120,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §14.3, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-06"
+		},
+		"rescue.lone_heard_hand_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.4, §11.11, §A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-09"
+		},
+		"rescue.replay_window_s": {
+			"value": 15,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.10, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-08"
+		},
+		"rescue.self_rescue_attempts_per_grab": {
+			"value": 1,
+			"type": "float",
+			"unit": "attempts",
+			"source": "Gameplay §11.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-03"
+		},
+		"rescue.self_rescue_chance": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "probability",
+			"source": "Gameplay §11.11, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-03"
+		},
+		"rescue.self_rescue_hold_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.11, §A.8",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-03"
+		},
+		"rescue.self_revive_delay_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.11, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-09"
+		},
+		"rescue.self_revives_per_run": {
+			"value": 1,
+			"type": "float",
+			"unit": "revives",
+			"source": "Gameplay §11.11, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-09"
+		},
+		"rescue.take_item_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.3, §A.8",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-01"
+		},
+		"rescue.unconscious_gain_db": {
+			"value": -12,
+			"type": "float",
+			"unit": "dB",
+			"source": "Gameplay §11.8, §A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-04"
+		},
+		"rescue.unconscious_lowpass_hz": {
+			"value": 800,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-04"
+		},
+		"rescue.watch_delay_s": {
+			"value": 45,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.8, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket RSC-04"
+		},
+		"rescue.window_sight_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §11.8, §A.3",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-04"
+		},
+		"rescue.wipe_lamp_check_wait_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-11"
+		},
+		"rescue.kit_starvation_target_max": {
+			"value": 0.15,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §11.5, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.8 Kit starvation: under 15% of runs (target)"
+		},
+		"rescue.retention_target_share": {
+			"value": 0.8,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §11.8, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.8 Retention: 80% of those unconscious over 10 minutes stay to the end (target)"
+		},
+		"rescue.retention_unconscious_min_s": {
+			"value": 600,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.8, §A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.8 Retention: the 10 minutes unconscious that defines the measured group (target)"
+		},
+		"rescue.outcome_target_unconscious_share": {
+			"value": 0.85,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §3.8, §A.8",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.8 Outcome targets: at least one miner unconscious in 85% of runs (starting value)"
+		},
+		"rescue.outcome_target_left_below_share": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §3.8, §A.8",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.8 Outcome targets: one Left Below in 25% of escapes (starting value)"
+		}
+	}
+}

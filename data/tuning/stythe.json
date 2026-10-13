@@ -1,0 +1,432 @@
+{
+	"domain": "stythe",
+	"keys": {
+		"stythe.apex_lurk_gate_tiles": {
+			"value": 40,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §3.6, §7.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles by path; ticket LFT-09"
+		},
+		"stythe.apex_lurk_tiles": {
+			"value": 40,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, §3.6, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.backbiter_cover_level": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §7.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-17"
+		},
+		"stythe.backbiter_mark_s_by_ring": {
+			"value": [
+				60,
+				60,
+				45,
+				45,
+				45
+			],
+			"type": "by_ring",
+			"unit": "s",
+			"source": "Gameplay §7.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-17"
+		},
+		"stythe.backbiter_point_dist_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.3, §7.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-17"
+		},
+		"stythe.backbiter_points": {
+			"value": 8,
+			"type": "int",
+			"unit": "points",
+			"source": "Gameplay §5.3, §7.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-17"
+		},
+		"stythe.backbiter_points_needed": {
+			"value": 4,
+			"type": "int",
+			"unit": "points",
+			"source": "Gameplay §5.3, §7.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-17"
+		},
+		"stythe.circle_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.circle_speed": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.collect_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.drag_conscious_s": {
+			"value": 20,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.drag_speed": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.electric_snuff_drain_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.flee_tiles": {
+			"value": 10,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.hunting_range_tiles": {
+			"value": 150,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.lair_soot_lung_s": {
+			"value": 120,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.4, §8.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-15"
+		},
+		"stythe.lurk_move_s": {
+			"value": [
+				60,
+				120
+			],
+			"type": "range",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.memory_s": {
+			"value": 45,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.reach_tiles": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.replan_hz": {
+			"value": 4,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.scrape_interval_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.scrape_np": {
+			"value": 9,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.shadow_cooldown_s": {
+			"value": 600,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.4, A.4 (starting value)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-16"
+		},
+		"stythe.shadow_dist_max_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-16"
+		},
+		"stythe.shadow_dist_min_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-16"
+		},
+		"stythe.shadow_max_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-16"
+		},
+		"stythe.shadow_min_group": {
+			"value": 2,
+			"type": "int",
+			"unit": "miners",
+			"source": "Gameplay §7.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-16"
+		},
+		"stythe.shadow_never_nearer_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-16"
+		},
+		"stythe.snuff_interval_territory_s": {
+			"value": 1.6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"stythe.snuff_reach_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.speed": {
+			"value": 3.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.tell_reach_tiles": {
+			"value": 10,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.territory_senses_tiles": {
+			"value": 20,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"stythe.territory_tiles": {
+			"value": 50,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.thin_wall_level": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §7.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-17"
+		},
+		"stythe.wall_level": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §7.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-13"
+		},
+		"stythe.windup_s": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.1, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14"
+		},
+		"stythe.senses_tiles_by_ring": {
+			"value": [
+				8,
+				10,
+				12,
+				14,
+				16
+			],
+			"type": "by_ring",
+			"unit": "tiles",
+			"source": "Gameplay §7.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Stythe senses by ring (territory: stythe.territory_senses_tiles); name from CRT-01"
+		},
+		"stythe.memory_places_by_crew": {
+			"value": [
+				2,
+				3,
+				4,
+				5,
+				6
+			],
+			"type": "by_crew",
+			"unit": "places",
+			"source": "Gameplay §7.1, §7.4, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Stythe memory (places remembered, 1 + crew count); name from CRT-01"
+		},
+		"stythe.snuff_interval_s_by_crew": {
+			"value": [
+				2.0,
+				2.0,
+				1.6,
+				1.6,
+				1.6
+			],
+			"type": "by_crew",
+			"unit": "s",
+			"source": "Gameplay §7.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Stythe snuff interval (territory: stythe.snuff_interval_territory_s); name from CRT-01"
+		}
+	}
+}

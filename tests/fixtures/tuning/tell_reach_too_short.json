@@ -1,0 +1,26 @@
+{
+	"expect": "must be greater than 6",
+	"units": [
+		"s",
+		"tiles",
+		"px",
+		"count",
+		"share"
+	],
+	"files": {
+		"moth.json": {
+			"domain": "moth",
+			"keys": {
+				"moth.tell_reach_tiles": {
+					"value": 6,
+					"type": "float",
+					"unit": "tiles",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				}
+			}
+		}
+	}
+}

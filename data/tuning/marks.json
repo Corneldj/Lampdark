@@ -1,0 +1,72 @@
+{
+	"domain": "marks",
+	"keys": {
+		"marks.cure_priority": {
+			"value": [
+				"infested",
+				"soot_lung",
+				"trap_wound"
+			],
+			"type": "string_list",
+			"unit": "enum",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: order; ticket HAZ-06"
+		},
+		"marks.egg_glow_pulse_hz": {
+			"value": 1,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Proposed (GDD §14.5 cap)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: Hz (below 3); ticket VIS-10"
+		},
+		"marks.rock_touched_illusion_mult": {
+			"value": 2,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §8.3, §7.3, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-06"
+		},
+		"marks.rock_touched_s": {
+			"value": 600,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.3, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-06"
+		},
+		"marks.soot_lung_cough_interval_s": {
+			"value": [
+				20,
+				40
+			],
+			"type": "range",
+			"unit": "s",
+			"source": "Gameplay §8.3, §11.6, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-06"
+		},
+		"marks.kit_cures_per_use": {
+			"value": 1,
+			"type": "int",
+			"unit": "marks",
+			"source": "Gameplay §8.3, §11.5, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.5 Kit cure: one sickness a use"
+		}
+	}
+}

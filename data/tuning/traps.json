@@ -1,0 +1,185 @@
+{
+	"domain": "traps",
+	"keys": {
+		"traps.man_trap_approach_spacing_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-01"
+		},
+		"traps.man_trap_cells_per": {
+			"value": 10,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §8.2, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-01"
+		},
+		"traps.man_trap_free_cutters_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.2, §4.6, §A.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket HAZ-01"
+		},
+		"traps.man_trap_free_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.2, §A.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket HAZ-01"
+		},
+		"traps.man_trap_min_ring": {
+			"value": 2,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §8.2, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-01"
+		},
+		"traps.man_trap_struggle_s": {
+			"value": 15,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.2, §A.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket HAZ-01"
+		},
+		"traps.spring_with_tool_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.2, §A.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket HAZ-01"
+		},
+		"traps.staged_run1_min_ring": {
+			"value": 2,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-01"
+		},
+		"traps.staple_pit_climb_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.2, §11.11, §A.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket HAZ-02"
+		},
+		"traps.staple_pit_free_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.2, §11.3, §A.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket HAZ-02"
+		},
+		"traps.sump_mud_gait_multiplier": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §4.1, §8.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: factor; ticket HAZ-02"
+		},
+		"traps.timber_pin_free_crowbar_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.2, §4.6, §A.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket HAZ-03"
+		},
+		"traps.timber_pin_free_pair_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.2, §A.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket HAZ-03"
+		},
+		"traps.timber_pin_struggle_s": {
+			"value": 20,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.2, §A.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket HAZ-03"
+		},
+		"traps.man_trap_approach_min": {
+			"value": 4,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §7.4, §8.2, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Stythe Man-traps; 4-8 approach traps; name from HAZ-01"
+		},
+		"traps.man_trap_approach_max": {
+			"value": 8,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §7.4, §8.2, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Stythe Man-traps; 4-8 approach traps; name from HAZ-01"
+		},
+		"traps.man_trap_approach_path_min_tiles": {
+			"value": 30,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, §8.2, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Stythe Man-traps; 30-70 tiles by path from the lair; name from HAZ-01"
+		},
+		"traps.man_trap_approach_path_max_tiles": {
+			"value": 70,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.4, §8.2, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Stythe Man-traps; 30-70 tiles by path from the lair; name from HAZ-01"
+		}
+	}
+}

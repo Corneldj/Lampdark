@@ -1,0 +1,184 @@
+{
+	"note": "Hash domains and runtime streams (FND-06). IDs are append-only: never reuse or renumber one; renaming is allowed. Owners register their own entries and may refine the key layout. Generated into native/src/core/generated/hash_domains.h and shared/ids/hash_domains.gd by tools/build/gen_ids.gd.",
+	"domains": [
+		{
+			"name": "gen.socket.open",
+			"id": 1,
+			"owner": "GEN-05",
+			"kind": "hash",
+			"keys": [
+				"edge_x",
+				"edge_y",
+				"edge_axis"
+			]
+		},
+		{
+			"name": "gen.socket.offset",
+			"id": 2,
+			"owner": "GEN-05",
+			"kind": "hash",
+			"keys": [
+				"edge_x",
+				"edge_y",
+				"edge_axis"
+			]
+		},
+		{
+			"name": "gen.socket.width",
+			"id": 3,
+			"owner": "GEN-05",
+			"kind": "hash",
+			"keys": [
+				"edge_x",
+				"edge_y",
+				"edge_axis"
+			]
+		},
+		{
+			"name": "gen.template",
+			"id": 4,
+			"owner": "GEN-05",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"attempt"
+			]
+		},
+		{
+			"name": "gen.biome",
+			"id": 5,
+			"owner": "GEN-06",
+			"kind": "hash",
+			"keys": [
+				"block_x",
+				"block_y"
+			]
+		},
+		{
+			"name": "gen.basecamp",
+			"id": 6,
+			"owner": "GEN-02",
+			"kind": "hash",
+			"keys": []
+		},
+		{
+			"name": "lift.repair_list",
+			"id": 7,
+			"owner": "LFT-03",
+			"kind": "stream",
+			"keys": []
+		},
+		{
+			"name": "creatures.moth",
+			"id": 8,
+			"owner": "CRT-01",
+			"kind": "stream",
+			"keys": [
+				"entity"
+			]
+		},
+		{
+			"name": "creatures.tapper",
+			"id": 9,
+			"owner": "CRT-01",
+			"kind": "stream",
+			"keys": [
+				"entity"
+			]
+		},
+		{
+			"name": "creatures.stythe",
+			"id": 10,
+			"owner": "CRT-01",
+			"kind": "stream",
+			"keys": [
+				"entity"
+			]
+		},
+		{
+			"name": "hands",
+			"id": 11,
+			"owner": "MOD-08",
+			"kind": "stream",
+			"keys": [
+				"entity"
+			]
+		},
+		{
+			"name": "gen.cell_digest",
+			"id": 12,
+			"owner": "GEN-01",
+			"kind": "hash",
+			"keys": [
+				"canonical cell bytes"
+			]
+		},
+		{
+			"name": "light.grid_digest",
+			"id": 13,
+			"owner": "VIS-02",
+			"kind": "hash",
+			"keys": [
+				"sorted cells: coord, values, colour classes"
+			]
+		},
+		{
+			"name": "sound.jitter",
+			"id": 14,
+			"owner": "SND-01",
+			"kind": "hash",
+			"keys": [
+				"event or utterance id",
+				"listener id"
+			]
+		},
+		{
+			"name": "net.input_digest",
+			"id": 15,
+			"owner": "FND-09",
+			"kind": "hash",
+			"keys": [
+				"previous digest as the seed",
+				"tick",
+				"slot",
+				"flags",
+				"packed record",
+				"packed actions"
+			]
+		},
+		{
+			"name": "net.event_order",
+			"id": 16,
+			"owner": "NET-04",
+			"kind": "hash",
+			"keys": [
+				"start tick",
+				"type",
+				"apparent x and y in 1/16 tile",
+				"remaining np, quarter steps",
+				"duration, tenths of a second",
+				"voice id or -1"
+			]
+		},
+		{
+			"name": "net.token",
+			"id": 17,
+			"owner": "NET-04",
+			"kind": "stream",
+			"keys": [
+				"slot"
+			]
+		},
+		{
+			"name": "rescue.self_rescue",
+			"id": 18,
+			"owner": "RSC-03",
+			"kind": "stream",
+			"keys": [
+				"victim entity",
+				"grab id"
+			]
+		}
+	]
+}

@@ -1,0 +1,26 @@
+{
+	"expect": "source must start with",
+	"units": [
+		"s",
+		"tiles",
+		"px",
+		"count",
+		"share"
+	],
+	"files": {
+		"moth.json": {
+			"domain": "moth",
+			"keys": {
+				"moth.a_s": {
+					"value": 1.5,
+					"type": "float",
+					"unit": "s",
+					"source": "somewhere",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,581 @@
+{
+	"domain": "modes",
+	"keys": {
+		"modes.cold_open_end_s": {
+			"value": 20,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §14.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-04"
+		},
+		"modes.cold_open_lamps_on_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §14.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-04"
+		},
+		"modes.cold_open_screams_s": {
+			"value": 8,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §14.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-04"
+		},
+		"modes.cold_open_sit_up_stagger_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-04"
+		},
+		"modes.default_list": {
+			"value": "standard",
+			"type": "string",
+			"unit": "enum",
+			"source": "Gameplay §13.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-03"
+		},
+		"modes.demo_hoard_max_tiles": {
+			"value": 150,
+			"type": "float",
+			"unit": "tiles",
+			"source": "GDD §16.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles from the shaft; ticket STM-13"
+		},
+		"modes.first_use_feel_dark_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-04"
+		},
+		"modes.friendly_hits_to_eject": {
+			"value": 2,
+			"type": "int",
+			"unit": "hits",
+			"source": "Gameplay §13.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-11"
+		},
+		"modes.friends_lobby_max": {
+			"value": 5,
+			"type": "int",
+			"unit": "players",
+			"source": "Gameplay §13.5, A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-03"
+		},
+		"modes.hands_default_friends": {
+			"value": false,
+			"type": "bool",
+			"unit": "flag",
+			"source": "GDD §13.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-03"
+		},
+		"modes.hard_variants_enabled": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "GDD §16.6 (cut 12)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-10"
+		},
+		"modes.hard_variants_max": {
+			"value": 1,
+			"type": "float",
+			"unit": "variants",
+			"source": "Gameplay §13.6, A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-03"
+		},
+		"modes.kick_min_votes": {
+			"value": 2,
+			"type": "float",
+			"unit": "votes",
+			"source": "Gameplay §13.10, A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-11"
+		},
+		"modes.kick_vote_cooldown_s": {
+			"value": 120,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-11"
+		},
+		"modes.kick_vote_window_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-11"
+		},
+		"modes.knock_off_ack_timeout_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-05"
+		},
+		"modes.lamp_number_max": {
+			"value": 999,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-01"
+		},
+		"modes.lamp_number_min": {
+			"value": 100,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-01"
+		},
+		"modes.new_brigade_runs": {
+			"value": 5,
+			"type": "int",
+			"unit": "runs",
+			"source": "Gameplay §10.10, A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-01"
+		},
+		"modes.night_shift_lists": {
+			"value": [
+				"short",
+				"standard"
+			],
+			"type": "string_list",
+			"unit": "enum",
+			"source": "Gameplay §13.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: enum set; ticket MOD-06"
+		},
+		"modes.offline_telemetry_max_age_days": {
+			"value": 30,
+			"type": "int",
+			"unit": "days",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-06"
+		},
+		"modes.page_line_max_words": {
+			"value": 12,
+			"type": "int",
+			"unit": "words",
+			"source": "Gameplay §13.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-02"
+		},
+		"modes.public_join_cutoff_s": {
+			"value": 900,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §13.8; Gameplay A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: s of run time; ticket MOD-09"
+		},
+		"modes.public_places": {
+			"value": 4,
+			"type": "float",
+			"unit": "places",
+			"source": "Gameplay §13.5 (2–4 humans)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-03"
+		},
+		"modes.queue_launch_s": {
+			"value": 45,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §13.8, C.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-09"
+		},
+		"modes.queue_tag_split": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "GDD §13.8, §16.6 (cut 3)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-09"
+		},
+		"modes.queue_widen_rtt_ms": {
+			"value": 150,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §13.8, C.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-09"
+		},
+		"modes.queue_widen_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §13.8, C.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-09"
+		},
+		"modes.replacement_offers": {
+			"value": 3,
+			"type": "float",
+			"unit": "names",
+			"source": "Gameplay §13.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-01"
+		},
+		"modes.roll_call_public_max_s": {
+			"value": 120,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §14.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-04"
+		},
+		"modes.roster_size": {
+			"value": 3,
+			"type": "int",
+			"unit": "miners",
+			"source": "Gameplay §13.2, A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-01"
+		},
+		"modes.staging_illusions_from_s": {
+			"value": [
+				480,
+				0,
+				0,
+				0
+			],
+			"type": "int_list",
+			"unit": "s",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "no illusion before this run time, by stage 1-4; 8:00 in stage 1; ticket DIR-06"
+		},
+		"modes.staging_roost_min_tiles": {
+			"value": [
+				100,
+				0,
+				0,
+				0
+			],
+			"type": "int_list",
+			"unit": "tiles",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "by stage 1-4, 0 means no limit; stages 2-3 Proposed; ticket DIR-06"
+		},
+		"modes.staging_tapper_hunt_from_s": {
+			"value": [
+				240,
+				0,
+				0,
+				0
+			],
+			"type": "int_list",
+			"unit": "s",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "run time before the Tapper may hunt, by stage 1-4; 4:00 in stage 1; ticket DIR-06"
+		},
+		"modes.staging_tapper_start_rings": {
+			"value": [
+				0,
+				1
+			],
+			"type": "range",
+			"unit": "rings",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-06"
+		},
+		"modes.visitors_max": {
+			"value": 3,
+			"type": "int",
+			"unit": "players",
+			"source": "GDD §16.1, C.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-14"
+		},
+		"modes.staging_force_short_list": {
+			"value": [
+				1,
+				0,
+				0,
+				0
+			],
+			"type": "int_list",
+			"unit": "flag",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "by stage 1-4 (index 0 is stage 1); stages 2-3 Proposed; ticket DIR-06"
+		},
+		"modes.staging_stythe_confined": {
+			"value": [
+				1,
+				0,
+				0,
+				0
+			],
+			"type": "int_list",
+			"unit": "flag",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "by stage 1-4; ticket DIR-06"
+		},
+		"modes.staging_no_man_traps_rings_0_1": {
+			"value": [
+				1,
+				0,
+				0,
+				0
+			],
+			"type": "int_list",
+			"unit": "flag",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "by stage 1-4; ticket DIR-06"
+		},
+		"modes.staging_tapper_start_rings_0_1": {
+			"value": [
+				1,
+				0,
+				0,
+				0
+			],
+			"type": "int_list",
+			"unit": "flag",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "by stage 1-4; stages 2-3 Proposed; ticket DIR-06"
+		},
+		"modes.staging_illusion_kinds_all": {
+			"value": [
+				0,
+				0,
+				1,
+				1
+			],
+			"type": "int_list",
+			"unit": "flag",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "0 plain kinds only, 1 all kinds, by stage 1-4; ticket DIR-06"
+		},
+		"modes.staging_defaults_only": {
+			"value": [
+				1,
+				1,
+				1,
+				0
+			],
+			"type": "int_list",
+			"unit": "flag",
+			"source": "Gameplay §10.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "default variants and no run conditions, by stage 1-4; ticket DIR-06"
+		},
+		"modes.friends_lobby_min": {
+			"value": 1,
+			"type": "int",
+			"unit": "players",
+			"source": "Gameplay §1.2, §13.5, §A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.10 Players: 1-5 per lobby (min)"
+		},
+		"modes.target_run_minutes_short": {
+			"value": [
+				40,
+				55
+			],
+			"type": "range",
+			"unit": "min",
+			"source": "Gameplay §3.7, §13.5, §A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.10 Run lengths, crew of four: Short; a target, never a clock"
+		},
+		"modes.target_run_minutes_standard": {
+			"value": [
+				75,
+				100
+			],
+			"type": "range",
+			"unit": "min",
+			"source": "Gameplay §3.7, §13.5, §A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.10 Run lengths, crew of four: Standard; a target, never a clock"
+		},
+		"modes.target_run_minutes_full": {
+			"value": [
+				120,
+				180
+			],
+			"type": "range",
+			"unit": "min",
+			"source": "Gameplay §3.7, §13.5, §A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.10 Run lengths, crew of four: Full 2-3 h; a target, never a clock"
+		},
+		"modes.target_escape_standard_friends": {
+			"value": [
+				0.45,
+				0.55
+			],
+			"type": "range",
+			"unit": "share",
+			"source": "Gameplay §3.8, §A.10",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.10 Escape rates: Standard, four friends"
+		},
+		"modes.target_escape_new_brigade": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §3.8, §A.10",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.10 Escape rates: Standard, New Brigade crews (about)"
+		},
+		"modes.target_escape_short_public": {
+			"value": [
+				0.55,
+				0.65
+			],
+			"type": "range",
+			"unit": "share",
+			"source": "Gameplay §3.8, §A.10",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.10 Escape rates: Short, public"
+		},
+		"modes.target_escape_night_shift_short": {
+			"value": 0.35,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §3.8, §A.10",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.10 Escape rates: Night Shift, Short (about)"
+		},
+		"modes.target_friendly_fire_deaths_max": {
+			"value": 0.15,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §3.8, §A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.10 Friendly-fire deaths: under 15% of runs that find the revolver"
+		}
+	}
+}

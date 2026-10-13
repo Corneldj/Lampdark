@@ -1,0 +1,255 @@
+{
+	"domain": "vision",
+	"keys": {
+		"vision.bite_below_light": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.8 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-10"
+		},
+		"vision.bite_below_light_thin": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.8 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-10"
+		},
+		"vision.bite_range_tiles": {
+			"value": 1,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.8 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-10"
+		},
+		"vision.budget_ms_p99": {
+			"value": 0.8,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed (GDD §15.3)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-03"
+		},
+		"vision.bump_rumble_ms": {
+			"value": 80,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-07"
+		},
+		"vision.cone_deg": {
+			"value": 110,
+			"type": "float",
+			"unit": "deg",
+			"source": "Gameplay §5.3 / A.1 (starting value; Q6 tests 140)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: degrees; ticket VIS-03"
+		},
+		"vision.detail_widen_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-03"
+		},
+		"vision.edge_glow_bucket_deg": {
+			"value": 5,
+			"type": "float",
+			"unit": "deg",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: degrees; ticket VIS-03"
+		},
+		"vision.edge_glow_range_tiles": {
+			"value": 40,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-03"
+		},
+		"vision.feel_bearing_step_deg": {
+			"value": 22.5,
+			"type": "float",
+			"unit": "deg",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: degrees; ticket VIS-07"
+		},
+		"vision.feel_hold_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §5.5, §4.8 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-07"
+		},
+		"vision.felt_target_valid_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "ticket VIS-07"
+		},
+		"vision.held_geometry_cells": {
+			"value": 2,
+			"type": "int",
+			"unit": "cells",
+			"source": "Gameplay §5.10 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-05"
+		},
+		"vision.identity_light_min": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-03"
+		},
+		"vision.los_range_tiles": {
+			"value": 40,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-03"
+		},
+		"vision.margin_budget_ms_p99": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed (GDD §15.3)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-04"
+		},
+		"vision.margin_entity_tiles": {
+			"value": 1,
+			"type": "float",
+			"unit": "tiles",
+			"source": "GDD §5.6 / C.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-04"
+		},
+		"vision.margin_geometry_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "GDD §5.6 / C.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-04"
+		},
+		"vision.min_drawn_level": {
+			"value": 2,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed (GDD §14.1: no painted pure black)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: /255 per channel; ticket VIS-05"
+		},
+		"vision.own_miner_min_exposure": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-05"
+		},
+		"vision.seen_light_min": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-03"
+		},
+		"vision.small_thing_light_min": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-03"
+		},
+		"vision.touch_range_tiles": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.5 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-07"
+		},
+		"vision.trail_light_min": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-03"
+		},
+		"vision.blind_area_deg": {
+			"value": 250,
+			"type": "float",
+			"unit": "deg",
+			"source": "Gameplay §5.3, §A.1",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "A.1 Vision cone: the blind area, drawn black even where lit"
+		}
+	}
+}

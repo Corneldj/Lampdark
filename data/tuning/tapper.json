@@ -1,0 +1,660 @@
+{
+	"domain": "tapper",
+	"keys": {
+		"tapper.arm_hit_radius_tiles": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed (CRT-01: the arm's tip is the Tapper's only body)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.attend_aim_tiles": {
+			"value": 25,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-08"
+		},
+		"tapper.attend_max_tiles": {
+			"value": 40,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-08"
+		},
+		"tapper.attend_min_tiles": {
+			"value": 15,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-08"
+		},
+		"tapper.deaf_not_struck_kinds": {
+			"value": [
+				"panting",
+				"canary",
+				"gasp",
+				"cough",
+				"trapped_cry",
+				"moth_laying",
+				"brood_burst",
+				"bess_whinny",
+				"voice",
+				"callout"
+			],
+			"type": "string_list",
+			"unit": "enum",
+			"source": "Gameplay §7.3; unlisted kinds Proposed",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "SND-02 catalogue ids the Deaf does not hear (voice, callouts, panting, gasps, coughs; Proposed: canary, Moth laying, brood burst, Bess's whinny). Every catalogue id is in exactly one list; ticket CRT-12"
+		},
+		"tapper.deaf_spoil_radius_tiles": {
+			"value": 8,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-12"
+		},
+		"tapper.deaf_struck_kinds": {
+			"value": [
+				"step_walk",
+				"step_run",
+				"step_heavy",
+				"step_stretcher",
+				"step_drum_gear",
+				"flint_click",
+				"lamp_hang_clink",
+				"spanner",
+				"reload_click",
+				"rock_tap",
+				"rail_bang",
+				"tub_rumble",
+				"stone_landing",
+				"carry_knock",
+				"phone_bell",
+				"phone_crank",
+				"hold_bell",
+				"buzzer",
+				"gate",
+				"hammer",
+				"main_switch",
+				"cage_freed",
+				"engine_crank",
+				"engine_running",
+				"backfire",
+				"roof_fall",
+				"staple_pit_crash",
+				"shot",
+				"firedamp_blast",
+				"mantrap_snap",
+				"drag_scrape",
+				"flare_strike",
+				"struggle"
+			],
+			"type": "string_list",
+			"unit": "enum",
+			"note": "SND-02 catalogue ids the Deaf hears. Unlisted in §7.3 and Proposed as struck: drag_scrape, buzzer, main_switch, cage_freed, mantrap_snap, flare_strike, backfire, staple_pit_crash, firedamp_blast, struggle; ticket CRT-12",
+			"source": "Gameplay §7.3; unlisted kinds Proposed",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param"
+		},
+		"tapper.echo_delay_s": {
+			"value": [
+				2,
+				4
+			],
+			"type": "range",
+			"unit": "s",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-12"
+		},
+		"tapper.echo_face_min_offset_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-12"
+		},
+		"tapper.echo_illusion_mult": {
+			"value": 2,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-12"
+		},
+		"tapper.hearing_mult_by_ring": {
+			"value": [
+				0.8,
+				1.0,
+				1.2,
+				1.4,
+				1.6
+			],
+			"type": "by_ring",
+			"unit": "×",
+			"source": "Gameplay §7.1, §6.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Tapper hearing by ring: hears within (np - noise.tapper_threshold) x this, tiles; name from CRT-01"
+		},
+		"tapper.heat_window_s_by_crew": {
+			"value": [
+				90,
+				90,
+				105,
+				120,
+				135
+			],
+			"type": "by_crew",
+			"unit": "s",
+			"source": "Gameplay §7.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Tapper heat map window; name from CRT-01"
+		},
+		"tapper.illusion_base_interval_s": {
+			"value": 90,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_callout_weights": {
+			"value": {
+				"is_that_you": 3,
+				"count_off": 3,
+				"here": 2,
+				"help": 2,
+				"douse": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_countoff_answer_p": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "probability",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: p; ticket CRT-10"
+		},
+		"tapper.illusion_face_max_tiles": {
+			"value": 15,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_face_min_miner_tiles": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, §9.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_gap_gamma_shape": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_guard_radius_tiles": {
+			"value": 10,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §9.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_help_fallen_tiles": {
+			"value": 15,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_kind_min_pull": {
+			"value": {
+				"plain": 30,
+				"taps": 30,
+				"callout": 50,
+				"bell": 50,
+				"numbers": 80,
+				"scream": 80
+			},
+			"type": "table",
+			"unit": "Pull",
+			"source": "Gameplay §7.3 (matches DIR-03's thresholds)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_kind_weights": {
+			"value": {
+				"plain": 6,
+				"taps": 2,
+				"callout": 4,
+				"bell": 1,
+				"numbers": 2,
+				"scream": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_lamp_numbers_enabled": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "GDD §16.6 (cut 6)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_max_s": {
+			"value": 8,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §9.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_next_action_window_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_phone_max_tiles": {
+			"value": 15,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_pull_ref": {
+			"value": 50,
+			"type": "float",
+			"unit": "Pull",
+			"source": "Gameplay §7.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.illusion_scream_per_miner": {
+			"value": 1,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §7.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: per run; ticket CRT-10"
+		},
+		"tapper.illusion_short_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.3, §9.2, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.4 Tapper Illusion limits; most illusions under 3 s (CRT-10 checks at least 80%)"
+		},
+		"tapper.illusion_windup_block_s": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §9.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.line_cooldown_s": {
+			"value": 600,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.3, §9.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-11"
+		},
+		"tapper.line_drop_chance_per_min": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "probability",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: p per minute; ticket CRT-11"
+		},
+		"tapper.line_phone_max_tiles": {
+			"value": 15,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, §9.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-11"
+		},
+		"tapper.line_tapping_max_s": {
+			"value": 8,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (the 8 s illusion cap, §9.2)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-11"
+		},
+		"tapper.listen_pause_s_by_crew": {
+			"value": [
+				3,
+				3,
+				3,
+				2,
+				2
+			],
+			"type": "by_crew",
+			"unit": "s",
+			"source": "Gameplay §7.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Tapper listening pause; name from CRT-01"
+		},
+		"tapper.lure_max_tiles": {
+			"value": 10,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.lure_min_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.lure_np": {
+			"value": 14,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.lure_ring0_max_tiles": {
+			"value": 8,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.4 Tapper Loud lure; only to 8 tiles in ring 0, which follows from its hearing ((14 - 4) x 0.8); checked by QA, code reads the hearing rule"
+		},
+		"tapper.max_pins": {
+			"value": 1,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §7.3, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Tapper Strike; one pin at a time"
+		},
+		"tapper.patrol_dwell_s": {
+			"value": [
+				30,
+				90
+			],
+			"type": "range",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-08"
+		},
+		"tapper.pin_s": {
+			"value": 25,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.pull_spoil_radius_tiles": {
+			"value": 8,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.reach_tiles": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.restrike_delay_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.rhythm_max_gap_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-10"
+		},
+		"tapper.rock_speed": {
+			"value": 3.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-08"
+		},
+		"tapper.search_tap_radius_tiles": {
+			"value": 10,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.silent_pull_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.start_rings": {
+			"value": [
+				1,
+				2
+			],
+			"type": "range",
+			"unit": "rings",
+			"source": "Gameplay §7.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-08"
+		},
+		"tapper.tap_interval_s": {
+			"value": [
+				2,
+				4
+			],
+			"type": "range",
+			"unit": "s",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.tap_min_offset_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.tap_np": {
+			"value": 10,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1 (a rock tap)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.tap_points": {
+			"value": 3,
+			"type": "int",
+			"unit": "points",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.tap_radius_tiles": {
+			"value": 15,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		},
+		"tapper.windup_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.1, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-09"
+		}
+	}
+}

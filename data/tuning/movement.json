@@ -1,0 +1,315 @@
+{
+	"domain": "movement",
+	"keys": {
+		"movement.body_radius": {
+			"value": 0.35,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-01"
+		},
+		"movement.carry_drum_gear_speed": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §4.3 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.carry_fireman_speed": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §4.3 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-13"
+		},
+		"movement.carry_lift_time": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.3 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-13"
+		},
+		"movement.carry_stretcher_speed": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §4.3 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.carry_tub_speed_one": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §4.3 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.carry_tub_speed_two": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §4.3 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.crouch_speed": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §4.1 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-01"
+		},
+		"movement.drum_gear_length": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "GDD §15.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.facing_dead_zone": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: deflection; ticket MNR-15"
+		},
+		"movement.hurt_duration": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.1 / A.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-03"
+		},
+		"movement.input_tap_max": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.8",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-15"
+		},
+		"movement.load_knock_angle": {
+			"value": 45,
+			"type": "float",
+			"unit": "deg",
+			"source": "Gameplay §4.3 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: degrees; ticket MNR-14"
+		},
+		"movement.load_knock_time": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.3 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.load_take_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.load_turn_per_tick": {
+			"value": 15,
+			"type": "float",
+			"unit": "deg",
+			"source": "Gameplay §A.2, GDD §15.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: degrees; ticket MNR-14"
+		},
+		"movement.panting_duration": {
+			"value": 8,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.1 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-02"
+		},
+		"movement.panting_interval": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.1 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-02"
+		},
+		"movement.run_speed": {
+			"value": 5.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §4.1 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-01"
+		},
+		"movement.stamina_drain_rate": {
+			"value": 1,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §4.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: s per s; ticket MNR-02"
+		},
+		"movement.stamina_pool": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.1 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-02"
+		},
+		"movement.stamina_refill_rate": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §4.1 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: s per s; ticket MNR-02"
+		},
+		"movement.step_interval": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §A.2 (event rates)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-01"
+		},
+		"movement.stick_dead_zone": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: deflection; ticket MNR-15"
+		},
+		"movement.stretcher_lay_time": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.4 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.stretcher_length": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "GDD §15.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.stretcher_to_table_time": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.3, §11.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.together_path_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.1 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-01"
+		},
+		"movement.tub_max_cans": {
+			"value": 4,
+			"type": "int",
+			"unit": "cans",
+			"source": "Gameplay §4.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-14"
+		},
+		"movement.walk_speed": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §4.1 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-01"
+		},
+		"movement.wound_gait_multiplier": {
+			"value": 0.8,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §4.1 / A.2 (Hurt or trap wound, −20%)",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: factor; ticket MNR-01"
+		}
+	}
+}

@@ -1,0 +1,209 @@
+class_name RunState
+extends RefCounted
+## The server-only container for one run (NET-01): header, tick counter, entity registry,
+## systems in their stages, sessions, the change feed and tick timings. Nothing here is
+## ever sent to a client; the header holds the run seed (Gameplay §5.10).
+
+class Header:
+	extends RefCounted
+	var run_seed: int = 0
+	var mode: ServerConfig.Mode = ServerConfig.Mode.FRIENDS
+	var offline: bool = false
+	var hash_version: int = 1
+	var tuning_hash: String = ""
+	## FND-08: a state-changing debug command ran (set once, never cleared; telemetry carries it).
+	var debug_tainted: bool = false
+
+
+var header: Header = Header.new()
+## Completed ticks. The tick being run is `tick` while systems run, then it advances.
+var tick: int = 0
+var feed: ChangeFeed = ChangeFeed.new()
+var registry: EntityRegistry = EntityRegistry.new(feed)
+var stages: StageTable = StageTable.new()
+var timer: TickTimer = TickTimer.new()
+## Connected sessions, filled by NET-02.
+var sessions: Dictionary = {}
+## NET-03's input service; systems read each slot's consumed input through input_for().
+var inputs: InputService = null
+## The world, when the run has one (GEN-01, VIS-02); ServerSystems sets them.
+var mine: Mine = null
+var light: LightSystem = null
+var road_graph: RoadGraphService = null
+## VIS-03's seen sets, the only door to NET-04's encoder.
+var vision: VisionSystem = null
+## SND-02's emission point for every sound.
+var noise: NoiseSystem = null
+## MNR-01's miners: positions, facing, gaits, steps.
+var movement: MovementSystem = null
+## NET-04's per-client frames.
+var replication: Replication = null
+## MNR-03's life states, overlays and cues.
+var miner_state: MinerStateSystem = null
+## MNR-04's hands, belts, items in the world and timed actions (server-only).
+var inventory: InventorySystem = null
+## VIS-07's feeling and wall bumps (server-only, but for each owner's own FEEL messages).
+var feel: FeelSystem = null
+## MNR-05's interact ring (server-only, but for each actor's own RING messages).
+var ring: RingSystem = null
+## MNR-06's gauze lamps: state machines and their light (server-only).
+var lamps: LampSystem = null
+## NET-06: the body history and rewinds, the defender rule, the 'Now!' judge. Creature
+## perception, pacing and illusions never read rewind (check_module_deps.sh).
+var rewind: Rewind = null
+var defender: DefenderRule = null
+var now_judge: NowJudge = null
+## CRT-01's creatures: registry, spawner, hunt gate, guards and log (server-only).
+var creatures: CreatureSystem = null
+## DIR-05's crew census and active-hunter cap (server-only).
+var crew: CrewCensus = null
+var cap: ActiveCap = null
+## RSC-03's holds: every grab and trap (server-only).
+var holds: Holds = null
+## RSC-01's falls and bodies (server-only).
+var falls: FallSystem = null
+## LFT-01's base camp state, once base camp's cell is loaded (install it then).
+var base_camp: BaseCampState = null
+## MNR-13's fireman's carry.
+var carry: FiremanCarry = null
+## RSC-02's medbay revival and healing-kit cure.
+var revival: Revival = null
+## VIS-08's flame states.
+var flame_states: FlameStates = null
+## SND-03's audio delivery stage.
+var audio: AudioDelivery = null
+## FND-08's debug channel (DebugServer), dev and QA servers only; null in release.
+var debug: SimSystem = null
+## GEN-15's air doors.
+var air_doors: AirDoorSystem = null
+## VIS-09's overhead tells (the Moth's dust, the Tapper's puffs, bursts); output only.
+var tells: OverheadTells = null
+## SND-04's deafened state.
+var deafen: Deafen = null
+## DIR-04's depth helpers are static (Depth): which ring counts, D, the relax lengths, Level names.
+## True while frozen (knock-off, host migration): only the network stage runs.
+var frozen: bool = false
+var _startup_errors: PackedStringArray = PackedStringArray()
+## Every stream handed out, by domain and keys, so a debug build can script its next draws.
+var _streams: Dictionary = {}
+var _scripted: Dictionary = {}
+
+
+static func create(run_seed: int, mode: ServerConfig.Mode, offline: bool) -> RunState:
+	var run: RunState = RunState.new()
+	run.header.run_seed = run_seed
+	run.header.mode = mode
+	run.header.offline = offline or mode == ServerConfig.Mode.NIGHTSHIFT
+	run.header.hash_version = LbHash.VERSION
+	run.header.tuning_hash = Tuning.content_hash() if Tuning.current.entries.size() > 0 else ""
+	if Tuning.current.has_key(&"net.tick_timing_window"):
+		run.timer = TickTimer.new(Tuning.i(&"net.tick_timing_window"))
+	return run
+
+
+## Registers a system; a missing or clashing (stage, order) is a start-up error.
+func add_system(system: SimSystem) -> bool:
+	var error: String = stages.register(system)
+	if not error.is_empty():
+		_startup_errors.append(error)
+		push_error("RunState: " + error)
+		return false
+	return true
+
+
+func startup_errors() -> PackedStringArray:
+	return _startup_errors
+
+
+## The input consumed this tick for a slot (NET-03), or null before its first input.
+func input_for(slot: int) -> InputBuffer.Consumed:
+	return inputs.input_for(slot) if inputs != null else null
+
+
+## A random stream for one system and entity, from the run seed (FND-06).
+func stream(domain: int, keys: PackedInt64Array) -> LbRng:
+	var rng: LbRng = LbRng.from_seed(LbHash.sub_seed(header.run_seed, domain, keys, 0))
+	var key: String = _stream_key(domain, keys)
+	_streams[key] = rng
+	if _scripted.has(key):
+		var values: PackedInt64Array = _scripted[key]
+		_scripted.erase(key)
+		rng.call(&"script_values", values)
+	return rng
+
+
+## Debug builds only (FND-09, QA-02): the next draws of a stream return these raw values, then
+## it resumes. A stream not yet handed out takes them when it is. Release builds lack
+## LbRng.script_values, so this reports an error and changes nothing.
+func script_rolls(domain: int, keys: PackedInt64Array, values: PackedInt64Array) -> bool:
+	if not ClassDB.class_has_method(&"LbRng", &"script_values"):
+		push_error("RunState.script_rolls: scripted rolls exist only in debug builds")
+		return false
+	var key: String = _stream_key(domain, keys)
+	if _streams.has(key):
+		var rng: LbRng = _streams[key]
+		rng.call(&"script_values", values)
+	else:
+		_scripted[key] = values
+	return true
+
+
+static func _stream_key(domain: int, keys: PackedInt64Array) -> String:
+	return "%d:%s" % [domain, ",".join(Array(keys).map(func(k: int) -> String: return str(k)))]
+
+
+## Runs one full tick: every stage in order, each system timed.
+func run_tick() -> void:
+	feed.begin_tick(tick)
+	var tick_start: int = TickTimer.now_usec()
+	for stage: int in range(1, StageTable.STAGE_COUNT + 1):
+		if stage == StageTable.Stage.LIGHT_PASS_1:
+			_push_mirror()
+		var stage_start: int = TickTimer.now_usec()
+		for system: SimSystem in stages.systems_in(stage):
+			var system_start: int = TickTimer.now_usec()
+			system.tick(self)
+			timer.record(TickTimer.system_key(system), TickTimer.now_usec() - system_start)
+		timer.record(TickTimer.stage_key(stage), TickTimer.now_usec() - stage_start)
+	timer.record(TickTimer.TICK, TickTimer.now_usec() - tick_start)
+	tick += 1
+
+
+## While frozen: pump only the network stage; the tick counter and every timer stand still.
+func run_frozen_pump() -> void:
+	for system: SimSystem in stages.systems_in(StageTable.Stage.RECEIVE):
+		system.tick(self)
+
+
+## The slowest stage of the last window, by p99 (for overrun logs).
+func worst_stage() -> String:
+	var worst: String = ""
+	var worst_usec: int = -1
+	for stage: int in range(1, StageTable.STAGE_COUNT + 1):
+		var usec: int = timer.percentile(TickTimer.stage_key(stage), 99.0)
+		if usec > worst_usec:
+			worst_usec = usec
+			worst = StageTable.stage_name(stage)
+	return worst
+
+
+## SHA-256 over the deterministic state: header, tick, registry, then every system in order.
+func state_hash() -> String:
+	var writer: SimStateWriter = SimStateWriter.new()
+	writer.put_i64(header.run_seed)
+	writer.put_i32(header.mode)
+	writer.put_bool(header.offline)
+	writer.put_i64(header.hash_version)
+	writer.put_i64(tick)
+	registry.write_state(writer)
+	for system: SimSystem in stages.all_systems():
+		if not system.hashed():
+			continue
+		writer.put_string(system.system_name())
+		system.write_state(writer)
+	return writer.sha256_hex()
+
+
+func _push_mirror() -> void:
+	if not registry.push_mirror(tick):
+		push_error("RunState: the native entity mirror refused tick %d" % tick)

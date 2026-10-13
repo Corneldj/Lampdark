@@ -1,0 +1,414 @@
+{
+	"domain": "lift",
+	"keys": {
+		"lift.alone_place_hold_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, §11.11, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket LFT-04"
+		},
+		"lift.alone_work_multiplier": {
+			"value": 2,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §3.3, §11.11, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: × time; ticket LFT-04"
+		},
+		"lift.brake_shoes_parts": {
+			"value": 2,
+			"type": "int",
+			"unit": "parts",
+			"source": "Gameplay §3.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-07"
+		},
+		"lift.brake_shoes_s": {
+			"value": 8,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: s for the job; ticket LFT-07"
+		},
+		"lift.cage_deck_length_tiles": {
+			"value": 5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §3.6, §A.6 (starting value)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-02"
+		},
+		"lift.cage_deck_width_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §3.6, §A.6 (starting value)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-02"
+		},
+		"lift.clutch_run_up_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.6, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-08"
+		},
+		"lift.cord_public_after_s": {
+			"value": 300,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.6, §13.10, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: s of running; ticket LFT-10"
+		},
+		"lift.crank_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.6, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket LFT-08"
+		},
+		"lift.drive_belt_strike_interval_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-07"
+		},
+		"lift.drive_belt_strikes": {
+			"value": 6,
+			"type": "float",
+			"unit": "strikes",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-07"
+		},
+		"lift.drum_gear_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: s, two miners; ticket LFT-07"
+		},
+		"lift.engine_s_per_can": {
+			"value": 300,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.6, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: s of running per can; ticket LFT-08"
+		},
+		"lift.free_cage_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: s, two miners; ticket LFT-07"
+		},
+		"lift.fuel_pour_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, §3.6, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: s per can; ticket LFT-06"
+		},
+		"lift.full_list_enabled": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "GDD §16.6 (cut 11)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-03"
+		},
+		"lift.hold_bell_s": {
+			"value": 20,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.6, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-10"
+		},
+		"lift.list_full_cans": {
+			"value": 6,
+			"type": "int",
+			"unit": "cans",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-03"
+		},
+		"lift.list_full_pool_jobs": {
+			"value": 4,
+			"type": "int",
+			"unit": "jobs",
+			"source": "Gameplay §3.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-03"
+		},
+		"lift.list_short_cans": {
+			"value": 2,
+			"type": "int",
+			"unit": "cans",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-03"
+		},
+		"lift.list_short_pool_jobs": {
+			"value": 0,
+			"type": "int",
+			"unit": "jobs",
+			"source": "Gameplay §3.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-03"
+		},
+		"lift.list_standard_cans": {
+			"value": 4,
+			"type": "int",
+			"unit": "cans",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-03"
+		},
+		"lift.list_standard_pool_jobs": {
+			"value": 2,
+			"type": "int",
+			"unit": "jobs",
+			"source": "Gameplay §3.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-03"
+		},
+		"lift.magneto_s": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket LFT-07"
+		},
+		"lift.now_late_press_grace_ticks": {
+			"value": 3,
+			"type": "int",
+			"unit": "ticks",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-04"
+		},
+		"lift.now_window_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, §3.6, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-04"
+		},
+		"lift.paired_work_keeps_progress": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-04"
+		},
+		"lift.power_fuse_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: s per fuse; ticket LFT-05"
+		},
+		"lift.power_fuses_required": {
+			"value": 3,
+			"type": "float",
+			"unit": "fuses",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-05"
+		},
+		"lift.power_links_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket LFT-05"
+		},
+		"lift.prime_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.6, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket LFT-08"
+		},
+		"lift.ride_s": {
+			"value": 40,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.6, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-10"
+		},
+		"lift.rope_clamps_parts": {
+			"value": 4,
+			"type": "int",
+			"unit": "parts",
+			"source": "Gameplay §3.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-07"
+		},
+		"lift.rope_clamps_s": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.3, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: s for the job; ticket LFT-07"
+		},
+		"lift.shaft_brick_above_m": {
+			"value": 150,
+			"type": "float",
+			"unit": "m",
+			"source": "Gameplay §3.6, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-02"
+		},
+		"lift.shaft_depth_m": {
+			"value": 300,
+			"type": "float",
+			"unit": "m",
+			"source": "Gameplay §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-02"
+		},
+		"lift.solo_excluded_jobs": {
+			"value": [
+				"drum_gear"
+			],
+			"type": "string_list",
+			"unit": "enum",
+			"source": "Gameplay §3.3, §11.11, §13.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: job IDs; ticket LFT-03"
+		},
+		"lift.tank_unit_fills": {
+			"value": 4,
+			"type": "int",
+			"unit": "fills",
+			"source": "Gameplay §3.3, §10.7, A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: lamp fills per tank unit; ticket LFT-06"
+		},
+		"lift.list_always_jobs": {
+			"value": [
+				"power",
+				"fuel",
+				"start"
+			],
+			"type": "string_list",
+			"unit": "enum",
+			"source": "Gameplay §3.3, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Repair lists: the 3 jobs on every list (Start last); list size = these + lift.list_<list>_pool_jobs, so Short 3, Standard 5, Full 7"
+		},
+		"lift.expedition_length_target_min": {
+			"value": [
+				10,
+				25
+			],
+			"type": "range",
+			"unit": "min",
+			"source": "Gameplay §3.5, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.6 Expedition length (target)"
+		}
+	}
+}

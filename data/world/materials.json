@@ -1,0 +1,12 @@
+{
+	"note": "GEN-01's material property table. It must not contradict FND-07's design facts. Proposed rows: timber (no Tapper movement or face use; voice and taps cross), rock taps never cross brick, a shut air door bumps as [timber], fallen roof is ROCK. Server-only.",
+	"materials": {
+		"FLOOR": {"solid": false, "opaque": false, "tapper_moves": false, "tapper_face": false, "voice_crosses": true, "taps_cross": false, "caption_key": ""},
+		"ROCK": {"solid": true, "opaque": true, "tapper_moves": true, "tapper_face": true, "voice_crosses": true, "taps_cross": true, "caption_key": "caption.bump.rock"},
+		"COAL": {"solid": true, "opaque": true, "tapper_moves": true, "tapper_face": true, "voice_crosses": true, "taps_cross": true, "caption_key": "caption.bump.rock"},
+		"BRICK": {"solid": true, "opaque": true, "tapper_moves": false, "tapper_face": false, "voice_crosses": false, "taps_cross": false, "caption_key": "caption.bump.brick"},
+		"TIMBER": {"solid": true, "opaque": true, "tapper_moves": false, "tapper_face": false, "voice_crosses": true, "taps_cross": true, "caption_key": "caption.bump.timber"},
+		"STEEL": {"solid": true, "opaque": true, "tapper_moves": false, "tapper_face": false, "voice_crosses": false, "taps_cross": false, "caption_key": "caption.bump.steel"},
+		"WOODEN_DOOR": {"solid": true, "opaque": true, "tapper_moves": false, "tapper_face": false, "voice_crosses": false, "taps_cross": false, "caption_key": "caption.bump.timber"}
+	}
+}

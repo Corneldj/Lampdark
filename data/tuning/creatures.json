@@ -1,0 +1,276 @@
+{
+	"domain": "creatures",
+	"keys": {
+		"creatures.enabled": {
+			"value": {
+				"moth": 1,
+				"tapper": 1,
+				"stythe": 0
+			},
+			"type": "table",
+			"unit": "flag",
+			"note": "1 on, 0 off; the Stythe is off in M1 (dev); unit as written: flags; ticket CRT-01",
+			"source": "Proposed (dev)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param"
+		},
+		"creatures.guard_horizon_s": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"creatures.guard_moth_path_tiles": {
+			"value": 30,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.1, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"creatures.guard_stythe_dark_path_tiles": {
+			"value": 21,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.1, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"creatures.guard_tapper_rock_path_tiles": {
+			"value": 21,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.1, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"creatures.nav_crawl_open_tile_cost": {
+			"value": 3,
+			"type": "float",
+			"unit": "×",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: × path cost; ticket CRT-02"
+		},
+		"creatures.nav_tapper_crosses_floor": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "Gameplay §7.3 (it passes beneath open floor at rock speed, never beneath a brick-lined one; design ruling 2026-10-12)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-02"
+		},
+		"creatures.nav_tapper_brick_clearance_tiles": {
+			"value": 2,
+			"type": "int",
+			"unit": "tiles",
+			"source": "Proposed (CRT-02: never beneath floor this close to brick, keeping base camp, the upper shaft and the arches beyond it)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-02"
+		},
+		"creatures.nav_keep_loaded_cells": {
+			"value": 4,
+			"type": "int",
+			"unit": "cells",
+			"source": "GDD §15.9 (cells generate within 4 cells of any creature; none of those is evicted)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "fixed",
+			"note": "ticket CRT-02"
+		},
+		"creatures.nav_guard_max_expansions": {
+			"value": 2000,
+			"type": "int",
+			"unit": "nodes",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-02"
+		},
+		"creatures.retreat_s": {
+			"value": 120,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.1, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"creatures.tell_min_reach_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles (must exceed); ticket CRT-01"
+		},
+		"creatures.third_variants_enabled": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "GDD §16.6 (cut 10)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-07"
+		},
+		"creatures.variant_weights_moth": {
+			"value": {
+				"brightest": 1,
+				"widow": 1,
+				"flicker": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Gameplay §8.4 (equal weights)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-07"
+		},
+		"creatures.variant_weights_stythe": {
+			"value": {
+				"unheard": 1,
+				"backbiter": 1,
+				"thin": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Gameplay §8.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-07"
+		},
+		"creatures.variant_weights_tapper": {
+			"value": {
+				"voice": 1,
+				"deaf": 1,
+				"echo": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Gameplay §8.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-07"
+		},
+		"creatures.windup_min_s": {
+			"value": 0.4,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.1 (validation floor)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"creatures.search_time_s_by_ring": {
+			"value": [
+				20,
+				20,
+				30,
+				40,
+				50
+			],
+			"type": "by_ring",
+			"unit": "s",
+			"source": "Gameplay §7.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Search time by ring; name from CRT-01"
+		},
+		"creatures.population_per_kind": {
+			"value": 1,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §7.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "fixed",
+			"note": "A.4 Shared rules/Population: exactly one Moth, one Tapper, one Stythe; nothing spawns a second"
+		},
+		"creatures.hunt_interval_target_crew4_rings01_min": {
+			"value": [
+				10,
+				15
+			],
+			"type": "range",
+			"unit": "min",
+			"source": "Gameplay §10.9, §A.7",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.7 Hunt rarity targets: crew of four in rings 0–1, a hunt every 10–15 min (starting value)"
+		},
+		"creatures.hunt_interval_target_lone_ring2_min": {
+			"value": [
+				3,
+				5
+			],
+			"type": "range",
+			"unit": "min",
+			"source": "Gameplay §10.9, §A.7",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.7 Hunt rarity targets: lone miner in ring 2, every 3–5 min (starting value)"
+		},
+		"creatures.hunt_interval_target_lone_ring3plus_min": {
+			"value": [
+				2,
+				3
+			],
+			"type": "range",
+			"unit": "min",
+			"source": "Gameplay §10.9, §A.7",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.7 Hunt rarity targets: lone miner in ring 3 or deeper, every 2–3 min (starting value)"
+		},
+		"creatures.first_contact_target_min": {
+			"value": 10,
+			"type": "float",
+			"unit": "min",
+			"source": "Gameplay §10.9, §A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.7 First contact: within 10 minutes of pressing Play"
+		},
+		"creatures.first_contact_target_run_s": {
+			"value": 480,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §10.9, §A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.7 First contact: about 8:00 run time (the same target on the run clock)"
+		}
+	}
+}

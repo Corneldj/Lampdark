@@ -1,0 +1,431 @@
+{
+	"domain": "lamp",
+	"keys": {
+		"lamp.burn_factor_closed": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §4.4 (shuttered, slotted, hooked)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.burn_factor_normal": {
+			"value": 1,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.burn_factor_wick_down": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.burn_factor_wick_up": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.can_fill_time": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: s per fill; ticket MNR-07"
+		},
+		"lamp.can_fills": {
+			"value": 4,
+			"type": "int",
+			"unit": "fills",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.candle_relight_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.check_marks": {
+			"value": 4,
+			"type": "float",
+			"unit": "marks",
+			"source": "Gameplay §4.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.douse_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.3, §4.4 (douse and shutter in place)",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.electric_battery": {
+			"value": 360,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-08"
+		},
+		"lamp.electric_hook_radius": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-08"
+		},
+		"lamp.electric_radius": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-08"
+		},
+		"lamp.fill_minutes": {
+			"value": 12,
+			"type": "float",
+			"unit": "min",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: min at normal; ticket MNR-07"
+		},
+		"lamp.flask_pour_time": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.flint_time": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.found_notches_range": {
+			"value": [
+				0,
+				3
+			],
+			"type": "range",
+			"unit": "notches",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.found_oil_range": {
+			"value": [
+				0.25,
+				0.75
+			],
+			"type": "range",
+			"unit": "fills",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.help_duration_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-12"
+		},
+		"lamp.hook_radius": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.3 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.max_notches": {
+			"value": 3,
+			"type": "int",
+			"unit": "notches",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.pass_flame_time": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.pick_up_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.point_duration_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.6, A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-12"
+		},
+		"lamp.point_light": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §6.6, A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-12"
+		},
+		"lamp.point_max_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.6, A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-12"
+		},
+		"lamp.radius_normal": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.radius_wick_down": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.radius_wick_up": {
+			"value": 5.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.seam_drink_by_ring": {
+			"value": [
+				1,
+				1,
+				1.25,
+				1.5,
+				1.5
+			],
+			"type": "by_ring",
+			"unit": "×",
+			"source": "Gameplay §10.7 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.set_down_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1 (set down or hang)",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.share_oil_time": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-07"
+		},
+		"lamp.shutter_time": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.signal_duration_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-12"
+		},
+		"lamp.signal_range_tiles": {
+			"value": 40,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.6, A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-12"
+		},
+		"lamp.slot_swap_time": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.wick_step_time": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.4 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-06"
+		},
+		"lamp.wake_reach_by_wick_tiles": {
+			"value": [
+				0.9,
+				1.4,
+				1.9
+			],
+			"type": "float_list",
+			"unit": "tiles",
+			"source": "Gameplay §4.4, §A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.1 Lamp's 0.60 reach, wick down / normal / up; follows from the falloff, checked by QA"
+		},
+		"lamp.radius_shuttered": {
+			"value": 0,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.4, §5.4, §A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "A.1 Shuttered, belt slot, belt hook: shuttered lamp at any wick"
+		},
+		"lamp.radius_slotted": {
+			"value": 0,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.4, §5.4, §A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "A.1 Shuttered, belt slot, belt hook: lamp in a belt slot at any wick"
+		},
+		"lamp.flint_notch_cost": {
+			"value": 1,
+			"type": "int",
+			"unit": "notches",
+			"source": "Gameplay §4.4, §A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.1 Relighting: one notch a flint relight"
+		},
+		"lamp.flask_fills": {
+			"value": 1,
+			"type": "float",
+			"unit": "fills",
+			"source": "Gameplay §4.4, §A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.1 Oil handling: a flask holds one 12-min fill"
+		}
+	}
+}

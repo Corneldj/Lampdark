@@ -1,0 +1,15 @@
+{
+	"domain": "ui",
+	"keys": {
+		"ui.wheel_radius": {
+			"value": 0.18,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-15: a wheel's radius as a share of the screen's short side; the mouse's distance over it is the pick's distance"
+		}
+	}
+}

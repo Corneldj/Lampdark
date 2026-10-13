@@ -1,0 +1,217 @@
+{
+	"domain": "light",
+	"keys": {
+		"light.brightness_ev": {
+			"value": 0,
+			"type": "float",
+			"unit": "EV",
+			"min": -0.5,
+			"max": 1,
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket UI-06"
+		},
+		"light.cap": {
+			"value": 1,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-02"
+		},
+		"light.core_fraction": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: of radius; ticket VIS-02"
+		},
+		"light.core_value": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-02"
+		},
+		"light.dust_min_light": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"source": "Proposed (\"every lit tile\")",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-09"
+		},
+		"light.edge_glow_strip_tiles": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-06"
+		},
+		"light.edge_value": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-02"
+		},
+		"light.flame_sprite_tiles": {
+			"value": 0.333,
+			"type": "float",
+			"unit": "tiles",
+			"source": "GDD §14.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: tiles across; ticket VIS-06"
+		},
+		"light.flash_build_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §14.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-06"
+		},
+		"light.grid_budget_ms_p99": {
+			"value": 1,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed (GDD §15.3: 2 ms for visibility)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-02"
+		},
+		"light.gutter_radius_mult": {
+			"value": 0.7,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §5.7 / A.1 (radius −30%)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: factor; ticket VIS-08"
+		},
+		"light.lamp_glow_step": {
+			"value": 0,
+			"type": "float",
+			"unit": "step",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "off; steps 1–3; ticket UI-06"
+		},
+		"light.max_flash_hz": {
+			"value": 3,
+			"type": "int",
+			"unit": "Hz",
+			"source": "GDD §14.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-06"
+		},
+		"light.muzzle_flash_reduced_peak": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "share",
+			"source": "GDD §14.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: of peak; ticket VIS-06"
+		},
+		"light.shadow_levels": {
+			"value": 4,
+			"type": "int",
+			"unit": "levels",
+			"source": "Gameplay §5.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: levels (2-bit); ticket VIS-09"
+		},
+		"light.shadow_min_light": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.8",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-09"
+		},
+		"light.shadow_width_tiles": {
+			"value": 1,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket VIS-09"
+		},
+		"light.shrink_rate_per_s": {
+			"value": 0.1,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §5.7 / A.1 (out after 10 s)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: of R per s; ticket VIS-08"
+		},
+		"light.source_peak": {
+			"value": 1,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.2 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket VIS-02"
+		},
+		"light.streamer_lamp_glow_suggestion": {
+			"value": 2,
+			"type": "float",
+			"unit": "step",
+			"source": "Proposed; Q1's stream test sets it (GDD §16.12)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: Lamp Glow step (of UI-06's scale); ticket UI-05"
+		},
+		"light.value_scale": {
+			"value": 1000,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed (fixed point)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "fixed",
+			"note": "unit as written: units per 1.0; ticket VIS-02"
+		}
+	}
+}

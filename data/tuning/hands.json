@@ -1,0 +1,75 @@
+{
+	"domain": "hands",
+	"keys": {
+		"hands.cough_interval_s": {
+			"value": 180,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §13.9, A.10 (\"three minutes or so\")",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-08"
+		},
+		"hands.cough_jitter_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-08"
+		},
+		"hands.follow_max_tiles": {
+			"value": 5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §13.9, A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles by path; ticket MOD-08"
+		},
+		"hands.follow_min_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §13.9, A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles by path; ticket MOD-08"
+		},
+		"hands.grab_freeze_range_tiles": {
+			"value": 12,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §13.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles by path; ticket MOD-08"
+		},
+		"hands.knock_reheading_delay_ms": {
+			"value": 200,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-08"
+		},
+		"hands.switch_nearer_tiles": {
+			"value": 5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §13.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles by path; ticket MOD-08"
+		}
+	}
+}

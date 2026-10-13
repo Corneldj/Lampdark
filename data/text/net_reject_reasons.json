@@ -1,0 +1,12 @@
+{
+	"note": "Placeholder English for each handshake reject reason (NET-02), shown by STM-02's dev lobby and later UI-04. UI-07 moves these to translation keys.",
+	"reasons": {
+		"version_mismatch": "This game is a different version from the host's. Both need the same update.",
+		"full": "That crew is full.",
+		"removed": "You were removed from that crew.",
+		"run_closed": "That run has ended.",
+		"auth_failed": "Steam could not confirm your identity.",
+		"bad_message": "The connection sent something unexpected.",
+		"flavour_mismatch": "That game is a test build, and this one is not (or the other way round)."
+	}
+}

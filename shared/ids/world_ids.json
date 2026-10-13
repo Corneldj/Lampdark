@@ -1,0 +1,134 @@
+{
+	"note": "World units and identifiers shared by C++ and GDScript (FND-07). Material and entity-kind values are saved: append only, never reuse or renumber. Generated into native/src/core/generated/world_ids.h and shared/ids/world_ids.gd by tools/build/gen_ids.gd.",
+	"constants": {
+		"TILE_METRES": 1,
+		"CELL_TILES": 20,
+		"BLOCK_CELLS": 2,
+		"REGION_CELLS": 5,
+		"SHAFT_CENTRE_X2": 20,
+		"SHAFT_CENTRE_Y2": 20,
+		"TILE_STATE_OPEN": 1
+	},
+	"constant_notes": {
+		"SHAFT_CENTRE_X2": "The shaft centre in doubled tile units: (10.0, 10.0), the middle of cell (0,0). It must stay on the half-tile grid.",
+		"TILE_STATE_OPEN": "Bit 0 of a tile's state byte: open, for STEEL gates and WOODEN_DOOR air doors. Other bits are GEN-01's."
+	},
+	"materials": [
+		{
+			"name": "FLOOR",
+			"id": 0,
+			"caption_key": "",
+			"note": "Open tile; never an illusion source"
+		},
+		{
+			"name": "ROCK",
+			"id": 1,
+			"caption_key": "caption.bump.rock",
+			"note": "Shares every rule with COAL; the Tapper lives in it"
+		},
+		{
+			"name": "COAL",
+			"id": 2,
+			"caption_key": "caption.bump.rock",
+			"note": "Shares every rule with ROCK"
+		},
+		{
+			"name": "BRICK",
+			"id": 3,
+			"caption_key": "caption.bump.brick",
+			"note": "The Tapper cannot enter, strike through or speak from it; voice never crosses it"
+		},
+		{
+			"name": "TIMBER",
+			"id": 4,
+			"caption_key": "caption.bump.timber",
+			"note": "Never an illusion source"
+		},
+		{
+			"name": "STEEL",
+			"id": 5,
+			"caption_key": "caption.bump.steel",
+			"note": "A gate: shut stops voice and takes 12 np; open is floor"
+		},
+		{
+			"name": "WOODEN_DOOR",
+			"id": 6,
+			"caption_key": "caption.bump.timber",
+			"note": "An air door: shut blocks light and voice and takes 12 np; open is floor. Bumps as [timber] (GEN-01, Proposed)"
+		}
+	],
+	"entity_kinds": [
+		{
+			"name": "MINER",
+			"id": 1,
+			"owner": "MNR-03",
+			"note": "Player or Hired Hand; a fallen miner stays the same entity"
+		},
+		{
+			"name": "BESS",
+			"id": 2,
+			"owner": "MOD-07"
+		},
+		{
+			"name": "MOTH",
+			"id": 3,
+			"owner": "CRT-03"
+		},
+		{
+			"name": "TAPPER",
+			"id": 4,
+			"owner": "CRT-08"
+		},
+		{
+			"name": "STYTHE",
+			"id": 5,
+			"owner": "CRT-13"
+		},
+		{
+			"name": "ITEM",
+			"id": 6,
+			"owner": "MNR-04"
+		},
+		{
+			"name": "FIXTURE",
+			"id": 7,
+			"owner": "LFT-01"
+		},
+		{
+			"name": "GATE",
+			"id": 8,
+			"owner": "LFT-02"
+		},
+		{
+			"name": "AIR_DOOR",
+			"id": 9,
+			"owner": "GEN-15"
+		},
+		{
+			"name": "PHONE",
+			"id": 10,
+			"owner": "LFT-12"
+		},
+		{
+			"name": "TRAP",
+			"id": 11,
+			"owner": "HAZ-01"
+		},
+		{
+			"name": "COAT_HEAP",
+			"id": 12,
+			"owner": "CRT-03"
+		},
+		{
+			"name": "COLLAPSE_POINT",
+			"id": 13,
+			"owner": "HAZ-03"
+		},
+		{
+			"name": "TAPPER_ARM",
+			"id": 14,
+			"owner": "CRT-09",
+			"note": "The Tapper's arm out of a wall face, only in WindUp, Pin and ReStrike: the only part of it ever seen or hit"
+		}
+	]
+}

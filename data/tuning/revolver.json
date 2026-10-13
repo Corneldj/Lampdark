@@ -1,0 +1,134 @@
+{
+	"domain": "revolver",
+	"keys": {
+		"revolver.box_rounds": {
+			"value": 6,
+			"type": "int",
+			"unit": "rounds",
+			"source": "Gameplay §4.7 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.cylinder_rounds": {
+			"value": 6,
+			"type": "int",
+			"unit": "rounds",
+			"source": "Gameplay §4.7 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.deafen_radius": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.7 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.draw_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.7 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.fire_interval": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.7 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.flash_duration": {
+			"value": 0.1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.7, §5.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.flash_peak": {
+			"value": 1,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §4.7, §5.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.flash_radius": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.7, §5.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.partial_hit_reset": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.7, §7.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.range": {
+			"value": 20,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.7, §7.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.reload_per_round": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.7 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		},
+		"revolver.retreat_thresholds": {
+			"value": [
+				3,
+				4,
+				6,
+				9,
+				13,
+				18,
+				24,
+				31
+			],
+			"type": "int_list",
+			"unit": "hits",
+			"source": "Gameplay §4.7, §7.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-16"
+		}
+	}
+}

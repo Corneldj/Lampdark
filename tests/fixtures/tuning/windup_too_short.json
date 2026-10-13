@@ -1,0 +1,26 @@
+{
+	"expect": "below min 0.4",
+	"units": [
+		"s",
+		"tiles",
+		"px",
+		"count",
+		"share"
+	],
+	"files": {
+		"moth.json": {
+			"domain": "moth",
+			"keys": {
+				"moth.windup_s": {
+					"value": 0.39,
+					"type": "float",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				}
+			}
+		}
+	}
+}

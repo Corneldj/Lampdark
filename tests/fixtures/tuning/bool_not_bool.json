@@ -1,0 +1,26 @@
+{
+	"expect": "true or false",
+	"units": [
+		"s",
+		"tiles",
+		"px",
+		"count",
+		"share"
+	],
+	"files": {
+		"moth.json": {
+			"domain": "moth",
+			"keys": {
+				"moth.flag_on": {
+					"value": 1,
+					"type": "bool",
+					"unit": "count",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				}
+			}
+		}
+	}
+}

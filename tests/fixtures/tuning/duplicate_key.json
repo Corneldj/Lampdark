@@ -1,0 +1,40 @@
+{
+	"expect": "duplicate key",
+	"units": [
+		"s",
+		"tiles",
+		"px",
+		"count",
+		"share"
+	],
+	"files": {
+		"moth.json": {
+			"domain": "moth",
+			"keys": {
+				"moth.a_s": {
+					"value": 1.5,
+					"type": "float",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				}
+			}
+		},
+		"stythe.json": {
+			"domain": "stythe",
+			"keys": {
+				"moth.a_s": {
+					"value": 1.5,
+					"type": "float",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				}
+			}
+		}
+	}
+}

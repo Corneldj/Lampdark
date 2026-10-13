@@ -1,0 +1,37 @@
+{
+	"game": {
+		"version": "0.1.0"
+	},
+	"milestone": "M1",
+	"engine": {
+		"version": "4.7.2-stable",
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"source": "https://github.com/godotengine/godot-builds/releases/tag/4.7.2-stable",
+		"sha512": {
+			"Godot_v4.7.2-stable_linux.x86_64.zip": "9aa00f7a605200940bce3027a567b782f49bd8e940dd06ae9e987bd65aee1b1467edd56ed84fcdcbdd44354bf613bdbb4e5d2913e925850368e150c59ed54c65",
+			"Godot_v4.7.2-stable_win64.exe.zip": "83decd58fdf67b9d657958a1ae6bf1929c20785315a81effe245874cdc57acb709bf868e00778a96984338c1b29dafdb453c6847747694621c6ecf5da2259993",
+			"Godot_v4.7.2-stable_export_templates.tpz": "ca4d71c4d7b81dfc15d1a98baa07534aa95b03fdda78a0075b06672e1648d2e5f40980c9adc28d23e1b92e732ee7bf3461997aa804af74ec2fcd7a93ccb84079"
+		}
+	},
+	"gut": {
+		"version": "9.7.1",
+		"path": "addons/gut",
+		"source": "https://github.com/bitwes/Gut/archive/refs/tags/v9.7.1.tar.gz",
+		"sha512": "c4c609944b0853942bfe4ed47162503651ae1246e3eec740e4432e0786bd48781783ce2c05bcd7a4fb52d29d60866af8175226b88c9725eb938d06f426d2c5a5"
+	},
+	"godot_cpp": {
+		"tag": "10.0.0-stable",
+		"godot_cpp_ref": "507ed9d840c01a3c5b2a39af8bb4000bfac30bf5",
+		"api_version": "4.7",
+		"path": "native/godot-cpp",
+		"source": "https://github.com/godotengine/godot-cpp"
+	},
+	"doctest": {
+		"version": "2.5.3",
+		"path": "native/thirdparty/doctest/doctest.h",
+		"source": "https://github.com/doctest/doctest/releases/tag/v2.5.3"
+	}
+}

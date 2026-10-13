@@ -1,0 +1,16 @@
+{
+	"note": "SND-13: the lampman's digits and first-run line (GDD §14.4). Above ground only.",
+	"strings": {
+		"lampman.digit_0": "'Oh'",
+		"lampman.digit_1": "'One'",
+		"lampman.digit_2": "'Two'",
+		"lampman.digit_3": "'Three'",
+		"lampman.digit_4": "'Four'",
+		"lampman.digit_5": "'Five'",
+		"lampman.digit_6": "'Six'",
+		"lampman.digit_7": "'Seven'",
+		"lampman.digit_8": "'Eight'",
+		"lampman.digit_9": "'Nine'",
+		"lampman.first_run": "'One lamp's worth a dozen men below. Keep it low by the coats, and keep talking.'"
+	}
+}

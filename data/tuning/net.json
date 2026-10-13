@@ -1,0 +1,971 @@
+{
+	"domain": "net",
+	"keys": {
+		"net.about_turn_held_geometry_frames": {
+			"value": 1,
+			"type": "int",
+			"unit": "frames",
+			"source": "GDD §15.3, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 About-turn: held geometry drawn the next frame (M1 criterion 4)"
+		},
+		"net.ack_history_frames": {
+			"value": 32,
+			"type": "int",
+			"unit": "frames",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-04"
+		},
+		"net.backend_session_ttl_s": {
+			"value": 3600,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-10"
+		},
+		"net.bundle_fetch_timeout_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-14"
+		},
+		"net.clock_sync_interval_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-02"
+		},
+		"net.cloud_runs_kept": {
+			"value": 4,
+			"type": "int",
+			"unit": "runs",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-05"
+		},
+		"net.connection_timeout_s": {
+			"value": 5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (when a silent client counts as dropped)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-02"
+		},
+		"net.correction_blend_ms": {
+			"value": 100,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-05"
+		},
+		"net.correction_snap_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-05"
+		},
+		"net.defender_max_ms": {
+			"value": 150,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.2, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-06"
+		},
+		"net.dev_port": {
+			"value": 24600,
+			"type": "int",
+			"unit": "port",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-02"
+		},
+		"net.down_budget_kbps": {
+			"value": 64,
+			"type": "int",
+			"unit": "kbps",
+			"source": "GDD §15.3 (voice excluded)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-04"
+		},
+		"net.down_burst_bytes": {
+			"value": 2400,
+			"type": "int",
+			"unit": "bytes",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-04"
+		},
+		"net.drain_deadline_s": {
+			"value": 3600,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (a Short run is 40–55 min for four, Gameplay §1.2)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-09"
+		},
+		"net.empty_server_linger_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-04"
+		},
+		"net.emu_jitter_ms": {
+			"value": 10,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-12"
+		},
+		"net.emu_loss": {
+			"value": 0.02,
+			"type": "float",
+			"unit": "×",
+			"source": "GDD §15.13",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: ratio; ticket NET-12"
+		},
+		"net.emu_rtt_max_ms": {
+			"value": 250,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.13",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-12"
+		},
+		"net.emu_rtt_min_ms": {
+			"value": 40,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.13",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-12"
+		},
+		"net.extrapolate_max_ms": {
+			"value": 50,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-05"
+		},
+		"net.handshake_timeout_s": {
+			"value": 5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-02"
+		},
+		"net.health_tick_stale_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-09"
+		},
+		"net.host_hold_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §13.11; GDD §15.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-10"
+		},
+		"net.input_buffer_max_ticks": {
+			"value": 8,
+			"type": "int",
+			"unit": "ticks",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-03"
+		},
+		"net.input_buffer_target_ticks": {
+			"value": 1,
+			"type": "int",
+			"unit": "ticks",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "target",
+			"note": "ticket NET-03"
+		},
+		"net.input_clock_nudge_max": {
+			"value": 0.05,
+			"type": "float",
+			"unit": "×",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: ratio; ticket NET-03"
+		},
+		"net.input_redundancy": {
+			"value": 3,
+			"type": "int",
+			"unit": "inputs",
+			"source": "GDD §15.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-03"
+		},
+		"net.input_repeat_ms": {
+			"value": 200,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.2; Gameplay §13.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-03"
+		},
+		"net.input_stamp_grace_ms": {
+			"value": 250,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-03: shown_tick may lie RTT + interpolation + this far back"
+		},
+		"net.instance_tick_load_share": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "share",
+			"source": "GDD §15.3, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Runs per instance: sized at 60% of the tick"
+		},
+		"net.instance_vcpus": {
+			"value": 4,
+			"type": "int",
+			"unit": "count",
+			"source": "GDD §15.3, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Runs per instance: a 4-vCPU instance; unit as written: vCPUs"
+		},
+		"net.interp_delay_ms": {
+			"value": 100,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-05"
+		},
+		"net.invite_code_length": {
+			"value": 6,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-02"
+		},
+		"net.knock_off_wall_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket QA-03"
+		},
+		"net.light_edge_worst_ms": {
+			"value": {
+				"rtt_120_ms": 175,
+				"rtt_200_ms": 255
+			},
+			"type": "table",
+			"unit": "ms",
+			"source": "GDD §15.3, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Light edge latency: worst case by round trip"
+		},
+		"net.load_plan_players": {
+			"value": 5000,
+			"type": "int",
+			"unit": "players",
+			"source": "GDD §15.10, §16.2, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Concurrent load: 5,000 concurrent players"
+		},
+		"net.load_plan_run_hours_month": {
+			"value": [
+				900000,
+				1200000
+			],
+			"type": "range",
+			"unit": "count",
+			"source": "GDD §15.10, §16.2, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Concurrent load: 0.9-1.2M run-hours a month; unit as written: run-hours"
+		},
+		"net.load_plan_runs": {
+			"value": [
+				1250,
+				1670
+			],
+			"type": "range",
+			"unit": "runs",
+			"source": "GDD §15.10, §16.2, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Concurrent load: 1,250-1,670 concurrent runs"
+		},
+		"net.local_server_ready_timeout_s": {
+			"value": 20,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-04"
+		},
+		"net.migration_attack_grace_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §15.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-10"
+		},
+		"net.migration_gutter_s": {
+			"value": [
+				5,
+				10
+			],
+			"type": "range",
+			"unit": "s",
+			"source": "GDD §15.10, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Host migration: 5-10 s of guttering"
+		},
+		"net.migration_reconnect_deadline_s": {
+			"value": 8,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (keeps the gap within 5–10 s)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-10"
+		},
+		"net.migration_silence_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §15.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-10"
+		},
+		"net.migration_snapshot_interval_s": {
+			"value": 5,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §15.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-10"
+		},
+		"net.priority_age_gain": {
+			"value": 1,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: per tick; ticket NET-04"
+		},
+		"net.private_host_upload_kbps": {
+			"value": 2000,
+			"type": "int",
+			"unit": "kbps",
+			"source": "GDD §15.10, §C.12 (\"about 2 Mbps\")",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-04"
+		},
+		"net.private_host_upload_mbps": {
+			"value": 2,
+			"type": "float",
+			"unit": "Mbps",
+			"source": "GDD §15.10 (a budget)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-10"
+		},
+		"net.probe_about_turn_deg": {
+			"value": 90,
+			"type": "float",
+			"unit": "deg",
+			"source": "Proposed (what counts as an about-turn)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: °; ticket NET-12"
+		},
+		"net.probe_about_turn_p95_ms": {
+			"value": 150,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.3, §16.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "target",
+			"note": "ticket NET-12"
+		},
+		"net.probe_light_to_contents_p95_ms": {
+			"value": 150,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §16.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "target",
+			"note": "ticket NET-12"
+		},
+		"net.probe_mouth_to_ear_ms": {
+			"value": 250,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-12"
+		},
+		"net.probe_reference_rtt_ms": {
+			"value": 120,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.3, §16.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-12"
+		},
+		"net.public_retake_window_s": {
+			"value": 180,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §13.11, §A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-11"
+		},
+		"net.rate_callouts_per_s": {
+			"value": 4,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: messages a second; ticket NET-13"
+		},
+		"net.rate_ring_choices_per_s": {
+			"value": 10,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: messages a second; ticket NET-13"
+		},
+		"net.record_buffer_estimate_mb": {
+			"value": 25,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.3, §15.7, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Run record: the rolling 10-minute buffer is about 25 MB (within net.record_memory_mb)"
+		},
+		"net.record_event_window_s": {
+			"value": 15,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §15.3, §15.7; Gameplay §11.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-07"
+		},
+		"net.record_keyframe_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §15.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-07"
+		},
+		"net.record_memory_mb": {
+			"value": 48,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-07"
+		},
+		"net.record_tail_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-07"
+		},
+		"net.record_window_s": {
+			"value": 600,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §15.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-07"
+		},
+		"net.report_band_window_s": {
+			"value": 300,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-08"
+		},
+		"net.rewind_history_ticks": {
+			"value": 10,
+			"type": "int",
+			"unit": "ticks",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-06"
+		},
+		"net.rewind_max_ms": {
+			"value": 150,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.2, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-06"
+		},
+		"net.run_heartbeat_timeout_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-10"
+		},
+		"net.run_memory_mb": {
+			"value": 192,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9, C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "ticket QA-03"
+		},
+		"net.run_memory_parts_mb": {
+			"value": {
+				"cells": 80,
+				"sim": 32,
+				"clients": 32
+			},
+			"type": "table",
+			"unit": "MB",
+			"note": "the run record's 48 MB is net.record_memory_mb (NET-07); ticket QA-03",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target"
+		},
+		"net.runs_per_instance_best": {
+			"value": 40,
+			"type": "int",
+			"unit": "runs",
+			"source": "GDD §15.3, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Runs per instance: 40 at best"
+		},
+		"net.runs_per_instance_max": {
+			"value": 24,
+			"type": "int",
+			"unit": "runs",
+			"source": "GDD §15.3, §C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "C.12 Runs per instance: 20-24 at 60% of the tick (max)"
+		},
+		"net.runs_per_instance_min": {
+			"value": 20,
+			"type": "int",
+			"unit": "runs",
+			"source": "GDD §15.3, C.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "unit as written: runs at 60% of the tick; ticket QA-03"
+		},
+		"net.save_budget_diff_log_mb": {
+			"value": 8,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-09"
+		},
+		"net.save_budget_map_table_mb": {
+			"value": 4,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-09"
+		},
+		"net.save_budget_mb": {
+			"value": 50,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-09"
+		},
+		"net.save_budget_pocket_books_mb": {
+			"value": 6,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-09"
+		},
+		"net.save_budget_snapshot_mb": {
+			"value": 2,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-09"
+		},
+		"net.save_budget_windows_mb": {
+			"value": 30,
+			"type": "int",
+			"unit": "MB",
+			"source": "GDD §15.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-09"
+		},
+		"net.sdr_virtual_port": {
+			"value": 0,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed (one listen socket per server)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-03"
+		},
+		"net.server_memory_limit_mb": {
+			"value": 256,
+			"type": "int",
+			"unit": "MB",
+			"source": "Proposed (the run budget of 192 MB, GDD §15.3, plus headroom)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-09"
+		},
+		"net.server_runs_per_process": {
+			"value": 10,
+			"type": "int",
+			"unit": "runs",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-09"
+		},
+		"net.snapshot_interval_s": {
+			"value": 30,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §13.11, §A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-09"
+		},
+		"net.suspend_detect_gap_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-07"
+		},
+		"net.telemetry_band_retention_days": {
+			"value": 90,
+			"type": "int",
+			"unit": "days",
+			"source": "GDD §15.6, C.12 (subject to legal review)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket QA-04"
+		},
+		"net.telemetry_illusion_fall_window_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §15.12, §16.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket QA-04"
+		},
+		"net.telemetry_lost_time_stretch_s": {
+			"value": 180,
+			"type": "float",
+			"unit": "s",
+			"source": "GDD §15.12 (starting definition)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket QA-04"
+		},
+		"net.tick_budget_ms_p99": {
+			"value": 5,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-01"
+		},
+		"net.tick_budget_road_graph_ms": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-01"
+		},
+		"net.tick_budget_visibility_ms": {
+			"value": 2,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-01"
+		},
+		"net.tick_hz": {
+			"value": 20,
+			"type": "int",
+			"unit": "Hz",
+			"source": "GDD §15.2, §C.12 (fixed, not a starting value)",
+			"starting": false,
+			"visibility": "client",
+			"kind": "fixed",
+			"note": "ticket NET-01"
+		},
+		"net.tick_max_catchup": {
+			"value": 3,
+			"type": "int",
+			"unit": "ticks",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-01"
+		},
+		"net.tick_overrun_late_ms": {
+			"value": 5,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed (NET-01: a tick starting more than this late is logged as an overrun)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-01"
+		},
+		"net.tick_timing_window": {
+			"value": 1200,
+			"type": "int",
+			"unit": "ticks",
+			"source": "Proposed (60 s)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-01"
+		},
+		"net.token_reuse_cooldown_frames": {
+			"value": 64,
+			"type": "int",
+			"unit": "frames",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-04"
+		},
+		"net.unreliable_max_bytes": {
+			"value": 1200,
+			"type": "int",
+			"unit": "bytes",
+			"source": "Proposed (below common path MTUs)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket NET-02"
+		},
+		"net.up_budget_kbps": {
+			"value": 16,
+			"type": "int",
+			"unit": "kbps",
+			"source": "GDD §15.3 (voice excluded)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket NET-03"
+		},
+		"net.violation_report_per_min": {
+			"value": 20,
+			"type": "float",
+			"unit": "per_min",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: violations a minute; ticket NET-13"
+		}
+	}
+}

@@ -1,0 +1,300 @@
+{
+	"domain": "hazards",
+	"keys": {
+		"hazards.blackdamp_exposure_decay_per_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "×",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: s per s; ticket HAZ-05"
+		},
+		"hazards.blackdamp_flame_recovery_per_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "×",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: s per s; ticket HAZ-05"
+		},
+		"hazards.blackdamp_hurt_s": {
+			"value": 5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §5.7, §11.1 / A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-05"
+		},
+		"hazards.blackdamp_road_max_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.5 / A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles of road; ticket HAZ-05"
+		},
+		"hazards.blackdamp_road_min_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.5 / A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles of road; ticket HAZ-05"
+		},
+		"hazards.blackdamp_unconscious_s": {
+			"value": 15,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §5.7, §11.1 / A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-05"
+		},
+		"hazards.blast_hurt_tiles": {
+			"value": 7,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.7 / A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-04"
+		},
+		"hazards.blast_unconscious_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.7 / A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-04"
+		},
+		"hazards.collapse_blast_trigger_tiles": {
+			"value": 7,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-03"
+		},
+		"hazards.collapse_creak_interval_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-03"
+		},
+		"hazards.collapse_creak_s": {
+			"value": 5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §12.5, §A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-03"
+		},
+		"hazards.collapse_hurt_edge_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §8.2, §12.5, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-03"
+		},
+		"hazards.collapse_pin_edge_tiles": {
+			"value": 1,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §8.2, §12.5, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-03"
+		},
+		"hazards.condition_weights": {
+			"value": {
+				"quiet_seam": 0.03,
+				"dry_stores": 0.03,
+				"restless_moth": 0.03
+			},
+			"type": "table",
+			"unit": "probability",
+			"source": "Gameplay §8.4 (2–5% each); 0.03 is Proposed",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: p per run; ticket HAZ-07"
+		},
+		"hazards.conditions_enabled": {
+			"value": true,
+			"type": "bool",
+			"unit": "flag",
+			"source": "GDD §16.6 (cut 7)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-07"
+		},
+		"hazards.dry_stores_factor": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §8.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-07"
+		},
+		"hazards.firedamp_flare_up_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §5.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-04"
+		},
+		"hazards.firedamp_hiss_range_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-04"
+		},
+		"hazards.firedamp_pocket_max_tiles": {
+			"value": 8,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.5 / A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles across; ticket HAZ-04"
+		},
+		"hazards.firedamp_pocket_min_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.5 / A.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles across; ticket HAZ-04"
+		},
+		"hazards.gas_pocket_min_gap_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-04"
+		},
+		"hazards.gob_fire_radius": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.4 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-04"
+		},
+		"hazards.max_conditions_per_run": {
+			"value": 1,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §8.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-07"
+		},
+		"hazards.note_fact_weights": {
+			"value": {
+				"moth": 1,
+				"tapper": 1,
+				"stythe": 1,
+				"condition": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-08"
+		},
+		"hazards.note_falsify_p": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "probability",
+			"source": "Gameplay §8.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: p; ticket HAZ-08"
+		},
+		"hazards.note_max_words": {
+			"value": 30,
+			"type": "int",
+			"unit": "words",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-08"
+		},
+		"hazards.note_rumour_count": {
+			"value": [
+				2,
+				3
+			],
+			"type": "range",
+			"unit": "notes",
+			"source": "Gameplay §8.4, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-08"
+		},
+		"hazards.condition_chance_range": {
+			"value": [
+				0.02,
+				0.05
+			],
+			"type": "range",
+			"unit": "probability",
+			"source": "Gameplay §8.4, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.4 Shared rules/Run conditions: each entry of hazards.condition_weights must lie in 2-5% a run"
+		}
+	}
+}

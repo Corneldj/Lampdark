@@ -1,0 +1,5617 @@
+{
+	"voices": {
+		"voice_1": {
+			"cough.take_1": {
+				"frames": 78,
+				"samples": 74400,
+				"duration_s": 1.55,
+				"band": "talk",
+				"lufs": -26.15,
+				"max_frame_rms_dbfs": -18.69,
+				"sha256": "305122bf294c0aae5a9335f41672fdd4ca0aa8bba872b9e59f5ba680e3e6f86c"
+			},
+			"count_off.shout": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "shout",
+				"lufs": -16.35,
+				"max_frame_rms_dbfs": -10.28,
+				"sha256": "a115db619066bdcab7cb702035db3b55a957a6c60ae9ac7363d61427b169f4df"
+			},
+			"count_off.talk": {
+				"frames": 36,
+				"samples": 33600,
+				"duration_s": 0.7,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -19.98,
+				"sha256": "06e810a06f0990b63610886b3bc59c2190b4fb8bcb83241f0613b3873ce0c394"
+			},
+			"count_off.whisper": {
+				"frames": 36,
+				"samples": 33600,
+				"duration_s": 0.7,
+				"band": "whisper",
+				"lufs": -38.31,
+				"max_frame_rms_dbfs": -34.99,
+				"sha256": "69859e7424eece77b47c73ffc930fb731395b7ca390dc9559032ad4b84955f8a"
+			},
+			"digit_0.continuing": {
+				"frames": 17,
+				"samples": 15360,
+				"duration_s": 0.32,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -21.58,
+				"sha256": "18738adb26799156785c0d3817abd454b66ac4074594d690856803b25e3250d0"
+			},
+			"digit_0.final": {
+				"frames": 17,
+				"samples": 15360,
+				"duration_s": 0.32,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -21.2,
+				"sha256": "8159c65e4c4d91ba721cd27710c1eeb84a9b3786d777c533443b80d125df467e"
+			},
+			"digit_1.continuing": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "talk",
+				"lufs": -26.12,
+				"max_frame_rms_dbfs": -19.65,
+				"sha256": "d349a31af8145e76c2e5fda0dd8863905165d051b4e7a9fda6fb4cc008881ffa"
+			},
+			"digit_1.final": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -20.01,
+				"sha256": "daa944b55c7c721be8e77fe3f43ec0a20aef8369c6256e132d7f7bb36d2c48fc"
+			},
+			"digit_2.continuing": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -21.62,
+				"sha256": "b3ec6ce3ef33ec7a7043ef038677a144f1958e7b16041e0b3273c828c7fec922"
+			},
+			"digit_2.final": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.1,
+				"max_frame_rms_dbfs": -21.14,
+				"sha256": "aa59366539604a6e36e1b33692b7e61e2abfed3aa37feabd56706b09a564f78d"
+			},
+			"digit_3.continuing": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -21.75,
+				"sha256": "95ef531749fb5b9554d2a94ff148651d1c525b65bd79ec9f9e3a26932f1e0fa2"
+			},
+			"digit_3.final": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -22.32,
+				"sha256": "21b598e8e60447c265474ce7745bb2dbd68c8cd9ef6ef83899259a821b6e64eb"
+			},
+			"digit_4.continuing": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.05,
+				"max_frame_rms_dbfs": -21.93,
+				"sha256": "a38f544eb51ba7e256b14c60878187daa854aa6142c5f71ff5fa27572c71d182"
+			},
+			"digit_4.final": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -21.36,
+				"sha256": "9cf331fe8a506dddd62a11bfabcafa80fdfc650fef7d6e87b1bc65d897d03388"
+			},
+			"digit_5.continuing": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "talk",
+				"lufs": -26.23,
+				"max_frame_rms_dbfs": -21.85,
+				"sha256": "d19bc75b285e1ab7c817af332189464429b537b1ce8cfa44a98e27cc7c70d6af"
+			},
+			"digit_5.final": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -21.9,
+				"sha256": "6cac3e6b3a325870ee4ceb9f623d2f888dc05306d4de53e2c883306f8b6b22f3"
+			},
+			"digit_6.continuing": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -19.18,
+				"sha256": "a6cdcbf7cea93da4acf5298e6b8c277633157e4cf06d1568bd75cecb7c79a833"
+			},
+			"digit_6.final": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -18.93,
+				"sha256": "6b0f1848dbab15d2951972797c8fdfe1dfa74de3cf15e50957f0eda08ff4892a"
+			},
+			"digit_7.continuing": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.37,
+				"max_frame_rms_dbfs": -21.48,
+				"sha256": "7f45167b9b1a58315d052ba0014035da9241ebf8593b19f69c234bcfabd5d3ca"
+			},
+			"digit_7.final": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -21.7,
+				"sha256": "e4aa001a38c74983cf730009471a8b2b464bd9b7b6cc45d7d323651a6d1be2be"
+			},
+			"digit_8.continuing": {
+				"frames": 18,
+				"samples": 16320,
+				"duration_s": 0.34,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -21.21,
+				"sha256": "be46c5f153e81c71913a10e4f8725f478754c45fff548cb2593a73213edbb09d"
+			},
+			"digit_8.final": {
+				"frames": 18,
+				"samples": 16320,
+				"duration_s": 0.34,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -21.51,
+				"sha256": "c9a51f64bd013c91dd3cdacec29db00d7882107534406cec49706199105eee0e"
+			},
+			"digit_9.continuing": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -20.89,
+				"sha256": "fdebf1cea459846c7cfad4a078a08436fceba008ca8a27bbf8e61a1fc370c154"
+			},
+			"digit_9.final": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "talk",
+				"lufs": -26.14,
+				"max_frame_rms_dbfs": -21.49,
+				"sha256": "fd7d236caa76ac2e1cd506e2b7364a55a05e2022005b41d5a8fbd83481823e09"
+			},
+			"douse.shout": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "shout",
+				"lufs": -16.25,
+				"max_frame_rms_dbfs": -11.18,
+				"sha256": "853a51f95d88fd4a7f245e4de3f03f924c7c029d7a6a05cce265f1450f98f900"
+			},
+			"douse.talk": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -20.57,
+				"sha256": "ed3b62edeeb79f0389fb8c3513706a8e2369010187ff490b6d3039a98b6a2583"
+			},
+			"douse.whisper": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "whisper",
+				"lufs": -38.28,
+				"max_frame_rms_dbfs": -34.72,
+				"sha256": "58e240de94d03aad3be6307e2e08cc05da56998d3fd5d8572d7d7058d375e7e4"
+			},
+			"gasp.take_1": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -23.05,
+				"sha256": "877838408d77ff5c378d921dcef57e5f241071199e016c0203aeb35dd03d1562"
+			},
+			"gate.shout": {
+				"frames": 18,
+				"samples": 16320,
+				"duration_s": 0.34,
+				"band": "shout",
+				"lufs": -16.14,
+				"max_frame_rms_dbfs": -11.74,
+				"sha256": "52b1bb4f0d5748e135eb40605328254467300659335077a051441c79702e22be"
+			},
+			"gate.talk": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.26,
+				"max_frame_rms_dbfs": -20.78,
+				"sha256": "41e2ed372672bc0e78112ef073774177438175b213f4264f8cfbcccda5fc2511"
+			},
+			"gate.whisper": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "whisper",
+				"lufs": -38.25,
+				"max_frame_rms_dbfs": -34.96,
+				"sha256": "45d98b67379ab4d9d0b11ecbad3f5ccbc47ed96c3cb81b38f740a164e6561cb0"
+			},
+			"help.shout": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "shout",
+				"lufs": -16.34,
+				"max_frame_rms_dbfs": -10.21,
+				"sha256": "a9d5f4038e57e04ee2ec64d7a181cb6ed2b5bb9defe4a30634a091c25be96020"
+			},
+			"help.talk": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -20.1,
+				"sha256": "050318ce1661c5836cf6df264e82cf01364f37bc89b5961f6377335645162c74"
+			},
+			"help.whisper": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "whisper",
+				"lufs": -38.37,
+				"max_frame_rms_dbfs": -35.03,
+				"sha256": "0fd8d8341cb98870a026e67b90e987d375328a133cbee57faeeec65ac799c485"
+			},
+			"here.shout": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "shout",
+				"lufs": -16.2,
+				"max_frame_rms_dbfs": -13.91,
+				"sha256": "8f7dd7951726c387a7e845221728c70c3709871f3ed6a4b0f532e50175de13d3"
+			},
+			"here.talk": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "talk",
+				"lufs": -26.12,
+				"max_frame_rms_dbfs": -23.73,
+				"sha256": "f630053ce4e1dbe392bd4f51a1f6a9876c816735b0f01720dff7c588759394db"
+			},
+			"here.whisper": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "whisper",
+				"lufs": -38.16,
+				"max_frame_rms_dbfs": -35.57,
+				"sha256": "35c0c5a7f7a9017de1be40f46f030f851d4c73606a5faf3a83655c228e91cff2"
+			},
+			"is_that_you.shout": {
+				"frames": 35,
+				"samples": 32640,
+				"duration_s": 0.68,
+				"band": "shout",
+				"lufs": -16.17,
+				"max_frame_rms_dbfs": -9.75,
+				"sha256": "381c118871038388a61be8ea268059567d2a4cdff79dae20a444ce01a627ca29"
+			},
+			"is_that_you.talk": {
+				"frames": 38,
+				"samples": 36000,
+				"duration_s": 0.75,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -20.28,
+				"sha256": "05a438fee984bf578e182540bc80006b0c8ea431874f1e73c0a56a95769bb19b"
+			},
+			"is_that_you.whisper": {
+				"frames": 38,
+				"samples": 36000,
+				"duration_s": 0.75,
+				"band": "whisper",
+				"lufs": -38.14,
+				"max_frame_rms_dbfs": -35.09,
+				"sha256": "1f4eda470f06e33ae64aeab0f221348bfb8dc013355793c72f8b1465c8c5d5e3"
+			},
+			"left.shout": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "shout",
+				"lufs": -16.33,
+				"max_frame_rms_dbfs": -10.3,
+				"sha256": "5018c96c7a3dd154467ef4fa659e2d4e3126331d92f79f12686cef00485a5bd4"
+			},
+			"left.talk": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -19.23,
+				"sha256": "5a7e1a1a25c9110075b8a7f4d649f9c0bfad6d807723a35f75f41c536a08697d"
+			},
+			"left.whisper": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "whisper",
+				"lufs": -38.31,
+				"max_frame_rms_dbfs": -35.14,
+				"sha256": "761dbc3669d948383d4e738e162970dcddf233ae6fd25dc2e6bdbfc0b80a8cc6"
+			},
+			"light_up.shout": {
+				"frames": 29,
+				"samples": 27360,
+				"duration_s": 0.57,
+				"band": "shout",
+				"lufs": -16.24,
+				"max_frame_rms_dbfs": -11.84,
+				"sha256": "099ab4131b2cdd9999a751eecf064f6f6c4017d5fc0fe379bf612c38581bbfcd"
+			},
+			"light_up.talk": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "talk",
+				"lufs": -26.15,
+				"max_frame_rms_dbfs": -19.63,
+				"sha256": "3ed37752d44ed643aabba481ce264fffdaf6dc360826cac9d0b0167e4f9182ea"
+			},
+			"light_up.whisper": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "whisper",
+				"lufs": -38.03,
+				"max_frame_rms_dbfs": -34.64,
+				"sha256": "5d5fedfe57e831733d0bc741507a6594b7151ed27b9a1ee35f6618ce2b9b1d66"
+			},
+			"moan.take_1": {
+				"frames": 103,
+				"samples": 98400,
+				"duration_s": 2.05,
+				"band": "whisper",
+				"lufs": -38.2,
+				"max_frame_rms_dbfs": -34.98,
+				"sha256": "078cf771d42ec0bf33a21ab36cd4daffff7a701fb4979c18ae76d9f0e845b855"
+			},
+			"moth.shout": {
+				"frames": 43,
+				"samples": 40800,
+				"duration_s": 0.85,
+				"band": "shout",
+				"lufs": -16.18,
+				"max_frame_rms_dbfs": -9.06,
+				"sha256": "ac3b22e90638de7bfa526b42f745c3325a15e7be261cd9a23f692db48ebdb132"
+			},
+			"moth.talk": {
+				"frames": 48,
+				"samples": 45120,
+				"duration_s": 0.94,
+				"band": "talk",
+				"lufs": -26.26,
+				"max_frame_rms_dbfs": -18.81,
+				"sha256": "2c9820ea1b3c01a306bba00fe8b8e04c037343fff9becaf8063e73e12ff01f67"
+			},
+			"moth.whisper": {
+				"frames": 48,
+				"samples": 45120,
+				"duration_s": 0.94,
+				"band": "whisper",
+				"lufs": -38.34,
+				"max_frame_rms_dbfs": -35.1,
+				"sha256": "d122c5ae42f92adca684f07e9ebca20d66e6509671028fbb0c68df83fd8dbda0"
+			},
+			"now.shout": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "shout",
+				"lufs": -16.18,
+				"max_frame_rms_dbfs": -12.76,
+				"sha256": "63ab4c1ddd55220d11adfd0d5e6a9d5de40ae5ece55f2a31383926a8f24bfce5"
+			},
+			"now.talk": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.23,
+				"max_frame_rms_dbfs": -22.36,
+				"sha256": "392d288acac002908af1cdf7675552766c1193280bed708ee7bf7d597930bbee"
+			},
+			"now.whisper": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "whisper",
+				"lufs": -38.38,
+				"max_frame_rms_dbfs": -35.36,
+				"sha256": "d129b4566c20cc2c426852973e180fad80352b2384e8a3ede98dc2428d60fec4"
+			},
+			"oil.shout": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "shout",
+				"lufs": -16.23,
+				"max_frame_rms_dbfs": -10.86,
+				"sha256": "f52587b4de3ddd7c904185a00f536afce50efa56aa5a10ccc17bd55c98bee4e0"
+			},
+			"oil.talk": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -19.66,
+				"sha256": "feee4a7fba3b0790621ae690168b5099c19bae7c3cde2b95e1240ab4511eec5d"
+			},
+			"oil.whisper": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "whisper",
+				"lufs": -38.39,
+				"max_frame_rms_dbfs": -35.16,
+				"sha256": "c8dff0f2eae59c746f2e91ded6f184f300278a4332c5075b962da76ccab0f01b"
+			},
+			"panting.take_1": {
+				"frames": 179,
+				"samples": 170880,
+				"duration_s": 3.56,
+				"band": "whisper",
+				"lufs": -38.16,
+				"max_frame_rms_dbfs": -34.8,
+				"sha256": "0e0f43a2d44ba71ee03694c020e4095ae838366bb2f87f6e0a706bed7c2eef72"
+			},
+			"quiet.shout": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "shout",
+				"lufs": -15.91,
+				"max_frame_rms_dbfs": -10.79,
+				"sha256": "903530f350b69f09239fec0630690a1155c1214f4acff716198a2c328fa1b01f"
+			},
+			"quiet.talk": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.29,
+				"max_frame_rms_dbfs": -20.73,
+				"sha256": "37d18242cf85be8516ca6a4fa9c2f9e012a050eac4eadbd4a5abcbdd8c700be5"
+			},
+			"quiet.whisper": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "whisper",
+				"lufs": -38.32,
+				"max_frame_rms_dbfs": -35.08,
+				"sha256": "a396050422945d9b62e44815088db9473aaba276c6412c2979f83b1bdad26cc9"
+			},
+			"right.shout": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "shout",
+				"lufs": -16.28,
+				"max_frame_rms_dbfs": -11.07,
+				"sha256": "7aeb267e0bb354f72db059c4bd1cb96a3f452d1acd6844c872b1920f879b47e1"
+			},
+			"right.talk": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.04,
+				"max_frame_rms_dbfs": -19.8,
+				"sha256": "45340cdddf3e74b284d52351fe92f715ee618c4b6bf6807c8efeb6cfa93490e1"
+			},
+			"right.whisper": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "whisper",
+				"lufs": -38.11,
+				"max_frame_rms_dbfs": -35.15,
+				"sha256": "ee6ca82c11af7a31bb655a22ff817b2b7ef11e29e3e44ab9eefee4d3d1a6a324"
+			},
+			"roll_all_right.talk": {
+				"frames": 34,
+				"samples": 31680,
+				"duration_s": 0.66,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -20.55,
+				"sha256": "a183262b7924a3d39b3fc3d9e74ec01dcb56a931a9e2e729540e8e4bb6472060"
+			},
+			"roll_lamp.talk": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -19.88,
+				"sha256": "2b50845e5be4e8311e7e15e409b1b9ce8b153a926e3dc3bd2273d6fdbe54da63"
+			},
+			"scream.take_1": {
+				"frames": 52,
+				"samples": 48960,
+				"duration_s": 1.02,
+				"band": "scream",
+				"lufs": -10.2,
+				"max_frame_rms_dbfs": -7.95,
+				"sha256": "ed71080265c29610cef034bfd59b0f432344c0ab39b92191bc711bb288ca4243"
+			},
+			"stop.shout": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "shout",
+				"lufs": -16.09,
+				"max_frame_rms_dbfs": -8.64,
+				"sha256": "d2d2b304f8daf9393bbcb7451c771ab6178628f41703e8a24ed3646487b69d4e"
+			},
+			"stop.talk": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -18.57,
+				"sha256": "563f82360fa450f84077e01c60d62da0f1b82b167a5a00cd3c50eb22b5309fb4"
+			},
+			"stop.whisper": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "whisper",
+				"lufs": -38.25,
+				"max_frame_rms_dbfs": -34.99,
+				"sha256": "4da46c65542037825843e7d0a5722b9a98eb9aad85564761572b8ac1053f32d7"
+			},
+			"stythe.shout": {
+				"frames": 128,
+				"samples": 122400,
+				"duration_s": 2.55,
+				"band": "shout",
+				"lufs": -16.38,
+				"max_frame_rms_dbfs": -9.17,
+				"sha256": "c217934a8776fd78af804540d4ca251888e24d04a8b779dd3335d25aec41537e"
+			},
+			"stythe.talk": {
+				"frames": 143,
+				"samples": 136320,
+				"duration_s": 2.84,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -17.71,
+				"sha256": "36ac2b1013d9df1d57869a7fd2e3e3e826e4809e4238acb2bcaeebca69ef813e"
+			},
+			"stythe.whisper": {
+				"frames": 143,
+				"samples": 136320,
+				"duration_s": 2.84,
+				"band": "whisper",
+				"lufs": -38.19,
+				"max_frame_rms_dbfs": -34.51,
+				"sha256": "c8ff97caddb26b309e510deb7a6bdbaea08b2ad40f14350f5f72f718f105293d"
+			},
+			"tapping.shout": {
+				"frames": 137,
+				"samples": 131040,
+				"duration_s": 2.73,
+				"band": "shout",
+				"lufs": -16.33,
+				"max_frame_rms_dbfs": -7.81,
+				"sha256": "96a3c6e33483acecf6159cffdec24127ced38142df6e33c1762257eb972685ba"
+			},
+			"tapping.talk": {
+				"frames": 152,
+				"samples": 145440,
+				"duration_s": 3.03,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -17.25,
+				"sha256": "21e4c64e279381da742287f41864e59811bf9a098372d303c89493ec8de52fa0"
+			},
+			"tapping.whisper": {
+				"frames": 152,
+				"samples": 145440,
+				"duration_s": 3.03,
+				"band": "whisper",
+				"lufs": -38.39,
+				"max_frame_rms_dbfs": -34.62,
+				"sha256": "5d4d82d225bd5ec2b19778de9c49b7573397ca22edad65ab1dc4455585309a44"
+			},
+			"trapped_cry.take_1": {
+				"frames": 112,
+				"samples": 106560,
+				"duration_s": 2.22,
+				"band": "shout",
+				"lufs": -16.18,
+				"max_frame_rms_dbfs": -9.57,
+				"sha256": "5e8e23d6da1417b0ad34975dd75bd8cf48ff5f68bef869269e9ede35a387cb1f"
+			}
+		},
+		"voice_2": {
+			"cough.take_1": {
+				"frames": 80,
+				"samples": 76320,
+				"duration_s": 1.59,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -18.43,
+				"sha256": "ffdfb69de24c9bc4d40ab599854747653fbc85858f4faffa706b5d2cd40be15f"
+			},
+			"count_off.shout": {
+				"frames": 33,
+				"samples": 31200,
+				"duration_s": 0.65,
+				"band": "shout",
+				"lufs": -16.14,
+				"max_frame_rms_dbfs": -9.65,
+				"sha256": "c9c5777a1c6e9fad26f96196169893a5d832496b2d5d1c5aebba2a7747553910"
+			},
+			"count_off.talk": {
+				"frames": 36,
+				"samples": 33600,
+				"duration_s": 0.7,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -18.38,
+				"sha256": "56a36e872925256e4267bd188fa12f0eab4f4e0e1ce4859aad9cc51283924935"
+			},
+			"count_off.whisper": {
+				"frames": 37,
+				"samples": 35040,
+				"duration_s": 0.73,
+				"band": "whisper",
+				"lufs": -38.27,
+				"max_frame_rms_dbfs": -36.1,
+				"sha256": "74afcf122b5ee2203a697a1d84f9ba3f32c7fbe009f727b0a0009b6618f9c7a0"
+			},
+			"digit_0.continuing": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -22.14,
+				"sha256": "5559f6c9db22a73efe6920bca8824504680b74e262e849eeb9e76891f7f43193"
+			},
+			"digit_0.final": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.29,
+				"max_frame_rms_dbfs": -22.22,
+				"sha256": "2717db2333115536c1e141e3f2dc1344edcb40c2ced98b6180d8f976f297c881"
+			},
+			"digit_1.continuing": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -19.93,
+				"sha256": "c0ff747174e0edf7f879d1263ebd7ae6278fb8d3928b1f34808937b53160df31"
+			},
+			"digit_1.final": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.35,
+				"max_frame_rms_dbfs": -20.3,
+				"sha256": "253d0de08e44de3ed01e841c312d7c9db91a57ff7daf3c709279342ba30e158c"
+			},
+			"digit_2.continuing": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -21.85,
+				"sha256": "5a6c1223514df1fcc689ae9c4feb8cc2ae181e4ae5e4d46a71c7df04c7980eba"
+			},
+			"digit_2.final": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -20.69,
+				"sha256": "569d5af3a88472fff6c81617bbebda1e4447a123d26944c647bd6c73285e4e06"
+			},
+			"digit_3.continuing": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "talk",
+				"lufs": -26.38,
+				"max_frame_rms_dbfs": -22.01,
+				"sha256": "41ef7db26fc789557079c28e2d9b5d5f86dd2b22f4b3a7901f22a6d48f199724"
+			},
+			"digit_3.final": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -22.05,
+				"sha256": "e6e52541f66ad04bd3cb415bdf6611a1b44a81ab706924fdd2def33bc6030da0"
+			},
+			"digit_4.continuing": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "talk",
+				"lufs": -26.12,
+				"max_frame_rms_dbfs": -21.42,
+				"sha256": "b7138c31c4b0645da6d923e9870abab0a934c0f762c7d017d11a42f06de5e096"
+			},
+			"digit_4.final": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -21.89,
+				"sha256": "ea8056a1296f1073812f481b5e867a87c937e40edb14749aed0407f237d717ec"
+			},
+			"digit_5.continuing": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -22.13,
+				"sha256": "351ad54da2503548d012cf1a0f63e9732dcff60ad4af3ffa264095da4028d002"
+			},
+			"digit_5.final": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -22.16,
+				"sha256": "ccdf3811063aedd4b3984e630bcf03477bd971f6b0218277a615b3936216aa7a"
+			},
+			"digit_6.continuing": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -19.24,
+				"sha256": "3b2b20138e962055f16b9b52fc387bac015853ecf7c6743329add6d3cf0389ae"
+			},
+			"digit_6.final": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.15,
+				"max_frame_rms_dbfs": -18.96,
+				"sha256": "4d102b9537d5556eba7524391708b71fd9d53ec1d51e4b5bbc9dd48475567870"
+			},
+			"digit_7.continuing": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -20.47,
+				"sha256": "cc6a1d36d83daef06930623fa2ce0287cf206dfcb5f3374900ad9bb77db31e81"
+			},
+			"digit_7.final": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -20.2,
+				"sha256": "91a627bc8cc79b6ccd5685a5bf00801158e6d4404f2d5f3655e1be7219518931"
+			},
+			"digit_8.continuing": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -21.89,
+				"sha256": "36a1af3cb8b650ddb5a00843acfd91e5a011884153f49e23fb95d174b1f68644"
+			},
+			"digit_8.final": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -22.04,
+				"sha256": "f79bed6cdce9b45572e4b1bd215231248e6384cd4b55d030af634e09e4d9dfa5"
+			},
+			"digit_9.continuing": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.12,
+				"max_frame_rms_dbfs": -20.97,
+				"sha256": "d295e7e94f013ae048ff125f2d92a8c88b2054365b439c4456ae193037906774"
+			},
+			"digit_9.final": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -21.16,
+				"sha256": "922c276b45333ab2d67cc97a3b0f06b93981b096ee188a9102ca04ecff4932c6"
+			},
+			"douse.shout": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "shout",
+				"lufs": -16.26,
+				"max_frame_rms_dbfs": -10.6,
+				"sha256": "c27d57a49e0d0e3a04639936b393beb75ae591dd8ec52cd04d1a894576e0bc7a"
+			},
+			"douse.talk": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -21.13,
+				"sha256": "f7d71a49d7cbc0be21987a51ee71bc747c43608c8f9f064eaf4b23e3420b957a"
+			},
+			"douse.whisper": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "whisper",
+				"lufs": -38.38,
+				"max_frame_rms_dbfs": -36.58,
+				"sha256": "2638948e196f2e65e087110d3010fc060be86e4e7894bb43f9a6a0c8d58af07c"
+			},
+			"gasp.take_1": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.23,
+				"max_frame_rms_dbfs": -22.8,
+				"sha256": "aed716bf835f75d00b7f5d50e939da61336ca998421e587b96e84c91d47d024a"
+			},
+			"gate.shout": {
+				"frames": 19,
+				"samples": 17760,
+				"duration_s": 0.37,
+				"band": "shout",
+				"lufs": -16.22,
+				"max_frame_rms_dbfs": -11.2,
+				"sha256": "158eeecc360c73f87fb41876f0d1965882ecb44ccf37289dc4f9a0f0af3892df"
+			},
+			"gate.talk": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -21.28,
+				"sha256": "93722454e714ae95002fe056b94c983f38076c9fbbdaf357b9927dc59c06ff72"
+			},
+			"gate.whisper": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "whisper",
+				"lufs": -38.31,
+				"max_frame_rms_dbfs": -35.89,
+				"sha256": "f8cff584c4fd461d3aa8b7d113a236bf55fa99c9e2050c36aaced74446e84d98"
+			},
+			"help.shout": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "shout",
+				"lufs": -16.36,
+				"max_frame_rms_dbfs": -9.88,
+				"sha256": "3d0b5b425f3f16b64d639d19878ee97327ad14d35171e3e1630fda554b3d838c"
+			},
+			"help.talk": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -20.28,
+				"sha256": "46d9bd513093da466cc3e8e4ac3f9d15b8601107eddaa61d996c08c96469456f"
+			},
+			"help.whisper": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "whisper",
+				"lufs": -38.02,
+				"max_frame_rms_dbfs": -36.32,
+				"sha256": "a5a7959703c5a628d7828c7b6200856d7f6a43d968de00304afc260a5b25ec8a"
+			},
+			"here.shout": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "shout",
+				"lufs": -16.13,
+				"max_frame_rms_dbfs": -12.8,
+				"sha256": "33113e3f8a5a513c01b71588433b14d018318c00fa2dff720b0dc4c0a4ef21ea"
+			},
+			"here.talk": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -23.04,
+				"sha256": "71b0e62e6bd508422ffb76df2674d23a0bf4e5e37cf3aebb555406a5c5803d58"
+			},
+			"here.whisper": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "whisper",
+				"lufs": -38.33,
+				"max_frame_rms_dbfs": -37.85,
+				"sha256": "0d446017f107b87d9af50fb5d6c1fc0d53deef7fc45bfff5bbcbfd85b8ff76d2"
+			},
+			"is_that_you.shout": {
+				"frames": 37,
+				"samples": 35040,
+				"duration_s": 0.73,
+				"band": "shout",
+				"lufs": -16.15,
+				"max_frame_rms_dbfs": -9.22,
+				"sha256": "e60b6d2f49cfdb32e1601b6e8b734f3d16f95280d5b7c88aff196e30ed6b43c9"
+			},
+			"is_that_you.talk": {
+				"frames": 40,
+				"samples": 37440,
+				"duration_s": 0.78,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -19.9,
+				"sha256": "c6d1f67d0af022eecd9a1a0d84b7bcd6489067bbed52d8fa6ac2db80cd7c8391"
+			},
+			"is_that_you.whisper": {
+				"frames": 35,
+				"samples": 33120,
+				"duration_s": 0.69,
+				"band": "whisper",
+				"lufs": -37.99,
+				"max_frame_rms_dbfs": -36.27,
+				"sha256": "8d96cdf90a673675dd3ca648dd17b022737336dbae5fddc198c0251b6d9cdda7"
+			},
+			"left.shout": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "shout",
+				"lufs": -16.2,
+				"max_frame_rms_dbfs": -10.97,
+				"sha256": "a5f1fcbee0882115449f1dbdaeb91b1e2c0457ccdb4fbde85a1cbf9b1a86e0c6"
+			},
+			"left.talk": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "talk",
+				"lufs": -26.23,
+				"max_frame_rms_dbfs": -19.95,
+				"sha256": "bdbbb62be9b472c9aa81690379c5412ebdf46c9ef5ca7b2fd8dac1ac97f0f7e3"
+			},
+			"left.whisper": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -36.15,
+				"sha256": "fc705348f0a8cca0e9ebc2bfdb20b4b4f1e7a8fc9c92c235fe8e5857afcef7ac"
+			},
+			"light_up.shout": {
+				"frames": 29,
+				"samples": 27360,
+				"duration_s": 0.57,
+				"band": "shout",
+				"lufs": -16.16,
+				"max_frame_rms_dbfs": -12.25,
+				"sha256": "7e14cb0bd6d13fa6dc98a3a19292db2f56c88a6f579e4db541612dc7d1000e2a"
+			},
+			"light_up.talk": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.12,
+				"max_frame_rms_dbfs": -20.57,
+				"sha256": "040f2d5c1c0566eb89bc4f3bf5944d79650c8d053ffaa83b2dd04f0ec56b92e9"
+			},
+			"light_up.whisper": {
+				"frames": 33,
+				"samples": 31200,
+				"duration_s": 0.65,
+				"band": "whisper",
+				"lufs": -38.17,
+				"max_frame_rms_dbfs": -36.44,
+				"sha256": "672e62c14226f98ad6d33b51f4e0a4b543738bd3b9bcc152279b4b4477e6d8bc"
+			},
+			"moan.take_1": {
+				"frames": 100,
+				"samples": 95520,
+				"duration_s": 1.99,
+				"band": "whisper",
+				"lufs": -38.31,
+				"max_frame_rms_dbfs": -34.53,
+				"sha256": "83c87cab95567570d6012cad1ae3e95d6d72754217cea5c5f3880edc7b1169b3"
+			},
+			"moth.shout": {
+				"frames": 43,
+				"samples": 40800,
+				"duration_s": 0.85,
+				"band": "shout",
+				"lufs": -16.17,
+				"max_frame_rms_dbfs": -7.97,
+				"sha256": "338ed20d73957b0b7a283df7ab3d82719cab916361e163179d65980fb11ea2dc"
+			},
+			"moth.talk": {
+				"frames": 47,
+				"samples": 44640,
+				"duration_s": 0.93,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -17.47,
+				"sha256": "031b534a013918854ab5ea5fb1e17bc9d8ec5a7c456ce1a0e0ac299985a23887"
+			},
+			"moth.whisper": {
+				"frames": 50,
+				"samples": 47040,
+				"duration_s": 0.98,
+				"band": "whisper",
+				"lufs": -38.28,
+				"max_frame_rms_dbfs": -35.98,
+				"sha256": "2ab2c16843796b80654ed61a3f283ac649a41cd11592ec8f48bad3374086dd66"
+			},
+			"now.shout": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "shout",
+				"lufs": -16.17,
+				"max_frame_rms_dbfs": -12.12,
+				"sha256": "f0a4578e1aac3390aa0487a68a95c9a3a166e78584f44cf820c654bb4255f828"
+			},
+			"now.talk": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -22.01,
+				"sha256": "8c814fa5f7e642a364e9ef6dc512904f1a590aa7023c35edb869e2916dc031cb"
+			},
+			"now.whisper": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "whisper",
+				"lufs": -38.28,
+				"max_frame_rms_dbfs": -36.69,
+				"sha256": "e612443f3fc0e7b3c5248d0b18dd06bffad0904e2b6a3b97c553bb3ca06355b7"
+			},
+			"oil.shout": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "shout",
+				"lufs": -16.3,
+				"max_frame_rms_dbfs": -10.23,
+				"sha256": "fe4d1279accd231da6da6bdb1521dee85758239086cc1119316241897c524c6b"
+			},
+			"oil.talk": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -17.48,
+				"sha256": "67d38f86014dac1d0495f01a0a1f438fe36d6e18fe159348b876279e0952463d"
+			},
+			"oil.whisper": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "whisper",
+				"lufs": -38.23,
+				"max_frame_rms_dbfs": -36.96,
+				"sha256": "d9c887497265154607941399536b34839cbcb18f6f06cc33343dcc0270334814"
+			},
+			"panting.take_1": {
+				"frames": 178,
+				"samples": 170400,
+				"duration_s": 3.55,
+				"band": "whisper",
+				"lufs": -38.2,
+				"max_frame_rms_dbfs": -34.76,
+				"sha256": "62f1cb3f88ef2d108392ce256ffbcd9f922dd75ae0e4a6cbd1b5b873b7aa085a"
+			},
+			"quiet.shout": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "shout",
+				"lufs": -16.07,
+				"max_frame_rms_dbfs": -9.94,
+				"sha256": "b5557b5743c1078a4e30298f4f5bac4c3d16f96b994ef2813d110d752934b470"
+			},
+			"quiet.talk": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -20.46,
+				"sha256": "d5dff474657a0696d2053209320b2f88876941494728e2b0f73bde18fc6e5bf5"
+			},
+			"quiet.whisper": {
+				"frames": 29,
+				"samples": 26880,
+				"duration_s": 0.56,
+				"band": "whisper",
+				"lufs": -38.32,
+				"max_frame_rms_dbfs": -37.29,
+				"sha256": "ee1d834117bbcbb67662a9ccd460e52c97a7929df4f54413f4f134c0e6ac66b3"
+			},
+			"right.shout": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "shout",
+				"lufs": -16.13,
+				"max_frame_rms_dbfs": -11.12,
+				"sha256": "7a11f1c9524ea44925cea2113861b1221cc1fd672737f0ea6818597386053b1f"
+			},
+			"right.talk": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -20.42,
+				"sha256": "8e27dd37ac90bf90037181995fcafd4a0f3c0626aaddbf8df244ebfd23597b5f"
+			},
+			"right.whisper": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "whisper",
+				"lufs": -38.27,
+				"max_frame_rms_dbfs": -37.13,
+				"sha256": "562f6a36e6578b6b866206b94ef06cacfe287584e838b6ed3e7ba76949b8d025"
+			},
+			"roll_all_right.talk": {
+				"frames": 34,
+				"samples": 31680,
+				"duration_s": 0.66,
+				"band": "talk",
+				"lufs": -26.09,
+				"max_frame_rms_dbfs": -19.15,
+				"sha256": "dc2486dfb25554d5420f287bcf9e2001bf882f767a65cd3593cc0d9ffcdc223e"
+			},
+			"roll_lamp.talk": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -19.85,
+				"sha256": "80964682bf5bc61c4d7f5c8b446520c71dc02da21487e0a133a385411b2ef36f"
+			},
+			"scream.take_1": {
+				"frames": 53,
+				"samples": 50400,
+				"duration_s": 1.05,
+				"band": "scream",
+				"lufs": -10.2,
+				"max_frame_rms_dbfs": -6.23,
+				"sha256": "f0691d2aa08735f7ab12e1c7df18f4642d09a558472b52c4e942a13c8b1291f2"
+			},
+			"stop.shout": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "shout",
+				"lufs": -16.06,
+				"max_frame_rms_dbfs": -8.59,
+				"sha256": "db3164f358711bc51313e804ac60e3a8ec147abdd3e872e7026a7dee4defda8e"
+			},
+			"stop.talk": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.02,
+				"max_frame_rms_dbfs": -18.3,
+				"sha256": "95051b436cf9db3fd2ba98ced581732986761d0f5a6e6e79fea53c84c2737db9"
+			},
+			"stop.whisper": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -37.32,
+				"sha256": "495c8b0f2f1afae0f928c783d876cdd8a90f2884bc5882ad295776ca344de45e"
+			},
+			"stythe.shout": {
+				"frames": 126,
+				"samples": 120480,
+				"duration_s": 2.51,
+				"band": "shout",
+				"lufs": -16.24,
+				"max_frame_rms_dbfs": -9.16,
+				"sha256": "9936fda0b90db6fd5bf87266b09126990af69ebf0092cff7b5a6e9345790fd09"
+			},
+			"stythe.talk": {
+				"frames": 139,
+				"samples": 132960,
+				"duration_s": 2.77,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -18.02,
+				"sha256": "273c1cc4ea821ada09348484240c1626e21962701d045c48686a3491cf386333"
+			},
+			"stythe.whisper": {
+				"frames": 137,
+				"samples": 131040,
+				"duration_s": 2.73,
+				"band": "whisper",
+				"lufs": -38.17,
+				"max_frame_rms_dbfs": -36.02,
+				"sha256": "ee4b6bffc3800ab49870f93ae70325fc7c5ff677efa869e2105d3c35ad2246ab"
+			},
+			"tapping.shout": {
+				"frames": 132,
+				"samples": 126240,
+				"duration_s": 2.63,
+				"band": "shout",
+				"lufs": -16.39,
+				"max_frame_rms_dbfs": -8.52,
+				"sha256": "e225591e315ef3407b7b20d174474d3525616168b887eeb7e401dfb21d970278"
+			},
+			"tapping.talk": {
+				"frames": 145,
+				"samples": 138720,
+				"duration_s": 2.89,
+				"band": "talk",
+				"lufs": -26.12,
+				"max_frame_rms_dbfs": -17.01,
+				"sha256": "3488022c176843aa7ad7956418ab2311359972cf03b2abf211028ed73d80f41d"
+			},
+			"tapping.whisper": {
+				"frames": 148,
+				"samples": 141600,
+				"duration_s": 2.95,
+				"band": "whisper",
+				"lufs": -38.31,
+				"max_frame_rms_dbfs": -34.8,
+				"sha256": "f612597dc33c18ae564edcd39b869f260b2764100443cbee66c3c469123456d4"
+			},
+			"trapped_cry.take_1": {
+				"frames": 111,
+				"samples": 105600,
+				"duration_s": 2.2,
+				"band": "shout",
+				"lufs": -16.15,
+				"max_frame_rms_dbfs": -9.61,
+				"sha256": "ce7c1eb1a701518019e08c5da74a1dbb90d7813e1f8c4a89a884af4bf78a083c"
+			}
+		},
+		"voice_3": {
+			"cough.take_1": {
+				"frames": 91,
+				"samples": 86880,
+				"duration_s": 1.81,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -20.46,
+				"sha256": "8399a8dc0e25b8018b964e78e150045cb09542b56ea0b8d719d99e720f12db8a"
+			},
+			"count_off.shout": {
+				"frames": 38,
+				"samples": 35520,
+				"duration_s": 0.74,
+				"band": "shout",
+				"lufs": -16.32,
+				"max_frame_rms_dbfs": -10.9,
+				"sha256": "4f0bb508a5ea15853d786760c535ddac1e785292191b004ce899ceaba01b80a6"
+			},
+			"count_off.talk": {
+				"frames": 41,
+				"samples": 38400,
+				"duration_s": 0.8,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -19.95,
+				"sha256": "1ff5403526e7461b95b47acb5ac6d4883725087e22d1b67e9cecb8e8e462bf20"
+			},
+			"count_off.whisper": {
+				"frames": 40,
+				"samples": 37440,
+				"duration_s": 0.78,
+				"band": "whisper",
+				"lufs": -38.2,
+				"max_frame_rms_dbfs": -36.65,
+				"sha256": "7451ed786ca1de800b8b8eb2155b424b23555bc8a2ce8b2aed5977166d9a14a7"
+			},
+			"digit_0.continuing": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -22.55,
+				"sha256": "2ca9a6aadc36e4d364141346b48209f797d054eed1191eb55a5ef1911214065c"
+			},
+			"digit_0.final": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -22.09,
+				"sha256": "216cd6a74020f45bdd27f3db41bdd8e5ad89109efca737508d5856fce8e7fed4"
+			},
+			"digit_1.continuing": {
+				"frames": 30,
+				"samples": 28320,
+				"duration_s": 0.59,
+				"band": "talk",
+				"lufs": -26.07,
+				"max_frame_rms_dbfs": -21.59,
+				"sha256": "8b3174bfc841b46ace46c41e9a330d644537234f8d4349977ff9fae9e931700b"
+			},
+			"digit_1.final": {
+				"frames": 30,
+				"samples": 28320,
+				"duration_s": 0.59,
+				"band": "talk",
+				"lufs": -26.1,
+				"max_frame_rms_dbfs": -21.71,
+				"sha256": "d0c4d7e8608d79be5dcd26c352c855958144f9475335fd13bd0aaeff56a2b143"
+			},
+			"digit_2.continuing": {
+				"frames": 29,
+				"samples": 27360,
+				"duration_s": 0.57,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -23.65,
+				"sha256": "69c6919e2f835695b66a0d5a43d9c97579e877bb8f28b9e738f44a4771198f9d"
+			},
+			"digit_2.final": {
+				"frames": 29,
+				"samples": 27360,
+				"duration_s": 0.57,
+				"band": "talk",
+				"lufs": -26.15,
+				"max_frame_rms_dbfs": -23.07,
+				"sha256": "413cfa17aeda1bd837668d8a6d724f5422c1635d0a0392e704c354c8eaf0e5f6"
+			},
+			"digit_3.continuing": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -22.91,
+				"sha256": "3e36cb39cc9094bd5bf7f2c533a4e7b81fc62037e27508cdc6aeb466071541b7"
+			},
+			"digit_3.final": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -23.15,
+				"sha256": "62b148bee2704a687170b33750801f9134c43e2696aee2334b842c25807d30c5"
+			},
+			"digit_4.continuing": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.07,
+				"max_frame_rms_dbfs": -21.72,
+				"sha256": "8923cc3e905272b2b7fc97c7458719733637ff30673c99e9f447156d35dbda5d"
+			},
+			"digit_4.final": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -21.61,
+				"sha256": "f62dc3c95256b5e84a3589221c8f2bacd9ab9b67c59b4f4112e7555aeaaa342a"
+			},
+			"digit_5.continuing": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -20.46,
+				"sha256": "f01f4ed9a4e7182e56ec0b79491293f5520e0477718b2dd29d5881c262db3663"
+			},
+			"digit_5.final": {
+				"frames": 31,
+				"samples": 29280,
+				"duration_s": 0.61,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -20.78,
+				"sha256": "0f8c91640bc56939f15edc6762fef08896eed2a63377cec2702aed23bf5bd1a5"
+			},
+			"digit_6.continuing": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.26,
+				"max_frame_rms_dbfs": -19.72,
+				"sha256": "75e617904b1f1733c8f1e8cb370c7d4686de692a39cc6474924df054567fdb8e"
+			},
+			"digit_6.final": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.33,
+				"max_frame_rms_dbfs": -19.63,
+				"sha256": "ec5090efe04cf3bb5e80474a7891fd1f5fc6eab576e54db0f48a79d79906ce02"
+			},
+			"digit_7.continuing": {
+				"frames": 38,
+				"samples": 35520,
+				"duration_s": 0.74,
+				"band": "talk",
+				"lufs": -26.39,
+				"max_frame_rms_dbfs": -20.22,
+				"sha256": "ac6eae61bf7b5756cf86660e4f8da7e93df70f47c812cb263b7ddddbd2d29b2c"
+			},
+			"digit_7.final": {
+				"frames": 38,
+				"samples": 35520,
+				"duration_s": 0.74,
+				"band": "talk",
+				"lufs": -26.39,
+				"max_frame_rms_dbfs": -19.7,
+				"sha256": "3d081f826c82507ae81dfef379773897ab320a60848663f2b92aa8cf1414c2d1"
+			},
+			"digit_8.continuing": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "talk",
+				"lufs": -26.26,
+				"max_frame_rms_dbfs": -21.47,
+				"sha256": "99711ba5dd3dcc0a588aac48d79aeea45af95d6629c6192ec7c8551c71aa9fcf"
+			},
+			"digit_8.final": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -21.59,
+				"sha256": "7d951ed3e3ea1e9736dfd28e3e7839e9d6322addd5ddfce8b50e6df722e4ce54"
+			},
+			"digit_9.continuing": {
+				"frames": 34,
+				"samples": 32160,
+				"duration_s": 0.67,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -19.73,
+				"sha256": "df00f0b9e9e4440e2c4d850ac8644d6a1d6b1759238de7d4e644704278b0ac7b"
+			},
+			"digit_9.final": {
+				"frames": 34,
+				"samples": 32160,
+				"duration_s": 0.67,
+				"band": "talk",
+				"lufs": -26.06,
+				"max_frame_rms_dbfs": -19.72,
+				"sha256": "13e79d893f3106e2c1b4966292d6bbdda615dcd4a8c456473153e70a58c7b6f4"
+			},
+			"douse.shout": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "shout",
+				"lufs": -16.35,
+				"max_frame_rms_dbfs": -11.28,
+				"sha256": "cc40819cfeba3c8cbbdfd56b118d4f7b7987c962c707af18976f3013b053a8d3"
+			},
+			"douse.talk": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -20.62,
+				"sha256": "9cd83b3705150b38e0d1d74ae2d4ec38ee5c2de5c98f3582f785710887bd447c"
+			},
+			"douse.whisper": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "whisper",
+				"lufs": -38.33,
+				"max_frame_rms_dbfs": -36.24,
+				"sha256": "ba4307e1591e2a3eadeb755672f99399879f4353c1ee52c01178fca201054554"
+			},
+			"gasp.take_1": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -22.87,
+				"sha256": "36a10bee2af50a1c0a77c9985b873573a2fa44afae9af647c86558f9770daf82"
+			},
+			"gate.shout": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "shout",
+				"lufs": -16.37,
+				"max_frame_rms_dbfs": -10.97,
+				"sha256": "7371009f5f2636b954023585afad2a74bba20d55dfbf73a25cd74c2c8ffe2eb2"
+			},
+			"gate.talk": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -21.65,
+				"sha256": "98c17e05401f1587a45953b6eaa261c9c9050bc6239cab64c06925d4c30fd5d9"
+			},
+			"gate.whisper": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "whisper",
+				"lufs": -38.37,
+				"max_frame_rms_dbfs": -36.71,
+				"sha256": "e5dbe5464fd67a137c285a468fef25723d23f7ca0c2dd5dbe00611c0968e9844"
+			},
+			"help.shout": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "shout",
+				"lufs": -16.29,
+				"max_frame_rms_dbfs": -10.7,
+				"sha256": "5d5ae92dedcf68fec49afc26c5589d47e3a38db08b673b287b621b9daf67a0c3"
+			},
+			"help.talk": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -20.15,
+				"sha256": "9ab5ee9c93c494100347ae3f2cbddf848e6aa1b9bd341f7154c2c45a2d8dcc6e"
+			},
+			"help.whisper": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "whisper",
+				"lufs": -38.06,
+				"max_frame_rms_dbfs": -36.29,
+				"sha256": "7f5e0a9ee59647a39f5ccdd0a62dc8df9b15df1e458b03324f073677d20c7be8"
+			},
+			"here.shout": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "shout",
+				"lufs": -16.33,
+				"max_frame_rms_dbfs": -10.8,
+				"sha256": "c4ee1d1e56ceac2342b6e01a20948793aa2702f0931151bb75b1dbd82faa0ccf"
+			},
+			"here.talk": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "talk",
+				"lufs": -26.26,
+				"max_frame_rms_dbfs": -21.57,
+				"sha256": "3c4e6caebf9c381f43446b9712da3e886c004a36bec5eca362038a73fd6831ba"
+			},
+			"here.whisper": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "whisper",
+				"lufs": -38.37,
+				"max_frame_rms_dbfs": -36.88,
+				"sha256": "084aebacd30d73006fd14ca67a0a3984da825c088271bda83095c51852263d70"
+			},
+			"is_that_you.shout": {
+				"frames": 42,
+				"samples": 39840,
+				"duration_s": 0.83,
+				"band": "shout",
+				"lufs": -16.34,
+				"max_frame_rms_dbfs": -11.66,
+				"sha256": "77633a4d59b6999d7253bdf9003978de082917a02dcf9d73a0283b9b3d73c02c"
+			},
+			"is_that_you.talk": {
+				"frames": 45,
+				"samples": 42720,
+				"duration_s": 0.89,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -20.4,
+				"sha256": "c97a29c0acb73b222f11a4ec0cfb236052c92d7b626fb0cbc9eaee9f6f300a82"
+			},
+			"is_that_you.whisper": {
+				"frames": 39,
+				"samples": 36480,
+				"duration_s": 0.76,
+				"band": "whisper",
+				"lufs": -38.33,
+				"max_frame_rms_dbfs": -36.74,
+				"sha256": "eff669eba3bccb7e823bbf11e18d961cb8cd287cfcd609f479d8bd31b37e9ab2"
+			},
+			"left.shout": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "shout",
+				"lufs": -16.38,
+				"max_frame_rms_dbfs": -11.09,
+				"sha256": "b892cfb02f88dca80b827d7a9cabc848fd85c4dd62d194a61a27ec47c9a2d3c5"
+			},
+			"left.talk": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -20.55,
+				"sha256": "ad95652706a06fc7f88cb89cb74828800d44c7339efac0627ba467f40273864f"
+			},
+			"left.whisper": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "whisper",
+				"lufs": -38.29,
+				"max_frame_rms_dbfs": -36.35,
+				"sha256": "01994115b0d0ae5af7edc408907128632520d433312edeee8a9791f8ce029638"
+			},
+			"light_up.shout": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "shout",
+				"lufs": -16.28,
+				"max_frame_rms_dbfs": -12.13,
+				"sha256": "ab9279c02cbb236c984d8358c4daadebc60adf7217619874c1c0ca979c5092b9"
+			},
+			"light_up.talk": {
+				"frames": 33,
+				"samples": 30720,
+				"duration_s": 0.64,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -19.37,
+				"sha256": "7bae56919f7247e37a6073c09fc92c2c57c358ae79b920787f67499cafa437e8"
+			},
+			"light_up.whisper": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "whisper",
+				"lufs": -38.36,
+				"max_frame_rms_dbfs": -35.96,
+				"sha256": "97a69a7a8aede3b42555d4b1e1597da5de56ca143b45017cc10145e4882b1d8d"
+			},
+			"moan.take_1": {
+				"frames": 124,
+				"samples": 118080,
+				"duration_s": 2.46,
+				"band": "whisper",
+				"lufs": -38.23,
+				"max_frame_rms_dbfs": -35.06,
+				"sha256": "f21af20a79cc6d20e456797876e3f4cc87a4f1e8356cf37dd53eb86a6e232d76"
+			},
+			"moth.shout": {
+				"frames": 50,
+				"samples": 47040,
+				"duration_s": 0.98,
+				"band": "shout",
+				"lufs": -16.19,
+				"max_frame_rms_dbfs": -9.26,
+				"sha256": "400e853c94d0e6697ea562318296a2602d8d6e499860438d706c015d9770695e"
+			},
+			"moth.talk": {
+				"frames": 55,
+				"samples": 51840,
+				"duration_s": 1.08,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -18.75,
+				"sha256": "ea3e8622af27e1dd3e79088c2c72be05a944344dc9b541b4b75e0ea02bd9773f"
+			},
+			"moth.whisper": {
+				"frames": 54,
+				"samples": 50880,
+				"duration_s": 1.06,
+				"band": "whisper",
+				"lufs": -38.27,
+				"max_frame_rms_dbfs": -36.13,
+				"sha256": "26537f3c9fe5da359174664ce552a8bcf69b25e1493fa53a06dec0c913552d25"
+			},
+			"now.shout": {
+				"frames": 29,
+				"samples": 27360,
+				"duration_s": 0.57,
+				"band": "shout",
+				"lufs": -16.4,
+				"max_frame_rms_dbfs": -12.85,
+				"sha256": "223f350f4155c9bf9a14442b12d585ae9c3d46d02466a077dc063508ad80f5da"
+			},
+			"now.talk": {
+				"frames": 31,
+				"samples": 29280,
+				"duration_s": 0.61,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -21.37,
+				"sha256": "d1f5421c3756e9f8e51f714f7ecfc033df6a4515d498981d5febbd33ed4a16e2"
+			},
+			"now.whisper": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -37.83,
+				"sha256": "ef20612dee7fb9009ebf35dc5e3c7c4437e2a85456f5768f1a763f6755b08058"
+			},
+			"oil.shout": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "shout",
+				"lufs": -16.22,
+				"max_frame_rms_dbfs": -11.42,
+				"sha256": "58e6e0b62d3132c1f7ba8b5ff49aba4ed6bf0d1fb50d4c6ab01d493a8807bd1b"
+			},
+			"oil.talk": {
+				"frames": 29,
+				"samples": 26880,
+				"duration_s": 0.56,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -20.67,
+				"sha256": "f5b81d29ba962fcf91c5b474b7ceb4aa23bb5b13dca386709a8705d619376576"
+			},
+			"oil.whisper": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "whisper",
+				"lufs": -38.35,
+				"max_frame_rms_dbfs": -37.73,
+				"sha256": "315ab909077cce39e37acbed602e326e3111165fbdaa3c79b4bec63dca967ad6"
+			},
+			"panting.take_1": {
+				"frames": 201,
+				"samples": 192000,
+				"duration_s": 4.0,
+				"band": "whisper",
+				"lufs": -38.17,
+				"max_frame_rms_dbfs": -34.74,
+				"sha256": "0d93abf51cf9ef718ebda89feb755014bbeba0ad52042cd44d3cf1b42e32946e"
+			},
+			"quiet.shout": {
+				"frames": 29,
+				"samples": 27360,
+				"duration_s": 0.57,
+				"band": "shout",
+				"lufs": -16.15,
+				"max_frame_rms_dbfs": -11.84,
+				"sha256": "71d23e95f47e5e8c0ffc084cb50403355a2e2486305cd318d61aa9b9f902db3b"
+			},
+			"quiet.talk": {
+				"frames": 31,
+				"samples": 29280,
+				"duration_s": 0.61,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -21.02,
+				"sha256": "0b9332af59ccfd28b7d67274f7c721111525d7a08a3cc13558332e319cf23458"
+			},
+			"quiet.whisper": {
+				"frames": 30,
+				"samples": 27840,
+				"duration_s": 0.58,
+				"band": "whisper",
+				"lufs": -38.05,
+				"max_frame_rms_dbfs": -36.64,
+				"sha256": "cf7d236be33bde8c0f8df0768e86d0785f8243c3f155a4c9957729aa4f9c4344"
+			},
+			"right.shout": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "shout",
+				"lufs": -16.29,
+				"max_frame_rms_dbfs": -11.17,
+				"sha256": "913f9956e25cce08a7f6a8c90a37069909fc804fa56138e338800dab86023537"
+			},
+			"right.talk": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "talk",
+				"lufs": -26.05,
+				"max_frame_rms_dbfs": -19.47,
+				"sha256": "d35852d40d08b97a8b3df49999fc15dd82513cd29516fbb4d068f5a474d29601"
+			},
+			"right.whisper": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "whisper",
+				"lufs": -38.18,
+				"max_frame_rms_dbfs": -36.73,
+				"sha256": "4973b80ac53f96807a8856aeb12de1772bd7fecef71ef1a0016af2c396465827"
+			},
+			"roll_all_right.talk": {
+				"frames": 34,
+				"samples": 32160,
+				"duration_s": 0.67,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -18.76,
+				"sha256": "11e81a7dafc033b7c59acc03a0b106254b91314cf1282555e06a828d28de947d"
+			},
+			"roll_lamp.talk": {
+				"frames": 29,
+				"samples": 26880,
+				"duration_s": 0.56,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -20.96,
+				"sha256": "769d6afed3e743e3379f756265bd3be5d5ef753d8c6c48c47b18176b7c86914e"
+			},
+			"scream.take_1": {
+				"frames": 65,
+				"samples": 61440,
+				"duration_s": 1.28,
+				"band": "scream",
+				"lufs": -10.11,
+				"max_frame_rms_dbfs": -7.42,
+				"sha256": "5a1be9dc81946ce0617f5d12559537b1f162342ccf696cd22c95a27acd38c306"
+			},
+			"stop.shout": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "shout",
+				"lufs": -16.32,
+				"max_frame_rms_dbfs": -11.31,
+				"sha256": "e60e5e4aaf99fe0e47e171b3b46346e2a377dbe3a4c076b87147e52709107d6a"
+			},
+			"stop.talk": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -21.03,
+				"sha256": "5d97229562045a334478c39b4b606635710d84d50a91233290ae176f75a445b8"
+			},
+			"stop.whisper": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "whisper",
+				"lufs": -38.21,
+				"max_frame_rms_dbfs": -37.45,
+				"sha256": "61794c87714f24b00595d090d61dfa1cea44e1a642f101d442044f3b32843e64"
+			},
+			"stythe.shout": {
+				"frames": 140,
+				"samples": 133440,
+				"duration_s": 2.78,
+				"band": "shout",
+				"lufs": -16.28,
+				"max_frame_rms_dbfs": -9.96,
+				"sha256": "ecd727feeee4856e0d0102b9c17266c21a37a94277fb1118ad36283953bbf388"
+			},
+			"stythe.talk": {
+				"frames": 156,
+				"samples": 148800,
+				"duration_s": 3.1,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -17.32,
+				"sha256": "e2c2c2f8ee6fb992c8e91c724aeb2b5aa7b4028579d175697ceb23f569843e84"
+			},
+			"stythe.whisper": {
+				"frames": 149,
+				"samples": 142080,
+				"duration_s": 2.96,
+				"band": "whisper",
+				"lufs": -38.28,
+				"max_frame_rms_dbfs": -34.86,
+				"sha256": "4215f7b3a7cf9e3b01eef1906c47ca9e26e3f584963e4d7e48be0809be024d0c"
+			},
+			"tapping.shout": {
+				"frames": 150,
+				"samples": 143520,
+				"duration_s": 2.99,
+				"band": "shout",
+				"lufs": -16.37,
+				"max_frame_rms_dbfs": -9.48,
+				"sha256": "dd8b5956d9f6e64c26e3ecb58fb0f55b03c13db6850a6198472f7c196dda0567"
+			},
+			"tapping.talk": {
+				"frames": 145,
+				"samples": 138240,
+				"duration_s": 2.88,
+				"band": "talk",
+				"lufs": -26.35,
+				"max_frame_rms_dbfs": -17.23,
+				"sha256": "1271b38c9d7869ec68a50f525dfc0cfeb26ca8d5a37da79faa8ede063ebaf163"
+			},
+			"tapping.whisper": {
+				"frames": 142,
+				"samples": 135840,
+				"duration_s": 2.83,
+				"band": "whisper",
+				"lufs": -38.36,
+				"max_frame_rms_dbfs": -34.96,
+				"sha256": "a2a79bdea3969e6181028c8b87d61cba612a17a6c4e0ce6f7d33329033af1d1f"
+			},
+			"trapped_cry.take_1": {
+				"frames": 125,
+				"samples": 119040,
+				"duration_s": 2.48,
+				"band": "shout",
+				"lufs": -16.12,
+				"max_frame_rms_dbfs": -10.01,
+				"sha256": "f26186cc9ee95ee1483033f2aec35f51f8c69a63eb92b9e69d03e04fec2bd0ec"
+			}
+		},
+		"voice_4": {
+			"cough.take_1": {
+				"frames": 86,
+				"samples": 82080,
+				"duration_s": 1.71,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -18.62,
+				"sha256": "d3dcc06c3c3c5b2314156a616fbca5faa769e5ffe6cae25a5cf2364ce2e29407"
+			},
+			"count_off.shout": {
+				"frames": 36,
+				"samples": 33600,
+				"duration_s": 0.7,
+				"band": "shout",
+				"lufs": -16.12,
+				"max_frame_rms_dbfs": -10.73,
+				"sha256": "e6a6e78f4d2fa7a341d817e65210bc1f2529f914d90ab2db9c8eae98a8038b9a"
+			},
+			"count_off.talk": {
+				"frames": 40,
+				"samples": 37440,
+				"duration_s": 0.78,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -19.12,
+				"sha256": "cd1f65377f5b695aa08d2d73fc12e457fc8358504160f2994eb120d64836f1e6"
+			},
+			"count_off.whisper": {
+				"frames": 38,
+				"samples": 35520,
+				"duration_s": 0.74,
+				"band": "whisper",
+				"lufs": -38.18,
+				"max_frame_rms_dbfs": -36.36,
+				"sha256": "85bf64fca6920e24f3dfd9dca74c502ebfe5502198724743d56d65c079c0ff78"
+			},
+			"digit_0.continuing": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -21.13,
+				"sha256": "962526f95b0f4c121fc21187208a91075b3a29831a4adf9bad5f335605bff080"
+			},
+			"digit_0.final": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.17,
+				"max_frame_rms_dbfs": -21.19,
+				"sha256": "5592f58eb494f3d3fef1f80759a4a6b73295ab6410e5295ff1c839177396aa8a"
+			},
+			"digit_1.continuing": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.09,
+				"max_frame_rms_dbfs": -19.69,
+				"sha256": "b2efae88f6845aa51e72df5342bf71f441c7c82318617e18f8cf9c38e2d6d3dc"
+			},
+			"digit_1.final": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.09,
+				"max_frame_rms_dbfs": -19.69,
+				"sha256": "b2efae88f6845aa51e72df5342bf71f441c7c82318617e18f8cf9c38e2d6d3dc"
+			},
+			"digit_2.continuing": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -22.53,
+				"sha256": "3fe492f6001a45900057167204e60a24ef2c9e8af6fa52506876878eebc85e82"
+			},
+			"digit_2.final": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.17,
+				"max_frame_rms_dbfs": -22.76,
+				"sha256": "82a2dca32d858a4cd25b99e129421622a9c07a792dd406d7f571c35fe8862eda"
+			},
+			"digit_3.continuing": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -22.52,
+				"sha256": "c9d6b5e0e8497bbc34f0de5fb7c588de4f87899d75baa40417c1bc4cecf2c6ac"
+			},
+			"digit_3.final": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -23.04,
+				"sha256": "0bdb3f612b3b2eecc825b7ebe409ed86364f65aefdb79e1ef03a98f59087858a"
+			},
+			"digit_4.continuing": {
+				"frames": 33,
+				"samples": 31200,
+				"duration_s": 0.65,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -22.44,
+				"sha256": "d251bc145c0057f2076abe6123bd8b50811c5dd7e370958823a07cfa00cadfc9"
+			},
+			"digit_4.final": {
+				"frames": 33,
+				"samples": 31200,
+				"duration_s": 0.65,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -22.7,
+				"sha256": "87ad4667e575b232facb6a077ac767a506fd8374148ef5f479921bd8bb570ce8"
+			},
+			"digit_5.continuing": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.06,
+				"max_frame_rms_dbfs": -19.95,
+				"sha256": "e273fabbe68df1dc04f0295c659d2cc385c107665286912419f7f0bf606f9c14"
+			},
+			"digit_5.final": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.14,
+				"max_frame_rms_dbfs": -20.34,
+				"sha256": "ff54d7a4e1d74568549c2403fc581ee204709169e29fb3ed136d8720c70a2129"
+			},
+			"digit_6.continuing": {
+				"frames": 34,
+				"samples": 32160,
+				"duration_s": 0.67,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -20.35,
+				"sha256": "4ea29495ebf7325f1e504fce8e71802db95046cfb36d24ab6a52d9f3c24f3965"
+			},
+			"digit_6.final": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -20.03,
+				"sha256": "f8423e69d199284a562f0fa9321451f2796bd38449915022113547d4155cdb97"
+			},
+			"digit_7.continuing": {
+				"frames": 36,
+				"samples": 34080,
+				"duration_s": 0.71,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -20.53,
+				"sha256": "c54ad46232947b1e99c06ab79fc387da91f760ed4106c99e3fcb04a59246b963"
+			},
+			"digit_7.final": {
+				"frames": 36,
+				"samples": 34080,
+				"duration_s": 0.71,
+				"band": "talk",
+				"lufs": -26.39,
+				"max_frame_rms_dbfs": -20.9,
+				"sha256": "6aed703f5b7f008044c5e036ec31513932e5240789d7b63ad5b9f5d23d3d80af"
+			},
+			"digit_8.continuing": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -20.69,
+				"sha256": "8ada61fcf822c0397564f3d164af0a134afcbdbdf4cfe20c62804d6dba5bab88"
+			},
+			"digit_8.final": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -21.01,
+				"sha256": "df0a6086bd4b5de60f491d1ba3dc651b7b3375e54856751ab56b7cd25140cf82"
+			},
+			"digit_9.continuing": {
+				"frames": 41,
+				"samples": 38400,
+				"duration_s": 0.8,
+				"band": "talk",
+				"lufs": -26.29,
+				"max_frame_rms_dbfs": -18.2,
+				"sha256": "3df73455d62d50b4dc1e2255e56a70113659d6c4e46c6bc8c9bbe35832faf949"
+			},
+			"digit_9.final": {
+				"frames": 41,
+				"samples": 38400,
+				"duration_s": 0.8,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -19.5,
+				"sha256": "564dbc09aad2c59203eb818257f50304d5d3a01591be418b3563553bf9ef9efd"
+			},
+			"douse.shout": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "shout",
+				"lufs": -16.26,
+				"max_frame_rms_dbfs": -11.67,
+				"sha256": "459ffedca09ca5beb8e452281ff536cb7958b3c9b8c4d67f5342232cf27c2bec"
+			},
+			"douse.talk": {
+				"frames": 29,
+				"samples": 27360,
+				"duration_s": 0.57,
+				"band": "talk",
+				"lufs": -26.14,
+				"max_frame_rms_dbfs": -21.97,
+				"sha256": "ceda0e138f865c95815da99290c5912264884a7e2f961a078d8925bd6de824bf"
+			},
+			"douse.whisper": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "whisper",
+				"lufs": -37.92,
+				"max_frame_rms_dbfs": -36.39,
+				"sha256": "152dee21be4f7335fd7bc90c3edcc7271d5d1b2089a822a7227552537a9cdfec"
+			},
+			"gasp.take_1": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -23.7,
+				"sha256": "d2475af7e5bdce85c807cc894b31fefc1663b1107f96d0a470293eb5d5153fb7"
+			},
+			"gate.shout": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "shout",
+				"lufs": -16.33,
+				"max_frame_rms_dbfs": -12.89,
+				"sha256": "335c379fe057b934f11af480974bacf18d8e0cc2ba9e377bde15f2144c52a64d"
+			},
+			"gate.talk": {
+				"frames": 30,
+				"samples": 27840,
+				"duration_s": 0.58,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -21.44,
+				"sha256": "19530cfe19bece74e5669725258fafc9826c8d711a81261b0d1608e9dc3b05c3"
+			},
+			"gate.whisper": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "whisper",
+				"lufs": -38.28,
+				"max_frame_rms_dbfs": -37.42,
+				"sha256": "d490c05d6a077e557496f1c0d3cc8e713670267c895c58468975ff08c3cb0185"
+			},
+			"help.shout": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "shout",
+				"lufs": -16.32,
+				"max_frame_rms_dbfs": -12.15,
+				"sha256": "932e81717a681c6419016473ab251de953fb34f78a3688036080ba7c1ee21a24"
+			},
+			"help.talk": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -19.71,
+				"sha256": "bd5eecaeb0bfa70aa896e6b8dc4e73b19ab7117d260bbccaa1a4ac3fc05518e8"
+			},
+			"help.whisper": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "whisper",
+				"lufs": -38.16,
+				"max_frame_rms_dbfs": -36.17,
+				"sha256": "265fd60a4bf26812e3d993df664579f6b5d86d8d0bc3fd10b70ca19d974b75a7"
+			},
+			"here.shout": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "shout",
+				"lufs": -16.32,
+				"max_frame_rms_dbfs": -13.3,
+				"sha256": "ba296185113873c8f80d2c14a02ee6228f682c171e479d20acef298f120cf174"
+			},
+			"here.talk": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "talk",
+				"lufs": -26.39,
+				"max_frame_rms_dbfs": -23.7,
+				"sha256": "8ce7b8c9393af69d0a6dc03d2359b23dafface402d2a813a20600dd7e26cab92"
+			},
+			"here.whisper": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "whisper",
+				"lufs": -38.36,
+				"max_frame_rms_dbfs": -37.74,
+				"sha256": "46250f9aec28c695a98381aed3af9470e245fac354ab1b55c8697edb33626a44"
+			},
+			"is_that_you.shout": {
+				"frames": 44,
+				"samples": 41280,
+				"duration_s": 0.86,
+				"band": "shout",
+				"lufs": -16.31,
+				"max_frame_rms_dbfs": -12.01,
+				"sha256": "5dad6edbbeb18f0ce8850d25a02aaa5fb7165036e08ce85b902a8c4a7a40b51e"
+			},
+			"is_that_you.talk": {
+				"frames": 47,
+				"samples": 44160,
+				"duration_s": 0.92,
+				"band": "talk",
+				"lufs": -26.36,
+				"max_frame_rms_dbfs": -20.61,
+				"sha256": "255a1b2ce1d28b710c1e0eaf5b18431eb352a34cd77c52612ea778b1ed55c102"
+			},
+			"is_that_you.whisper": {
+				"frames": 39,
+				"samples": 36960,
+				"duration_s": 0.77,
+				"band": "whisper",
+				"lufs": -38.16,
+				"max_frame_rms_dbfs": -35.99,
+				"sha256": "09fab438f7454af044661822844a783be563f18a2f820a2b356d3894da8d0dcc"
+			},
+			"left.shout": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "shout",
+				"lufs": -16.31,
+				"max_frame_rms_dbfs": -12.51,
+				"sha256": "156522ff41433cc4e711b58bab416779ad0c5d58aca61520510b20cdc979b60e"
+			},
+			"left.talk": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -21.86,
+				"sha256": "615f61dd8e88a636d4b73b44ded7d616ccdd2b46124d8cee5fcd50b9870b279b"
+			},
+			"left.whisper": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "whisper",
+				"lufs": -38.05,
+				"max_frame_rms_dbfs": -36.09,
+				"sha256": "eb98de242c398e54a4b73a864bbe62939905613b636e818ea3585147623b017f"
+			},
+			"light_up.shout": {
+				"frames": 34,
+				"samples": 31680,
+				"duration_s": 0.66,
+				"band": "shout",
+				"lufs": -16.29,
+				"max_frame_rms_dbfs": -11.13,
+				"sha256": "227e4f9826d7fb94cb9ccdf8b31acf61bf4960d19ce101c0124501961971cd0e"
+			},
+			"light_up.talk": {
+				"frames": 37,
+				"samples": 34560,
+				"duration_s": 0.72,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -20.16,
+				"sha256": "5647a936a2ebefd38e8b972088c1edc49b41b92c524df1a69e007591183747c4"
+			},
+			"light_up.whisper": {
+				"frames": 35,
+				"samples": 32640,
+				"duration_s": 0.68,
+				"band": "whisper",
+				"lufs": -38.33,
+				"max_frame_rms_dbfs": -36.67,
+				"sha256": "c6054bb72b5553b054bd33509fc1378299855cb6fdac8e8f57fd65e256fdd9e9"
+			},
+			"moan.take_1": {
+				"frames": 116,
+				"samples": 110400,
+				"duration_s": 2.3,
+				"band": "whisper",
+				"lufs": -38.31,
+				"max_frame_rms_dbfs": -34.96,
+				"sha256": "70981eec14fcd83ce2559e530c79a087f2023b723a624f6ef55f6dcaece35ead"
+			},
+			"moth.shout": {
+				"frames": 54,
+				"samples": 50880,
+				"duration_s": 1.06,
+				"band": "shout",
+				"lufs": -16.23,
+				"max_frame_rms_dbfs": -11.16,
+				"sha256": "07b41ba4ce224691634fac249e72728da0fdde00ab28eb7233d2abe4339b2a87"
+			},
+			"moth.talk": {
+				"frames": 60,
+				"samples": 56640,
+				"duration_s": 1.18,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -19.65,
+				"sha256": "ea9c68aa374a6c5e0c84c52784555744390fffa53a741acb1d0eaa62d6b4e164"
+			},
+			"moth.whisper": {
+				"frames": 53,
+				"samples": 49920,
+				"duration_s": 1.04,
+				"band": "whisper",
+				"lufs": -38.29,
+				"max_frame_rms_dbfs": -36.0,
+				"sha256": "4335d950da7291af83ed6e5e9e246b0b97bcdf46d765bf108b81a4ac7f9005c0"
+			},
+			"now.shout": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "shout",
+				"lufs": -16.22,
+				"max_frame_rms_dbfs": -13.24,
+				"sha256": "ac02d82d0004936240c6d4570789e3b0837ce9a635e74bd4bff6a5350a5ae0e1"
+			},
+			"now.talk": {
+				"frames": 34,
+				"samples": 32160,
+				"duration_s": 0.67,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -22.31,
+				"sha256": "790aeb98245aa216c057e713eaffe8f7eca7bc21628f56b6b680da27c32fb64b"
+			},
+			"now.whisper": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "whisper",
+				"lufs": -38.39,
+				"max_frame_rms_dbfs": -37.88,
+				"sha256": "0cbd31579cfab1b41ca0e2d5f90419aa8a5bbb9ffce29ef8f70d3662be06fad2"
+			},
+			"oil.shout": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "shout",
+				"lufs": -16.17,
+				"max_frame_rms_dbfs": -9.6,
+				"sha256": "4568b46953bf1bb8adfd4c49c817c4dba5d6b9458e252e5f3553c22424366ee3"
+			},
+			"oil.talk": {
+				"frames": 34,
+				"samples": 31680,
+				"duration_s": 0.66,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -19.4,
+				"sha256": "4a89e842e4c54de3e318b9591b60209bff96ecd396e990a4cbbd57605dbaafd2"
+			},
+			"oil.whisper": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -38.17,
+				"sha256": "a9f89069462ef848f0b26a4083503a7b2ad5867dee497482ea06f159b7f9d011"
+			},
+			"panting.take_1": {
+				"frames": 183,
+				"samples": 175200,
+				"duration_s": 3.65,
+				"band": "whisper",
+				"lufs": -38.12,
+				"max_frame_rms_dbfs": -34.85,
+				"sha256": "e79c6344c093a996c6a02d24e449c20dfacd8e427e1eab2c73c25c2fe905b410"
+			},
+			"quiet.shout": {
+				"frames": 35,
+				"samples": 32640,
+				"duration_s": 0.68,
+				"band": "shout",
+				"lufs": -16.14,
+				"max_frame_rms_dbfs": -12.86,
+				"sha256": "fe858599839d8751b6744aeffa868d42cafb6d134354ca16913fe4ab486b8e60"
+			},
+			"quiet.talk": {
+				"frames": 38,
+				"samples": 35520,
+				"duration_s": 0.74,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -19.89,
+				"sha256": "7de9ff6c59d42f7988fc8ac67984b837627e7d678d5d5c5ef832205c942fc1c3"
+			},
+			"quiet.whisper": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "whisper",
+				"lufs": -38.2,
+				"max_frame_rms_dbfs": -37.75,
+				"sha256": "5f0883d954c14ac4402a7868a484ae56b2f2b1a68c524354ced5ce2002436ae2"
+			},
+			"right.shout": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "shout",
+				"lufs": -16.39,
+				"max_frame_rms_dbfs": -12.27,
+				"sha256": "ff3762f663154f6f6c4fd9a7c2479ce85541e908392875163ee449e36610af69"
+			},
+			"right.talk": {
+				"frames": 33,
+				"samples": 31200,
+				"duration_s": 0.65,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -20.31,
+				"sha256": "119e8214c8b2f5d5c374151f8f6a1099945efc5290bc1192cf9ebb544d8f3f0b"
+			},
+			"right.whisper": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "whisper",
+				"lufs": -38.29,
+				"max_frame_rms_dbfs": -37.35,
+				"sha256": "ec41427873182640bf69f30892b4d437b5230a7378bc037899bcc78693e429d9"
+			},
+			"roll_all_right.talk": {
+				"frames": 42,
+				"samples": 39360,
+				"duration_s": 0.82,
+				"band": "talk",
+				"lufs": -26.17,
+				"max_frame_rms_dbfs": -19.45,
+				"sha256": "283fec01385d43eccb68cb30626dfda3db24d9ebe7e46d7b2083f97fb6e077a6"
+			},
+			"roll_lamp.talk": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -20.83,
+				"sha256": "4a7a9602b5234a132e0c0ba19a843c6e7d591f2f91afd4b076a9b8ab05179608"
+			},
+			"scream.take_1": {
+				"frames": 59,
+				"samples": 55680,
+				"duration_s": 1.16,
+				"band": "scream",
+				"lufs": -10.02,
+				"max_frame_rms_dbfs": -7.5,
+				"sha256": "50bb9cabb93db0faea913a6697868f051e638ea3d90405fb8b90409e9964b6db"
+			},
+			"stop.shout": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "shout",
+				"lufs": -16.35,
+				"max_frame_rms_dbfs": -11.07,
+				"sha256": "8c7e82c78325313d3d89277e955997cda43073c3b43ce370d14e1bc7ed83b044"
+			},
+			"stop.talk": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -20.41,
+				"sha256": "75ce7995d6b4e5156b41863a1453270f45e8bf5dec47e662a71f7e8d40837178"
+			},
+			"stop.whisper": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "whisper",
+				"lufs": -38.34,
+				"max_frame_rms_dbfs": -37.77,
+				"sha256": "ad0ccd226d689980344824ddce91804873c4517728db8edc24caf2cbfc9a734d"
+			},
+			"stythe.shout": {
+				"frames": 147,
+				"samples": 140160,
+				"duration_s": 2.92,
+				"band": "shout",
+				"lufs": -16.22,
+				"max_frame_rms_dbfs": -9.76,
+				"sha256": "6eab7f7a2b5de2fd434e10777396fbbf581410ef36bc093ac44b5afc26d66925"
+			},
+			"stythe.talk": {
+				"frames": 141,
+				"samples": 134400,
+				"duration_s": 2.8,
+				"band": "talk",
+				"lufs": -26.36,
+				"max_frame_rms_dbfs": -17.44,
+				"sha256": "16f1733af3d9c6b49ff0bab170cc6befa52173927b13b48a9439f5604d77f4fd"
+			},
+			"stythe.whisper": {
+				"frames": 152,
+				"samples": 144960,
+				"duration_s": 3.02,
+				"band": "whisper",
+				"lufs": -37.95,
+				"max_frame_rms_dbfs": -34.68,
+				"sha256": "471e5aa9223d7f5125287925a3186d842488d6a100607e1b9600b225f55594c9"
+			},
+			"tapping.shout": {
+				"frames": 154,
+				"samples": 147360,
+				"duration_s": 3.07,
+				"band": "shout",
+				"lufs": -16.25,
+				"max_frame_rms_dbfs": -9.82,
+				"sha256": "4b6dcefd746f4ea431fbde8e8d1f303a7147b242dc40f68045cc1b2dc718530b"
+			},
+			"tapping.talk": {
+				"frames": 147,
+				"samples": 140160,
+				"duration_s": 2.92,
+				"band": "talk",
+				"lufs": -26.29,
+				"max_frame_rms_dbfs": -17.07,
+				"sha256": "ad2669af27fbc24ed89a4302ec3edc31206cbceaddc6430232d073ebd82c459a"
+			},
+			"tapping.whisper": {
+				"frames": 139,
+				"samples": 132960,
+				"duration_s": 2.77,
+				"band": "whisper",
+				"lufs": -38.27,
+				"max_frame_rms_dbfs": -35.08,
+				"sha256": "7195bc3922adf6d9d76750a9be7bd9312d569e6cb82aac9bad60a9ebc6045380"
+			},
+			"trapped_cry.take_1": {
+				"frames": 132,
+				"samples": 126240,
+				"duration_s": 2.63,
+				"band": "shout",
+				"lufs": -16.2,
+				"max_frame_rms_dbfs": -10.71,
+				"sha256": "34521a17f085ca0e228d5ed17b0857efe1dd685be84d947b1a83d2fefa97f35a"
+			}
+		},
+		"voice_5": {
+			"cough.take_1": {
+				"frames": 78,
+				"samples": 74400,
+				"duration_s": 1.55,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -19.36,
+				"sha256": "1002cddcc5585d1b8883af03907dc5609687cc74eae5ab49ff52f82af6cdab83"
+			},
+			"count_off.shout": {
+				"frames": 33,
+				"samples": 30720,
+				"duration_s": 0.64,
+				"band": "shout",
+				"lufs": -16.28,
+				"max_frame_rms_dbfs": -10.21,
+				"sha256": "22bbec1bc1a860be8d4b986d924231106397055292344e44142e3d562148784e"
+			},
+			"count_off.talk": {
+				"frames": 36,
+				"samples": 33600,
+				"duration_s": 0.7,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -20.25,
+				"sha256": "baa24f8a28cdb0c2b3d7ffb5079169ef230ea656953f2951865fa4d2570d9941"
+			},
+			"count_off.whisper": {
+				"frames": 36,
+				"samples": 33600,
+				"duration_s": 0.7,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -34.98,
+				"sha256": "75492188937b1c911dae937e73f5bbd7ca2f43974247aaf17ad6491cfe0ebd43"
+			},
+			"digit_0.continuing": {
+				"frames": 17,
+				"samples": 15360,
+				"duration_s": 0.32,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -21.73,
+				"sha256": "591f3ff7021e6f9bdfeff676e5d11bae1e773038790b09637296acb9d89a1d76"
+			},
+			"digit_0.final": {
+				"frames": 17,
+				"samples": 15360,
+				"duration_s": 0.32,
+				"band": "talk",
+				"lufs": -26.26,
+				"max_frame_rms_dbfs": -21.56,
+				"sha256": "1e619a00dad141f4bb9386f095e74b4eef48612f483c54fcc16d54528ea561ad"
+			},
+			"digit_1.continuing": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -19.93,
+				"sha256": "c9918a603c4c639a84b0b3f6e442c2e8a73f91ffc424d4a65661f0e43175954c"
+			},
+			"digit_1.final": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -20.16,
+				"sha256": "85db8ea747ad026220a1fa28db4303ae1f44832a4a1e7e181fd884e0d781f9a1"
+			},
+			"digit_2.continuing": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.15,
+				"max_frame_rms_dbfs": -21.37,
+				"sha256": "5824575609cee74b96a26a15b74f864ddb21ce8aba81a95cce34ba3d73c47f9c"
+			},
+			"digit_2.final": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -21.67,
+				"sha256": "020897497b3f1b7ba466dceebf1f3ccb22ba8113d18e231987209d428400ba6d"
+			},
+			"digit_3.continuing": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -21.64,
+				"sha256": "db567711a16551d774936ff3258274d9dbf1bb744a1decede98033a307351dc2"
+			},
+			"digit_3.final": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -21.78,
+				"sha256": "3762a6f03fa092003761ddbb04f94f8af9508629a48a1a1b8f632d8dd90675b4"
+			},
+			"digit_4.continuing": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.03,
+				"max_frame_rms_dbfs": -21.81,
+				"sha256": "0a6bd28ebe48dbc3f447480f9f285301c907d15618e788eb7edbbfe367f4271f"
+			},
+			"digit_4.final": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.15,
+				"max_frame_rms_dbfs": -21.88,
+				"sha256": "97eb869dd9508d62f4a2e3bfd39a73d43945ca22090f0647b65a12940331bc7d"
+			},
+			"digit_5.continuing": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -21.44,
+				"sha256": "7c4c778115720f18934939502ddd620f04d60cf998921ae539462439c14bab60"
+			},
+			"digit_5.final": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -21.61,
+				"sha256": "efa073bf6637ed10b61f6b635d377377989bb6f59a788b5781df2064f09ea2d4"
+			},
+			"digit_6.continuing": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "talk",
+				"lufs": -26.4,
+				"max_frame_rms_dbfs": -19.28,
+				"sha256": "f5a26dd96ff0b8ca3f7b1e6c01a4f316bd85de1472f22f549100556c7ca605ec"
+			},
+			"digit_6.final": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -19.59,
+				"sha256": "0daf638bd791536a306cd2bb56eb1daddad30230a4c018260403ad28b79af61a"
+			},
+			"digit_7.continuing": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "talk",
+				"lufs": -26.33,
+				"max_frame_rms_dbfs": -21.54,
+				"sha256": "40d33fcb3ea848e445c9e4c77e75ebbcba865c04b20d4e51000929609aac9480"
+			},
+			"digit_7.final": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.33,
+				"max_frame_rms_dbfs": -21.17,
+				"sha256": "5831346884747a88265bd275ae5b1bfcd4cc3b98295366ccd53a478b4a15fc86"
+			},
+			"digit_8.continuing": {
+				"frames": 18,
+				"samples": 16320,
+				"duration_s": 0.34,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -21.21,
+				"sha256": "61c6c7eaeecdbf0fc6e9c35f33d88ab1ee5d5b5ae8fc394c147f66d31ee89136"
+			},
+			"digit_8.final": {
+				"frames": 18,
+				"samples": 16800,
+				"duration_s": 0.35,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -20.84,
+				"sha256": "65ee6435cc5a976874c304e14f1faa163493b2a572c83ff32dcfcb3f97acb34d"
+			},
+			"digit_9.continuing": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.36,
+				"max_frame_rms_dbfs": -21.0,
+				"sha256": "dc6c9bcfb5208feede2db6b041939ca50a4f3667647475db47e5966107952e4b"
+			},
+			"digit_9.final": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.38,
+				"max_frame_rms_dbfs": -21.31,
+				"sha256": "2fc0c0b35e18bceb7a640424225cc2943758f8bfcbf627a047e069aa6e435f87"
+			},
+			"douse.shout": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "shout",
+				"lufs": -16.37,
+				"max_frame_rms_dbfs": -11.24,
+				"sha256": "4ffee72a7ea645075efd2b0e569c30a1866bcc0ee7511ae82a1fd83c7a739b5c"
+			},
+			"douse.talk": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -20.68,
+				"sha256": "2d4e2e4276adbe7f306158f3139a713f125613e52f6b344bdae049f84725ebb2"
+			},
+			"douse.whisper": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "whisper",
+				"lufs": -38.13,
+				"max_frame_rms_dbfs": -35.14,
+				"sha256": "82bdce2806bcde2c31a32d4c252dc5c8d55ca8f954c67a5e3f48161d2384902d"
+			},
+			"gasp.take_1": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.36,
+				"max_frame_rms_dbfs": -23.29,
+				"sha256": "8cd87a9744af986dfb0353ff98aba006737e6a3fd3e347263c100fc62ac0b0a6"
+			},
+			"gate.shout": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "shout",
+				"lufs": -16.21,
+				"max_frame_rms_dbfs": -11.28,
+				"sha256": "3a408d8639aff005394e853d0628beb414e8c06fdbb6ed8d7e20efa06a784b60"
+			},
+			"gate.talk": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.33,
+				"max_frame_rms_dbfs": -20.81,
+				"sha256": "ac941d5daf50f04ac75530252c9bf297a2306824cd05ff4933f2466b773215a3"
+			},
+			"gate.whisper": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -35.44,
+				"sha256": "793885723159d7b601f664589ede06234910135a82f2d72e1981d76427bbfbee"
+			},
+			"help.shout": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "shout",
+				"lufs": -16.15,
+				"max_frame_rms_dbfs": -9.52,
+				"sha256": "1ba2ddc06cc4c8e5312457ef4b60ef1cf38dffcf7de359fd13fada1dba47acd0"
+			},
+			"help.talk": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -18.53,
+				"sha256": "72e2f5ea8128010ea118a7ad258e6b561695c9463b93a70f9d4003b4939722a3"
+			},
+			"help.whisper": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "whisper",
+				"lufs": -38.37,
+				"max_frame_rms_dbfs": -34.77,
+				"sha256": "28404db8660df578ca78e56bf22b2175988e6be5dfdcd96c90e8b73df9522d26"
+			},
+			"here.shout": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "shout",
+				"lufs": -16.24,
+				"max_frame_rms_dbfs": -13.79,
+				"sha256": "ca8c03f5c30fe79817e41d516d56d608d4053937f5ad27e2758dc205d2306da2"
+			},
+			"here.talk": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -24.44,
+				"sha256": "2da9b50b341a56af77fb1f139a481d4225924b012e1a06a8cdd38c5b1d99bbed"
+			},
+			"here.whisper": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -36.29,
+				"sha256": "15ffcb1865f31e0d619cfbc7f484a098998329ed96bd78f72800d835c810956c"
+			},
+			"is_that_you.shout": {
+				"frames": 35,
+				"samples": 32640,
+				"duration_s": 0.68,
+				"band": "shout",
+				"lufs": -16.16,
+				"max_frame_rms_dbfs": -10.61,
+				"sha256": "4f6ce8e5acc93b437f54b22699f8666ac7f14c1b29abb8b122bae7661a272b43"
+			},
+			"is_that_you.talk": {
+				"frames": 39,
+				"samples": 36480,
+				"duration_s": 0.76,
+				"band": "talk",
+				"lufs": -25.95,
+				"max_frame_rms_dbfs": -20.17,
+				"sha256": "7883ab6add2bbe87edc0f8fd555ef3db79cec2536dbf6ea508a14c246e76499d"
+			},
+			"is_that_you.whisper": {
+				"frames": 39,
+				"samples": 36480,
+				"duration_s": 0.76,
+				"band": "whisper",
+				"lufs": -38.28,
+				"max_frame_rms_dbfs": -34.75,
+				"sha256": "bb07c87371d46c76cfa78ec2b486ab6c04361225ece3a372163a705fa11b5ea3"
+			},
+			"left.shout": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "shout",
+				"lufs": -16.1,
+				"max_frame_rms_dbfs": -9.9,
+				"sha256": "3ac7779cc5b4a8f40668986351d553a045206a543e3c16f38b56b0861761238f"
+			},
+			"left.talk": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.36,
+				"max_frame_rms_dbfs": -19.91,
+				"sha256": "ab210cbce582cd453bcc16314f9602d118c906f379a9e96b528961f2c75bea01"
+			},
+			"left.whisper": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "whisper",
+				"lufs": -38.33,
+				"max_frame_rms_dbfs": -34.92,
+				"sha256": "ec2062d2a347df3dd1f8e441ef71b2386dce0add9a2a502ceeb7280b5bd2da62"
+			},
+			"light_up.shout": {
+				"frames": 30,
+				"samples": 28320,
+				"duration_s": 0.59,
+				"band": "shout",
+				"lufs": -16.37,
+				"max_frame_rms_dbfs": -11.33,
+				"sha256": "13b491c01c85679112bb1064f745b6eacddf5dfae6d6e2b40f72e10f1335c86a"
+			},
+			"light_up.talk": {
+				"frames": 33,
+				"samples": 30720,
+				"duration_s": 0.64,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -19.22,
+				"sha256": "e9ec67c4dd79e44e90a0b40d253edaff49c13b21a1b481fc606a17e826332e37"
+			},
+			"light_up.whisper": {
+				"frames": 33,
+				"samples": 30720,
+				"duration_s": 0.64,
+				"band": "whisper",
+				"lufs": -38.32,
+				"max_frame_rms_dbfs": -35.09,
+				"sha256": "e950af3c7d1ef182ab3a76744e6b5aa64c7af8b12db5efac57bd10ec94a3785a"
+			},
+			"moan.take_1": {
+				"frames": 105,
+				"samples": 100320,
+				"duration_s": 2.09,
+				"band": "whisper",
+				"lufs": -38.39,
+				"max_frame_rms_dbfs": -35.03,
+				"sha256": "7e2dbebd6fac1b44735bf5498784d0bf2905d25e8fce3d88c73ca682107d91f8"
+			},
+			"moth.shout": {
+				"frames": 44,
+				"samples": 41760,
+				"duration_s": 0.87,
+				"band": "shout",
+				"lufs": -16.31,
+				"max_frame_rms_dbfs": -9.09,
+				"sha256": "60f2404c9bedfe900a4cec49289f3c91517d836e07f48feea5b1e0087fc938ef"
+			},
+			"moth.talk": {
+				"frames": 49,
+				"samples": 46080,
+				"duration_s": 0.96,
+				"band": "talk",
+				"lufs": -26.23,
+				"max_frame_rms_dbfs": -18.51,
+				"sha256": "23b6b73006fdc7f5d189189a0257e439a5ef1b8ba6c6466136e34b2c93b069a2"
+			},
+			"moth.whisper": {
+				"frames": 49,
+				"samples": 46080,
+				"duration_s": 0.96,
+				"band": "whisper",
+				"lufs": -38.33,
+				"max_frame_rms_dbfs": -34.91,
+				"sha256": "d929c52be4e47e4a3c7e7f81e11f79bd262a08fc14821bf81518faec702d30a7"
+			},
+			"now.shout": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "shout",
+				"lufs": -16.3,
+				"max_frame_rms_dbfs": -12.12,
+				"sha256": "69dd27966d0695ab659fbb146f69ce51a2ba18f6d7df29469bf3fe1fafd39eac"
+			},
+			"now.talk": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -22.25,
+				"sha256": "c35c52133cffded479e4f93897669e99a3658a4c094569af8b3e0eb4a3087fbc"
+			},
+			"now.whisper": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "whisper",
+				"lufs": -38.29,
+				"max_frame_rms_dbfs": -35.26,
+				"sha256": "cbbdaff8e43611a24b445ca31dbd20a43986cd72104e0e38aa3e907dd6fd25c4"
+			},
+			"oil.shout": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "shout",
+				"lufs": -16.17,
+				"max_frame_rms_dbfs": -10.5,
+				"sha256": "333bdbaa162773e3de89d220a1738c5a0d1f90b14f69f326bb499b3d3580e539"
+			},
+			"oil.talk": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -20.2,
+				"sha256": "cf0db03fc0a904aa37836a0b031ca520c2dbec1479083f76a18d9b895173f7e0"
+			},
+			"oil.whisper": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "whisper",
+				"lufs": -38.15,
+				"max_frame_rms_dbfs": -35.42,
+				"sha256": "ba74dcd1c7dbd51863db7017f1b73b1d748572a6b3148492abd6d391135e55dc"
+			},
+			"panting.take_1": {
+				"frames": 179,
+				"samples": 171360,
+				"duration_s": 3.57,
+				"band": "whisper",
+				"lufs": -38.29,
+				"max_frame_rms_dbfs": -34.74,
+				"sha256": "e5b22aeffc408ce6bfef897d0c4c16f21f6410a41898bef082dd41588cc0a5bf"
+			},
+			"quiet.shout": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "shout",
+				"lufs": -16.35,
+				"max_frame_rms_dbfs": -10.76,
+				"sha256": "366dbc95a347d0362ab5c7800e71013fc9b67979a25c1dc6d20d95d724827b0f"
+			},
+			"quiet.talk": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "talk",
+				"lufs": -26.33,
+				"max_frame_rms_dbfs": -19.98,
+				"sha256": "ee57ce40f56282d8bd0bf4b70c93a6e5d46d9a6e2c1349619409b5a93e3a49a2"
+			},
+			"quiet.whisper": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "whisper",
+				"lufs": -38.24,
+				"max_frame_rms_dbfs": -35.05,
+				"sha256": "58850af055f25df5649f9c63e5890d1ca38087aad6b7cef06d4e4390f872ba45"
+			},
+			"right.shout": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "shout",
+				"lufs": -16.4,
+				"max_frame_rms_dbfs": -10.91,
+				"sha256": "afc4265e2a0ec856f5b2bdd868f4870ad2f6cb57ac6d448c9ea143d1778a829d"
+			},
+			"right.talk": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -20.38,
+				"sha256": "0ebcd1e0c62fd4d671cbf0aec5c3667cd5e1291132a94f373b76d0dee1d83a38"
+			},
+			"right.whisper": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "whisper",
+				"lufs": -38.36,
+				"max_frame_rms_dbfs": -35.29,
+				"sha256": "8a7dcf863e2ec1bfd3498b10c03ae631abd65d7900eb13c96f1262e398969209"
+			},
+			"roll_all_right.talk": {
+				"frames": 34,
+				"samples": 31680,
+				"duration_s": 0.66,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -20.1,
+				"sha256": "93599ce2cdd12dcd2fab12cde94abeb421cfba20d30c6bbcb49cf60db5f09be9"
+			},
+			"roll_lamp.talk": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.1,
+				"max_frame_rms_dbfs": -19.01,
+				"sha256": "abc07210a2ff8dc361c380192fde49fb264118c7972fcdc3f08cfddb734054b6"
+			},
+			"scream.take_1": {
+				"frames": 52,
+				"samples": 49440,
+				"duration_s": 1.03,
+				"band": "scream",
+				"lufs": -10.15,
+				"max_frame_rms_dbfs": -7.56,
+				"sha256": "740ade661def014df6a6c058fc33c348da619903c4118b6f5f8a8f7ec6440e22"
+			},
+			"stop.shout": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "shout",
+				"lufs": -16.16,
+				"max_frame_rms_dbfs": -8.44,
+				"sha256": "0c69c54184fbd0d5892bbeb63e41b0afc714cfccdbf0187f0a10090bc587818b"
+			},
+			"stop.talk": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -19.18,
+				"sha256": "0812fc80ff8c12660404a823bf905880efee1539ad3c661bc51e8d5f3bd124c2"
+			},
+			"stop.whisper": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "whisper",
+				"lufs": -38.38,
+				"max_frame_rms_dbfs": -35.49,
+				"sha256": "3cfd2ed6e38f9b98236d62ec63ca01a0f229ddfba501d2ebe6f028185804f66e"
+			},
+			"stythe.shout": {
+				"frames": 130,
+				"samples": 124320,
+				"duration_s": 2.59,
+				"band": "shout",
+				"lufs": -16.23,
+				"max_frame_rms_dbfs": -9.33,
+				"sha256": "8ce9edc9b2d44bb1c7cdcaf2eb3e88b89539d3629768324961f7b763b27d04d7"
+			},
+			"stythe.talk": {
+				"frames": 145,
+				"samples": 138720,
+				"duration_s": 2.89,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -17.49,
+				"sha256": "fdaf9d28f9483bf3f5cb380475a4b47c49bbf38f88f4fe89b946c97641d327f9"
+			},
+			"stythe.whisper": {
+				"frames": 145,
+				"samples": 138720,
+				"duration_s": 2.89,
+				"band": "whisper",
+				"lufs": -38.38,
+				"max_frame_rms_dbfs": -34.82,
+				"sha256": "cc96f755d558d898845e3c5b593ec4816cda63c284fb1966880f91d1d764a2c0"
+			},
+			"tapping.shout": {
+				"frames": 141,
+				"samples": 134400,
+				"duration_s": 2.8,
+				"band": "shout",
+				"lufs": -16.35,
+				"max_frame_rms_dbfs": -7.76,
+				"sha256": "cbaa7310dd773c8f85668273c9794f8a3d6c0deabb0ff88d27e3a153a569bb4a"
+			},
+			"tapping.talk": {
+				"frames": 154,
+				"samples": 147360,
+				"duration_s": 3.07,
+				"band": "talk",
+				"lufs": -26.35,
+				"max_frame_rms_dbfs": -17.4,
+				"sha256": "5cd5d14e9c6227db46f50d3e3d458843a2bd9fc37405a2058d876efd1de58289"
+			},
+			"tapping.whisper": {
+				"frames": 154,
+				"samples": 147360,
+				"duration_s": 3.07,
+				"band": "whisper",
+				"lufs": -38.29,
+				"max_frame_rms_dbfs": -34.86,
+				"sha256": "8d4dbcb597f0001c7be3ade3b0c74af79b31ce2213caaaacb0da76c5aa7def74"
+			},
+			"trapped_cry.take_1": {
+				"frames": 113,
+				"samples": 107520,
+				"duration_s": 2.24,
+				"band": "shout",
+				"lufs": -16.29,
+				"max_frame_rms_dbfs": -9.57,
+				"sha256": "f2d1e66cae207cef90d67e43a1fae10adc3c268e0abab6e332767be16a7856f4"
+			}
+		},
+		"voice_6": {
+			"cough.take_1": {
+				"frames": 70,
+				"samples": 66720,
+				"duration_s": 1.39,
+				"band": "talk",
+				"lufs": -26.26,
+				"max_frame_rms_dbfs": -18.04,
+				"sha256": "1467c618b038d399714e48ca070a1f82f5720a36930ce970e8e7cfd40496b5e3"
+			},
+			"count_off.shout": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "shout",
+				"lufs": -16.13,
+				"max_frame_rms_dbfs": -9.78,
+				"sha256": "7c9ccfbfb59848c86d415663e15f9a366f6482a682014f19fec5ccaa88435c68"
+			},
+			"count_off.talk": {
+				"frames": 34,
+				"samples": 31680,
+				"duration_s": 0.66,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -18.73,
+				"sha256": "a562523c108842d612916008ea40368d75d27ea94bd31e26f7e87899b819841b"
+			},
+			"count_off.whisper": {
+				"frames": 36,
+				"samples": 33600,
+				"duration_s": 0.7,
+				"band": "whisper",
+				"lufs": -38.39,
+				"max_frame_rms_dbfs": -36.48,
+				"sha256": "acd39a518a4c17eccb12d42ba1c557ed396394f9ec692e60d01bbf37ab60bab7"
+			},
+			"digit_0.continuing": {
+				"frames": 15,
+				"samples": 13920,
+				"duration_s": 0.29,
+				"band": "talk",
+				"lufs": -26.26,
+				"max_frame_rms_dbfs": -22.77,
+				"sha256": "6e6cf2d908ef9496e364b299b4f2a9f0da3e10513d23c5bd43af4993bb8edec4"
+			},
+			"digit_0.final": {
+				"frames": 16,
+				"samples": 14400,
+				"duration_s": 0.3,
+				"band": "talk",
+				"lufs": -26.37,
+				"max_frame_rms_dbfs": -22.38,
+				"sha256": "a610af81261ea2b4fedd1c9f22220aff746b9a849b3b7628a2386d65001701f1"
+			},
+			"digit_1.continuing": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -18.85,
+				"sha256": "1a62a2baa78eedabd25d5d0a227a4753557ff92e33ebeedf78b1581b014e9664"
+			},
+			"digit_1.final": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -19.19,
+				"sha256": "fc4b36320a9dd7ca6525f0b8319b3bfbfb12c3e4697699bb16c7a75183019fe9"
+			},
+			"digit_2.continuing": {
+				"frames": 17,
+				"samples": 15840,
+				"duration_s": 0.33,
+				"band": "talk",
+				"lufs": -26.3,
+				"max_frame_rms_dbfs": -21.36,
+				"sha256": "afb9a518e17ba67ab9c2a8a39286c68fa2f0df93926a1e35004a2cced2e49ce3"
+			},
+			"digit_2.final": {
+				"frames": 17,
+				"samples": 15360,
+				"duration_s": 0.32,
+				"band": "talk",
+				"lufs": -26.29,
+				"max_frame_rms_dbfs": -20.77,
+				"sha256": "1368fb2d0273f46b64c680d0bd8a2f5e622592d88e24e165ef13b993b3d373ed"
+			},
+			"digit_3.continuing": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -21.93,
+				"sha256": "4c901b68f879b25e0adf10a63e3ffe439ef6daf4bb3b581420876c79530dd735"
+			},
+			"digit_3.final": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -22.04,
+				"sha256": "1a824e8b2de099a1f13694cbb6fc095ab627e09795fe41ce0706be4a49b7872b"
+			},
+			"digit_4.continuing": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "talk",
+				"lufs": -26.12,
+				"max_frame_rms_dbfs": -21.44,
+				"sha256": "8e2d46dcd284c1f5a827593f3978822d8f45fd084d9f7cac2c80e74e7038e382"
+			},
+			"digit_4.final": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "talk",
+				"lufs": -26.12,
+				"max_frame_rms_dbfs": -21.07,
+				"sha256": "00d748391cff132108b7184cf50075d7bdc2252fe3f311e1c15511725218bd27"
+			},
+			"digit_5.continuing": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.17,
+				"max_frame_rms_dbfs": -20.61,
+				"sha256": "516f427c30c1c4ace1a687cc53c0e13f2c4d4d2885b6d052342b7bddabe62acc"
+			},
+			"digit_5.final": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.17,
+				"max_frame_rms_dbfs": -20.8,
+				"sha256": "199776b95df6b9ec061dfbc36e7f5fc69a1e63e5050a5e49747bb3de74bf6965"
+			},
+			"digit_6.continuing": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -18.54,
+				"sha256": "636fbf078dd22aad260c806bb647b7c5a775fe2ce2733da1d9d863a2f8f58f70"
+			},
+			"digit_6.final": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -17.96,
+				"sha256": "b90e51c8d816c77b045a10cd97f1042e972030a37c989294fa4a14f866a11eef"
+			},
+			"digit_7.continuing": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -20.51,
+				"sha256": "fb11b9373958dd9259f518c5f976fedf0714484320ff51b9a9171ee89238c850"
+			},
+			"digit_7.final": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -20.05,
+				"sha256": "6987111d20d15c487f1407d2fa9fd2e0303f57f83d674ba636f6e956e2fb25a2"
+			},
+			"digit_8.continuing": {
+				"frames": 16,
+				"samples": 14880,
+				"duration_s": 0.31,
+				"band": "talk",
+				"lufs": -26.1,
+				"max_frame_rms_dbfs": -21.6,
+				"sha256": "b3bee72a186ae1529a9c4f88d3b68b525292bd40d6771d6afefde5265b4eb7e5"
+			},
+			"digit_8.final": {
+				"frames": 16,
+				"samples": 14400,
+				"duration_s": 0.3,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -21.52,
+				"sha256": "5f04c398c48ade6f49ee074d98335f9e5cf9c9073fc92cdf38f0372ee0e0873b"
+			},
+			"digit_9.continuing": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.29,
+				"max_frame_rms_dbfs": -20.98,
+				"sha256": "5692b254aa92590a15da8b8c20ee01c21126c4e46247bd406c25f19d0f2881e9"
+			},
+			"digit_9.final": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.17,
+				"max_frame_rms_dbfs": -21.4,
+				"sha256": "4e2652b852e969f32c86cbd301391c626c50fabe187ad2e81631639318ed9b87"
+			},
+			"douse.shout": {
+				"frames": 18,
+				"samples": 16320,
+				"duration_s": 0.34,
+				"band": "shout",
+				"lufs": -16.3,
+				"max_frame_rms_dbfs": -11.25,
+				"sha256": "da57c5f4620eac8410e01810f958f657b5f5e365aa315c72df74b3d07db2d572"
+			},
+			"douse.talk": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -20.76,
+				"sha256": "be6a4c4c9de6b0a75a32b7b6590ff4e1c90d7243cd7fedafae7bf1b9f3935ece"
+			},
+			"douse.whisper": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "whisper",
+				"lufs": -38.38,
+				"max_frame_rms_dbfs": -36.42,
+				"sha256": "791c8324777e9bf7669fa8fe6275fa70a1419a1c0e6e47f00d7d6ae9f0358cdb"
+			},
+			"gasp.take_1": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -22.2,
+				"sha256": "c3e94c5d851110dafebe3381aed17616e3f4df567402508a67b7973a4c6bce1f"
+			},
+			"gate.shout": {
+				"frames": 17,
+				"samples": 15360,
+				"duration_s": 0.32,
+				"band": "shout",
+				"lufs": -16.11,
+				"max_frame_rms_dbfs": -11.43,
+				"sha256": "1b061489fbdd182094b848ebc4675fe35b5c778580ae44ddca4bce484b30f3a5"
+			},
+			"gate.talk": {
+				"frames": 18,
+				"samples": 16800,
+				"duration_s": 0.35,
+				"band": "talk",
+				"lufs": -26.39,
+				"max_frame_rms_dbfs": -22.06,
+				"sha256": "41d126b7157fcabe6ee4889cb253dec5a3eb9c2f7da71da43e17518cddcaef45"
+			},
+			"gate.whisper": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "whisper",
+				"lufs": -38.05,
+				"max_frame_rms_dbfs": -35.88,
+				"sha256": "8a18ff502210c99213416f15d9174bed46f4f0c48bdeb49f7d9b1d9046942ddc"
+			},
+			"help.shout": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "shout",
+				"lufs": -16.37,
+				"max_frame_rms_dbfs": -10.27,
+				"sha256": "3733997e07af57a7d374f8e9445e00dd7253bd3b1f4c1c64ae5102498e9c0593"
+			},
+			"help.talk": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -19.31,
+				"sha256": "531d86a9e9ccbf4ff3e6c4388a6547dd360fdf427a8bc6fc980d4fce6c034c6c"
+			},
+			"help.whisper": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "whisper",
+				"lufs": -38.27,
+				"max_frame_rms_dbfs": -35.55,
+				"sha256": "fcec9bf6400336b806feb856ad102af093cba8c291586b89251514bf1dfc9f33"
+			},
+			"here.shout": {
+				"frames": 18,
+				"samples": 16320,
+				"duration_s": 0.34,
+				"band": "shout",
+				"lufs": -16.22,
+				"max_frame_rms_dbfs": -12.95,
+				"sha256": "3b0237ff74173a7188ab08bf7ca7dc48ac71e266cf5249bbd0ce961514030e65"
+			},
+			"here.talk": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.36,
+				"max_frame_rms_dbfs": -23.5,
+				"sha256": "f448fc7738dc6f79808c0f5f18d5a4de8e8be3cdf985471f8ef22a893358dac6"
+			},
+			"here.whisper": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "whisper",
+				"lufs": -38.28,
+				"max_frame_rms_dbfs": -36.29,
+				"sha256": "eeb6cfe2b46ef96f922655cf3032db207b718012d6ca287136877510ea6b92a8"
+			},
+			"is_that_you.shout": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "shout",
+				"lufs": -16.26,
+				"max_frame_rms_dbfs": -9.82,
+				"sha256": "c3e9ce3fe8d4da38f1c3c7f89129c94b73284413cdcd21765bf0691fc1c7463a"
+			},
+			"is_that_you.talk": {
+				"frames": 34,
+				"samples": 31680,
+				"duration_s": 0.66,
+				"band": "talk",
+				"lufs": -26.37,
+				"max_frame_rms_dbfs": -19.79,
+				"sha256": "eb78eb426acb4c1ae7494233149711e7e091017391818c02f16b7c3bc391ef5a"
+			},
+			"is_that_you.whisper": {
+				"frames": 34,
+				"samples": 32160,
+				"duration_s": 0.67,
+				"band": "whisper",
+				"lufs": -38.28,
+				"max_frame_rms_dbfs": -36.63,
+				"sha256": "96bde656fa655082866d1670b4e27a7db9fa03840e8ca821fccf64bc9b2087a7"
+			},
+			"left.shout": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "shout",
+				"lufs": -16.32,
+				"max_frame_rms_dbfs": -10.28,
+				"sha256": "b83f64f9c5fc82c87f0601ee62cb2940115727c3366fa8e6577a11134594906e"
+			},
+			"left.talk": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -19.99,
+				"sha256": "5b0091bd7d35b382082fb540dc483f2b73ead741f86c2d95092d8a2d772e439d"
+			},
+			"left.whisper": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "whisper",
+				"lufs": -38.38,
+				"max_frame_rms_dbfs": -35.47,
+				"sha256": "d29261fb00dd4024ef8cba721a3b8542080a4427d2f87b32d533e533a3102a59"
+			},
+			"light_up.shout": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "shout",
+				"lufs": -16.08,
+				"max_frame_rms_dbfs": -10.73,
+				"sha256": "1cc5437c3ba2d730b25274b23499ef62f4a358093278d944a5037896657bf25e"
+			},
+			"light_up.talk": {
+				"frames": 30,
+				"samples": 28320,
+				"duration_s": 0.59,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -21.17,
+				"sha256": "5b91efc34f281807f18007003fd4f545b923b59f4c49eaf8029ce8630a73a2c0"
+			},
+			"light_up.whisper": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "whisper",
+				"lufs": -38.36,
+				"max_frame_rms_dbfs": -36.27,
+				"sha256": "31c918df5348ca4fe235f8e7ef41c63a176ea2b2f54630d48e9cbb1a40c230e2"
+			},
+			"moan.take_1": {
+				"frames": 92,
+				"samples": 87840,
+				"duration_s": 1.83,
+				"band": "whisper",
+				"lufs": -38.25,
+				"max_frame_rms_dbfs": -34.93,
+				"sha256": "b77b9c5b5a36738a7d3ae3f0688cdf0d8c9a2c5cba837f8719ea9743735bcac0"
+			},
+			"moth.shout": {
+				"frames": 40,
+				"samples": 37920,
+				"duration_s": 0.79,
+				"band": "shout",
+				"lufs": -16.33,
+				"max_frame_rms_dbfs": -9.05,
+				"sha256": "b7325440ac3aa9e096359cbbef55e3d180f359db14121b5a2dc8c515411fa94f"
+			},
+			"moth.talk": {
+				"frames": 44,
+				"samples": 41760,
+				"duration_s": 0.87,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -17.27,
+				"sha256": "77c88cfde2f2efcf316e9d03a6df3f865228b2cdc36300e67e1ed8dab55f4799"
+			},
+			"moth.whisper": {
+				"frames": 47,
+				"samples": 44160,
+				"duration_s": 0.92,
+				"band": "whisper",
+				"lufs": -38.24,
+				"max_frame_rms_dbfs": -36.23,
+				"sha256": "f318db1849698ead9bc0b8e17f4c678aa1976f21930bfb68dd8d05841b01ef0f"
+			},
+			"now.shout": {
+				"frames": 18,
+				"samples": 16800,
+				"duration_s": 0.35,
+				"band": "shout",
+				"lufs": -16.4,
+				"max_frame_rms_dbfs": -12.52,
+				"sha256": "a1b50d94697b3447162616994d83fbed845e884218db4a59e2bbcabb71254d71"
+			},
+			"now.talk": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -21.77,
+				"sha256": "096b783496bed8e9660efe03c82179e79c7f31b84dd6e9624252cc626436efef"
+			},
+			"now.whisper": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "whisper",
+				"lufs": -38.02,
+				"max_frame_rms_dbfs": -35.69,
+				"sha256": "2234b59f83edbc86df4776d6924e2d2604f922e5082e43da166dee55eb6b6d2f"
+			},
+			"oil.shout": {
+				"frames": 17,
+				"samples": 15360,
+				"duration_s": 0.32,
+				"band": "shout",
+				"lufs": -16.31,
+				"max_frame_rms_dbfs": -10.45,
+				"sha256": "9f8f0063253ebf8f0aca006fad3d7b43118fd802751511495e1d94128dbf5bc0"
+			},
+			"oil.talk": {
+				"frames": 18,
+				"samples": 16800,
+				"duration_s": 0.35,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -19.33,
+				"sha256": "65c63bcf462f28d058100ae8b6a09449ac411fb3c35333aff069983f231952ae"
+			},
+			"oil.whisper": {
+				"frames": 19,
+				"samples": 17760,
+				"duration_s": 0.37,
+				"band": "whisper",
+				"lufs": -38.31,
+				"max_frame_rms_dbfs": -36.74,
+				"sha256": "a85e12c6d2b52580184814f2265c09b9540f72b99b8679a36e74933430d58deb"
+			},
+			"panting.take_1": {
+				"frames": 164,
+				"samples": 156480,
+				"duration_s": 3.26,
+				"band": "whisper",
+				"lufs": -38.46,
+				"max_frame_rms_dbfs": -34.79,
+				"sha256": "08b429de42d03b1e542dc84df9e55698602ba018d31d67670e988060c007ce60"
+			},
+			"quiet.shout": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "shout",
+				"lufs": -16.31,
+				"max_frame_rms_dbfs": -10.04,
+				"sha256": "b5a56a690793ca07cc298cf919ce0eecfa8e6eb3bd111f89d7e883b8a3112a04"
+			},
+			"quiet.talk": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.29,
+				"max_frame_rms_dbfs": -19.73,
+				"sha256": "da99f607a928b559236d7351a283dae447c3e5bda2d6f91b253789e68ac3dfdf"
+			},
+			"quiet.whisper": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "whisper",
+				"lufs": -38.21,
+				"max_frame_rms_dbfs": -36.25,
+				"sha256": "8e4cba6af58ae5ebe0fe24f41e7ddea47e3107c3b5a271e0440092ad120e521d"
+			},
+			"right.shout": {
+				"frames": 18,
+				"samples": 16800,
+				"duration_s": 0.35,
+				"band": "shout",
+				"lufs": -16.23,
+				"max_frame_rms_dbfs": -11.16,
+				"sha256": "01415c8574bff6034ad2c420da2df709742df185bf5104bac4e5960bb47e1727"
+			},
+			"right.talk": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -20.97,
+				"sha256": "11e3745f4b1ff1275e21cd1e7d1f919a0cb1b58ad829f3e9e0ab694879f379e5"
+			},
+			"right.whisper": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "whisper",
+				"lufs": -38.0,
+				"max_frame_rms_dbfs": -35.77,
+				"sha256": "93d8905c872d5c6696ba8f265b8ea688568af4f2bf24e02da68920a13173a764"
+			},
+			"roll_all_right.talk": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "talk",
+				"lufs": -26.39,
+				"max_frame_rms_dbfs": -19.1,
+				"sha256": "6d945bb74b1cbc1561f86a888c061c0c7325755bc66e131b720ca5a63cbe2930"
+			},
+			"roll_lamp.talk": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -18.72,
+				"sha256": "3a652e4bf7d3dd184d4ce84993a0a058413aae44e7380e3e3b9c9f3385de76af"
+			},
+			"scream.take_1": {
+				"frames": 46,
+				"samples": 43680,
+				"duration_s": 0.91,
+				"band": "scream",
+				"lufs": -10.15,
+				"max_frame_rms_dbfs": -7.08,
+				"sha256": "28ce78c29a2c91c44be5195b96b04eefebf6955da22f3f8e7195b82d4b06edfc"
+			},
+			"stop.shout": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "shout",
+				"lufs": -16.39,
+				"max_frame_rms_dbfs": -8.69,
+				"sha256": "4156453795af8b31b2d93e86f08d9b3620d062d4a107bdefd9661065c7c222ef"
+			},
+			"stop.talk": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -18.22,
+				"sha256": "69f0a9f6675682ef284657b834993364dd0bfbd7c334b8c0a8cb8100eb652ce7"
+			},
+			"stop.whisper": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -36.6,
+				"sha256": "2c167e2bbf7d25b65925c6da86186e28f8d88293ee4aa610efb40a10c060e318"
+			},
+			"stythe.shout": {
+				"frames": 117,
+				"samples": 111360,
+				"duration_s": 2.32,
+				"band": "shout",
+				"lufs": -16.29,
+				"max_frame_rms_dbfs": -9.51,
+				"sha256": "ae3f019865cd7f76d08eeeba270381dd6681546106e718fdc298f6a4f1194c99"
+			},
+			"stythe.talk": {
+				"frames": 128,
+				"samples": 122400,
+				"duration_s": 2.55,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -17.79,
+				"sha256": "db655178d73350e4debcfdb27bd8cd51c4d080886d085e789c1f07a42d7a9488"
+			},
+			"stythe.whisper": {
+				"frames": 132,
+				"samples": 126240,
+				"duration_s": 2.63,
+				"band": "whisper",
+				"lufs": -37.93,
+				"max_frame_rms_dbfs": -34.82,
+				"sha256": "b9a1092c35c7112f81fa9c453764594df4a93711f34df16d36ae56c5423087d4"
+			},
+			"tapping.shout": {
+				"frames": 129,
+				"samples": 122880,
+				"duration_s": 2.56,
+				"band": "shout",
+				"lufs": -16.26,
+				"max_frame_rms_dbfs": -7.74,
+				"sha256": "48b0950a6d5a9c4cf50df599ce5e11d8938ea9e76362e79cc93acd5d87203d28"
+			},
+			"tapping.talk": {
+				"frames": 141,
+				"samples": 134400,
+				"duration_s": 2.8,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -17.52,
+				"sha256": "1b1f7f214f65574dfe1c28120fa2304e1f4db6942533684ce79f67997cab1623"
+			},
+			"tapping.whisper": {
+				"frames": 144,
+				"samples": 137280,
+				"duration_s": 2.86,
+				"band": "whisper",
+				"lufs": -38.18,
+				"max_frame_rms_dbfs": -34.72,
+				"sha256": "e9b6c2149916c982eff956088b9ca7621ba03679f865ee0f055bb34c3e6752b8"
+			},
+			"trapped_cry.take_1": {
+				"frames": 100,
+				"samples": 95520,
+				"duration_s": 1.99,
+				"band": "shout",
+				"lufs": -16.35,
+				"max_frame_rms_dbfs": -8.19,
+				"sha256": "db23446d164e42cd198ed620a2cdca12077543fd0f161199b203ea020684d0d0"
+			}
+		},
+		"voice_7": {
+			"cough.take_1": {
+				"frames": 83,
+				"samples": 79200,
+				"duration_s": 1.65,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -18.65,
+				"sha256": "6baab16d29f1f586ca7e0ae9000accd66c419e738a8997b4be4cee11b2c17441"
+			},
+			"count_off.shout": {
+				"frames": 35,
+				"samples": 33120,
+				"duration_s": 0.69,
+				"band": "shout",
+				"lufs": -16.23,
+				"max_frame_rms_dbfs": -11.33,
+				"sha256": "a0e914ffcfea3a7efc9a02178293eda787da268a0cbffc8177ebdda4b73f57e3"
+			},
+			"count_off.talk": {
+				"frames": 39,
+				"samples": 36960,
+				"duration_s": 0.77,
+				"band": "talk",
+				"lufs": -26.15,
+				"max_frame_rms_dbfs": -20.25,
+				"sha256": "24ed27f34e37069ea73abb9ceefaccd03166a30c6d1b4747a25692cbebb77ca7"
+			},
+			"count_off.whisper": {
+				"frames": 39,
+				"samples": 36480,
+				"duration_s": 0.76,
+				"band": "whisper",
+				"lufs": -38.31,
+				"max_frame_rms_dbfs": -36.31,
+				"sha256": "02b69412b5b46d226f834c575418d438c4a142ed3535db6aa80bf16e969305e5"
+			},
+			"digit_0.continuing": {
+				"frames": 16,
+				"samples": 14880,
+				"duration_s": 0.31,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -22.93,
+				"sha256": "c81bc13963e842705884b837268020f21895a9b923e67310efbe41773bb06d05"
+			},
+			"digit_0.final": {
+				"frames": 16,
+				"samples": 14400,
+				"duration_s": 0.3,
+				"band": "talk",
+				"lufs": -26.08,
+				"max_frame_rms_dbfs": -22.44,
+				"sha256": "101d3896ad1381243c94c003535fe582f31123afb16666a8500fba35d0666a92"
+			},
+			"digit_1.continuing": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.06,
+				"max_frame_rms_dbfs": -21.21,
+				"sha256": "9572ec8ff75cd3a9759d573d4dd2b82be02fbd6ab1456e94394bb1f69b3b9fa3"
+			},
+			"digit_1.final": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "talk",
+				"lufs": -26.07,
+				"max_frame_rms_dbfs": -20.96,
+				"sha256": "c4ce5e5906ed53caf7829643bdb8d70de4433ac24ceabfbbfe69e3910debc9ab"
+			},
+			"digit_2.continuing": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "talk",
+				"lufs": -26.14,
+				"max_frame_rms_dbfs": -23.05,
+				"sha256": "ca74f748d35243ffe23ba708a7766a7d067ebc7ee420cf87c52e364ae8811f32"
+			},
+			"digit_2.final": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "talk",
+				"lufs": -26.09,
+				"max_frame_rms_dbfs": -22.06,
+				"sha256": "5e6b0cf073caf0942e731d9294c0484b4da90235a460f6789a88ba7bf1f04020"
+			},
+			"digit_3.continuing": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.01,
+				"max_frame_rms_dbfs": -22.87,
+				"sha256": "9b38781f633b8125f722c830132deaf987d5685b137ffe62c5a22fa9a1744c55"
+			},
+			"digit_3.final": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "talk",
+				"lufs": -26.09,
+				"max_frame_rms_dbfs": -22.86,
+				"sha256": "53736db39040396583c0810192acabf5a61ae1b0e2f268b089fdcb2bd8d3c5c7"
+			},
+			"digit_4.continuing": {
+				"frames": 19,
+				"samples": 17760,
+				"duration_s": 0.37,
+				"band": "talk",
+				"lufs": -26.02,
+				"max_frame_rms_dbfs": -21.95,
+				"sha256": "f0ec1df1f9e68ae9aef579c6e16fbb4f28f5cfa856145255685230f14a3af2f3"
+			},
+			"digit_4.final": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.08,
+				"max_frame_rms_dbfs": -20.67,
+				"sha256": "f66180d811530fa698b02b1270fb3ba0ff91c59f16387ad1de1f86682cd56f78"
+			},
+			"digit_5.continuing": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -21.03,
+				"sha256": "b430b0d87ff285f28d9a47c92941b72c216f99fd6c8d64a3ee5c72dd8dbebcab"
+			},
+			"digit_5.final": {
+				"frames": 28,
+				"samples": 26400,
+				"duration_s": 0.55,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -21.09,
+				"sha256": "136d4f32d3ef546ccdf3363ea324cf4b2c7762e82e0716351c6b918230970f63"
+			},
+			"digit_6.continuing": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -19.19,
+				"sha256": "c1a5540f28a925fa6753908683003a5aad4f5de3752a01907e4e1184efbcee45"
+			},
+			"digit_6.final": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.38,
+				"max_frame_rms_dbfs": -18.6,
+				"sha256": "28272125960cb98298baff942420860c427f91b5fa82efec35d44524b615cc41"
+			},
+			"digit_7.continuing": {
+				"frames": 30,
+				"samples": 28320,
+				"duration_s": 0.59,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -20.55,
+				"sha256": "7f07b59ff6f967d6d49e1e83fb8fef9fec7c287a97ea0efab39801853ce6409e"
+			},
+			"digit_7.final": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -19.99,
+				"sha256": "af9aadf35cfd5e972a9c23085369343bcf2dc4bea5761372e56392c0fecbf5d6"
+			},
+			"digit_8.continuing": {
+				"frames": 18,
+				"samples": 16320,
+				"duration_s": 0.34,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -21.15,
+				"sha256": "a1757fcb1d4df42d882628143cb9486a0ae08300556e5e00dac11ef079d21cf2"
+			},
+			"digit_8.final": {
+				"frames": 18,
+				"samples": 16320,
+				"duration_s": 0.34,
+				"band": "talk",
+				"lufs": -26.06,
+				"max_frame_rms_dbfs": -20.46,
+				"sha256": "437aa92f21d658a615c24021dcea582a95e1bb9d25b8a0b25dae031f8d0680d5"
+			},
+			"digit_9.continuing": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -20.52,
+				"sha256": "dd8f9043a5c5109e4bbedc9d040a3d5cff62d1d817ee09eb3427a82c6c0849b9"
+			},
+			"digit_9.final": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "talk",
+				"lufs": -26.15,
+				"max_frame_rms_dbfs": -19.68,
+				"sha256": "74003a64db981e3a571e4dbd3c5f35a3359f32cea552853505b06d68deef8a2c"
+			},
+			"douse.shout": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "shout",
+				"lufs": -16.12,
+				"max_frame_rms_dbfs": -11.11,
+				"sha256": "d040035254c99a46ee3ac4a43080cc9798407fc21678d377e4e9543cbd67afe9"
+			},
+			"douse.talk": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "talk",
+				"lufs": -26.22,
+				"max_frame_rms_dbfs": -19.63,
+				"sha256": "e7c0f865a17634e4241242f0a4eaa2b28fc74a38fbf2920c67ed82fdfe5fa122"
+			},
+			"douse.whisper": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "whisper",
+				"lufs": -38.11,
+				"max_frame_rms_dbfs": -36.07,
+				"sha256": "9800b2ac6c329db8f299c2e2f8dd53667221271c0762981db64ad1f663c9c5a5"
+			},
+			"gasp.take_1": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -22.17,
+				"sha256": "feb0322f19e4b1702b809f5b1bd64d20d9934ac0e4e9c33a040bffdd3a919c25"
+			},
+			"gate.shout": {
+				"frames": 18,
+				"samples": 16320,
+				"duration_s": 0.34,
+				"band": "shout",
+				"lufs": -16.15,
+				"max_frame_rms_dbfs": -11.01,
+				"sha256": "6a3097ccd1a37c4e7a005f6738803bf1e16c2cdab2f3cc355b4df6ca2e3295b2"
+			},
+			"gate.talk": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "talk",
+				"lufs": -26.0,
+				"max_frame_rms_dbfs": -19.75,
+				"sha256": "302668bd9d4bbff4d2ae68c539151f495668358668589b7e0eb5e9d168f23a1b"
+			},
+			"gate.whisper": {
+				"frames": 19,
+				"samples": 17760,
+				"duration_s": 0.37,
+				"band": "whisper",
+				"lufs": -38.23,
+				"max_frame_rms_dbfs": -36.83,
+				"sha256": "bb8b1469aa94e3e33638896f26fc609960460dc3636a62aa1cc17035f6cd3608"
+			},
+			"help.shout": {
+				"frames": 26,
+				"samples": 24000,
+				"duration_s": 0.5,
+				"band": "shout",
+				"lufs": -16.12,
+				"max_frame_rms_dbfs": -10.51,
+				"sha256": "ad4ec1e0ff08067c709137901a26bf29913ad00eecf6a24e9dda7df9758f72bd"
+			},
+			"help.talk": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "talk",
+				"lufs": -26.13,
+				"max_frame_rms_dbfs": -19.14,
+				"sha256": "3da87817fbc23b3e1408a38e11d554c345fe80e14d31c1ed8de0a802d4033c5d"
+			},
+			"help.whisper": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "whisper",
+				"lufs": -38.23,
+				"max_frame_rms_dbfs": -36.67,
+				"sha256": "56929f309f3655814276a1957ba9036959d5c3efcf9fe523d3d1da959202e691"
+			},
+			"here.shout": {
+				"frames": 17,
+				"samples": 15360,
+				"duration_s": 0.32,
+				"band": "shout",
+				"lufs": -16.22,
+				"max_frame_rms_dbfs": -10.99,
+				"sha256": "3cb775eaa0135d5a6229e4fdeabea9e6cf5cc65b7f2af72a6c90e2c482908565"
+			},
+			"here.talk": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "talk",
+				"lufs": -26.02,
+				"max_frame_rms_dbfs": -19.8,
+				"sha256": "17bb813e48a47ec6eff549692bbc9288ae8de112d6d092368bd39f6a8440cbd0"
+			},
+			"here.whisper": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "whisper",
+				"lufs": -38.26,
+				"max_frame_rms_dbfs": -36.29,
+				"sha256": "54a6dab62ce8111f5ff835c247f60e4ee24b550dd71774394d984f6ae5bdaab6"
+			},
+			"is_that_you.shout": {
+				"frames": 35,
+				"samples": 32640,
+				"duration_s": 0.68,
+				"band": "shout",
+				"lufs": -16.24,
+				"max_frame_rms_dbfs": -11.25,
+				"sha256": "b49f7c2f13967247af8e5d0dcf0cf2163e0ab069e2e3cdc13d83b8218f071f52"
+			},
+			"is_that_you.talk": {
+				"frames": 39,
+				"samples": 36480,
+				"duration_s": 0.76,
+				"band": "talk",
+				"lufs": -26.34,
+				"max_frame_rms_dbfs": -20.85,
+				"sha256": "6d38ccb4676ce97626947e048e5c6f4e8ae26c89c3640460da214683602eb28c"
+			},
+			"is_that_you.whisper": {
+				"frames": 38,
+				"samples": 36000,
+				"duration_s": 0.75,
+				"band": "whisper",
+				"lufs": -38.12,
+				"max_frame_rms_dbfs": -36.29,
+				"sha256": "db3f82f2525c7dcb2f3e2997ec3879b0e7158d055e3af787493f440eb1ea3565"
+			},
+			"left.shout": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "shout",
+				"lufs": -16.17,
+				"max_frame_rms_dbfs": -10.54,
+				"sha256": "12046d76debd67cf10130a92f5cb6ac0ac6417d6fc96edeb7ef41742e2a15a66"
+			},
+			"left.talk": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.01,
+				"max_frame_rms_dbfs": -19.2,
+				"sha256": "9b948d134585f88d8326df0eb90cfdc2df2c95120370d338b6c034d17fd62bc9"
+			},
+			"left.whisper": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "whisper",
+				"lufs": -38.15,
+				"max_frame_rms_dbfs": -36.73,
+				"sha256": "ebc25937d505e982dc010d7426ebcbbe1bcd5252f4ba65fcd3eb3bd0b23595f9"
+			},
+			"light_up.shout": {
+				"frames": 30,
+				"samples": 27840,
+				"duration_s": 0.58,
+				"band": "shout",
+				"lufs": -16.31,
+				"max_frame_rms_dbfs": -11.22,
+				"sha256": "88d75ca4994e8f080f623dd102ef43dd96550e70bd0edace3e4f9ec902acd36e"
+			},
+			"light_up.talk": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -18.41,
+				"sha256": "3254f12ebaf8e7237c434b9fdf6fec29248d94199d3390ef68080e4e560d9403"
+			},
+			"light_up.whisper": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "whisper",
+				"lufs": -38.35,
+				"max_frame_rms_dbfs": -35.98,
+				"sha256": "8b799ccbeceb23bd3cc2eb097272b849477f0e4a12115eb91c1ec8afe46ec47a"
+			},
+			"moan.take_1": {
+				"frames": 114,
+				"samples": 108960,
+				"duration_s": 2.27,
+				"band": "whisper",
+				"lufs": -38.34,
+				"max_frame_rms_dbfs": -34.94,
+				"sha256": "1eb2c17f429e42fe33a10fbb3ca2634e41aeca656fd88632027cee938ec24e74"
+			},
+			"moth.shout": {
+				"frames": 47,
+				"samples": 44160,
+				"duration_s": 0.92,
+				"band": "shout",
+				"lufs": -16.26,
+				"max_frame_rms_dbfs": -9.74,
+				"sha256": "6dd4667da86c93ab42ccc2b61beed04aa0bab7447d774a76dbd689c0822e4f9a"
+			},
+			"moth.talk": {
+				"frames": 52,
+				"samples": 48960,
+				"duration_s": 1.02,
+				"band": "talk",
+				"lufs": -26.17,
+				"max_frame_rms_dbfs": -18.85,
+				"sha256": "0f4907ecf5a0411fd5ae6435bcc5ab5447b45fd0ef3e81e4811af54bed3555c6"
+			},
+			"moth.whisper": {
+				"frames": 52,
+				"samples": 48960,
+				"duration_s": 1.02,
+				"band": "whisper",
+				"lufs": -38.34,
+				"max_frame_rms_dbfs": -35.94,
+				"sha256": "b24c4cc31a801a0d9eef9699d2cb7f28e43b9ae4e02b7ffba72a1ce464716346"
+			},
+			"now.shout": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "shout",
+				"lufs": -16.16,
+				"max_frame_rms_dbfs": -13.0,
+				"sha256": "7c9187ba23712f2d6bb67400c9155e7c4f6961292bb6688b3b03279f0b31ecee"
+			},
+			"now.talk": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "talk",
+				"lufs": -26.09,
+				"max_frame_rms_dbfs": -21.16,
+				"sha256": "39945b469854c8fedd601950d16fc04361769e2d476025aedd111e0387872d12"
+			},
+			"now.whisper": {
+				"frames": 23,
+				"samples": 21120,
+				"duration_s": 0.44,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -35.62,
+				"sha256": "f8fbaaef19c3148f510b4106a590028d85bbd9bbefd354799b02d3bce248b352"
+			},
+			"oil.shout": {
+				"frames": 19,
+				"samples": 17280,
+				"duration_s": 0.36,
+				"band": "shout",
+				"lufs": -16.32,
+				"max_frame_rms_dbfs": -12.0,
+				"sha256": "2945e5335629215f89e5072777d37652f7bb0301dec9a89e56fa07bfd351b657"
+			},
+			"oil.talk": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -22.14,
+				"sha256": "bfd2841c0cf8c520099ff4e2ee45f0c2220edb04c31ab9095a8e5ff55496e094"
+			},
+			"oil.whisper": {
+				"frames": 20,
+				"samples": 18720,
+				"duration_s": 0.39,
+				"band": "whisper",
+				"lufs": -38.35,
+				"max_frame_rms_dbfs": -36.55,
+				"sha256": "37ee813237655980f9dc2eaffc5b423cdd9a4aa78b640856832014268c058e06"
+			},
+			"panting.take_1": {
+				"frames": 187,
+				"samples": 179040,
+				"duration_s": 3.73,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -34.65,
+				"sha256": "508139441c434a18319f7c1ebffabac819be8a85f7ab490b3378bc26f0a76b98"
+			},
+			"quiet.shout": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "shout",
+				"lufs": -16.24,
+				"max_frame_rms_dbfs": -11.44,
+				"sha256": "afe7c52b6dd8e3dca1df27e1f9dc31781106f99da6a8677f42523c991ddd389b"
+			},
+			"quiet.talk": {
+				"frames": 29,
+				"samples": 26880,
+				"duration_s": 0.56,
+				"band": "talk",
+				"lufs": -26.35,
+				"max_frame_rms_dbfs": -21.07,
+				"sha256": "c2da7376db86f51a6313b53a14eef7afdc9d34a8b23a76bc64bc05d19c97be79"
+			},
+			"quiet.whisper": {
+				"frames": 29,
+				"samples": 26880,
+				"duration_s": 0.56,
+				"band": "whisper",
+				"lufs": -38.27,
+				"max_frame_rms_dbfs": -36.12,
+				"sha256": "53ec13a3c21e540d804169ba68f0ce134c5da4e7c39ca7ef360e35af390397ce"
+			},
+			"right.shout": {
+				"frames": 20,
+				"samples": 18240,
+				"duration_s": 0.38,
+				"band": "shout",
+				"lufs": -16.27,
+				"max_frame_rms_dbfs": -10.88,
+				"sha256": "694fd8777ae479d7ee54dc9e7bec4d572951fbcd69718f2a4c724fc6c37746d9"
+			},
+			"right.talk": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -19.69,
+				"sha256": "c380353d1995aa800c80134f0cf2165ed911c08883787f06c1b145d1b0fd5628"
+			},
+			"right.whisper": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "whisper",
+				"lufs": -38.08,
+				"max_frame_rms_dbfs": -36.31,
+				"sha256": "c40a12bbbc4d361e9438970bc67a6b6858d80037e2eddd12cb0f54333326f04d"
+			},
+			"roll_all_right.talk": {
+				"frames": 32,
+				"samples": 30240,
+				"duration_s": 0.63,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -19.26,
+				"sha256": "d9b64dcce78b82c0382d0c697179b6cf5990100b790a31387f4dbd109e27e6af"
+			},
+			"roll_lamp.talk": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.14,
+				"max_frame_rms_dbfs": -20.94,
+				"sha256": "acb36a50beeee8a00885cfc283de5638846f4407e30a537ca49670a96e4c873f"
+			},
+			"scream.take_1": {
+				"frames": 58,
+				"samples": 54720,
+				"duration_s": 1.14,
+				"band": "scream",
+				"lufs": -10.16,
+				"max_frame_rms_dbfs": -6.8,
+				"sha256": "950f4430f6143360410e2bb9079bf1c4e7a49ba251b268409be5277886da18fd"
+			},
+			"stop.shout": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "shout",
+				"lufs": -16.27,
+				"max_frame_rms_dbfs": -10.14,
+				"sha256": "7c5b20aecb901083de372311f88fc9dc7aa93f22848733b6d980bafbcdd80723"
+			},
+			"stop.talk": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -19.86,
+				"sha256": "192b914369280a165a09355b08f4b713c0bb9ef869f87c892371a997a8f157f6"
+			},
+			"stop.whisper": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "whisper",
+				"lufs": -38.27,
+				"max_frame_rms_dbfs": -35.97,
+				"sha256": "ef4f5edeb5d2353d2c25938e0bd5cd1f0d6802c756f4c124b2d6360f21e341bd"
+			},
+			"stythe.shout": {
+				"frames": 133,
+				"samples": 126720,
+				"duration_s": 2.64,
+				"band": "shout",
+				"lufs": -16.31,
+				"max_frame_rms_dbfs": -9.4,
+				"sha256": "712409e3ff22c5bc7cffac81f35732735499b4eca90bdc83f243196340725907"
+			},
+			"stythe.talk": {
+				"frames": 148,
+				"samples": 141120,
+				"duration_s": 2.94,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -17.15,
+				"sha256": "9200ddbbb2efc0c8246c424bbcfc5e60d1b076c4461d6734386f49fb41eb7f95"
+			},
+			"stythe.whisper": {
+				"frames": 148,
+				"samples": 141600,
+				"duration_s": 2.95,
+				"band": "whisper",
+				"lufs": -38.25,
+				"max_frame_rms_dbfs": -35.17,
+				"sha256": "25011803ae3b3e6fbf0fc116bd2b3386907fb0ae1fdbc3facca2a04b9bdae2ea"
+			},
+			"tapping.shout": {
+				"frames": 146,
+				"samples": 139200,
+				"duration_s": 2.9,
+				"band": "shout",
+				"lufs": -16.15,
+				"max_frame_rms_dbfs": -9.52,
+				"sha256": "9dffdd028a20eb999f46fa711941799e9adef0f7840335dfca3c3150d76bca2a"
+			},
+			"tapping.talk": {
+				"frames": 142,
+				"samples": 135360,
+				"duration_s": 2.82,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -17.08,
+				"sha256": "1bbca457c91ff775d970a2a29e4be321580770fff441ab0074d20aa4f35511fc"
+			},
+			"tapping.whisper": {
+				"frames": 142,
+				"samples": 135360,
+				"duration_s": 2.82,
+				"band": "whisper",
+				"lufs": -37.61,
+				"max_frame_rms_dbfs": -35.05,
+				"sha256": "32c97d0014d9e64a887f032b40237cf4e125dfb41b5a737c56d19cac92d6d9cb"
+			},
+			"trapped_cry.take_1": {
+				"frames": 115,
+				"samples": 109920,
+				"duration_s": 2.29,
+				"band": "shout",
+				"lufs": -16.15,
+				"max_frame_rms_dbfs": -8.96,
+				"sha256": "d57539b4e79a925eb983849e3896a56aeddb67dba3b84cf443e2f0c65755a745"
+			}
+		},
+		"voice_8": {
+			"cough.take_1": {
+				"frames": 88,
+				"samples": 84000,
+				"duration_s": 1.75,
+				"band": "talk",
+				"lufs": -26.36,
+				"max_frame_rms_dbfs": -18.57,
+				"sha256": "75f27d18e61ac146e70e090ac723bb7a93dbbc93d23808d04c93227c5825b8b2"
+			},
+			"count_off.shout": {
+				"frames": 35,
+				"samples": 32640,
+				"duration_s": 0.68,
+				"band": "shout",
+				"lufs": -16.15,
+				"max_frame_rms_dbfs": -10.57,
+				"sha256": "8ea07f23a48cb3f38401d7c68cdf172c08d50aecb1e6d95b50c83c2681a8420b"
+			},
+			"count_off.talk": {
+				"frames": 37,
+				"samples": 35040,
+				"duration_s": 0.73,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -18.69,
+				"sha256": "e92eba8f3af4229e9b98e42642306cda0875d4b71a3cc3395cd2c7c5c251e57a"
+			},
+			"count_off.whisper": {
+				"frames": 37,
+				"samples": 34560,
+				"duration_s": 0.72,
+				"band": "whisper",
+				"lufs": -38.36,
+				"max_frame_rms_dbfs": -36.03,
+				"sha256": "0d1a91c2cec9ee338ed49fa9a8ee0c89ac780b3dc011a5b5fd279e3233b4106b"
+			},
+			"digit_0.continuing": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -20.58,
+				"sha256": "2d0e2e1de2fb3148917d72f61c18247696c7584687b7d3bbe836b9e7b1fe4f0e"
+			},
+			"digit_0.final": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.16,
+				"max_frame_rms_dbfs": -21.78,
+				"sha256": "6092f55f5a5c727f6d20f0ce66f9a6f1c55b2bbb3a0c0c0398da17aaec216aa3"
+			},
+			"digit_1.continuing": {
+				"frames": 29,
+				"samples": 26880,
+				"duration_s": 0.56,
+				"band": "talk",
+				"lufs": -26.07,
+				"max_frame_rms_dbfs": -19.54,
+				"sha256": "5d4c5114ce1690c200fff6dd60a5b395ea9e5c9d4e02651b2a53141104858860"
+			},
+			"digit_1.final": {
+				"frames": 29,
+				"samples": 26880,
+				"duration_s": 0.56,
+				"band": "talk",
+				"lufs": -26.07,
+				"max_frame_rms_dbfs": -19.54,
+				"sha256": "5d4c5114ce1690c200fff6dd60a5b395ea9e5c9d4e02651b2a53141104858860"
+			},
+			"digit_2.continuing": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "talk",
+				"lufs": -26.28,
+				"max_frame_rms_dbfs": -22.4,
+				"sha256": "fdc86cd97f89708a02585c0db93785aa559b3473f9edb06ac9cfd02f4c8d5358"
+			},
+			"digit_2.final": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "talk",
+				"lufs": -26.23,
+				"max_frame_rms_dbfs": -21.4,
+				"sha256": "8533067285df557aaca259fd92bd67ffcbe2bac6869e8d445e00be0085374e83"
+			},
+			"digit_3.continuing": {
+				"frames": 30,
+				"samples": 27840,
+				"duration_s": 0.58,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -21.67,
+				"sha256": "f0a84c2fd2856166e148e937701f890436ef8ddd3a4d070af7c714cc52a928bf"
+			},
+			"digit_3.final": {
+				"frames": 30,
+				"samples": 27840,
+				"duration_s": 0.58,
+				"band": "talk",
+				"lufs": -26.19,
+				"max_frame_rms_dbfs": -21.97,
+				"sha256": "9102cec2dca9f2d8770afe6f4f5cd173f4e7cdb316e0f73f05908c008a2b649a"
+			},
+			"digit_4.continuing": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.21,
+				"max_frame_rms_dbfs": -20.97,
+				"sha256": "0eb9837c8c3dbfb783585ab362d2f4998fd495c3121f25f6f74d2ef1f29f5889"
+			},
+			"digit_4.final": {
+				"frames": 31,
+				"samples": 28800,
+				"duration_s": 0.6,
+				"band": "talk",
+				"lufs": -26.38,
+				"max_frame_rms_dbfs": -21.66,
+				"sha256": "093a67a96431c261192f2d69ffbabef67bbac0a2c2f1b8bb1c46f4e7610bda5a"
+			},
+			"digit_5.continuing": {
+				"frames": 29,
+				"samples": 27360,
+				"duration_s": 0.57,
+				"band": "talk",
+				"lufs": -26.35,
+				"max_frame_rms_dbfs": -20.53,
+				"sha256": "db840f97be77057c0b77cff79e57e03ef2b3f6c296869e9a371eef62832fb70c"
+			},
+			"digit_5.final": {
+				"frames": 29,
+				"samples": 26880,
+				"duration_s": 0.56,
+				"band": "talk",
+				"lufs": -26.38,
+				"max_frame_rms_dbfs": -20.49,
+				"sha256": "9dd2fdd5040ef59e45b58aba2f77aff4e30a0d51db13a20609ef938d47d5f23d"
+			},
+			"digit_6.continuing": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "talk",
+				"lufs": -26.37,
+				"max_frame_rms_dbfs": -19.14,
+				"sha256": "06b5270088a79a05967b5b7ca2af7afb2fa827b3d56aefb1d7a0ed188d3d4fdb"
+			},
+			"digit_6.final": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -18.63,
+				"sha256": "1c074a74333fa8e16b7e7a075d70e64db71cafbad55b3ba3ca0d1ff2a709183c"
+			},
+			"digit_7.continuing": {
+				"frames": 35,
+				"samples": 32640,
+				"duration_s": 0.68,
+				"band": "talk",
+				"lufs": -26.35,
+				"max_frame_rms_dbfs": -20.13,
+				"sha256": "f2568f8a1d4dfa884fa666947d40f768471b46193757932ba64da9df5746705b"
+			},
+			"digit_7.final": {
+				"frames": 35,
+				"samples": 33120,
+				"duration_s": 0.69,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -20.71,
+				"sha256": "981da9627d63e2d10f4a0fff84ee6a8736b8fe3af1a913cffb344258ce4df5b1"
+			},
+			"digit_8.continuing": {
+				"frames": 21,
+				"samples": 19680,
+				"duration_s": 0.41,
+				"band": "talk",
+				"lufs": -26.24,
+				"max_frame_rms_dbfs": -21.23,
+				"sha256": "2c01ac009c0a3ec0d5e17f181ef650418b07084734f76e8112e9de71faffe877"
+			},
+			"digit_8.final": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "talk",
+				"lufs": -26.14,
+				"max_frame_rms_dbfs": -21.69,
+				"sha256": "26dc1c7b7c2a6cf301bf44c097c674ec30c373e95b02541b6ae160f90b8558b0"
+			},
+			"digit_9.continuing": {
+				"frames": 33,
+				"samples": 30720,
+				"duration_s": 0.64,
+				"band": "talk",
+				"lufs": -26.17,
+				"max_frame_rms_dbfs": -19.39,
+				"sha256": "1ebc61cfaf866cae9bb17402ceaa1d4b865bc21d1a2f7901e4f8ee57d8e9c4ed"
+			},
+			"digit_9.final": {
+				"frames": 33,
+				"samples": 30720,
+				"duration_s": 0.64,
+				"band": "talk",
+				"lufs": -26.26,
+				"max_frame_rms_dbfs": -19.5,
+				"sha256": "f2e47213fa4f6f614410a59b0447f97447c56b82b62387be91e1420b3ee078b0"
+			},
+			"douse.shout": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "shout",
+				"lufs": -16.27,
+				"max_frame_rms_dbfs": -10.56,
+				"sha256": "24a843f2a12d204aaadbe8c05e78e97ffbe719c1347d36922d671d8d2828ab34"
+			},
+			"douse.talk": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -19.54,
+				"sha256": "db41e82e4fd924b9879a3c93fd94ddd3d9ac031c8035ae4f1cc2f32bfb514160"
+			},
+			"douse.whisper": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "whisper",
+				"lufs": -38.39,
+				"max_frame_rms_dbfs": -36.38,
+				"sha256": "619452b926858e8fd7932b633a4ec497a9bb5844db1ef889a9a20b5ef5b97f13"
+			},
+			"gasp.take_1": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "talk",
+				"lufs": -26.29,
+				"max_frame_rms_dbfs": -22.41,
+				"sha256": "81039b1d773b2924535796c0e61eadc2913d3393a324859afc071c2e2703c91f"
+			},
+			"gate.shout": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "shout",
+				"lufs": -16.09,
+				"max_frame_rms_dbfs": -10.73,
+				"sha256": "baeebe517054cfb6ae976f2008fc32fc2db4a3ccb55d94f6397bd81580bfc718"
+			},
+			"gate.talk": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "talk",
+				"lufs": -26.11,
+				"max_frame_rms_dbfs": -19.18,
+				"sha256": "a2cd0b98f52a9b46e9a61fca161734eb815d6a10deafdbdb7f67434b333faa2a"
+			},
+			"gate.whisper": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "whisper",
+				"lufs": -38.21,
+				"max_frame_rms_dbfs": -35.89,
+				"sha256": "382b0719acc54209157f9c6b07a4116ac31b0bd5ad9ae3ec4546387ffc97531f"
+			},
+			"help.shout": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "shout",
+				"lufs": -16.33,
+				"max_frame_rms_dbfs": -10.98,
+				"sha256": "9bff1d335764b795a3fba3f9fa7d20495ace110925a5a6dde25a7e5e293e1428"
+			},
+			"help.talk": {
+				"frames": 23,
+				"samples": 21600,
+				"duration_s": 0.45,
+				"band": "talk",
+				"lufs": -26.2,
+				"max_frame_rms_dbfs": -20.25,
+				"sha256": "1f19b00c122d41d90325aec7239bdeb6ee0c267121ae61bdf1000f3d23db48f9"
+			},
+			"help.whisper": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "whisper",
+				"lufs": -38.24,
+				"max_frame_rms_dbfs": -35.58,
+				"sha256": "eda8ade38c8b17dd61736aa3d7b1cf5498e6bf7ab25d16c32b703fef82576166"
+			},
+			"here.shout": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "shout",
+				"lufs": -16.18,
+				"max_frame_rms_dbfs": -13.35,
+				"sha256": "05dabec11ff6b8c9d4de263de2e10d9d6ce545fdda1d28095bdd2aadf8152b41"
+			},
+			"here.talk": {
+				"frames": 27,
+				"samples": 24960,
+				"duration_s": 0.52,
+				"band": "talk",
+				"lufs": -26.15,
+				"max_frame_rms_dbfs": -22.66,
+				"sha256": "50d363fab5839757e39ef384adb9ed472f5321c2681faa66e4905191420d37e7"
+			},
+			"here.whisper": {
+				"frames": 21,
+				"samples": 19200,
+				"duration_s": 0.4,
+				"band": "whisper",
+				"lufs": -38.32,
+				"max_frame_rms_dbfs": -36.03,
+				"sha256": "419a2816cef29b8b5d7aa88e45d13f720597712c2bfb2e41b5cc69ab4ddb5f46"
+			},
+			"is_that_you.shout": {
+				"frames": 41,
+				"samples": 38880,
+				"duration_s": 0.81,
+				"band": "shout",
+				"lufs": -16.39,
+				"max_frame_rms_dbfs": -10.07,
+				"sha256": "30b9028d180cd08487301205a3cd569b8230a09081026846f1031b48f6f6bac6"
+			},
+			"is_that_you.talk": {
+				"frames": 46,
+				"samples": 43200,
+				"duration_s": 0.9,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -18.8,
+				"sha256": "74908e46f1631ec46a37c5236ee489cd974c084857526fd453efd39637dc17b5"
+			},
+			"is_that_you.whisper": {
+				"frames": 39,
+				"samples": 36960,
+				"duration_s": 0.77,
+				"band": "whisper",
+				"lufs": -38.22,
+				"max_frame_rms_dbfs": -36.53,
+				"sha256": "b0e80456914e7fcc8379ecdf2598374f649f2585a18dee0164bb5898a09e6aea"
+			},
+			"left.shout": {
+				"frames": 27,
+				"samples": 25440,
+				"duration_s": 0.53,
+				"band": "shout",
+				"lufs": -16.0,
+				"max_frame_rms_dbfs": -10.92,
+				"sha256": "3cf93ec63f0738bdd6353a83c6c920947968fdff08b7d2a388a5c42586302d40"
+			},
+			"left.talk": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -20.63,
+				"sha256": "d3d773f46f0ba9d3f8603693e677c99b145f3a8e76cef7c4ef43677af069de56"
+			},
+			"left.whisper": {
+				"frames": 25,
+				"samples": 23040,
+				"duration_s": 0.48,
+				"band": "whisper",
+				"lufs": -38.23,
+				"max_frame_rms_dbfs": -36.89,
+				"sha256": "5e28b1418356f622c63a51d4daac6b1b14dc235a29b59e2931d7956aff9df7cf"
+			},
+			"light_up.shout": {
+				"frames": 31,
+				"samples": 29280,
+				"duration_s": 0.61,
+				"band": "shout",
+				"lufs": -16.21,
+				"max_frame_rms_dbfs": -10.9,
+				"sha256": "b329d6f59e48b5d12ba9f8cfeb7177fe9197029081b018ea42f03326dd879d85"
+			},
+			"light_up.talk": {
+				"frames": 34,
+				"samples": 31680,
+				"duration_s": 0.66,
+				"band": "talk",
+				"lufs": -26.17,
+				"max_frame_rms_dbfs": -19.43,
+				"sha256": "d8f51b59e71daeeb797ebf3e76bf7fd270797bc2c6a782439d84324515381583"
+			},
+			"light_up.whisper": {
+				"frames": 34,
+				"samples": 31680,
+				"duration_s": 0.66,
+				"band": "whisper",
+				"lufs": -38.2,
+				"max_frame_rms_dbfs": -35.9,
+				"sha256": "6a286e335ae3a047e87bc790eaaa6392f60b1cfb8a0daa1dd00f72372cf1ec06"
+			},
+			"moan.take_1": {
+				"frames": 114,
+				"samples": 108480,
+				"duration_s": 2.26,
+				"band": "whisper",
+				"lufs": -38.34,
+				"max_frame_rms_dbfs": -34.98,
+				"sha256": "931c79f41dcda434ebdba3d4e83c77c46d324b52a31f5dfa50927cc1c9ab9d2c"
+			},
+			"moth.shout": {
+				"frames": 52,
+				"samples": 49440,
+				"duration_s": 1.03,
+				"band": "shout",
+				"lufs": -16.37,
+				"max_frame_rms_dbfs": -10.33,
+				"sha256": "0ba69735581e21f434a98ac6284e72db4ffaa6c842b4f73d31d597187d2cb55a"
+			},
+			"moth.talk": {
+				"frames": 56,
+				"samples": 52800,
+				"duration_s": 1.1,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -18.34,
+				"sha256": "80c373c1565a6beaac92a1ab7ac739df27ca86e09bd87c357df3181bf10afac6"
+			},
+			"moth.whisper": {
+				"frames": 51,
+				"samples": 48000,
+				"duration_s": 1.0,
+				"band": "whisper",
+				"lufs": -38.3,
+				"max_frame_rms_dbfs": -35.82,
+				"sha256": "71b780660682383eff456b2d48de1a83a21836419bd8d93826e236b08ca67235"
+			},
+			"now.shout": {
+				"frames": 30,
+				"samples": 27840,
+				"duration_s": 0.58,
+				"band": "shout",
+				"lufs": -16.2,
+				"max_frame_rms_dbfs": -12.44,
+				"sha256": "8c57fe5836065d80caf9dd7feb48073b3511bed3118b7b3c3cbd71c1792fcb28"
+			},
+			"now.talk": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -21.69,
+				"sha256": "9860a93d27d40cc5343a8a8bde3d182e5c1528b40f75158a521a9b6cec4f0f2f"
+			},
+			"now.whisper": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "whisper",
+				"lufs": -38.39,
+				"max_frame_rms_dbfs": -36.67,
+				"sha256": "28b80dcf5d739eaf2e0831e5164503fb4abb3812aff5dc3be258f62b839e023b"
+			},
+			"oil.shout": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "shout",
+				"lufs": -16.38,
+				"max_frame_rms_dbfs": -10.28,
+				"sha256": "1a7fb04a16e9e120ba4f5c5ddf601015416a77ce96c7f35bdac66420d11846ef"
+			},
+			"oil.talk": {
+				"frames": 28,
+				"samples": 25920,
+				"duration_s": 0.54,
+				"band": "talk",
+				"lufs": -26.18,
+				"max_frame_rms_dbfs": -18.47,
+				"sha256": "588e67b7a239098830df94c3d9ebbaf0d853d71d3c618a02846ee4719cf892a9"
+			},
+			"oil.whisper": {
+				"frames": 22,
+				"samples": 20160,
+				"duration_s": 0.42,
+				"band": "whisper",
+				"lufs": -38.28,
+				"max_frame_rms_dbfs": -36.62,
+				"sha256": "479ac4b50b7862c560913913e41120077db7b47c736f8fed890e34d1a0e29b3d"
+			},
+			"panting.take_1": {
+				"frames": 172,
+				"samples": 164160,
+				"duration_s": 3.42,
+				"band": "whisper",
+				"lufs": -38.32,
+				"max_frame_rms_dbfs": -34.8,
+				"sha256": "07734a18287da1ef7ba5d1bc9e5712361b7992883fae29b9f54d9fbc33725ae3"
+			},
+			"quiet.shout": {
+				"frames": 33,
+				"samples": 31200,
+				"duration_s": 0.65,
+				"band": "shout",
+				"lufs": -16.37,
+				"max_frame_rms_dbfs": -11.13,
+				"sha256": "33c4b05ca8ba2999ed0cd12a0cdeef547d42ce84193f2e7d55e385d65fc15085"
+			},
+			"quiet.talk": {
+				"frames": 32,
+				"samples": 29760,
+				"duration_s": 0.62,
+				"band": "talk",
+				"lufs": -26.31,
+				"max_frame_rms_dbfs": -19.69,
+				"sha256": "501c5e31d9f5a97774ac2d0b73551a2f852cd356ce0e1b698633a0e9bcd491d3"
+			},
+			"quiet.whisper": {
+				"frames": 30,
+				"samples": 28320,
+				"duration_s": 0.59,
+				"band": "whisper",
+				"lufs": -38.22,
+				"max_frame_rms_dbfs": -34.94,
+				"sha256": "8b8e95f6a213c23a46b47d0e512dc0b829b551ff91fcedc3a170aef496bec2d2"
+			},
+			"right.shout": {
+				"frames": 29,
+				"samples": 26880,
+				"duration_s": 0.56,
+				"band": "shout",
+				"lufs": -16.26,
+				"max_frame_rms_dbfs": -11.41,
+				"sha256": "2e7db3fb22a451e5d65ddd15a60f55dd03f4331419d7c77979f04a7477b56d85"
+			},
+			"right.talk": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "talk",
+				"lufs": -26.32,
+				"max_frame_rms_dbfs": -20.11,
+				"sha256": "f6805ec795e39e5792cbcfbe90270683b7ec8f91c70b5ab8b5b57da3ab600da3"
+			},
+			"right.whisper": {
+				"frames": 25,
+				"samples": 23520,
+				"duration_s": 0.49,
+				"band": "whisper",
+				"lufs": -38.13,
+				"max_frame_rms_dbfs": -35.96,
+				"sha256": "7b9cbaba3ba23572ae5065fc8100d245cfef68860c29d25ddcb0f8523ffe9a44"
+			},
+			"roll_all_right.talk": {
+				"frames": 37,
+				"samples": 34560,
+				"duration_s": 0.72,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -18.53,
+				"sha256": "3433e2135a3f9d464fa1d485e8f152ac3e52a0148220fd49b65418057bee42df"
+			},
+			"roll_lamp.talk": {
+				"frames": 26,
+				"samples": 24480,
+				"duration_s": 0.51,
+				"band": "talk",
+				"lufs": -26.06,
+				"max_frame_rms_dbfs": -18.09,
+				"sha256": "dfbd14e33a5ac3c6d94cda7c0464bdba7fe541477830f023ade89023148fab25"
+			},
+			"scream.take_1": {
+				"frames": 59,
+				"samples": 55680,
+				"duration_s": 1.16,
+				"band": "scream",
+				"lufs": -10.17,
+				"max_frame_rms_dbfs": -6.13,
+				"sha256": "b99d8b2926b2ab77233ae06f3114869e884c883f280f792b1dde9be7ed6fd11a"
+			},
+			"stop.shout": {
+				"frames": 22,
+				"samples": 20640,
+				"duration_s": 0.43,
+				"band": "shout",
+				"lufs": -16.32,
+				"max_frame_rms_dbfs": -9.89,
+				"sha256": "2120944fb1000041d598d54db0d3029c5617eb2603cb11fe956baed972ad5633"
+			},
+			"stop.talk": {
+				"frames": 24,
+				"samples": 22080,
+				"duration_s": 0.46,
+				"band": "talk",
+				"lufs": -26.35,
+				"max_frame_rms_dbfs": -18.77,
+				"sha256": "8ad92a3ab4f81fa3e1cd9d6d7df656805054f1402f020397a00279a371715911"
+			},
+			"stop.whisper": {
+				"frames": 24,
+				"samples": 22560,
+				"duration_s": 0.47,
+				"band": "whisper",
+				"lufs": -38.33,
+				"max_frame_rms_dbfs": -36.22,
+				"sha256": "cb6c835f864ecd5e31346d27d77d33a1fe1fe69166bca45ba60cf4f352ede33c"
+			},
+			"stythe.shout": {
+				"frames": 143,
+				"samples": 136320,
+				"duration_s": 2.84,
+				"band": "shout",
+				"lufs": -16.25,
+				"max_frame_rms_dbfs": -10.04,
+				"sha256": "f2d6d0107ccf13fcc719492b534b53101d34a530e0265c1511f90d9c67ccc969"
+			},
+			"stythe.talk": {
+				"frames": 138,
+				"samples": 131520,
+				"duration_s": 2.74,
+				"band": "talk",
+				"lufs": -26.25,
+				"max_frame_rms_dbfs": -17.31,
+				"sha256": "452f92cab5c7f3002fca9c083601f6abdc70936b6c51b725737a579ef1764ba0"
+			},
+			"stythe.whisper": {
+				"frames": 150,
+				"samples": 143520,
+				"duration_s": 2.99,
+				"band": "whisper",
+				"lufs": -38.37,
+				"max_frame_rms_dbfs": -35.48,
+				"sha256": "7147a0f2fbc7c6892aeca3a248b168ee0b0fcd8b242df45df39f63d66bfbd8a4"
+			},
+			"tapping.shout": {
+				"frames": 149,
+				"samples": 142080,
+				"duration_s": 2.96,
+				"band": "shout",
+				"lufs": -16.38,
+				"max_frame_rms_dbfs": -9.1,
+				"sha256": "074c26d4602d27e5e5756f29d4a09f1ffee179b11c57ebfa5a13808751970dcb"
+			},
+			"tapping.talk": {
+				"frames": 143,
+				"samples": 136320,
+				"duration_s": 2.84,
+				"band": "talk",
+				"lufs": -26.27,
+				"max_frame_rms_dbfs": -17.18,
+				"sha256": "6dd036e304ab95e283883107ade1b844247cb7388b8a6614917b28d27c048fb1"
+			},
+			"tapping.whisper": {
+				"frames": 140,
+				"samples": 133920,
+				"duration_s": 2.79,
+				"band": "whisper",
+				"lufs": -37.98,
+				"max_frame_rms_dbfs": -34.64,
+				"sha256": "11e66811a38a72e234fcb2ace9382b6e9effc7aa8730024949e6e92c8cf2043e"
+			},
+			"trapped_cry.take_1": {
+				"frames": 128,
+				"samples": 121920,
+				"duration_s": 2.54,
+				"band": "shout",
+				"lufs": -16.27,
+				"max_frame_rms_dbfs": -10.03,
+				"sha256": "e85f38a2d52df13b4d4ce64194a9e1d4540c9f9f83f7190990689ce8b59932a0"
+			}
+		}
+	},
+	"lampman": {
+		"digit_0.continuing": {
+			"duration_s": 0.43,
+			"sha256": "9f94eedb5ea6d8ae849cbbc2a5ca32bedccdf1f243770315fc32b7a16e4793a1"
+		},
+		"digit_0.final": {
+			"duration_s": 0.43,
+			"sha256": "88f0af0f9694f97777c01f4904c94a9a6647d97eba36434c7b8e83602240c4c0"
+		},
+		"digit_1.continuing": {
+			"duration_s": 0.52,
+			"sha256": "2cc59aa6fc3cb0e6f30a59f8e6e155c79e5eb96cd14a6e9c8d69d2685397c9db"
+		},
+		"digit_1.final": {
+			"duration_s": 0.52,
+			"sha256": "aa1ec9b4b5ccdd50835a9f4c74d57550d84d6db788e08104ab622c242875e756"
+		},
+		"digit_2.continuing": {
+			"duration_s": 0.45,
+			"sha256": "778a739c3b6fe9b8065fd3004518bafd4e58661396e07a2470551493b5c2df90"
+		},
+		"digit_2.final": {
+			"duration_s": 0.45,
+			"sha256": "856037213c945c2e657ea2dd4224ba7d9c81e5b1daa6eb6f90e2f433140653e0"
+		},
+		"digit_3.continuing": {
+			"duration_s": 0.5,
+			"sha256": "50e2b9203b5f732b59b941e0d23059c79a31389851a063af3a093de92f9b470f"
+		},
+		"digit_3.final": {
+			"duration_s": 0.5,
+			"sha256": "751d5be7d035a3eae32a309628a6bf5e01ccbd09d8d55e5f8c5b22d5167aa808"
+		},
+		"digit_4.continuing": {
+			"duration_s": 0.56,
+			"sha256": "d56c65bf210a3d062c09adbc6d5b5ad9f25183cf88ff9978ea90566dd3355d87"
+		},
+		"digit_4.final": {
+			"duration_s": 0.57,
+			"sha256": "9943e7ab27c6d500ee013fba18d9253b703000c48c66ad4e7104bd167f2ce9db"
+		},
+		"digit_5.continuing": {
+			"duration_s": 0.65,
+			"sha256": "12efc7124056769f6ceda25941c661618e89f63ca5cbcfd6ca05292933b09e01"
+		},
+		"digit_5.final": {
+			"duration_s": 0.65,
+			"sha256": "4ac7179ab26cdf59785cc083f06ba75d62bd096156496d3e6e419e5e96065571"
+		},
+		"digit_6.continuing": {
+			"duration_s": 0.57,
+			"sha256": "a3833d01190016ff3891359fd8bd0846d0d01c9c63389bfdcb5130b409b65bc7"
+		},
+		"digit_6.final": {
+			"duration_s": 0.57,
+			"sha256": "c5d5f231e9c6e20f0d3c6bd683a4185de4d05886f6d18cc6e17c377c6657cce9"
+		},
+		"digit_7.continuing": {
+			"duration_s": 0.68,
+			"sha256": "d53118e0fcdf686749dd60b8d30cb1a4fe9e179ec6a81770d89abc336a82bc8d"
+		},
+		"digit_7.final": {
+			"duration_s": 0.69,
+			"sha256": "7c54444347cb71b02bc0da966d21ae1e4622e5c4f879c2da1ef7f26a3e68cfff"
+		},
+		"digit_8.continuing": {
+			"duration_s": 0.44,
+			"sha256": "8c699a579ca12ff441ed9608642643666f92180af8300b8578e376e95bba7d4d"
+		},
+		"digit_8.final": {
+			"duration_s": 0.43,
+			"sha256": "ea2cfeb94356647c6b46f9eb91b070d85f8a23ce1efb318eef144ca39dd2ec26"
+		},
+		"digit_9.continuing": {
+			"duration_s": 0.64,
+			"sha256": "2bc25703e8ffde20716feec62fe9d0f24027c5cb65aef246baaf38630772d475"
+		},
+		"digit_9.final": {
+			"duration_s": 0.65,
+			"sha256": "feaea6af5f819998b88f330e25518f4ba3b042e765d6677e83b65928eaa882d5"
+		},
+		"first_run.one": {
+			"duration_s": 7.25,
+			"sha256": "c841e9a965db82d299eebf4fda1cdf7d186d7c20b2f35c88c5ab98741de4d478"
+		},
+		"remark_blackdamp.one": {
+			"duration_s": 4.29,
+			"sha256": "d8c77b6f3f1c4caa93edb8d378c66969dae16be540b38be4e3d34d9620a0bff5"
+		},
+		"remark_blast.one": {
+			"duration_s": 5.33,
+			"sha256": "f4b70339960462b06dfb38c36370a8d744413b76d5c311bc9ac15affb9eea659"
+		},
+		"remark_drag.one": {
+			"duration_s": 2.61,
+			"sha256": "a6c5dba2bb4c346a64fcb44e5c4230ef1996a38d02eb40b7dc2c4f2a6af15740"
+		},
+		"remark_friendly_hit.one": {
+			"duration_s": 1.67,
+			"sha256": "e42b55e365316104746da0b43fe3970e14d711f12b29d6c588540470e5cba522"
+		},
+		"remark_hatch.one": {
+			"duration_s": 1.37,
+			"sha256": "c1f44ebf00063bf08cff912d869b27b85990645c4d3099cc253e025021aeb63d"
+		},
+		"remark_moth_smother.one": {
+			"duration_s": 4.7,
+			"sha256": "dbce19623bb0cf1ada671430cc1390a03b6e5ec6ab4b28ac2c16182f2eeff9b0"
+		},
+		"remark_pin.one": {
+			"duration_s": 1.99,
+			"sha256": "b458d3662d5a496392f7d98127f0be75105d24e5da9af4338630e0b1369d519d"
+		},
+		"remark_roof_fall.one": {
+			"duration_s": 1.74,
+			"sha256": "55d1385caf31c59f3e78fa7f97dae17f87758ad63590bf0e543dd497e904f619"
+		},
+		"remark_shot_dead.one": {
+			"duration_s": 2.82,
+			"sha256": "3fcf4e70c3be1d6aabd40d404ba3b18a1867ed9612db5ba10afd8c30f3b96a93"
+		}
+	},
+	"note": "SND-13: written by tools/build/voice_import (do not edit). Each character file's 20 ms Opus frames, samples at 48 kHz, duration, band, decoded loudness (LUFS), loudest 20 ms frame (dBFS RMS) and SHA-256; the lampman's Ogg Vorbis files. The server reads only this index.",
+	"frame_ms": 20,
+	"sample_rate": 48000
+}

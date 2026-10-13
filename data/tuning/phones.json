@@ -1,0 +1,55 @@
+{
+	"domain": "phones",
+	"keys": {
+		"phones.buzzer_repeat_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-13"
+		},
+		"phones.crank_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.6, §4.10, A.3",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket LFT-12"
+		},
+		"phones.line_number_max": {
+			"value": 99,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: numbers in the pool; ticket LFT-12"
+		},
+		"phones.ring_burst_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-12"
+		},
+		"phones.seat_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.10, §6.6, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: s to sit or stand; ticket LFT-13"
+		}
+	}
+}

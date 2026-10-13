@@ -1,0 +1,1029 @@
+{
+	"hash": "818d0029a4b424e0b4620ad2672d2f795abc324c1b2b76cb62758945ff4c9217",
+	"keys": {
+		"basecamp.gate_lever_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"basecamp.relighter_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.check_lamp_panel_height": {
+			"value": 0.33,
+			"type": "float",
+			"unit": "share",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.closeup_transition_s": {
+			"value": 0.15,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.lead_settle_s": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.lead_tiles": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.shake_max_tiles": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.squint_lead_tiles": {
+			"value": 8.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.text_size_pct": {
+			"value": 100.0,
+			"type": "float",
+			"unit": "%",
+			"min": 100.0,
+			"max": 200.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.tile_px_at_1080p": {
+			"value": 64,
+			"type": "int",
+			"unit": "px",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.ui_min_text_px_at_800p": {
+			"value": 16,
+			"type": "int",
+			"unit": "px",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.view_tiles_high": {
+			"value": 16.875,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.view_tiles_wide": {
+			"value": 30.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"items.candle_light_time": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"items.chalk_time": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"items.flare_strike_time": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"items.hand_over_time": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.can_fill_time": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.candle_relight_time": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.douse_time": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.electric_radius": {
+			"value": 6.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.flask_pour_time": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.flint_time": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.hook_radius": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.pass_flame_time": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.pick_up_time": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.radius_normal": {
+			"value": 4.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.radius_shuttered": {
+			"value": 0.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.radius_slotted": {
+			"value": 0.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.radius_wick_down": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.radius_wick_up": {
+			"value": 5.5,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.set_down_time": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.share_oil_time": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.shutter_time": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.wick_step_time": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.alone_place_hold_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.brake_shoes_s": {
+			"value": 8.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.crank_s": {
+			"value": 4.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.drum_gear_s": {
+			"value": 10.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.free_cage_s": {
+			"value": 10.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.fuel_pour_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.magneto_s": {
+			"value": 6.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.power_fuse_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.power_links_s": {
+			"value": 4.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.prime_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lift.rope_clamps_s": {
+			"value": 6.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.cap": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "light",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.core_fraction": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "share",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.core_value": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.dust_min_light": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.edge_glow_strip_tiles": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.edge_value": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.flame_sprite_tiles": {
+			"value": 0.333,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.flash_build_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.max_flash_hz": {
+			"value": 3,
+			"type": "int",
+			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.muzzle_flash_reduced_peak": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "share",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.source_peak": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "light",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"light.value_scale": {
+			"value": 1000,
+			"type": "int",
+			"unit": "count",
+			"visibility": "client",
+			"kind": "fixed"
+		},
+		"mine.pencil_slow_cursor_scale": {
+			"value": 0.35,
+			"type": "float",
+			"unit": "×",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.body_radius": {
+			"value": 0.35,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.carry_fireman_speed": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.carry_lift_time": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.carry_stretcher_speed": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.crouch_speed": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.facing_dead_zone": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "share",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.input_tap_max": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.run_speed": {
+			"value": 5.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.stick_dead_zone": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "share",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.stretcher_lay_time": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.stretcher_to_table_time": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.walk_speed": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "tiles/s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.wound_gait_multiplier": {
+			"value": 0.8,
+			"type": "float",
+			"unit": "×",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.clock_sync_interval_s": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.connection_timeout_s": {
+			"value": 5.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.correction_blend_ms": {
+			"value": 100.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.correction_snap_tiles": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.dev_port": {
+			"value": 24600,
+			"type": "int",
+			"unit": "port",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.emu_jitter_ms": {
+			"value": 10.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.emu_loss": {
+			"value": 0.02,
+			"type": "float",
+			"unit": "×",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.emu_rtt_max_ms": {
+			"value": 250.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.emu_rtt_min_ms": {
+			"value": 40.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.extrapolate_max_ms": {
+			"value": 50.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.handshake_timeout_s": {
+			"value": 5.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.input_clock_nudge_max": {
+			"value": 0.05,
+			"type": "float",
+			"unit": "×",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.input_redundancy": {
+			"value": 3,
+			"type": "int",
+			"unit": "inputs",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.interp_delay_ms": {
+			"value": 100.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.probe_about_turn_deg": {
+			"value": 90.0,
+			"type": "float",
+			"unit": "deg",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.probe_about_turn_p95_ms": {
+			"value": 150.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "target"
+		},
+		"net.probe_light_to_contents_p95_ms": {
+			"value": 150.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "target"
+		},
+		"net.probe_mouth_to_ear_ms": {
+			"value": 250.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.probe_reference_rtt_ms": {
+			"value": 120.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.tick_hz": {
+			"value": 20,
+			"type": "int",
+			"unit": "Hz",
+			"visibility": "client",
+			"kind": "fixed"
+		},
+		"net.unreliable_max_bytes": {
+			"value": 1200,
+			"type": "int",
+			"unit": "bytes",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.bed_volume_db": {
+			"value": -18.0,
+			"type": "float",
+			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.diffuse_emitter_count": {
+			"value": 3,
+			"type": "int",
+			"unit": "emitters",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.diffuse_emitter_distance_tiles": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.hrtf_bilinear": {
+			"value": false,
+			"type": "bool",
+			"unit": "flag",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.hrtf_frame_samples": {
+			"value": 512,
+			"type": "int",
+			"unit": "samples",
+			"min": 128.0,
+			"max": 2048.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.limiter_ceiling_dbfs": {
+			"value": -1.0,
+			"type": "float",
+			"unit": "dBFS",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.max_event_voices": {
+			"value": 24,
+			"type": "int",
+			"unit": "voices",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.muffle_lowpass_hz": {
+			"value": 1200,
+			"type": "int",
+			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.pitch_variation": {
+			"value": 0.04,
+			"type": "float",
+			"unit": "share",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.playback_edge_attenuation_db": {
+			"value": 24.0,
+			"type": "float",
+			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.rear_filter_start_deg": {
+			"value": 55.0,
+			"type": "float",
+			"unit": "deg",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.rear_lowpass_min_hz": {
+			"value": 2000,
+			"type": "int",
+			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.ringing_volume_db": {
+			"value": 0.0,
+			"type": "float",
+			"unit": "dB",
+			"min": -12.0,
+			"max": 0.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.tell_volume_db": {
+			"value": 0.0,
+			"type": "float",
+			"unit": "dB",
+			"min": -6.0,
+			"max": 6.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"phones.crank_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"phones.seat_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"rescue.crawl_speed": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"rescue.kit_use_s": {
+			"value": 5.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"rescue.self_rescue_hold_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"rescue.take_item_s": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"rescue.window_sight_tiles": {
+			"value": 4.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"tapper.silent_pull_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"traps.man_trap_free_cutters_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"traps.man_trap_free_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"traps.man_trap_struggle_s": {
+			"value": 15.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"traps.spring_with_tool_s": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"traps.staple_pit_climb_s": {
+			"value": 30.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"traps.staple_pit_free_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"traps.timber_pin_free_crowbar_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"traps.timber_pin_free_pair_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"traps.timber_pin_struggle_s": {
+			"value": 20.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"ui.wheel_radius": {
+			"value": 0.18,
+			"type": "float",
+			"unit": "share",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"vision.blind_area_deg": {
+			"value": 250.0,
+			"type": "float",
+			"unit": "deg",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"vision.cone_deg": {
+			"value": 110.0,
+			"type": "float",
+			"unit": "deg",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"vision.edge_glow_bucket_deg": {
+			"value": 5.0,
+			"type": "float",
+			"unit": "deg",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"vision.feel_hold_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"vision.held_geometry_cells": {
+			"value": 2,
+			"type": "int",
+			"unit": "cells",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"vision.min_drawn_level": {
+			"value": 2,
+			"type": "int",
+			"unit": "count",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"vision.own_miner_min_exposure": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"vision.seen_light_min": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.band_hysteresis_s": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.calibration_clamp_db": {
+			"value": 6.0,
+			"type": "float",
+			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.calibration_scream_offset_db": {
+			"value": 6.0,
+			"type": "float",
+			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.calibration_talk_fraction": {
+			"value": 0.667,
+			"type": "float",
+			"unit": "×",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.callout_shout_window_s": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "s",
+			"min": 0.2,
+			"max": 0.6,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.callout_whisper_hold_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"min": 0.3,
+			"max": 1.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.threshold_scream_dbfs": {
+			"value": -12.0,
+			"type": "float",
+			"unit": "dBFS",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.threshold_shout_dbfs": {
+			"value": -22.0,
+			"type": "float",
+			"unit": "dBFS",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.threshold_talk_dbfs": {
+			"value": -40.0,
+			"type": "float",
+			"unit": "dBFS",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.threshold_whisper_dbfs": {
+			"value": -50.0,
+			"type": "float",
+			"unit": "dBFS",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.wheel_ring_bounds": {
+			"value": [
+				0.25,
+				0.5,
+				0.75
+			],
+			"type": "float_list",
+			"unit": "×",
+			"visibility": "client",
+			"kind": "param"
+		}
+	}
+}

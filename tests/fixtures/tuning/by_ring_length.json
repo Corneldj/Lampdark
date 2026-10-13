@@ -1,0 +1,31 @@
+{
+	"expect": "exactly 5 values",
+	"units": [
+		"s",
+		"tiles",
+		"px",
+		"count",
+		"share"
+	],
+	"files": {
+		"moth.json": {
+			"domain": "moth",
+			"keys": {
+				"moth.per_ring_s": {
+					"value": [
+						1,
+						2,
+						3,
+						4
+					],
+					"type": "by_ring",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"starting": false,
+					"visibility": "server",
+					"kind": "param"
+				}
+			}
+		}
+	}
+}

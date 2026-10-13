@@ -1,0 +1,15 @@
+# Godot import cache and export credentials
+/.godot/
+# Build outputs
+/build/
+/native/bin/
+*.tmp
+# Test reports
+/tests/reports/
+# Native build intermediates
+/native/src/**/*.os
+/native/src/**/*.o
+/native/src/**/*.obj
+/native/src/core/version.gen.h
+/native/tests/*.o
+/native/.sconsign*.dblite

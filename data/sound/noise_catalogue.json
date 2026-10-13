@@ -1,0 +1,576 @@
+{
+	"format": 1,
+	"note": "SND-02's noise catalogue. Levels, rates and durations are tuning keys (data/tuning/); the struck flag comes from tapper.deaf_struck_kinds and tapper.deaf_not_struck_kinds (CRT-12's classification). Voice and callouts take their level from the band (SND-09).",
+	"types": [
+		{
+			"id": "reload_click",
+			"np_key": "noise.reload_click_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "revolver",
+			"caption": "caption.noise.reload_click",
+			"sample": "sfx.reload_click",
+			"owner": "MNR-16",
+			"source": "Gameplay §4.7, §6.1"
+		},
+		{
+			"id": "lamp_hang_clink",
+			"np_key": "moth.hang_clink_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "creature",
+			"caption": "caption.noise.lamp_hang_clink",
+			"sample": "sfx.lamp_hang_clink",
+			"owner": "CRT-05",
+			"source": "Gameplay §6.1, §7.2"
+		},
+		{
+			"id": "step_walk",
+			"np_key": "noise.step_walk_np",
+			"rate_key": "noise.step_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "movement",
+			"caption": "caption.noise.step_walk",
+			"sample": "sfx.step_walk",
+			"owner": "MNR-01",
+			"source": "Gameplay §4.1, §6.1"
+		},
+		{
+			"id": "panting",
+			"np_key": "noise.panting_np",
+			"rate_key": "movement.panting_interval",
+			"duration_key": "",
+			"vocal": true,
+			"category": "movement",
+			"caption": "caption.noise.panting",
+			"sample": "sfx.panting",
+			"owner": "MNR-02",
+			"source": "Gameplay §4.1, §6.1"
+		},
+		{
+			"id": "flint_click",
+			"np_key": "noise.flint_click_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "item",
+			"caption": "caption.noise.flint_click",
+			"sample": "sfx.flint_click",
+			"owner": "MNR-07",
+			"source": "Gameplay §6.1, A.1"
+		},
+		{
+			"id": "spanner",
+			"np_key": "noise.spanner_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "action",
+			"caption": "caption.noise.spanner",
+			"sample": "sfx.spanner",
+			"owner": "LFT",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "step_stretcher",
+			"np_key": "noise.step_stretcher_np",
+			"rate_key": "noise.step_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "carry",
+			"caption": "caption.noise.step_stretcher",
+			"sample": "sfx.step_stretcher",
+			"owner": "MNR-14",
+			"source": "Gameplay §4.3, §6.1"
+		},
+		{
+			"id": "step_drum_gear",
+			"np_key": "noise.step_drum_gear_np",
+			"rate_key": "noise.step_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "carry",
+			"caption": "caption.noise.step_drum_gear",
+			"sample": "sfx.step_drum_gear",
+			"owner": "MNR-14",
+			"source": "Gameplay §4.3, A.2"
+		},
+		{
+			"id": "drag_scrape",
+			"np_key": "stythe.scrape_np",
+			"rate_key": "noise.drag_scrape_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "creature",
+			"caption": "caption.noise.drag_scrape",
+			"sample": "sfx.drag_scrape",
+			"owner": "CRT-14",
+			"source": "Gameplay §6.1, §7.4"
+		},
+		{
+			"id": "rock_tap",
+			"np_key": "noise.rock_tap_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "action",
+			"caption": "caption.noise.rock_tap",
+			"sample": "sfx.rock_tap",
+			"owner": "SND-12",
+			"source": "Gameplay §6.1, §6.6"
+		},
+		{
+			"id": "canary",
+			"np_key": "noise.canary_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "item",
+			"caption": "caption.noise.canary",
+			"sample": "sfx.canary",
+			"owner": "MNR-11",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "gasp",
+			"np_key": "noise.gasp_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": true,
+			"category": "vocal",
+			"caption": "caption.noise.gasp",
+			"sample": "sfx.gasp",
+			"owner": "SND-14",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "cough",
+			"np_key": "noise.cough_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": true,
+			"category": "vocal",
+			"caption": "caption.noise.cough",
+			"sample": "sfx.cough",
+			"owner": "HAZ-06",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "carry_knock",
+			"np_key": "noise.carry_knock_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "carry",
+			"caption": "caption.noise.carry_knock",
+			"sample": "sfx.carry_knock",
+			"owner": "MNR-14",
+			"source": "Gameplay §4.3, §6.1"
+		},
+		{
+			"id": "step_heavy",
+			"np_key": "noise.step_heavy_np",
+			"rate_key": "noise.step_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "movement",
+			"caption": "caption.noise.step_heavy",
+			"sample": "sfx.step_heavy",
+			"owner": "MNR-01",
+			"source": "Gameplay §4.1, §4.3, §6.1"
+		},
+		{
+			"id": "struggle",
+			"np_key": "noise.struggle_np",
+			"rate_key": "noise.struggle_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "hazard",
+			"caption": "caption.noise.struggle",
+			"sample": "sfx.struggle",
+			"owner": "HAZ-01",
+			"source": "Gameplay §6.1, §8.2"
+		},
+		{
+			"id": "moth_laying",
+			"np_key": "moth.lay_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "creature",
+			"caption": "caption.noise.moth_laying",
+			"sample": "sfx.moth_laying",
+			"owner": "CRT-06",
+			"source": "Gameplay §6.1, §7.2"
+		},
+		{
+			"id": "buzzer",
+			"np_key": "noise.buzzer_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.buzzer",
+			"sample": "sfx.buzzer",
+			"owner": "LFT-13",
+			"source": "Gameplay §6.1, §6.6"
+		},
+		{
+			"id": "trapped_cry",
+			"np_key": "noise.trapped_cry_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": true,
+			"category": "vocal",
+			"caption": "caption.noise.trapped_cry",
+			"sample": "sfx.trapped_cry",
+			"owner": "HAZ-01",
+			"source": "Gameplay §6.1, §8.2"
+		},
+		{
+			"id": "rail_bang",
+			"np_key": "noise.rail_bang_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "action",
+			"caption": "caption.noise.rail_bang",
+			"sample": "sfx.rail_bang",
+			"owner": "MNR-14",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "tub_rumble",
+			"np_key": "noise.tub_rumble_np",
+			"rate_key": "noise.step_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "carry",
+			"caption": "caption.noise.tub_rumble",
+			"sample": "sfx.tub_rumble",
+			"owner": "MNR-14",
+			"source": "Gameplay §4.3, §6.1"
+		},
+		{
+			"id": "stone_landing",
+			"np_key": "noise.stone_landing_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "item",
+			"caption": "caption.noise.stone_landing",
+			"sample": "sfx.stone_landing",
+			"owner": "MNR-09",
+			"source": "Gameplay §4.5, §6.1"
+		},
+		{
+			"id": "gate",
+			"np_key": "noise.gate_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.gate",
+			"sample": "sfx.gate",
+			"owner": "LFT-02",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "hammer",
+			"np_key": "noise.hammer_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "action",
+			"caption": "caption.noise.hammer",
+			"sample": "sfx.hammer",
+			"owner": "LFT",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "phone_crank",
+			"np_key": "noise.phone_crank_np",
+			"rate_key": "",
+			"duration_key": "phones.crank_s",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.phone_crank",
+			"sample": "sfx.phone_crank",
+			"owner": "LFT-12",
+			"source": "Gameplay §6.1, §6.6"
+		},
+		{
+			"id": "mantrap_snap",
+			"np_key": "noise.mantrap_snap_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "hazard",
+			"caption": "caption.noise.mantrap_snap",
+			"sample": "sfx.mantrap_snap",
+			"owner": "HAZ-01",
+			"source": "Gameplay §6.1, §8.2"
+		},
+		{
+			"id": "flare_strike",
+			"np_key": "noise.flare_strike_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "item",
+			"caption": "caption.noise.flare_strike",
+			"sample": "sfx.flare_strike",
+			"owner": "MNR-09",
+			"source": "Gameplay §4.5, §6.1"
+		},
+		{
+			"id": "step_run",
+			"np_key": "noise.step_run_np",
+			"rate_key": "noise.step_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "movement",
+			"caption": "caption.noise.step_run",
+			"sample": "sfx.step_run",
+			"owner": "MNR-01",
+			"source": "Gameplay §4.1, §6.1"
+		},
+		{
+			"id": "phone_bell",
+			"np_key": "noise.phone_bell_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.phone_bell",
+			"sample": "sfx.phone_bell",
+			"owner": "LFT-12",
+			"source": "Gameplay §6.1, §6.6"
+		},
+		{
+			"id": "hold_bell",
+			"np_key": "noise.hold_bell_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.hold_bell",
+			"sample": "sfx.hold_bell",
+			"owner": "LFT-10",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "engine_crank",
+			"np_key": "noise.engine_crank_np",
+			"rate_key": "",
+			"duration_key": "lift.crank_s",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.engine_crank",
+			"sample": "sfx.engine_crank",
+			"owner": "LFT-08",
+			"source": "Gameplay §3.6, §6.1"
+		},
+		{
+			"id": "main_switch",
+			"np_key": "noise.main_switch_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.main_switch",
+			"sample": "sfx.main_switch",
+			"owner": "LFT-05",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "cage_freed",
+			"np_key": "noise.cage_freed_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.cage_freed",
+			"sample": "sfx.cage_freed",
+			"owner": "LFT-07",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "staple_pit_crash",
+			"np_key": "noise.staple_pit_crash_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "hazard",
+			"caption": "caption.noise.staple_pit_crash",
+			"sample": "sfx.staple_pit_crash",
+			"owner": "HAZ-02",
+			"source": "Gameplay §6.1, §8.2"
+		},
+		{
+			"id": "brood_burst",
+			"np_key": "moth.brood_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "creature",
+			"caption": "caption.noise.brood_burst",
+			"sample": "sfx.brood_burst",
+			"owner": "CRT-06",
+			"source": "Gameplay §6.1, §7.2"
+		},
+		{
+			"id": "engine_running",
+			"np_key": "noise.engine_running_np",
+			"rate_key": "noise.engine_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.engine_running",
+			"sample": "sfx.engine_running",
+			"owner": "LFT-08",
+			"source": "Gameplay §3.6, §6.1"
+		},
+		{
+			"id": "bess_whinny",
+			"np_key": "bess.whinny_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "creature",
+			"caption": "caption.noise.bess_whinny",
+			"sample": "sfx.bess_whinny",
+			"owner": "MOD-07",
+			"source": "Gameplay §6.1, §13.7"
+		},
+		{
+			"id": "backfire",
+			"np_key": "noise.backfire_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.backfire",
+			"sample": "sfx.backfire",
+			"owner": "LFT-08",
+			"source": "Gameplay §6.1"
+		},
+		{
+			"id": "roof_fall",
+			"np_key": "noise.roof_fall_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "hazard",
+			"caption": "caption.noise.roof_fall",
+			"sample": "sfx.roof_fall",
+			"owner": "HAZ-03",
+			"source": "Gameplay §6.1, §12.5"
+		},
+		{
+			"id": "shot",
+			"np_key": "noise.shot_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "revolver",
+			"caption": "caption.noise.shot",
+			"sample": "sfx.shot",
+			"owner": "MNR-16",
+			"source": "Gameplay §4.7, §6.1"
+		},
+		{
+			"id": "firedamp_blast",
+			"np_key": "noise.firedamp_blast_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "hazard",
+			"caption": "caption.noise.firedamp_blast",
+			"sample": "sfx.firedamp_blast",
+			"owner": "HAZ-04",
+			"source": "Gameplay §6.1, §8.4"
+		},
+		{
+			"id": "voice",
+			"np_key": "",
+			"rate_key": "noise.voice_event_interval_s",
+			"duration_key": "",
+			"vocal": true,
+			"category": "voice",
+			"caption": "caption.noise.voice",
+			"sample": "sfx.voice",
+			"owner": "SND-09",
+			"source": "Gameplay §6.2, §6.3"
+		},
+		{
+			"id": "callout",
+			"np_key": "",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": true,
+			"category": "voice",
+			"caption": "caption.noise.callout",
+			"sample": "sfx.callout",
+			"owner": "SND-11",
+			"source": "Gameplay §6.2, §6.4"
+		}
+	],
+	"silent": [
+		{
+			"id": "crouch_step",
+			"why": "crouching is silent (§4.1, §6.1)"
+		},
+		{
+			"id": "feel",
+			"why": "feeling is silent (§6.1)"
+		},
+		{
+			"id": "chalk",
+			"why": "chalk is silent (§6.1)"
+		},
+		{
+			"id": "shutter",
+			"why": "the shutter is silent (§6.1)"
+		},
+		{
+			"id": "wick",
+			"why": "the wick is silent (§6.1)"
+		}
+	],
+	"not_road_graph_events": [
+		{
+			"id": "hatch_tell",
+			"owner": "CRT-06",
+			"why": "heard only within 3 tiles, never by the Tapper (§7.2)"
+		},
+		{
+			"id": "firedamp_hiss",
+			"owner": "HAZ-04",
+			"why": "ambient within 2 tiles (GDD §14.2)"
+		},
+		{
+			"id": "knocks",
+			"owner": "SND-15",
+			"why": "the knocks are not Road Graph events"
+		},
+		{
+			"id": "illusions",
+			"owner": "CRT-10",
+			"why": "delivered to one target, never inserted in the graph (§6.1)"
+		},
+		{
+			"id": "cold_open_screams",
+			"owner": "MOD-04",
+			"why": "scripted cold open"
+		},
+		{
+			"id": "creature_tells",
+			"owner": "CRT tickets",
+			"why": "tells and wind-ups go through SND-03 directly"
+		}
+	]
+}

@@ -1,0 +1,165 @@
+{
+	"domain": "basecamp",
+	"keys": {
+		"basecamp.arch_length_tiles": {
+			"value": 10,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §3.2, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-02"
+		},
+		"basecamp.battery_rack_full_charge_s": {
+			"value": 120,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.2, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-01"
+		},
+		"basecamp.battery_rack_slots": {
+			"value": 2,
+			"type": "int",
+			"unit": "lamps",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-01"
+		},
+		"basecamp.emergency_light_level": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §3.2, §5.4, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: light (0–1); ticket LFT-01"
+		},
+		"basecamp.first_lamp_fills": {
+			"value": 1,
+			"type": "int",
+			"unit": "fills",
+			"source": "Gameplay §3.2, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: lamp fills; ticket LFT-01"
+		},
+		"basecamp.first_lamp_notches": {
+			"value": 3,
+			"type": "int",
+			"unit": "notches",
+			"source": "Gameplay §3.2, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-01"
+		},
+		"basecamp.gate_lever_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.2, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket LFT-02"
+		},
+		"basecamp.gate_public_autoclose_s": {
+			"value": 20,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.2, §13.10, A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-02"
+		},
+		"basecamp.gate_spill_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §3.2, §5.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-02"
+		},
+		"basecamp.gate_width_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed (main roads are 3 wide, Gameplay §12.2)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-02"
+		},
+		"basecamp.medbay_cupboard_kits": {
+			"value": 1,
+			"type": "int",
+			"unit": "kits",
+			"source": "Gameplay §3.2, §11.5, A.6 (starting value)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket LFT-01"
+		},
+		"basecamp.relighter_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §3.2, §4.4, A.6",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket LFT-01"
+		},
+		"basecamp.room_width_tiles": {
+			"value": 16,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §3.2, §12.1, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Base camp: about 16 tiles wide (16×12)"
+		},
+		"basecamp.room_height_tiles": {
+			"value": 12,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §3.2, §12.1, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Base camp: about 12 tiles high (16×12)"
+		},
+		"basecamp.gate_count": {
+			"value": 3,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §3.2, §A.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Gates: three steel gates"
+		},
+		"basecamp.medbay_tables": {
+			"value": 2,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §3.2, §11.5, §A.6",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.6 Medbay: two first-aid tables (starting value)"
+		}
+	}
+}

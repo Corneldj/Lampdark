@@ -1,0 +1,112 @@
+class_name ServerSystems
+extends RefCounted
+## The one list of systems a server run registers, shared by the server entry (FND-03) and
+## FND-09's scenario kit, so a scenario runs exactly the systems a server runs. Each ticket
+## that adds a system adds it here.
+
+
+## FND-08: the debug channel's server end, loaded by path outside release builds only.
+const DEBUG_INSTALL: String = "res://server/debug/debug_install.gd"
+
+
+## Registers the network stages, the input pipeline and, with a mine, the world systems.
+## `secret` seeds per-client tokens and event ordering (NET-04): never the run seed. 0 draws one
+## from the OS; the scenario kit passes one derived from its own seed so its runs replay.
+static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: int = 0) -> void:
+	run.add_system(net)
+	run.inputs = InputService.new(net)
+	run.add_system(run.inputs)
+	run.now_judge = NowJudge.new()
+	run.add_system(run.now_judge)
+	if mine != null:
+		run.mine = mine
+		run.add_system(MineCommitSystem.new(mine))
+		run.light = LightSystem.new(mine)
+		run.light.register_into(run)
+		run.flame_states = FlameStates.new()
+		run.add_system(run.flame_states)
+		run.road_graph = RoadGraphService.new(mine, run.header.run_seed)
+		run.vision = VisionSystem.new(mine, run.light)
+		run.add_system(run.vision)
+	run.noise = NoiseSystem.new(run.road_graph)
+	run.add_system(run.noise)
+	run.movement = MovementSystem.new(mine)
+	run.add_system(run.movement)
+	run.miner_state = MinerStateSystem.new()
+	run.miner_state.register_into(run)
+	run.inventory = InventorySystem.new()
+	run.inventory.bind(run)
+	run.add_system(run.inventory)
+	run.feel = FeelSystem.new()
+	run.feel.bind(run)
+	run.add_system(run.feel)
+	run.ring = RingSystem.new()
+	run.add_system(run.ring)
+	run.lamps = LampSystem.new()
+	run.lamps.bind(run)
+	run.add_system(run.lamps)
+	run.rewind = Rewind.new()
+	run.rewind.bind(run)
+	run.add_system(run.rewind)
+	run.defender = DefenderRule.new()
+	run.add_system(run.defender)
+	run.creatures = CreatureSystem.new()
+	run.creatures.bind(run)
+	run.add_system(run.creatures)
+	run.rewind.radius_of = run.creatures.body_radius_of
+	# CRT-09's Tapper drops a pinned miner's lamp at the wall when the pin runs out (MNR-06).
+	run.creatures.spawned.connect(func(c: Creature) -> void:
+		if c is Tapper:
+			(c as Tapper).drop_lamp = run.lamps.drop_at_wall)
+	run.crew = CrewCensus.new()
+	run.crew.bind(run)
+	run.add_system(run.crew)
+	run.cap = ActiveCap.new(run.crew, run.creatures.gate)
+	run.holds = Holds.new()
+	run.holds.bind(run)
+	run.add_system(run.holds)
+	run.falls = FallSystem.new()
+	run.falls.bind(run)
+	run.add_system(run.falls)
+	run.carry = FiremanCarry.new()
+	run.carry.bind(run)
+	run.add_system(run.carry)
+	run.ring.bind(run)
+	run.revival = Revival.new()
+	run.revival.bind(run)
+	run.add_system(run.revival)
+	# A retreat drops the grab (CRT-01); a grab's end stands its creature's hunt down.
+	run.creatures.grab_release = func(_c: Creature, miner: int) -> void:
+		var g: GrabHold = run.holds.grab_of(miner)
+		if g != null:
+			run.holds.end_grab(run, g.id, GrabHold.Outcome.RETREAT)
+	run.holds.grab_ended.connect(func(grab_id: int, outcome: GrabHold.Outcome) -> void:
+		var g: GrabHold = run.holds.grabs[grab_id]
+		var c: Creature = run.creatures.creature_of(g.creature)
+		if c != null:
+			c.on_grab_ended(run, g, outcome))
+	run.creatures.gate.hunt_started.connect(func(c: Creature, miner: int, _chosen: bool) -> void:
+		var target: SimEntity = run.registry.get_entity(miner)
+		Log.info("telemetry hunt_committed creature=%s target=%d target_ring=%d crew_count=%d run_time=%.1f" % [c.kind_name(), miner,
+			WorldCoords.ring_of_point(target.position) if target != null else -1, run.crew.count, run.tick / Tuning.f(&"net.tick_hz")]))
+	if secret == 0:
+		secret = Crypto.new().generate_random_bytes(8).decode_s64(0)
+	run.replication = Replication.new(net, run.vision, mine, secret)
+	run.add_system(run.replication)
+	# SND-03: every player delivery, tell and local emitter goes through the masks to NET-04.
+	run.audio = AudioDelivery.new()
+	run.audio.bind(run)
+	run.audio.sink = run.replication.queue_audio
+	run.deafen = Deafen.new()
+	run.deafen.bind(run)
+	run.add_system(run.deafen)
+	run.tells = OverheadTells.new()
+	run.tells.bind(run)
+	if mine != null:
+		run.air_doors = AirDoorSystem.new()
+		run.air_doors.bind(run)
+		run.add_system(run.air_doors)
+	# FND-08: dev and QA servers only; server/debug/ is not in a release pack.
+	if net.flavour != BuildInfo.Flavour.RELEASE and ResourceLoader.exists(DEBUG_INSTALL):
+		var installer: GDScript = load(DEBUG_INSTALL)
+		installer.call(&"install", run, net)

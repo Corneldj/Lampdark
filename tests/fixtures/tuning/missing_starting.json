@@ -1,0 +1,25 @@
+{
+	"expect": "missing field 'starting'",
+	"units": [
+		"s",
+		"tiles",
+		"px",
+		"count",
+		"share"
+	],
+	"files": {
+		"moth.json": {
+			"domain": "moth",
+			"keys": {
+				"moth.a_s": {
+					"value": 1.5,
+					"type": "float",
+					"unit": "s",
+					"source": "Gameplay \u00a77.1",
+					"visibility": "server",
+					"kind": "param"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,7 @@
+extends RefCounted
+# Fixture for test_typed_warnings.gd. Kept as .txt so the editor never parses it.
+# The untyped declaration below must fail to load outside addons/.
+
+func value() -> int:
+	var x = 5
+	return x

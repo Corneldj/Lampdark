@@ -1,0 +1,26 @@
+{
+	"note": "MNR-04: the in-world names of item kinds (ItemKinds.text_key), as miners say them (Gameplay §4.5-4.7). UI-07 moves these to translation keys.",
+	"strings": {
+		"item.gauze_lamp": "a gauze lamp",
+		"item.electric_lamp": "an electric hand lamp",
+		"item.candle": "a candle",
+		"item.flare": "a magnesium flare",
+		"item.stone": "a stone",
+		"item.oil_flask": "an oil flask",
+		"item.paraffin_can": "a paraffin can",
+		"item.healing_kit": "a first-aid box",
+		"item.spanner": "a spanner",
+		"item.hammer": "a hammer",
+		"item.crowbar": "a crowbar",
+		"item.wire_cutters": "wire cutters",
+		"item.fuse": "a fuse",
+		"item.rope_clamp": "a rope clamp",
+		"item.magneto": "the magneto",
+		"item.drive_belt": "the drive belt",
+		"item.brake_shoe": "a brake shoe",
+		"item.revolver": "the Webley revolver",
+		"item.rounds": "a box of rounds",
+		"item.canary": "a canary in its cage",
+		"item.note": "a note"
+	}
+}

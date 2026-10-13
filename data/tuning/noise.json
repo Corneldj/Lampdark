@@ -1,0 +1,741 @@
+{
+	"domain": "noise",
+	"keys": {
+		"noise.air_cost_per_tile": {
+			"value": 1,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: np per tile; ticket SND-01"
+		},
+		"noise.backfire_np": {
+			"value": 30,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §6.2, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 28-30 np: backfire; SND-02 catalogue"
+		},
+		"noise.bed_volume_db": {
+			"value": -18,
+			"type": "float",
+			"unit": "dB",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-03: the quiet bed's level under everything"
+		},
+		"noise.buzzer_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 12 np: switchboard buzzer; SND-02 catalogue"
+		},
+		"noise.cage_freed_np": {
+			"value": 20,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 20 np: freeing the cage; SND-02 catalogue"
+		},
+		"noise.canary_np": {
+			"value": 10,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 10 np: canary; SND-02 catalogue"
+		},
+		"noise.caption_arc_deg": {
+			"value": 45,
+			"type": "float",
+			"unit": "deg",
+			"source": "GDD §14.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: degrees; ticket UI-03"
+		},
+		"noise.caption_linger_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket UI-03"
+		},
+		"noise.caption_max_lines": {
+			"value": 4,
+			"type": "float",
+			"unit": "lines",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket UI-03"
+		},
+		"noise.carry_knock_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.3, §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 Carry knock / 12 np; SND-02 catalogue"
+		},
+		"noise.closed_portal_cost": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-01"
+		},
+		"noise.collapse_creak_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Proposed; belongs in SND-02's catalogue",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket HAZ-03"
+		},
+		"noise.collapse_trigger_np": {
+			"value": 18,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-02"
+		},
+		"noise.collapse_trigger_path_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §12.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-02"
+		},
+		"noise.cough_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 12 np: cough; SND-02 catalogue"
+		},
+		"noise.deafen_dip_db": {
+			"value": 20,
+			"type": "float",
+			"unit": "dB",
+			"source": "Gameplay §4.7, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-04"
+		},
+		"noise.deafen_duration_s": {
+			"value": 5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.7, §6.10, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-04"
+		},
+		"noise.diffuse_emitter_count": {
+			"value": 3,
+			"type": "int",
+			"unit": "emitters",
+			"source": "Gameplay §6.10",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-03"
+		},
+		"noise.diffuse_emitter_distance_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-03"
+		},
+		"noise.drag_scrape_interval_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.1, A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-02"
+		},
+		"noise.engine_crank_np": {
+			"value": 20,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 20 np: engine crank; SND-02 catalogue"
+		},
+		"noise.engine_interval_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 24 np / Event rates: the running engine every 2 s; SND-02"
+		},
+		"noise.engine_running_np": {
+			"value": 24,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §3.6, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 24 np: the running engine, at the winder; SND-02 catalogue"
+		},
+		"noise.event_duration_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (SND-02)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "a one-shot event's duration unless its action is longer"
+		},
+		"noise.fan_creature_min_np": {
+			"value": 22,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.9, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-16"
+		},
+		"noise.fan_note_drop_s": {
+			"value": 5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.9, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-16"
+		},
+		"noise.fan_player_nonvoice_range_tiles": {
+			"value": 8,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-16"
+		},
+		"noise.fan_surge_duration_s": {
+			"value": 40,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.9, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-16"
+		},
+		"noise.firedamp_blast_np": {
+			"value": 40,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §12.5, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 40 np: firedamp explosion; SND-02 catalogue"
+		},
+		"noise.flare_strike_np": {
+			"value": 16,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-02"
+		},
+		"noise.flint_click_np": {
+			"value": 9,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.4, §6.1, §A.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.1 Relighting / A.2 9 np: flint click; SND-02 catalogue"
+		},
+		"noise.gasp_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 12 np: gasp; SND-02 catalogue"
+		},
+		"noise.gate_np": {
+			"value": 14,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 14 np: gate; SND-02 catalogue"
+		},
+		"noise.hammer_np": {
+			"value": 14,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 14 np: hammer strike; SND-02 catalogue"
+		},
+		"noise.hold_bell_np": {
+			"value": 20,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 20 np: hold bell; SND-02 catalogue"
+		},
+		"noise.jitter_per_path_tile": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.1, A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-01"
+		},
+		"noise.limiter_ceiling_dbfs": {
+			"value": -1,
+			"type": "float",
+			"unit": "dBFS",
+			"source": "Proposed (GDD §14.2)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-03"
+		},
+		"noise.main_switch_np": {
+			"value": 20,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 20 np: main switch; SND-02 catalogue"
+		},
+		"noise.mantrap_snap_np": {
+			"value": 14,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 14 np: man-trap snap; SND-02 catalogue"
+		},
+		"noise.max_event_voices": {
+			"value": 24,
+			"type": "int",
+			"unit": "voices",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-03"
+		},
+		"noise.muffle_lowpass_hz": {
+			"value": 1200,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Proposed (GDD §14.2 'muffled')",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-03"
+		},
+		"noise.panting_np": {
+			"value": 9,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.1, §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 Stamina; panting / 9 np: panting; SND-02 catalogue"
+		},
+		"noise.phone_bell_np": {
+			"value": 20,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 20 np: phone bell; SND-02 catalogue"
+		},
+		"noise.phone_crank_np": {
+			"value": 14,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 14 np: phone crank; SND-02 catalogue"
+		},
+		"noise.pitch_variation": {
+			"value": 0.04,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-03: a sample's pitch varies by up to this share per event"
+		},
+		"noise.playback_edge_attenuation_db": {
+			"value": 24,
+			"type": "float",
+			"unit": "dB",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-03"
+		},
+		"noise.player_threshold": {
+			"value": 0,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-01"
+		},
+		"noise.rail_bang_np": {
+			"value": 14,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 14 np: rail bang; SND-02 catalogue"
+		},
+		"noise.rear_filter_start_deg": {
+			"value": 55,
+			"type": "float",
+			"unit": "deg",
+			"source": "Proposed (half the 110° cone)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: ° off facing; ticket SND-04"
+		},
+		"noise.rear_lowpass_min_hz": {
+			"value": 2000,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-04"
+		},
+		"noise.reload_click_np": {
+			"value": 8,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 8 np: round loaded; SND-02 catalogue"
+		},
+		"noise.ringing_volume_db": {
+			"value": 0,
+			"type": "float",
+			"unit": "dB",
+			"min": -12,
+			"max": 0,
+			"source": "GDD §14.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "tickets SND-04, UI-06: the ringing's own level; the 20 dB dip never changes with it"
+		},
+		"noise.rock_tap_np": {
+			"value": 10,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 10 np: a miner's rock tap (also A.3 Rock tap); SND-02 catalogue"
+		},
+		"noise.roof_fall_np": {
+			"value": 30,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §12.5, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 28-30 np / Collapse trigger: roof fall; SND-02 catalogue"
+		},
+		"noise.shot_np": {
+			"value": 40,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.7, §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 40 np: revolver shot; SND-02 catalogue"
+		},
+		"noise.spanner_np": {
+			"value": 9,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 9 np: spanner work; SND-02 catalogue"
+		},
+		"noise.staple_pit_crash_np": {
+			"value": 20,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 20 np: staple-pit crash; SND-02 catalogue"
+		},
+		"noise.step_drum_gear_np": {
+			"value": 9,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.3, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 Carries: drum gear steps (not in SND-02's table; added for the A.2 row); SND-02 catalogue"
+		},
+		"noise.step_heavy_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.1, §4.3, §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 Carries / Sump mud / 12 np: steps carrying a body or can, or in sump mud; SND-02 catalogue"
+		},
+		"noise.step_interval_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-02"
+		},
+		"noise.step_run_np": {
+			"value": 18,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.1, §6.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-02"
+		},
+		"noise.step_stretcher_np": {
+			"value": 9,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.3, §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 Carries / 9 np: stretcher steps; SND-02 catalogue"
+		},
+		"noise.step_walk_np": {
+			"value": 9,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.1, §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 Gaits / 9 np: walking steps; SND-02 catalogue"
+		},
+		"noise.stone_landing_np": {
+			"value": 14,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.5, §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 Stones / 14 np: landing stone; SND-02 catalogue"
+		},
+		"noise.struggle_interval_s": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 Event rates: a struggle every 2 s; SND-02"
+		},
+		"noise.struggle_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 12 np: trapped struggle; SND-02 catalogue"
+		},
+		"noise.tapper_threshold": {
+			"value": 4,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.1, A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-01"
+		},
+		"noise.tell_volume_db": {
+			"value": 0,
+			"type": "float",
+			"unit": "dB",
+			"min": -6,
+			"max": 6,
+			"source": "GDD §14.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket UI-06"
+		},
+		"noise.trapped_cry_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §8.2, §6.1, §A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.5 Man-trap effect: the talk-band cry; SND-02 ticket name"
+		},
+		"noise.tub_rumble_np": {
+			"value": 14,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §4.3, §6.1, §A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.2 Carries / 14 np: tub rumble; SND-02 catalogue"
+		},
+		"noise.voice_event_interval_s": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §A.2, GDD §15.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-02"
+		},
+		"noise.hrtf_frame_samples": {
+			"value": 512,
+			"type": "int",
+			"unit": "samples",
+			"min": 128,
+			"max": 2048,
+			"source": "Proposed (SND-04 spike: 1.1% of a desktop core at 24 sources)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-04: Steam Audio's block on the headphone path (10.7 ms at 48 kHz); larger is cheaper and later"
+		},
+		"noise.hrtf_bilinear": {
+			"value": false,
+			"type": "bool",
+			"unit": "flag",
+			"source": "Proposed (SND-04 spike)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-04: bilinear HRTF interpolation (smoother for noise-like sounds, about 1.5x the cost); off takes the nearest measured direction"
+		}
+	}
+}

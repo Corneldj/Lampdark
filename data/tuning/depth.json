@@ -1,0 +1,52 @@
+{
+	"domain": "depth",
+	"keys": {
+		"depth.pull_factor": {
+			"value": [
+				0.5,
+				1.0,
+				1.5,
+				2.0,
+				2.5
+			],
+			"type": "by_ring",
+			"unit": "×",
+			"source": "Gameplay §10.6, §A.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-04"
+		},
+		"depth.relax_s": {
+			"value": [
+				60,
+				60,
+				45,
+				30,
+				30
+			],
+			"type": "by_ring",
+			"unit": "s",
+			"source": "Gameplay §10.2, §10.6, §A.7",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket DIR-04"
+		},
+		"depth.ring_start_tiles": {
+			"value": [
+				80,
+				200,
+				400,
+				700
+			],
+			"type": "int_list",
+			"unit": "tiles",
+			"source": "Gameplay §10.6, §A.7 (start of rings 1–4; ring 0 starts at 0)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket FND-07"
+		}
+	}
+}

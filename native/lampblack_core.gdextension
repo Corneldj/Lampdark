@@ -1,0 +1,20 @@
+[configuration]
+
+entry_symbol = "lampblack_core_init"
+compatibility_minimum = "4.7"
+reloadable = true
+
+[libraries]
+
+linux.debug.x86_64 = "res://native/bin/liblampblack_core.linux.template_debug.x86_64.so"
+linux.release.x86_64 = "res://native/bin/liblampblack_core.linux.template_release.x86_64.so"
+windows.debug.x86_64 = "res://native/bin/liblampblack_core.windows.template_debug.x86_64.dll"
+windows.release.x86_64 = "res://native/bin/liblampblack_core.windows.template_release.x86_64.dll"
+
+[dependencies]
+
+; SND-04: Steam Audio's runtime, loaded by the core from beside itself (never linked); clients only.
+linux.debug.x86_64.lb_client = { "res://native/bin/libphonon.so": "" }
+linux.release.x86_64.lb_client = { "res://native/bin/libphonon.so": "" }
+windows.debug.x86_64.lb_client = { "res://native/bin/phonon.dll": "" }
+windows.release.x86_64.lb_client = { "res://native/bin/phonon.dll": "" }

@@ -1,0 +1,10 @@
+{
+	"note": "DIR-04: the in-world names of the five depth rings (Gameplay §10.6). In-game text never says 'ring': it names the Level. UI-07 moves these to translation keys.",
+	"strings": {
+		"level.0": "the pit-bottom roads",
+		"level.1": "the First Level",
+		"level.2": "the Second Level",
+		"level.3": "the Third Level",
+		"level.4": "the Deep"
+	}
+}

@@ -1,0 +1,583 @@
+{
+	"domain": "voice",
+	"keys": {
+		"voice.agc_warning_margin_db": {
+			"value": 6,
+			"type": "float",
+			"unit": "dB",
+			"source": "GDD §15.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-06"
+		},
+		"voice.apm_backend": {
+			"value": "webrtc",
+			"type": "string",
+			"unit": "enum",
+			"source": "Proposed (GDD §15.13 fallback)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-05"
+		},
+		"voice.aside_budget_s": {
+			"value": 15,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.5, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-14"
+		},
+		"voice.aside_window_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.5, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-14"
+		},
+		"voice.band_cap_headroom_db": {
+			"value": 6,
+			"type": "float",
+			"unit": "dB",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-07"
+		},
+		"voice.band_hysteresis_s": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.3, A.3",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-06"
+		},
+		"voice.band_median_ms": {
+			"value": 100,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-06"
+		},
+		"voice.breath_hold_max_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.5, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-14"
+		},
+		"voice.breath_hold_panting_max_s": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.1, §6.5, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-14"
+		},
+		"voice.calibration_clamp_db": {
+			"value": 6,
+			"type": "float",
+			"unit": "dB",
+			"source": "Gameplay §6.3, A.3",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-06"
+		},
+		"voice.calibration_scream_offset_db": {
+			"value": 6,
+			"type": "float",
+			"unit": "dB",
+			"source": "GDD §15.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-06"
+		},
+		"voice.calibration_talk_fraction": {
+			"value": 0.667,
+			"type": "float",
+			"unit": "×",
+			"source": "GDD §15.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: ratio; ticket SND-06"
+		},
+		"voice.callout_max_duration_s": {
+			"value": 3.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-13"
+		},
+		"voice.callout_shout_window_s": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "s",
+			"min": 0.2,
+			"max": 0.6,
+			"source": "GDD §14.5, A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-11"
+		},
+		"voice.callout_whisper_hold_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"min": 0.3,
+			"max": 1,
+			"source": "GDD §14.5, A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-11"
+		},
+		"voice.caption_word_min_frames": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: share of a word's frames; ticket UI-03"
+		},
+		"voice.clean_range_fraction": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §6.2, A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: × range; ticket SND-08"
+		},
+		"voice.edge_gain_db": {
+			"value": -12,
+			"type": "float",
+			"unit": "dB",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-07"
+		},
+		"voice.edge_loss": {
+			"value": 0.4,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §6.2, A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-08"
+		},
+		"voice.fall_scream_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.8, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-15"
+		},
+		"voice.frame_ms": {
+			"value": 20,
+			"type": "float",
+			"unit": "ms",
+			"source": "GDD §15.5, C.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-05"
+		},
+		"voice.heard_min_fraction": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §6.4, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-09"
+		},
+		"voice.jitter_buffer_ms": {
+			"value": 60,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-07"
+		},
+		"voice.knock_count": {
+			"value": 3,
+			"type": "float",
+			"unit": "knocks",
+			"source": "Gameplay §6.8, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-15"
+		},
+		"voice.knock_delay_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-15"
+		},
+		"voice.knock_interval_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.8, A.3 (\"about\")",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-15"
+		},
+		"voice.loss_run_max_frames": {
+			"value": 10,
+			"type": "int",
+			"unit": "frames",
+			"source": "GDD §15.5, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-08"
+		},
+		"voice.loss_run_min_frames": {
+			"value": 3,
+			"type": "int",
+			"unit": "frames",
+			"source": "GDD §15.5, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-08"
+		},
+		"voice.noise_suppression_level": {
+			"value": "moderate",
+			"type": "string",
+			"unit": "enum",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-05"
+		},
+		"voice.opus_bitrate_kbps": {
+			"value": 24,
+			"type": "int",
+			"unit": "kbps",
+			"source": "GDD §15.5, C.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-07"
+		},
+		"voice.player_volume_max_db": {
+			"value": 0,
+			"type": "float",
+			"unit": "dB",
+			"source": "Proposed (never above the band cap, GDD §15.11)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket STM-08"
+		},
+		"voice.rhythm_gap_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-12"
+		},
+		"voice.rock_line_max_rock_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-07"
+		},
+		"voice.rock_line_range_factor": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "×",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: × range; ticket SND-07"
+		},
+		"voice.rock_tap_range_tiles": {
+			"value": 20,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.6, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-12"
+		},
+		"voice.running_loss": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §4.1, §6.2, A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-08"
+		},
+		"voice.sample_rate_hz": {
+			"value": 48000,
+			"type": "int",
+			"unit": "Hz",
+			"source": "GDD §15.5, C.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-05"
+		},
+		"voice.scream_np": {
+			"value": 28,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-09"
+		},
+		"voice.scream_range_tiles": {
+			"value": 24,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-07"
+		},
+		"voice.shout_np": {
+			"value": 20,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-09"
+		},
+		"voice.shout_range_tiles": {
+			"value": 24,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-07"
+		},
+		"voice.stythe_loss": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "share",
+			"source": "Gameplay §6.2, §7.4, A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-08"
+		},
+		"voice.stythe_radius_tiles": {
+			"value": 10,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.2, §7.4",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-08"
+		},
+		"voice.talk_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-09"
+		},
+		"voice.talk_range_tiles": {
+			"value": 12,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-07"
+		},
+		"voice.tap_min_interval_s": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-12"
+		},
+		"voice.threshold_scream_dbfs": {
+			"value": -12,
+			"type": "float",
+			"unit": "dBFS",
+			"source": "Gameplay §A.3, GDD §15.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-06"
+		},
+		"voice.threshold_shout_dbfs": {
+			"value": -22,
+			"type": "float",
+			"unit": "dBFS",
+			"source": "Gameplay §A.3, GDD §15.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-06"
+		},
+		"voice.threshold_talk_dbfs": {
+			"value": -40,
+			"type": "float",
+			"unit": "dBFS",
+			"source": "Gameplay §A.3, GDD §15.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-06"
+		},
+		"voice.threshold_whisper_dbfs": {
+			"value": -50,
+			"type": "float",
+			"unit": "dBFS",
+			"source": "Gameplay §A.3, GDD §15.5",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-06"
+		},
+		"voice.unheard_mark_deep_ring": {
+			"value": 2,
+			"type": "int",
+			"unit": "ring",
+			"source": "Gameplay §6.4",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-09"
+		},
+		"voice.unheard_mark_deep_s": {
+			"value": 45,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.4, A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-09"
+		},
+		"voice.unheard_mark_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §6.4, A.3",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-09"
+		},
+		"voice.utterance_split_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-09"
+		},
+		"voice.wheel_ring_bounds": {
+			"value": [
+				0.25,
+				0.5,
+				0.75
+			],
+			"type": "float_list",
+			"unit": "×",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: × radius; ticket SND-11"
+		},
+		"voice.whisper_np": {
+			"value": 6,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-09"
+		},
+		"voice.whisper_range_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §6.2, A.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket SND-07"
+		}
+	}
+}

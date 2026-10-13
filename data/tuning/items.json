@@ -1,0 +1,307 @@
+{
+	"domain": "items",
+	"keys": {
+		"items.belt_slots": {
+			"value": 4,
+			"type": "int",
+			"unit": "slots",
+			"source": "Gameplay §4.3 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-04"
+		},
+		"items.canary_blackdamp_quiet_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-11"
+		},
+		"items.canary_chirp_interval": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-11"
+		},
+		"items.canary_cover_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.5 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-11"
+		},
+		"items.canary_firedamp_chirp_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-11"
+		},
+		"items.canary_song_interval": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.5 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-11"
+		},
+		"items.canary_stythe_quiet_tiles": {
+			"value": 10,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-11"
+		},
+		"items.candle_burn_time": {
+			"value": 300,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.5 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-09"
+		},
+		"items.candle_light_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.5 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-09"
+		},
+		"items.candle_radius": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.5 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-09"
+		},
+		"items.chalk_arrow_directions": {
+			"value": 8,
+			"type": "float",
+			"unit": "directions",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-10"
+		},
+		"items.chalk_rib_reach": {
+			"value": 1,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-10"
+		},
+		"items.chalk_time": {
+			"value": 2,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.5 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-10"
+		},
+		"items.flare_burn_time": {
+			"value": 8,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.5 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-09"
+		},
+		"items.flare_radius": {
+			"value": 14,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.5 / A.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-09"
+		},
+		"items.flare_strike_time": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.5 / A.1",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-09"
+		},
+		"items.hand_over_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §4.3 / A.2",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket MNR-05"
+		},
+		"items.line_weight": {
+			"value": 1,
+			"type": "float",
+			"unit": "×",
+			"min": 1,
+			"max": 2,
+			"source": "GDD §14.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket UI-06"
+		},
+		"items.pick_up_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-04"
+		},
+		"items.range_tolerance": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-04"
+		},
+		"items.set_down_time": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (lamps use MNR-06's key)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-04"
+		},
+		"items.stack_candles": {
+			"value": 3,
+			"type": "int",
+			"unit": "items",
+			"source": "Gameplay §4.5 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-04"
+		},
+		"items.stack_fuses": {
+			"value": 3,
+			"type": "int",
+			"unit": "items",
+			"source": "Gameplay §4.6 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-04"
+		},
+		"items.stack_rope_clamps": {
+			"value": 4,
+			"type": "int",
+			"unit": "items",
+			"source": "Gameplay §4.6 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-04"
+		},
+		"items.stack_rounds": {
+			"value": 12,
+			"type": "int",
+			"unit": "rounds",
+			"source": "Gameplay §4.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-04"
+		},
+		"items.stack_stones": {
+			"value": 3,
+			"type": "int",
+			"unit": "items",
+			"source": "Gameplay §4.5 / A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-04"
+		},
+		"items.stone_flight_speed": {
+			"value": 12,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-09"
+		},
+		"items.stone_throw_max": {
+			"value": 8,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.5 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-09"
+		},
+		"items.stone_throw_min": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §4.5 / A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-09"
+		},
+		"items.stack_default": {
+			"value": 1,
+			"type": "int",
+			"unit": "items",
+			"source": "Gameplay §4.6, §A.9",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.9 Parts stacks: every other part stacks 1 a slot"
+		}
+	}
+}

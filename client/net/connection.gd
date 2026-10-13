@@ -1,0 +1,221 @@
+class_name ClientConnection
+extends RefCounted
+## The client's connection to the server (NET-02): handshake, clock sync and drop detection
+## over any Transport.
+
+enum State { IDLE, CONNECTING, CONNECTED, REJECTED, DROPPED }
+
+var transport: Transport
+var state: State = State.IDLE
+var peer: int = -1
+var identity: String = "dev"
+var seat_request: int = Protocol.Seat.PLAYER
+var session_token: String = ""
+## Overridable for tests.
+var build_id: String = Protocol.build_id()
+var protocol_version: int = Protocol.PROTOCOL_VERSION
+var welcome: Protocol.Welcome = null
+var reject_reason: int = -1
+var drop_reason: String = ""
+var clock: ClockSync = ClockSync.new()
+var frames_received: int = 0
+var last_frame_tick: int = -1
+## NET-03: the newest input seq the server applied, from the last frame (VIS-05's reconciliation).
+var last_input_ack: int = -1
+## NET-05's client timeline, fed by each newer frame: the render time NET-03 stamps on inputs.
+var timeline: ClientClock = ClientClock.new()
+## NET-06: timed cues presented on that timeline and reported up.
+var cues: CueReporter = CueReporter.new()
+## NET-03: inputs up, and the action acknowledgement and buffer depth from each frame header.
+var inputs: ClientInputSender = ClientInputSender.new()
+## NET-04: frames decoded against the baselines they name; `view` is what the client holds now.
+var decoder: FrameDecoder = FrameDecoder.new()
+var view: ReceivedView = null
+## MNR-04: the own miner's hands and belt, as last received (InventoryWire.decode), and how many
+## such messages arrived.
+var inventory: Dictionary = {}
+var inventory_messages: int = 0
+## VIS-07: the own miner's feel answers and wall bumps.
+var feel: FeelClient = FeelClient.new()
+## MNR-05: the interact ring as last received (RingMessages.decode); {} before any.
+var ring: Dictionary = {}
+var ring_messages: int = 0
+## SND-03: ambient cues in arrival order ({layer, start, fade_s}); the audio side drains them.
+var ambient_cues: Array[Dictionary] = []
+## SND-04: Deafened records in arrival order ({duration_s, dip_db}); the audio side drains them.
+var deafened: Array[Dictionary] = []
+## Audio events received, each once, in arrival order (SND-03 plays them).
+var events: Array[Dictionary] = []
+var _event_numbers: Dictionary = {}
+## FND-09: bytes received and sent per lane, and an optional observer called with
+## (lane, data, now_usec) for every message received (bots' receive logs).
+var bytes_in: Dictionary = {}
+var bytes_out: Dictionary = {}
+var message_observer: Callable = Callable()
+## FND-08: the QA token this client presents (--qa-token), and debug-lane messages in arrival order
+## ({type, payload}) once the server granted the channel. A message on the debug lane without the
+## grant, or in a release build, is dropped and counted as a protocol violation.
+var qa_token: String = ""
+var debug_inbox: Array[Dictionary] = []
+var debug_violations: int = 0
+## Messages received before Welcome other than Reject (must stay 0).
+var early_messages: int = 0
+var handshake_timeout_usec: int = 5000000
+var _started_usec: int = 0
+
+
+func _init(net_transport: Transport) -> void:
+	transport = net_transport
+	if Tuning.current.has_key(&"net.handshake_timeout_s"):
+		handshake_timeout_usec = roundi(Tuning.f(&"net.handshake_timeout_s") * 1000000.0)
+
+
+func start(host: String, port: int) -> bool:
+	_started_usec = Transport.now_usec()
+	peer = transport.connect_to(host, port)
+	state = State.CONNECTING if peer >= 0 else State.DROPPED
+	return peer >= 0
+
+
+func poll() -> void:
+	var now: int = Transport.now_usec()
+	for event: TransportEvent in transport.poll():
+		match event.kind:
+			TransportEvent.Kind.CONNECTED:
+				_send_hello()
+			TransportEvent.Kind.DROPPED:
+				if state == State.CONNECTING or state == State.CONNECTED:
+					state = State.DROPPED
+					drop_reason = event.reason
+			TransportEvent.Kind.MESSAGE:
+				bytes_in[event.lane] = int(Variants.number(bytes_in.get(event.lane, 0))) + event.data.size()
+				if message_observer.is_valid():
+					message_observer.call(event.lane, event.data, now)
+				_on_message(event, now)
+	if state == State.CONNECTING and now - _started_usec > handshake_timeout_usec:
+		state = State.DROPPED
+		drop_reason = "handshake_timeout"
+		transport.disconnect_peer(peer)
+	if state == State.CONNECTED and clock.ping_due(now):
+		transport.send(peer, Lane.Id.CONTROL, Protocol.ping(now))
+	transport.flush()
+
+
+func send(lane: int, payload: PackedByteArray, type: int) -> Error:
+	return send_raw(lane, Protocol.frame(type as Protocol.Msg, payload))
+
+
+## Sends an already framed message (InputPacket.encode() frames itself).
+func send_raw(lane: int, framed: PackedByteArray) -> Error:
+	if state != State.CONNECTED:
+		return ERR_UNCONFIGURED
+	bytes_out[lane] = int(Variants.number(bytes_out.get(lane, 0))) + framed.size()
+	return transport.send(peer, lane, framed)
+
+
+func close() -> void:
+	transport.close()
+	state = State.IDLE
+
+
+func _send_hello() -> void:
+	var hello: Protocol.Hello = Protocol.Hello.new()
+	hello.protocol_version = protocol_version
+	hello.build_id = build_id
+	hello.identity = identity
+	hello.seat_request = seat_request
+	hello.session_token = session_token
+	hello.flavour = transport.build.flavour
+	hello.qa_token = "" if transport.build.is_release() else qa_token
+	transport.send(peer, Lane.Id.CONTROL, hello.encode())
+
+
+## FND-08: the server opened the debug lane to this client (never in a release build).
+func has_debug() -> bool:
+	return state == State.CONNECTED and welcome != null and welcome.debug and not transport.build.is_release()
+
+
+func _on_message(event: TransportEvent, now: int) -> void:
+	var message: Dictionary = Protocol.unframe(event.data)
+	if message.is_empty():
+		return
+	var type: int = int(Variants.number(message["type"]))
+	var payload: PackedByteArray = message["payload"]
+	if event.lane == Lane.Id.DEBUG:
+		if has_debug():
+			debug_inbox.append({"type": type, "payload": payload})
+		else:
+			debug_violations += 1
+			Log.warn("protocol violation: a debug-lane message without the debug channel; dropped")
+		return
+	if state == State.CONNECTING:
+		if type == Protocol.Msg.WELCOME:
+			welcome = Protocol.Welcome.decode(payload)
+			session_token = welcome.session_token
+			state = State.CONNECTED
+			if not welcome.client_tuning.is_empty():
+				Log.info("server sent an updated client tuning table (%s)" % welcome.client_tuning_hash.left(12))
+		elif type == Protocol.Msg.REJECT:
+			reject_reason = Protocol.read_u8(payload)
+			state = State.REJECTED
+		else:
+			early_messages += 1
+		return
+	match type:
+		Protocol.Msg.PONG:
+			clock.on_pong(Protocol.read_i64(payload, 0), Protocol.read_i64(payload, 1), now)
+		Protocol.Msg.FEEL:
+			feel.on_message(payload)
+		Protocol.Msg.RING:
+			var r: Dictionary = RingMessages.decode(payload)
+			if not r.is_empty():
+				ring = r
+				ring_messages += 1
+		Protocol.Msg.AMBIENT:
+			var cue: Dictionary = AmbientMessages.decode(payload)
+			if not cue.is_empty():
+				ambient_cues.append(cue)
+		Protocol.Msg.DEAFENED:
+			var d: Dictionary = DeafenedMessages.decode(payload)
+			if not d.is_empty():
+				deafened.append(d)
+		Protocol.Msg.INVENTORY:
+			var own: Dictionary = InventoryWire.decode(payload)
+			if not own.is_empty():
+				inventory = own
+				inventory_messages += 1
+		Protocol.Msg.FRAME:
+			var decoded: FrameDecoder.Decoded = decoder.decode(payload)
+			if not decoded.ok:
+				return
+			frames_received += 1
+			if decoded.tick > last_frame_tick:
+				timeline.on_frame(decoded.tick, now)
+			last_frame_tick = decoded.tick
+			last_input_ack = decoded.input_ack
+			view = decoded.view
+			for e: Dictionary in decoded.events:
+				var number: int = int(Variants.number(e["number"]))
+				if not _event_numbers.has(number):
+					_event_numbers[number] = true
+					events.append(e)
+					cues.on_event(e)
+			inputs.on_frame(last_frame_tick, decoded.action_ack, decoded.input_depth, now)
+
+
+## The tick the client is showing now and its fraction (0-255), for an input's stamp (NET-03):
+## the render time, net.interp_delay_ms behind the received timeline (NET-05, NET-06).
+func shown_stamp(now_usec: int) -> PackedInt64Array:
+	if not timeline.has_estimate():
+		return PackedInt64Array([maxi(last_frame_tick, 0), 0])
+	var t: float = maxf(timeline.shown_tick(now_usec), 0.0)
+	var whole: int = floori(t)
+	return PackedInt64Array([whole, clampi(floori((t - whole) * 256.0), 0, 255)])
+
+
+## Before each tick's input goes up: present the timed cues the shown time has reached and
+## return the input's stamp.
+func stamp_for_send(now_usec: int) -> PackedInt64Array:
+	var stamp: PackedInt64Array = shown_stamp(now_usec)
+	cues.poll(float(stamp[0]) + stamp[1] / 256.0, inputs)
+	return stamp

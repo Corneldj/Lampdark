@@ -1,0 +1,1608 @@
+{
+	"note": "Every Gameplay Appendix A row and GDD C.12 row, mapped to the keys that carry its numbers or to a reason it has none (FND-05). Checked by tools/build/check_tuning_coverage.gd.",
+	"rows": {
+		"A.1/Projection": {
+			"none": "rule, no number: orthographic, straight down, north up"
+		},
+		"A.1/Scale and view": [
+			"camera.tile_px_at_1080p",
+			"camera.view_tiles_wide",
+			"camera.view_tiles_high"
+		],
+		"A.1/Camera lead": [
+			"camera.lead_tiles",
+			"camera.squint_lead_tiles"
+		],
+		"A.1/Vision cone": [
+			"vision.cone_deg",
+			"vision.blind_area_deg"
+		],
+		"A.1/Light grid": [
+			"light.cap",
+			"net.tick_hz"
+		],
+		"A.1/Falloff": [
+			"light.source_peak",
+			"light.core_value",
+			"light.core_fraction",
+			"light.edge_value"
+		],
+		"A.1/Seen; identity": [
+			"vision.seen_light_min",
+			"vision.identity_light_min",
+			"vision.touch_range_tiles"
+		],
+		"A.1/Fringe": [
+			"vision.seen_light_min",
+			"vision.identity_light_min",
+			"vision.small_thing_light_min",
+			"vision.trail_light_min"
+		],
+		"A.1/Walls to the Stythe": [
+			"stythe.wall_level",
+			"stythe.thin_wall_level"
+		],
+		"A.1/Sleeping Moth stir": [
+			"moth.stir_level",
+			"moth.stir_clock_s",
+			"moth.stir_window_s",
+			"moth.wake_level"
+		],
+		"A.1/Sight distance": [
+			"vision.los_range_tiles",
+			"vision.edge_glow_range_tiles",
+			"camera.squint_lead_tiles",
+			"camera.view_tiles_wide"
+		],
+		"A.1/Gauze lamp: wick down / normal / up": [
+			"lamp.radius_wick_down",
+			"lamp.radius_normal",
+			"lamp.radius_wick_up",
+			"light.core_fraction"
+		],
+		"A.1/Lamp's 0.60 reach": [
+			"lamp.wake_reach_by_wick_tiles",
+			"moth.wake_level"
+		],
+		"A.1/Shuttered, belt slot, belt hook": [
+			"lamp.radius_shuttered",
+			"lamp.radius_slotted",
+			"lamp.hook_radius",
+			"light.core_fraction"
+		],
+		"A.1/Shutter; wick step": [
+			"lamp.shutter_time",
+			"lamp.wick_step_time"
+		],
+		"A.1/Set down, hang, pick up": [
+			"lamp.set_down_time",
+			"lamp.pick_up_time",
+			"mine.timber_hook_spacing_tiles"
+		],
+		"A.1/Oil burn; full fount": [
+			"lamp.burn_factor_wick_down",
+			"lamp.burn_factor_normal",
+			"lamp.burn_factor_wick_up",
+			"lamp.fill_minutes",
+			"lamp.burn_factor_closed"
+		],
+		"A.1/The seam's drink": [
+			"lamp.seam_drink_by_ring"
+		],
+		"A.1/Relighting": [
+			"lamp.flint_time",
+			"lamp.flint_notch_cost",
+			"noise.flint_click_np",
+			"lamp.candle_relight_time",
+			"lamp.pass_flame_time",
+			"basecamp.relighter_s",
+			"lamp.max_notches"
+		],
+		"A.1/Oil handling": [
+			"lamp.flask_fills",
+			"lamp.fill_minutes",
+			"lamp.flask_pour_time",
+			"lamp.share_oil_time",
+			"lamp.can_fills",
+			"lift.tank_unit_fills",
+			"lamp.can_fill_time"
+		],
+		"A.1/Found lamps": [
+			"lamp.found_oil_range",
+			"lamp.found_notches_range",
+			"mine.harness_target_lamps_standard"
+		],
+		"A.1/Electric hand lamp": [
+			"lamp.electric_radius",
+			"light.core_fraction",
+			"lamp.electric_battery",
+			"stythe.electric_snuff_drain_s",
+			"basecamp.battery_rack_full_charge_s",
+			"mine.electric_lamp_per_run",
+			"mine.electric_lamp_min_ring"
+		],
+		"A.1/Candle": [
+			"items.candle_radius",
+			"light.core_fraction",
+			"items.candle_burn_time",
+			"items.candle_light_time"
+		],
+		"A.1/Magnesium flare": [
+			"items.flare_strike_time",
+			"items.flare_radius",
+			"light.core_fraction",
+			"items.flare_burn_time",
+			"moth.flare_sight_tiles",
+			"moth.flash_wake_tiles"
+		],
+		"A.1/Muzzle flash": [
+			"revolver.flash_peak",
+			"revolver.flash_radius",
+			"light.core_fraction",
+			"revolver.flash_duration",
+			"moth.flash_wake_tiles"
+		],
+		"A.1/Emergency lamps": [
+			"basecamp.emergency_light_level"
+		],
+		"A.1/Gate spill": [
+			"basecamp.emergency_light_level",
+			"light.edge_value",
+			"basecamp.gate_spill_tiles"
+		],
+		"A.1/Egg-glow": [
+			"moth.egg_glow_radius",
+			"moth.egg_glow_centre",
+			"moth.hatch_tell_s"
+		],
+		"A.1/Gob fire; Bess's lamp": [
+			"hazards.gob_fire_radius",
+			"bess.lamp_radius_tiles",
+			"light.core_fraction"
+		],
+		"A.1/Lamp signals": [
+			"lamp.signal_range_tiles",
+			"lamp.point_max_tiles",
+			"lamp.point_light",
+			"lamp.point_duration_s"
+		],
+		"A.1/Flame tells": [
+			"moth.tell_reach_tiles",
+			"moth.stir_tell_s",
+			"stythe.tell_reach_tiles",
+			"light.gutter_radius_mult",
+			"light.shrink_rate_per_s"
+		],
+		"A.1/The bite": [
+			"vision.bite_range_tiles",
+			"vision.bite_below_light",
+			"vision.bite_below_light_thin"
+		],
+		"A.1/Back cover": [
+			"stythe.backbiter_points_needed",
+			"stythe.backbiter_points",
+			"stythe.backbiter_point_dist_tiles",
+			"stythe.backbiter_cover_level"
+		],
+		"A.1/Feeling": [
+			"vision.feel_hold_s",
+			"movement.crouch_speed",
+			"vision.touch_range_tiles"
+		],
+		"A.1/Held geometry": [
+			"vision.held_geometry_cells"
+		],
+		"A.1/Sight lines": [
+			"mine.seam_sight_line_tiles",
+			"mine.main_road_run_min_tiles",
+			"mine.main_road_run_max_tiles",
+			"mine.old_workings_sight_max_tiles"
+		],
+		"A.1/Shadow tell": {
+			"none": "rule, no number: the shade is as long as the light's radius, cast away from the brightest light"
+		},
+		"A.2/Gaits": [
+			"movement.crouch_speed",
+			"movement.walk_speed",
+			"noise.step_walk_np",
+			"movement.run_speed",
+			"noise.step_run_np",
+			"moth.widow_min_speed"
+		],
+		"A.2/Hurt": [
+			"movement.wound_gait_multiplier",
+			"movement.hurt_duration"
+		],
+		"A.2/Trap wound": [
+			"movement.wound_gait_multiplier"
+		],
+		"A.2/Sump mud": [
+			"traps.sump_mud_gait_multiplier",
+			"noise.step_heavy_np"
+		],
+		"A.2/Stamina; panting": [
+			"movement.stamina_pool",
+			"movement.stamina_refill_rate",
+			"noise.panting_np",
+			"movement.panting_interval",
+			"movement.panting_duration"
+		],
+		"A.2/Together": [
+			"movement.together_path_tiles"
+		],
+		"A.2/Carries": [
+			"movement.carry_fireman_speed",
+			"noise.step_heavy_np",
+			"movement.carry_stretcher_speed",
+			"noise.step_stretcher_np",
+			"movement.carry_drum_gear_speed",
+			"noise.step_drum_gear_np",
+			"movement.walk_speed",
+			"movement.carry_tub_speed_one",
+			"movement.carry_tub_speed_two",
+			"noise.tub_rumble_np",
+			"movement.wound_gait_multiplier"
+		],
+		"A.2/Lift; lay; load; take": [
+			"movement.carry_lift_time",
+			"movement.stretcher_lay_time",
+			"movement.stretcher_to_table_time",
+			"rescue.take_item_s"
+		],
+		"A.2/Carry knock": [
+			"noise.carry_knock_np",
+			"movement.load_knock_angle",
+			"movement.load_knock_time",
+			"movement.load_turn_per_tick"
+		],
+		"A.2/Interact ring": [
+			"items.hand_over_time",
+			"lamp.douse_time",
+			"lamp.share_oil_time",
+			"lamp.pass_flame_time",
+			"rescue.kit_use_s"
+		],
+		"A.2/Road Graph": [
+			"noise.air_cost_per_tile",
+			"noise.closed_portal_cost"
+		],
+		"A.2/Thresholds": [
+			"noise.player_threshold",
+			"noise.tapper_threshold"
+		],
+		"A.2/Apparent position": [
+			"noise.jitter_per_path_tile"
+		],
+		"A.2/0 np": {
+			"none": "silent sources emit no noise event (SND-02: silent sources emit nothing); no level to tune"
+		},
+		"A.2/8 np": [
+			"noise.reload_click_np",
+			"moth.hang_clink_np"
+		],
+		"A.2/9 np": [
+			"noise.step_walk_np",
+			"noise.panting_np",
+			"noise.flint_click_np",
+			"noise.spanner_np",
+			"noise.step_stretcher_np",
+			"stythe.scrape_np",
+			"noise.drag_scrape_interval_s"
+		],
+		"A.2/10 np": [
+			"noise.rock_tap_np",
+			"noise.canary_np"
+		],
+		"A.2/12 np": [
+			"noise.gasp_np",
+			"noise.cough_np",
+			"noise.carry_knock_np",
+			"noise.step_heavy_np",
+			"noise.struggle_np",
+			"moth.lay_np",
+			"noise.buzzer_np",
+			"voice.talk_np"
+		],
+		"A.2/14 np": [
+			"noise.rail_bang_np",
+			"noise.tub_rumble_np",
+			"noise.stone_landing_np",
+			"noise.gate_np",
+			"noise.hammer_np",
+			"noise.phone_crank_np",
+			"noise.mantrap_snap_np"
+		],
+		"A.2/16 np": [
+			"noise.flare_strike_np"
+		],
+		"A.2/18 np": [
+			"noise.step_run_np",
+			"noise.collapse_trigger_np"
+		],
+		"A.2/20 np": [
+			"noise.phone_bell_np",
+			"noise.hold_bell_np",
+			"noise.engine_crank_np",
+			"noise.main_switch_np",
+			"noise.cage_freed_np",
+			"noise.staple_pit_crash_np",
+			"moth.brood_np",
+			"voice.shout_np"
+		],
+		"A.2/24 np": [
+			"noise.engine_running_np",
+			"noise.engine_interval_s",
+			"noise.closed_portal_cost",
+			"bess.whinny_np"
+		],
+		"A.2/28–30 np": [
+			"voice.scream_np",
+			"noise.backfire_np",
+			"noise.roof_fall_np"
+		],
+		"A.2/40 np": [
+			"noise.shot_np",
+			"noise.firedamp_blast_np"
+		],
+		"A.2/Event rates": [
+			"noise.step_interval_s",
+			"movement.step_interval",
+			"movement.panting_interval",
+			"noise.engine_interval_s",
+			"noise.struggle_interval_s",
+			"noise.drag_scrape_interval_s",
+			"stythe.scrape_interval_s",
+			"noise.voice_event_interval_s"
+		],
+		"A.2/Collapse trigger": [
+			"noise.collapse_trigger_np",
+			"noise.collapse_trigger_path_tiles",
+			"hazards.collapse_blast_trigger_tiles",
+			"hazards.collapse_creak_s",
+			"noise.roof_fall_np"
+		],
+		"A.2/Stones": [
+			"items.stone_throw_min",
+			"items.stone_throw_max",
+			"noise.stone_landing_np"
+		],
+		"A.2/Chalk": [
+			"items.chalk_time",
+			"vision.small_thing_light_min"
+		],
+		"A.2/Controls timings": [
+			"basecamp.gate_lever_s",
+			"phones.seat_s",
+			"phones.crank_s",
+			"vision.feel_hold_s"
+		],
+		"A.2/Callout input": [
+			"voice.callout_whisper_hold_s",
+			"voice.callout_shout_window_s"
+		],
+		"A.2/Dropped inputs": [
+			"net.input_repeat_ms"
+		],
+		"A.3/Whisper": [
+			"voice.whisper_range_tiles",
+			"voice.whisper_np"
+		],
+		"A.3/Talk (earshot)": [
+			"voice.talk_range_tiles",
+			"voice.talk_np"
+		],
+		"A.3/Shout": [
+			"voice.shout_range_tiles",
+			"voice.shout_np"
+		],
+		"A.3/Scream": [
+			"voice.scream_range_tiles",
+			"voice.scream_np"
+		],
+		"A.3/Clean range": [
+			"voice.clean_range_fraction",
+			"voice.whisper_range_tiles",
+			"voice.talk_range_tiles",
+			"voice.shout_range_tiles"
+		],
+		"A.3/Distance loss": [
+			"voice.clean_range_fraction",
+			"voice.edge_loss"
+		],
+		"A.3/Other losses": [
+			"voice.stythe_radius_tiles",
+			"voice.stythe_loss",
+			"voice.running_loss",
+			"voice.clean_range_fraction",
+			"voice.loss_run_min_frames",
+			"voice.loss_run_max_frames"
+		],
+		"A.3/Through rock": [
+			"voice.rock_line_max_rock_tiles",
+			"voice.rock_line_range_factor"
+		],
+		"A.3/Deafened": [
+			"revolver.deafen_radius",
+			"noise.deafen_dip_db",
+			"noise.deafen_duration_s"
+		],
+		"A.3/Being heard": [
+			"voice.heard_min_fraction"
+		],
+		"A.3/Unheard mark": [
+			"voice.unheard_mark_s",
+			"voice.unheard_mark_deep_s",
+			"voice.unheard_mark_deep_ring"
+		],
+		"A.3/Heard by a Hand or Bess": [
+			"rescue.lone_heard_hand_tiles",
+			"bess.hears_tiles"
+		],
+		"A.3/Calibration": [
+			"voice.calibration_clamp_db",
+			"voice.band_hysteresis_s",
+			"voice.threshold_whisper_dbfs",
+			"voice.threshold_talk_dbfs",
+			"voice.threshold_shout_dbfs",
+			"voice.threshold_scream_dbfs"
+		],
+		"A.3/Breath-hold": [
+			"voice.breath_hold_max_s",
+			"voice.breath_hold_panting_max_s",
+			"noise.gasp_np"
+		],
+		"A.3/The Aside": [
+			"voice.whisper_np",
+			"voice.aside_budget_s",
+			"voice.aside_window_s"
+		],
+		"A.3/The scream": [
+			"voice.fall_scream_s",
+			"voice.shout_range_tiles",
+			"voice.scream_np"
+		],
+		"A.3/The knocks": [
+			"voice.knock_count",
+			"voice.knock_interval_s"
+		],
+		"A.3/Coming round": [
+			"rescue.coming_round_interval_s",
+			"rescue.coming_round_window_s",
+			"voice.whisper_np",
+			"voice.talk_np",
+			"rescue.crawl_speed",
+			"rescue.window_sight_tiles"
+		],
+		"A.3/Watching": [
+			"rescue.watch_delay_s"
+		],
+		"A.3/Unconscious hearing": [
+			"rescue.unconscious_gain_db",
+			"rescue.unconscious_lowpass_hz"
+		],
+		"A.3/Pit phone": [
+			"phones.crank_s",
+			"noise.phone_crank_np",
+			"noise.phone_bell_np",
+			"noise.buzzer_np"
+		],
+		"A.3/Pit phone density": [
+			"mine.phones_near_gates",
+			"mine.phones_near_gates_path_tiles",
+			"mine.phone_cells_per_ring12",
+			"mine.phone_cells_per_beyond",
+			"mine.phones_per_service_room"
+		],
+		"A.3/The Tapper's line": [
+			"tapper.line_phone_max_tiles",
+			"tapper.line_cooldown_s"
+		],
+		"A.3/Loud lure by bell": [
+			"tapper.lure_min_tiles",
+			"tapper.lure_max_tiles",
+			"noise.phone_bell_np"
+		],
+		"A.3/Rock tap": [
+			"voice.rock_tap_range_tiles",
+			"noise.rock_tap_np"
+		],
+		"A.3/Callouts the Tapper copies": [
+			"tapper.illusion_callout_weights"
+		],
+		"A.3/Fan surge": [
+			"noise.fan_surge_duration_s",
+			"director.fan_roll_chance",
+			"director.fan_min_ring",
+			"noise.fan_creature_min_np",
+			"noise.fan_note_drop_s"
+		],
+		"A.4/Shared rules/Population": [
+			"creatures.population_per_kind"
+		],
+		"A.4/Shared rules/Active-hunter cap": [
+			"director.active_hunter_cap"
+		],
+		"A.4/Shared rules/Crew count": [
+			"director.hand_crew_weight",
+			"director.lone_human_crew_count"
+		],
+		"A.4/Shared rules/Wind-up": [
+			"creatures.windup_min_s"
+		],
+		"A.4/Shared rules/Diffuse tell": [
+			"creatures.tell_min_reach_tiles",
+			"noise.diffuse_emitter_count"
+		],
+		"A.4/Shared rules/Guard predicate": [
+			"creatures.guard_horizon_s",
+			"creatures.guard_moth_path_tiles",
+			"creatures.guard_tapper_rock_path_tiles",
+			"creatures.guard_stythe_dark_path_tiles"
+		],
+		"A.4/Shared rules/Retreat length": [
+			"creatures.retreat_s"
+		],
+		"A.4/Shared rules/Retreat thresholds, hits needed": [
+			"revolver.retreat_thresholds",
+			"revolver.partial_hit_reset"
+		],
+		"A.4/Shared rules/Flinch": {
+			"none": "rule, no number: a hit below the threshold cancels nothing (thresholds are revolver.retreat_thresholds)"
+		},
+		"A.4/Shared rules/Hitscan": [
+			"revolver.range"
+		],
+		"A.4/Shared rules/Moth sight by ring 0–4": [
+			"moth.sight_tiles_by_ring",
+			"moth.flare_sight_tiles",
+			"moth.signal_sight_tiles"
+		],
+		"A.4/Shared rules/Moth frenzy by ring": [
+			"moth.frenzy_s_by_ring"
+		],
+		"A.4/Shared rules/Tapper hearing by ring": [
+			"tapper.hearing_mult_by_ring",
+			"noise.tapper_threshold",
+			"voice.talk_np"
+		],
+		"A.4/Shared rules/Stythe senses by ring": [
+			"stythe.senses_tiles_by_ring",
+			"stythe.territory_senses_tiles"
+		],
+		"A.4/Shared rules/Search time by ring": [
+			"creatures.search_time_s_by_ring"
+		],
+		"A.4/Shared rules/Crew count 1 / 2 / 3 / 4 / 5: Moth memory": [
+			"moth.memory_lights_by_crew",
+			"moth.memory_s"
+		],
+		"A.4/Shared rules/Tapper heat map; listening pause": [
+			"tapper.heat_window_s_by_crew",
+			"tapper.listen_pause_s_by_crew"
+		],
+		"A.4/Shared rules/Stythe memory; snuff interval": [
+			"stythe.memory_places_by_crew",
+			"stythe.memory_s",
+			"stythe.snuff_interval_s_by_crew",
+			"stythe.snuff_interval_territory_s"
+		],
+		"A.4/Shared rules/Variants": [
+			"creatures.variant_weights_moth",
+			"creatures.variant_weights_tapper",
+			"creatures.variant_weights_stythe",
+			"creatures.third_variants_enabled"
+		],
+		"A.4/Shared rules/Run conditions": [
+			"hazards.condition_weights",
+			"hazards.condition_chance_range",
+			"hazards.max_conditions_per_run",
+			"modes.staging_defaults_only"
+		],
+		"A.4/Shared rules/Note rumours": [
+			"hazards.note_rumour_count",
+			"hazards.note_falsify_p"
+		],
+		"A.4/The Moth/Speeds": [
+			"moth.hunt_speed",
+			"moth.prowl_speed",
+			"moth.homing_speed",
+			"moth.retreat_speed"
+		],
+		"A.4/The Moth/Wind-up; smother": [
+			"moth.windup_s",
+			"moth.reach_tiles",
+			"moth.see_level"
+		],
+		"A.4/The Moth/Stir": [
+			"moth.stir_tell_s",
+			"moth.wake_level",
+			"moth.stir_level",
+			"moth.settle_s"
+		],
+		"A.4/The Moth/Hunger": [
+			"moth.hunger_min_s",
+			"moth.hunger_max_s",
+			"moth.prowl_without_hunt_s",
+			"moth.restless_sleep_max_s"
+		],
+		"A.4/The Moth/Marked miner": [
+			"pull.threshold_marked",
+			"moth.marked_wake_tiles"
+		],
+		"A.4/The Moth/Frenzy": [
+			"moth.frenzy_waker_known_s"
+		],
+		"A.4/The Moth/Lay": [
+			"moth.lay_s",
+			"moth.lay_np",
+			"moth.lay_radius_tiles"
+		],
+		"A.4/The Moth/Linger; searched": [
+			"moth.linger_s",
+			"moth.searched_s"
+		],
+		"A.4/The Moth/Last spot; search": [
+			"moth.last_spot_s",
+			"moth.search_per_light_s"
+		],
+		"A.4/The Moth/Memory": [
+			"moth.memory_lights_by_crew",
+			"moth.memory_s",
+			"moth.memory_merge_tiles"
+		],
+		"A.4/The Moth/Hoard": [
+			"moth.hoard_start_lamps",
+			"mine.band_hoard_short",
+			"mine.band_hoard_standard",
+			"mine.band_hoard_full"
+		],
+		"A.4/The Moth/Roosts": [
+			"mine.roosts_min",
+			"mine.roosts_max",
+			"mine.roost_max_from_hoard_tiles",
+			"mine.roost_min_from_shaft_staged_tiles",
+			"modes.staging_roost_min_tiles"
+		],
+		"A.4/The Moth/Coat heaps": [
+			"mine.coat_heap_near_hoard_tiles",
+			"mine.coat_heap_chamber_probability_near",
+			"mine.coat_heap_chamber_probability_far"
+		],
+		"A.4/The Moth/Hanging a lamp; preening; air door": [
+			"moth.hang_lamp_s",
+			"moth.preen_s",
+			"moth.air_door_hold_s"
+		],
+		"A.4/The Moth/Awake tell": [
+			"moth.tell_reach_tiles",
+			"moth.awake_tell_lead_min_s"
+		],
+		"A.4/The Moth/Breathing": [
+			"moth.breath_period_s",
+			"vision.identity_light_min"
+		],
+		"A.4/The Moth/Egg clock": [
+			"moth.egg_clock_s",
+			"moth.hatch_tell_s",
+			"moth.hatch_tick_hear_tiles",
+			"moth.brood_np",
+			"moth.brood_smother_tiles"
+		],
+		"A.4/The Moth/Variants": [
+			"moth.widow_min_speed",
+			"moth.flicker_visible_s"
+		],
+		"A.4/The Tapper/Movement; reach": [
+			"tapper.rock_speed",
+			"tapper.reach_tiles"
+		],
+		"A.4/The Tapper/Strike": [
+			"tapper.windup_s",
+			"tapper.pin_s",
+			"tapper.max_pins"
+		],
+		"A.4/The Tapper/ReStrike": [
+			"tapper.restrike_delay_s"
+		],
+		"A.4/The Tapper/Silent pull": [
+			"tapper.silent_pull_s",
+			"tapper.pull_spoil_radius_tiles",
+			"tapper.deaf_spoil_radius_tiles"
+		],
+		"A.4/The Tapper/Loud lure": [
+			"tapper.lure_np",
+			"tapper.lure_min_tiles",
+			"tapper.lure_max_tiles",
+			"tapper.lure_ring0_max_tiles"
+		],
+		"A.4/The Tapper/Heat map": [
+			"tapper.heat_window_s_by_crew"
+		],
+		"A.4/The Tapper/Attending": [
+			"tapper.attend_min_tiles",
+			"tapper.attend_max_tiles",
+			"pull.threshold_attend"
+		],
+		"A.4/The Tapper/Hunting taps": [
+			"tapper.tap_interval_s",
+			"tapper.tap_points",
+			"tapper.tap_radius_tiles"
+		],
+		"A.4/The Tapper/Illusion kinds": [
+			"tapper.illusion_kind_min_pull",
+			"tapper.illusion_scream_per_miner"
+		],
+		"A.4/The Tapper/Illusion rate": [
+			"tapper.illusion_base_interval_s",
+			"tapper.illusion_pull_ref",
+			"marks.rock_touched_illusion_mult",
+			"tapper.echo_illusion_mult"
+		],
+		"A.4/The Tapper/Illusion limits": [
+			"tapper.illusion_face_max_tiles",
+			"tapper.illusion_face_min_miner_tiles",
+			"tapper.illusion_max_s",
+			"tapper.illusion_short_s"
+		],
+		"A.4/The Tapper/Illusion guards": [
+			"tapper.illusion_windup_block_s",
+			"tapper.illusion_guard_radius_tiles"
+		],
+		"A.4/The Tapper/Rich rock": [
+			"mine.rich_rock_min_thickness_tiles",
+			"mine.rich_rock_per_region",
+			"mine.poi_region_cells"
+		],
+		"A.4/The Tapper/Echo": [
+			"tapper.echo_delay_s",
+			"tapper.echo_illusion_mult"
+		],
+		"A.4/The Tapper/Deaf": [
+			"tapper.deaf_struck_kinds"
+		],
+		"A.4/The Stythe/Movement": [
+			"stythe.speed",
+			"stythe.wall_level",
+			"stythe.drag_speed",
+			"stythe.replan_hz"
+		],
+		"A.4/The Stythe/Wind-up; reach": [
+			"stythe.windup_s",
+			"stythe.reach_tiles",
+			"stythe.wall_level"
+		],
+		"A.4/The Stythe/Snuff": [
+			"stythe.snuff_reach_tiles",
+			"stythe.snuff_interval_s_by_crew",
+			"stythe.snuff_interval_territory_s",
+			"stythe.electric_snuff_drain_s"
+		],
+		"A.4/The Stythe/Tell": [
+			"stythe.tell_reach_tiles"
+		],
+		"A.4/The Stythe/Drag": [
+			"stythe.drag_conscious_s",
+			"voice.whisper_range_tiles",
+			"stythe.scrape_interval_s",
+			"stythe.scrape_np"
+		],
+		"A.4/The Stythe/Breaking a drag": [
+			"stythe.wall_level",
+			"stythe.thin_wall_level",
+			"stythe.flee_tiles",
+			"stythe.circle_s"
+		],
+		"A.4/The Stythe/Collect": [
+			"stythe.collect_s",
+			"stythe.hunting_range_tiles"
+		],
+		"A.4/The Stythe/Territory; hunting range": [
+			"stythe.territory_tiles",
+			"stythe.hunting_range_tiles",
+			"stythe.territory_senses_tiles"
+		],
+		"A.4/The Stythe/Lair": [
+			"mine.band_lair_short",
+			"mine.band_lair_standard",
+			"mine.band_lair_full",
+			"mine.lair_min_bearing_from_hoard_deg",
+			"mine.lair_kits"
+		],
+		"A.4/The Stythe/Man-traps": [
+			"traps.man_trap_approach_min",
+			"traps.man_trap_approach_max",
+			"traps.man_trap_approach_path_min_tiles",
+			"traps.man_trap_approach_path_max_tiles"
+		],
+		"A.4/The Stythe/Eligibility": [
+			"stythe.reach_tiles",
+			"stythe.wall_level",
+			"stythe.territory_tiles",
+			"stythe.hunting_range_tiles",
+			"voice.unheard_mark_s",
+			"voice.unheard_mark_deep_s",
+			"pull.threshold_marked",
+			"pull.threshold_anywhere"
+		],
+		"A.4/The Stythe/Shadowing": [
+			"stythe.shadow_cooldown_s",
+			"stythe.shadow_dist_min_tiles",
+			"stythe.shadow_dist_max_tiles",
+			"stythe.shadow_never_nearer_tiles",
+			"stythe.shadow_max_s"
+		],
+		"A.4/The Stythe/Soot-lung": [
+			"stythe.lair_soot_lung_s"
+		],
+		"A.4/The Stythe/At the engine": [
+			"stythe.apex_lurk_tiles",
+			"stythe.apex_lurk_gate_tiles"
+		],
+		"A.4/The Stythe/Variants": [
+			"stythe.backbiter_cover_level",
+			"stythe.backbiter_mark_s_by_ring",
+			"stythe.thin_wall_level",
+			"stythe.wall_level"
+		],
+		"A.5/Man-trap placement": [
+			"traps.man_trap_approach_min",
+			"traps.man_trap_approach_max",
+			"traps.man_trap_cells_per",
+			"traps.man_trap_min_ring",
+			"traps.staged_run1_min_ring",
+			"modes.staging_no_man_traps_rings_0_1"
+		],
+		"A.5/Man-trap effect": [
+			"noise.mantrap_snap_np",
+			"noise.trapped_cry_np",
+			"director.gain_caught"
+		],
+		"A.5/Man-trap freeing": [
+			"traps.man_trap_free_s",
+			"traps.man_trap_free_cutters_s",
+			"traps.man_trap_struggle_s",
+			"noise.struggle_np",
+			"noise.struggle_interval_s"
+		],
+		"A.5/Springing on purpose": [
+			"traps.spring_with_tool_s"
+		],
+		"A.5/Timber pin": [
+			"hazards.collapse_pin_edge_tiles",
+			"hazards.collapse_hurt_edge_tiles"
+		],
+		"A.5/Timber pin freeing": [
+			"traps.timber_pin_free_crowbar_s",
+			"traps.timber_pin_free_pair_s",
+			"traps.timber_pin_struggle_s",
+			"noise.struggle_np",
+			"noise.struggle_interval_s",
+			"movement.hurt_duration"
+		],
+		"A.5/Staple pit": [
+			"mine.staple_pit_old_workings_cells_per",
+			"mine.staple_pit_min_ring",
+			"noise.staple_pit_crash_np"
+		],
+		"A.5/Staple pit freeing": [
+			"traps.staple_pit_free_s",
+			"traps.staple_pit_climb_s"
+		],
+		"A.5/Sump mud": [
+			"mine.sump_mud_low_road_cells_per",
+			"mine.sump_mud_min_ring"
+		],
+		"A.5/Infested": [
+			"moth.egg_clock_s",
+			"rescue.kit_use_s",
+			"moth.egg_glow_centre",
+			"moth.egg_glow_radius"
+		],
+		"A.5/Soot-lung": [
+			"stythe.lair_soot_lung_s",
+			"noise.cough_np",
+			"marks.soot_lung_cough_interval_s"
+		],
+		"A.5/Rock-touched": [
+			"marks.rock_touched_s",
+			"marks.rock_touched_illusion_mult"
+		],
+		"A.5/Trap wound": [
+			"movement.wound_gait_multiplier"
+		],
+		"A.5/Kit cure": [
+			"rescue.kit_use_s",
+			"marks.kit_cures_per_use"
+		],
+		"A.5/Brood": [
+			"moth.brood_np",
+			"moth.brood_smother_tiles"
+		],
+		"A.6/Base camp": [
+			"basecamp.room_width_tiles",
+			"basecamp.room_height_tiles",
+			"basecamp.emergency_light_level"
+		],
+		"A.6/Gates": [
+			"basecamp.gate_count",
+			"basecamp.gate_lever_s",
+			"noise.gate_np"
+		],
+		"A.6/Public auto-close": [
+			"basecamp.gate_public_autoclose_s"
+		],
+		"A.6/Brick arches": [
+			"basecamp.arch_length_tiles"
+		],
+		"A.6/Pull and Draught at home": [
+			"pull.home_rate_per_min",
+			"director.home_drain_per_s",
+			"pull.home_rate_solo_per_min"
+		],
+		"A.6/Medbay": [
+			"basecamp.medbay_tables",
+			"basecamp.medbay_cupboard_kits"
+		],
+		"A.6/Relighter; battery rack": [
+			"basecamp.relighter_s",
+			"basecamp.battery_rack_full_charge_s"
+		],
+		"A.6/Switchboard seat": [
+			"phones.seat_s"
+		],
+		"A.6/Repair lists": [
+			"lift.list_always_jobs",
+			"lift.list_short_pool_jobs",
+			"lift.list_standard_pool_jobs",
+			"lift.list_full_pool_jobs",
+			"lift.list_short_cans",
+			"lift.list_standard_cans",
+			"lift.list_full_cans"
+		],
+		"A.6/Substation distance": [
+			"mine.band_substation_short",
+			"mine.band_substation_standard",
+			"mine.band_substation_full"
+		],
+		"A.6/Parts band": [
+			"mine.band_parts_rings_short",
+			"mine.band_parts_rings_standard",
+			"mine.band_parts_rings_full",
+			"mine.drum_gear_ring",
+			"mine.part_spare_probability"
+		],
+		"A.6/Power": [
+			"lift.power_links_s",
+			"lift.power_fuse_s",
+			"lift.power_fuses_required",
+			"lift.now_window_s",
+			"noise.main_switch_np"
+		],
+		"A.6/Fuel": [
+			"lift.list_short_cans",
+			"lift.list_standard_cans",
+			"lift.list_full_cans",
+			"lift.fuel_pour_s",
+			"lift.engine_s_per_can"
+		],
+		"A.6/Other jobs": [
+			"lift.magneto_s",
+			"lift.drive_belt_strikes",
+			"noise.hammer_np",
+			"lift.brake_shoes_s",
+			"lift.drum_gear_s",
+			"lift.free_cage_s",
+			"noise.cage_freed_np",
+			"lift.rope_clamps_s"
+		],
+		"A.6/Alone": [
+			"lift.alone_place_hold_s",
+			"lift.alone_work_multiplier",
+			"lift.solo_excluded_jobs"
+		],
+		"A.6/Start": [
+			"lift.prime_s",
+			"lift.crank_s",
+			"noise.engine_crank_np",
+			"lift.now_window_s",
+			"noise.backfire_np"
+		],
+		"A.6/Engine noise": [
+			"noise.engine_running_np",
+			"noise.engine_interval_s",
+			"noise.closed_portal_cost"
+		],
+		"A.6/Run-up": [
+			"lift.clutch_run_up_s"
+		],
+		"A.6/Tank": [
+			"lift.list_short_cans",
+			"lift.list_standard_cans",
+			"lift.list_full_cans",
+			"lift.fuel_pour_s",
+			"lift.engine_s_per_can"
+		],
+		"A.6/Cord": [
+			"lift.cord_public_after_s"
+		],
+		"A.6/Hold bell": [
+			"lift.hold_bell_s"
+		],
+		"A.6/The ride": [
+			"lift.ride_s",
+			"lift.shaft_brick_above_m",
+			"lift.shaft_depth_m",
+			"tapper.reach_tiles",
+			"tapper.pin_s"
+		],
+		"A.6/Cage deck": [
+			"lift.cage_deck_width_tiles",
+			"lift.cage_deck_length_tiles",
+			"tapper.reach_tiles"
+		],
+		"A.6/Expedition length": [
+			"lift.expedition_length_target_min"
+		],
+		"A.6/The first lamp": [
+			"basecamp.first_lamp_fills",
+			"basecamp.first_lamp_notches",
+			"lamp.fill_minutes"
+		],
+		"A.7/Intensity range": [
+			"director.intensity_max",
+			"net.tick_hz"
+		],
+		"A.7/Intensity gains": [
+			"director.gain_grabbed",
+			"director.gain_caught",
+			"director.gain_fall_heard",
+			"director.gain_creature_seen",
+			"director.creature_seen_range_tiles",
+			"director.gain_blast",
+			"director.blast_range_tiles",
+			"director.dark_gain_per_s",
+			"director.dark_gain_cap"
+		],
+		"A.7/Intensity losses": [
+			"director.lit_drain_per_s",
+			"director.relax_drain_per_s",
+			"director.home_drain_per_s"
+		],
+		"A.7/Build; peak": [
+			"director.peak_threshold",
+			"director.peak_hold_s"
+		],
+		"A.7/Relax length": [
+			"depth.relax_s"
+		],
+		"A.7/Fan surge": [
+			"noise.fan_surge_duration_s",
+			"director.fan_roll_chance",
+			"director.fan_min_ring"
+		],
+		"A.7/Pull range": [
+			"pull.max",
+			"pull.initial"
+		],
+		"A.7/Group": [
+			"movement.together_path_tiles"
+		],
+		"A.7/Pull rate, alone": [
+			"pull.rate_alone_per_min",
+			"depth.pull_factor"
+		],
+		"A.7/Pull rate, in a pair": [
+			"pull.rate_pair_per_min",
+			"depth.pull_factor"
+		],
+		"A.7/Pull rate, three or more": [
+			"pull.rate_group_per_min"
+		],
+		"A.7/Solo or lone human": [
+			"pull.solo_multiplier"
+		],
+		"A.7/Pull at home": [
+			"pull.home_rate_per_min",
+			"pull.home_rate_solo_per_min"
+		],
+		"A.7/Pull thresholds": [
+			"pull.threshold_attend",
+			"pull.threshold_marked",
+			"pull.threshold_anywhere"
+		],
+		"A.7/Ebb": [
+			"pull.ebb"
+		],
+		"A.7/Depth factor D": [
+			"depth.pull_factor"
+		],
+		"A.7/Rings (distance from shaft)": [
+			"depth.ring_start_tiles"
+		],
+		"A.7/Hunt rarity targets": [
+			"creatures.hunt_interval_target_crew4_rings01_min",
+			"creatures.hunt_interval_target_lone_ring2_min",
+			"creatures.hunt_interval_target_lone_ring3plus_min"
+		],
+		"A.7/First contact": [
+			"creatures.first_contact_target_min",
+			"creatures.first_contact_target_run_s"
+		],
+		"A.7/Staged runs": [
+			"modes.staging_force_short_list",
+			"modes.staging_stythe_confined",
+			"modes.staging_illusions_from_s",
+			"modes.staging_roost_min_tiles",
+			"mine.roost_min_from_shaft_staged_tiles",
+			"modes.staging_no_man_traps_rings_0_1",
+			"traps.staged_run1_min_ring",
+			"modes.staging_tapper_hunt_from_s",
+			"modes.staging_illusion_kinds_all",
+			"modes.staging_defaults_only",
+			"modes.new_brigade_runs"
+		],
+		"A.7/Lamp oil clock": [
+			"lamp.fill_minutes"
+		],
+		"A.7/Paraffin": [
+			"mine.paraffin_planned_factor",
+			"mine.paraffin_max_ring",
+			"lift.tank_unit_fills"
+		],
+		"A.7/Egg timer": [
+			"moth.egg_clock_s"
+		],
+		"A.7/Electric battery": [
+			"lamp.electric_battery",
+			"stythe.electric_snuff_drain_s"
+		],
+		"A.8/Hurt": [
+			"movement.hurt_duration",
+			"movement.wound_gait_multiplier",
+			"hazards.collapse_hurt_edge_tiles",
+			"hazards.blackdamp_hurt_s",
+			"hazards.blast_hurt_tiles"
+		],
+		"A.8/Falls": [
+			"stythe.drag_conscious_s",
+			"tapper.pin_s",
+			"hazards.blast_unconscious_tiles",
+			"hazards.blackdamp_unconscious_s",
+			"moth.egg_clock_s"
+		],
+		"A.8/The belt": [
+			"rescue.take_item_s"
+		],
+		"A.8/Fireman's carry": [
+			"movement.carry_fireman_speed",
+			"noise.step_heavy_np",
+			"lamp.hook_radius"
+		],
+		"A.8/Stretcher": [
+			"movement.carry_stretcher_speed",
+			"movement.stretcher_lay_time"
+		],
+		"A.8/Healing kit": [
+			"rescue.kit_use_s"
+		],
+		"A.8/Kits in a typical Standard run": [
+			"mine.harness_target_kits_standard",
+			"basecamp.medbay_cupboard_kits"
+		],
+		"A.8/Kit starvation": [
+			"rescue.kit_starvation_target_max"
+		],
+		"A.8/Self-revive": [
+			"rescue.self_revives_per_run",
+			"rescue.self_revive_delay_s",
+			"movement.hurt_duration"
+		],
+		"A.8/Self-rescue": [
+			"rescue.self_rescue_attempts_per_grab",
+			"rescue.self_rescue_hold_s",
+			"rescue.self_rescue_chance"
+		],
+		"A.8/Drag": [
+			"stythe.drag_conscious_s",
+			"stythe.wall_level",
+			"stythe.thin_wall_level"
+		],
+		"A.8/Pin": [
+			"tapper.pin_s",
+			"tapper.silent_pull_s",
+			"tapper.restrike_delay_s"
+		],
+		"A.8/Public friendly fire": [
+			"modes.friendly_hits_to_eject"
+		],
+		"A.8/Dead": {
+			"none": "rule, no number: only a revolver hit kills, permanently"
+		},
+		"A.8/Dream channel; watching": [
+			"rescue.watch_delay_s"
+		],
+		"A.8/Retention": [
+			"rescue.retention_target_share",
+			"rescue.retention_unconscious_min_s"
+		],
+		"A.8/Inquiry replay": [
+			"rescue.replay_window_s",
+			"rescue.flagged_illusions_per_player"
+		],
+		"A.8/Lamp Check": [
+			"rescue.lamp_check_public_s"
+		],
+		"A.8/Outcome targets": [
+			"rescue.outcome_target_unconscious_share",
+			"rescue.outcome_target_left_below_share"
+		],
+		"A.9/Belt": [
+			"items.belt_slots"
+		],
+		"A.9/Candles": [
+			"items.stack_candles"
+		],
+		"A.9/Stones": [
+			"items.stack_stones"
+		],
+		"A.9/Parts stacks": [
+			"items.stack_fuses",
+			"items.stack_rope_clamps",
+			"items.stack_default"
+		],
+		"A.9/Canary": [
+			"noise.canary_np",
+			"items.canary_song_interval",
+			"items.canary_cover_time",
+			"mine.canary_max_per_run"
+		],
+		"A.9/Revolver availability": [
+			"mine.revolver_probability",
+			"revolver.cylinder_rounds",
+			"mine.ammo_boxes_min",
+			"mine.ammo_boxes_max",
+			"revolver.box_rounds"
+		],
+		"A.9/Draw; put away": [
+			"revolver.draw_time"
+		],
+		"A.9/Fire": [
+			"revolver.fire_interval"
+		],
+		"A.9/Reload": [
+			"revolver.reload_per_round",
+			"noise.reload_click_np"
+		],
+		"A.9/Shot": [
+			"noise.shot_np",
+			"revolver.flash_duration",
+			"revolver.deafen_radius",
+			"noise.deafen_duration_s",
+			"noise.collapse_trigger_path_tiles"
+		],
+		"A.9/Tapper hearing a shot": [
+			"noise.shot_np",
+			"noise.tapper_threshold",
+			"tapper.hearing_mult_by_ring"
+		],
+		"A.9/Remains": [
+			"mine.remains_cells_per",
+			"mine.remains_rings",
+			"mine.remains_item_chances",
+			"mine.remains_items_max"
+		],
+		"A.9/Lamp cabins; first-aid stations": [
+			"mine.lamp_cabin_regions_per",
+			"mine.first_aid_regions_per"
+		],
+		"A.9/Single paraffin cans": [
+			"mine.paraffin_single_cells_per",
+			"mine.paraffin_single_rings"
+		],
+		"A.9/Flares in a typical Standard run": [
+			"mine.harness_target_flares_ring2"
+		],
+		"A.9/Tools": [
+			"mine.harness_target_tools_ring2",
+			"mine.band_tools_ring"
+		],
+		"A.9/Old deputy's report": [
+			"mine.deputy_report_min_ring",
+			"mine.deputy_report_cells_per",
+			"mine.deputy_report_max_pages"
+		],
+		"A.9/Lamp cabin contents": [
+			"mine.poi_contents_lamp_cabin"
+		],
+		"A.9/Fuel store": [
+			"mine.fuel_store_cans_min",
+			"mine.fuel_store_cans_max"
+		],
+		"A.9/Powder magazine": [
+			"mine.poi_contents_powder_magazine"
+		],
+		"A.9/Electricians' cabin": [
+			"mine.poi_contents_electricians_cabin"
+		],
+		"A.10/Players": [
+			"modes.friends_lobby_min",
+			"modes.friends_lobby_max"
+		],
+		"A.10/Run lengths for a crew of four": [
+			"modes.target_run_minutes_short",
+			"modes.target_run_minutes_standard",
+			"modes.target_run_minutes_full"
+		],
+		"A.10/Escape rates": [
+			"modes.target_escape_standard_friends",
+			"modes.target_escape_new_brigade",
+			"modes.target_escape_short_public",
+			"modes.target_escape_night_shift_short"
+		],
+		"A.10/Friendly-fire deaths": [
+			"modes.target_friendly_fire_deaths_max"
+		],
+		"A.10/Roster": [
+			"modes.roster_size",
+			"modes.lamp_number_min",
+			"modes.lamp_number_max"
+		],
+		"A.10/Joining in progress": [
+			"modes.public_join_cutoff_s",
+			"net.public_retake_window_s"
+		],
+		"A.10/Votes to kick": [
+			"modes.kick_min_votes"
+		],
+		"A.10/Hired Hands": [
+			"hands.follow_min_tiles",
+			"hands.follow_max_tiles",
+			"director.hand_crew_weight",
+			"hands.cough_interval_s",
+			"noise.cough_np"
+		],
+		"A.10/Hands' orders": [
+			"noise.flint_click_np"
+		],
+		"A.10/Night Shift": [
+			"modes.night_shift_lists",
+			"director.lone_human_crew_count",
+			"pull.solo_multiplier"
+		],
+		"A.10/Bess": [
+			"bess.belt_slots",
+			"bess.saddle_cans",
+			"bess.follow_min_tiles",
+			"bess.follow_max_tiles",
+			"bess.hoof_np",
+			"bess.lamp_radius_tiles",
+			"bess.panic_delay_s",
+			"bess.whinny_np",
+			"items.candle_burn_time"
+		],
+		"A.10/Hard variants": [
+			"modes.hard_variants_max"
+		],
+		"A.10/Knock-off": {
+			"none": "rule, no number: knock-off needs every conscious miner in base camp and every gate shut"
+		},
+		"A.10/Snapshots": [
+			"net.snapshot_interval_s"
+		],
+		"A.10/New Brigade": [
+			"modes.new_brigade_runs"
+		],
+		"A.11/Cells": [
+			"mine.cell_tiles"
+		],
+		"A.11/Main roads": [
+			"mine.main_road_spacing_cells",
+			"mine.main_road_width_tiles",
+			"mine.main_road_run_min_tiles",
+			"mine.main_road_run_max_tiles",
+			"mine.old_fall_probability",
+			"mine.main_road_max_ring"
+		],
+		"A.11/Sockets": [
+			"mine.socket_widths_tiles",
+			"mine.socket_offsets_tiles",
+			"mine.edge_open_probability"
+		],
+		"A.11/Templates": [
+			"mine.target_cell_templates",
+			"mine.target_poi_templates",
+			"mine.target_cell_templates_by_biome"
+		],
+		"A.11/Biome patches": [
+			"mine.biome_block_cells",
+			"mine.cell_tiles"
+		],
+		"A.11/Biomes by ring": [
+			"mine.biome_weights_ring0",
+			"mine.biome_weights_ring1",
+			"mine.biome_weights_ring2",
+			"mine.biome_weights_ring3",
+			"mine.biome_weights_ring4"
+		],
+		"A.11/Points of interest": [
+			"mine.poi_region_cells",
+			"mine.poi_per_region_min",
+			"mine.poi_per_region_max",
+			"mine.poi_min_ring"
+		],
+		"A.11/Banded placement": {
+			"none": "cross-reference: the band numbers are carried by A.4 Hoard and Lair and A.6 Substation distance and Parts band; the revolver shares the parts band"
+		},
+		"A.11/Generation": [
+			"mine.generation_radius_cells",
+			"mine.generation_budget_ms_server",
+			"mine.generation_budget_ms_deck",
+			"mine.eviction_radius_cells"
+		],
+		"A.11/Validator": [
+			"mine.validator_max_rerolls"
+		],
+		"A.11/Seed harness": [
+			"mine.harness_seeds",
+			"mine.harness_road_ratio_max",
+			"mine.harness_joined_min",
+			"mine.harness_spine_reach_min"
+		],
+		"A.11/Chambers; roads": [
+			"mine.chamber_min_tiles",
+			"mine.chamber_max_tiles",
+			"mine.chamber_forbidden_width_tiles",
+			"mine.road_width_min_tiles",
+			"mine.road_width_max_tiles",
+			"mine.rib_wander_max_tiles"
+		],
+		"A.11/Firedamp": [
+			"hazards.firedamp_pocket_min_tiles",
+			"hazards.firedamp_pocket_max_tiles",
+			"mine.firedamp_cells_per_ring2",
+			"mine.firedamp_cells_per_beyond",
+			"mine.firedamp_cells_per_black_seam",
+			"mine.firedamp_min_ring",
+			"noise.firedamp_blast_np",
+			"hazards.blast_unconscious_tiles",
+			"hazards.blast_hurt_tiles"
+		],
+		"A.11/Blackdamp": [
+			"hazards.blackdamp_road_min_tiles",
+			"hazards.blackdamp_road_max_tiles",
+			"mine.blackdamp_old_workings_cells_per",
+			"hazards.blackdamp_hurt_s",
+			"hazards.blackdamp_unconscious_s"
+		],
+		"A.11/Collapse points": [
+			"mine.collapse_cells_per",
+			"mine.collapse_min_from_basecamp_tiles",
+			"mine.collapse_min_spacing_tiles",
+			"mine.collapse_min_path_from_sites_tiles",
+			"hazards.collapse_creak_s",
+			"noise.roof_fall_np"
+		],
+		"A.11/Air doors": [
+			"mine.air_door_side_passage_probability",
+			"moth.air_door_hold_s"
+		],
+		"A.11/Landmarks": [
+			"mine.landmarks_per_cell",
+			"mine.landmark_no_repeat_cells"
+		],
+		"A.11/Map table and book": [
+			"mine.sheet_max_strokes",
+			"mine.sheet_label_max_chars",
+			"mine.sheet_strokes_per_s"
+		],
+		"C.12/Tick": [
+			"net.tick_hz"
+		],
+		"C.12/Inputs": [
+			"net.input_redundancy"
+		],
+		"C.12/Prediction": [
+			"net.correction_blend_ms",
+			"net.interp_delay_ms"
+		],
+		"C.12/Rewind": [
+			"net.rewind_max_ms",
+			"net.defender_max_ms",
+			"net.interp_delay_ms"
+		],
+		"C.12/Light edge latency": [
+			"net.light_edge_worst_ms",
+			"net.probe_reference_rtt_ms",
+			"net.probe_light_to_contents_p95_ms"
+		],
+		"C.12/About-turn": [
+			"net.about_turn_held_geometry_frames",
+			"net.probe_about_turn_p95_ms"
+		],
+		"C.12/Tick cost": [
+			"net.tick_budget_ms_p99",
+			"net.tick_budget_visibility_ms",
+			"net.tick_budget_road_graph_ms"
+		],
+		"C.12/Run memory": [
+			"net.run_memory_mb",
+			"net.run_memory_parts_mb",
+			"net.record_memory_mb"
+		],
+		"C.12/Runs per instance": [
+			"net.runs_per_instance_min",
+			"net.runs_per_instance_max",
+			"net.runs_per_instance_best",
+			"net.instance_vcpus",
+			"net.instance_tick_load_share"
+		],
+		"C.12/Bandwidth per client": [
+			"net.down_budget_kbps",
+			"net.up_budget_kbps",
+			"voice.opus_bitrate_kbps"
+		],
+		"C.12/Run record": [
+			"net.record_window_s",
+			"net.record_keyframe_s",
+			"net.record_buffer_estimate_mb",
+			"net.record_event_window_s"
+		],
+		"C.12/Voice loss": [
+			"voice.clean_range_fraction",
+			"voice.edge_loss",
+			"voice.stythe_loss",
+			"voice.stythe_radius_tiles",
+			"voice.running_loss",
+			"voice.loss_run_min_frames",
+			"voice.loss_run_max_frames"
+		],
+		"C.12/Saves": [
+			"net.snapshot_interval_s",
+			"net.save_budget_mb",
+			"net.save_budget_snapshot_mb",
+			"net.save_budget_diff_log_mb",
+			"net.save_budget_map_table_mb",
+			"net.save_budget_pocket_books_mb",
+			"net.save_budget_windows_mb"
+		],
+		"C.12/Host migration": [
+			"net.migration_snapshot_interval_s",
+			"net.migration_silence_s",
+			"net.migration_gutter_s",
+			"net.migration_reconnect_deadline_s",
+			"net.host_hold_s"
+		],
+		"C.12/Private host upload": [
+			"net.private_host_upload_mbps",
+			"net.private_host_upload_kbps"
+		],
+		"C.12/Concurrent load": [
+			"net.load_plan_players",
+			"net.load_plan_runs",
+			"net.load_plan_run_hours_month"
+		],
+		"C.12/Compute cost": {
+			"none": "business estimate, not game tuning"
+		},
+		"C.12/Egress": {
+			"none": "business estimate, not game tuning"
+		},
+		"C.12/Monthly total": {
+			"none": "business estimate, not game tuning"
+		},
+		"C.12/Seeds": {
+			"none": "rule, no number: seeds stay on the server"
+		},
+		"C.12/Telemetry retention": [
+			"net.telemetry_band_retention_days"
+		],
+		"C.12/Map-table limits": [
+			"mine.sheet_label_max_chars",
+			"mine.sheet_strokes_per_s",
+			"mine.sheet_max_strokes"
+		],
+		"C.12/Client eviction": [
+			"mine.eviction_radius_cells"
+		]
+	}
+}

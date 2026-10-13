@@ -1,0 +1,165 @@
+{
+	"domain": "bess",
+	"keys": {
+		"bess.belt_slots": {
+			"value": 6,
+			"type": "int",
+			"unit": "slots",
+			"source": "Gameplay §13.7, A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.calm_light": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §13.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.drag_follow_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §13.7, §11.11",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.follow_max_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §13.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles by path; ticket MOD-07"
+		},
+		"bess.follow_min_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §13.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "unit as written: tiles by path; ticket MOD-07"
+		},
+		"bess.hears_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §13.7, §6.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.hitch_pull_free_s": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §13.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.hoof_np": {
+			"value": 9,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §13.7, A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.lamp_radius_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.4, A.1; GDD §16.12",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "Q9 fallback 2; ticket MOD-07"
+		},
+		"bess.lamp_toggle_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §13.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.load_item_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.panic_delay_s": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §13.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.saddle_cans": {
+			"value": 2,
+			"type": "int",
+			"unit": "cans",
+			"source": "Gameplay §13.7, A.10",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.stythe_ears_tiles": {
+			"value": 12,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §13.7",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.whinny_np": {
+			"value": 24,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §13.7, A.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		},
+		"bess.whinny_repeat_s": {
+			"value": 6,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-07"
+		}
+	}
+}

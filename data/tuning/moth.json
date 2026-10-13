@@ -1,0 +1,606 @@
+{
+	"domain": "moth",
+	"keys": {
+		"moth.hit_radius_tiles": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed (CRT-01: the Moth's body for a shot)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01, CRT-03"
+		},
+		"moth.air_door_hold_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4 (GEN-15 reads the same key; define once)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-02"
+		},
+		"moth.breath_period_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.brood_np": {
+			"value": 20,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §8.3, A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.brood_smother_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §8.3, A.5",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.brood_speed": {
+			"value": 5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.egg_clock_s": {
+			"value": 600,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.3, A.5 (GDD Q20 may make it 900)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.egg_glow_centre": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §5.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.egg_glow_radius": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §5.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.flare_sight_tiles": {
+			"value": 50,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"moth.flash_wake_tiles": {
+			"value": 30,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, §7.6",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.flicker_body_change_level": {
+			"value": 0.12,
+			"type": "float",
+			"unit": "light",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-07"
+		},
+		"moth.flicker_visible_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-07"
+		},
+		"moth.frenzy_waker_known_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.hang_clink_np": {
+			"value": 8,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §7.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-05"
+		},
+		"moth.hang_lamp_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-05"
+		},
+		"moth.hatch_tell_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §8.3, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.hatch_tick_hear_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.hoard_start_lamps": {
+			"value": [
+				2,
+				4
+			],
+			"type": "range",
+			"unit": "lamps",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-05"
+		},
+		"moth.homing_speed": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-05"
+		},
+		"moth.hunger_max_s": {
+			"value": 1500,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.hunger_min_s": {
+			"value": 900,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.hunt_speed": {
+			"value": 5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.last_spot_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.lay_np": {
+			"value": 12,
+			"type": "int",
+			"unit": "np",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.lay_radius_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.lay_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-06"
+		},
+		"moth.linger_s": {
+			"value": 8,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.marked_drift_tiles": {
+			"value": 80,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.marked_wake_tiles": {
+			"value": 80,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.memory_merge_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.memory_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.preen_s": {
+			"value": 5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.prowl_speed": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.prowl_without_hunt_s": {
+			"value": 240,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.reach_tiles": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.rescan_hz": {
+			"value": 4,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.restless_sleep_max_s": {
+			"value": 120,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, §8.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.restless_sleep_min_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.retreat_speed": {
+			"value": 5,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §7.1, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-05"
+		},
+		"moth.search_per_light_s": {
+			"value": 4,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.searched_s": {
+			"value": 60,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.see_level": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §7.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.settle_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.signal_sight_tiles": {
+			"value": 40,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-01"
+		},
+		"moth.stir_clock_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.stir_level": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §7.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.stir_tell_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.stir_window_s": {
+			"value": 10,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.tell_reach_tiles": {
+			"value": 20,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Gameplay §7.2, A.4 (also used by CRT-04)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.wake_level": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "light",
+			"source": "Gameplay §7.2",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-03"
+		},
+		"moth.widow_min_speed": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "tiles/s",
+			"source": "Gameplay §7.2, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-07"
+		},
+		"moth.widow_speed_window_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-07"
+		},
+		"moth.windup_s": {
+			"value": 1,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.1, A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-04"
+		},
+		"moth.sight_tiles_by_ring": {
+			"value": [
+				20,
+				25,
+				30,
+				35,
+				40
+			],
+			"type": "by_ring",
+			"unit": "tiles",
+			"source": "Gameplay §7.1, §10.6, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Moth sight by ring; name from CRT-01"
+		},
+		"moth.frenzy_s_by_ring": {
+			"value": [
+				60,
+				90,
+				90,
+				120,
+				150
+			],
+			"type": "by_ring",
+			"unit": "s",
+			"source": "Gameplay §7.1, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Moth frenzy by ring; name from CRT-01"
+		},
+		"moth.memory_lights_by_crew": {
+			"value": [
+				3,
+				4,
+				5,
+				6,
+				7
+			],
+			"type": "by_crew",
+			"unit": "count",
+			"source": "Gameplay §7.1, §7.2, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "A.4 Shared rules/Moth memory (lights remembered, 2 + crew count); unit as written: lights; name from CRT-01"
+		},
+		"moth.awake_tell_lead_min_s": {
+			"value": 4.7,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.2, §A.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "target",
+			"note": "A.4 Moth Awake tell; first dust to landing at least 4.7 s (18.5 tiles at 5.0 tiles/s plus the wind-up); derived, checked by QA"
+		}
+	}
+}

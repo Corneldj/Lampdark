@@ -1,0 +1,43 @@
+{
+	"note": "SND-13's import settings (not tuning). Loudness targets per band in LUFS (Proposed: whisper -38, talk -26, shout -16; the scream -10), each kept under SND-07's band cap: the 20 ms frame RMS ceiling of the next band's default threshold plus voice.band_cap_headroom_db (whisper -34, talk -16, shout -6 dBFS), and -1 dBFS for the scream (Proposed). The lampman is dry Ogg Vorbis at -20 LUFS (Proposed). Placeholder voices are espeak-ng (offline text-to-speech): eight distinct voices from accent, variant, pitch and speed.",
+	"bands": {
+		"whisper": {"target_lufs": -38.0, "next_threshold_key": "voice.threshold_talk_dbfs"},
+		"talk": {"target_lufs": -26.0, "next_threshold_key": "voice.threshold_shout_dbfs"},
+		"shout": {"target_lufs": -16.0, "next_threshold_key": "voice.threshold_scream_dbfs"},
+		"scream": {"target_lufs": -10.0, "cap_dbfs": -1.0}
+	},
+	"tolerance_lu": 1.0,
+	"aim_lu": 0.4,
+	"cap_margin_db": 1.0,
+	"trim_margin_s": 0.02,
+	"trim_floor_db": 45.0,
+	"opus_bitrate": "24k",
+	"lampman": {"target_lufs": -20.0, "vorbis_quality": 4},
+	"placeholder": {
+		"voices": {
+			"voice_1": {"lang": "en-gb", "variant": "f1", "pitch": 70, "speed": 150},
+			"voice_2": {"lang": "en-gb-x-gbclan", "variant": "f3", "pitch": 48, "speed": 158},
+			"voice_3": {"lang": "en-gb-scotland", "variant": "f2", "pitch": 88, "speed": 145},
+			"voice_4": {"lang": "en-gb-x-gbcwmd", "variant": "f4", "pitch": 32, "speed": 152},
+			"voice_5": {"lang": "en-gb", "variant": "m1", "pitch": 55, "speed": 148},
+			"voice_6": {"lang": "en-gb-x-gbclan", "variant": "m3", "pitch": 30, "speed": 160},
+			"voice_7": {"lang": "en-gb-scotland", "variant": "m7", "pitch": 70, "speed": 142},
+			"voice_8": {"lang": "en-gb-x-gbcwmd", "variant": "m2", "pitch": 12, "speed": 150}
+		},
+		"lampman": {"lang": "en-gb-x-rp", "variant": "grandpa", "pitch": 30, "speed": 118},
+		"spoken": {
+			"moth": "Moth, douse!", "tapping": "Tapping! Shut up, and get off the walls!", "stythe": "Stythe! Light up, and talk to me!",
+			"douse": "Douse!", "light_up": "Light up!", "quiet": "Quiet!", "count_off": "Count off!", "here": "Here!", "help": "Help!",
+			"is_that_you": "Is that you?", "gate": "Gate!", "oil": "Oil?", "now": "Now!", "left": "Left!", "right": "Right!", "stop": "Stop!",
+			"scream": "Aaaaaaaaaaaaaaah!", "gasp": "Hah!", "cough": "Kuh! Kuh, kuh!", "moan": "Mmmmmmmmm. Uhhhhhhh.", "panting": "Hah. Hah. Hah. Hah. Hah.",
+			"trapped_cry": "Aah! Get me out! Aah!", "roll_lamp": "Lamp", "roll_all_right": "all right",
+			"first_run": "One lamp's worth a dozen men below. Keep it low by the coats, and keep talking.",
+			"remark_moth_smother": "Somebody's lamp drew it down on them. Keep them low.", "remark_drag": "Nobody walks at the back alone.",
+			"remark_pin": "Off the walls when it taps.", "remark_blast": "Naked flame where the gas lies. Gauze lamps, lads.",
+			"remark_blackdamp": "Watch your flame. When it shrinks, you get out.", "remark_roof_fall": "Quiet under bad roof.",
+			"remark_hatch": "Leave the eggs be.", "remark_friendly_hit": "Know what you're shooting at.",
+			"remark_shot_dead": "A gun below does more harm than good."
+		},
+		"digits": ["oh", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+	}
+}
