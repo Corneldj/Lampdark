@@ -4,7 +4,8 @@ class_name Protocol
 ## handshake; no game data is sent before Welcome. Unknown types are dropped and counted.
 
 ## 2: FND-08's handshake carries the build flavour and the QA token, and Welcome the debug grant.
-const PROTOCOL_VERSION: int = 2
+## 3: SND-10's MIC_LABEL, the crew-list label flag, client to server.
+const PROTOCOL_VERSION: int = 3
 
 enum Msg {
 	HELLO = 1,
@@ -25,6 +26,7 @@ enum Msg {
 	DEBUG_SUBSCRIBE = 16,  ## FND-08, debug lane only: the client's truth layers and overlay switch
 	DEBUG_TRUTH = 17,  ## FND-08, debug lane only: a truth-view snapshot (5 Hz)
 	DEBUG_TAG = 18,  ## FND-08, debug lane only, QA and dev servers: an illusion's id, by tick and record number
+	MIC_LABEL = 19,  ## SND-10: the crew list's 'Mute (callouts and taps only)' flag, one byte, client to server, control lane
 }
 
 enum Reject {
@@ -165,6 +167,12 @@ static func ping(client_time_us: int) -> PackedByteArray:
 	var b: StreamPeerBuffer = StreamPeerBuffer.new()
 	b.put_64(client_time_us)
 	return frame(Msg.PING, b.data_array)
+
+
+## SND-10: whether the crew list shows this miner as 'Mute (callouts and taps only)'. Never anything
+## about speaking: the label covers Mute, the speech-impairment option and no device alike.
+static func mic_label(muted: bool) -> PackedByteArray:
+	return frame(Msg.MIC_LABEL, PackedByteArray([1 if muted else 0]))
 
 
 static func pong(client_time_us: int, server_time_us: int) -> PackedByteArray:

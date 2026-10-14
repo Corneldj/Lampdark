@@ -14,15 +14,13 @@ extends RefCounted
 signal frame_ready(pcm: PackedFloat32Array, ticks_usec: int)
 signal state_changed(state: int)
 
-## SND-10's mic modes. SND-10's MicMode autoload replaces `mic_mode` below.
-enum MicMode { USE, MUTE, SPEECH_IMPAIRMENT }
 enum State { CLOSED, OPEN, NO_DEVICE }
 
 const BACKENDS: Array[String] = ["webrtc", "speex", "none"]
 
 var native: LbVoiceCapture = LbVoiceCapture.new()
-## Until SND-10's first-launch choice exists, nothing may open the microphone: Mute.
-var mic_mode: Callable = func() -> int: return MicMode.MUTE
+## The player's mode; the client points this at its MicMode (SND-10). Unset: Mute.
+var mic_mode: Callable = func() -> int: return MicMode.Mode.MUTE
 ## Set by the client: in a lobby, a run, or the Pithead and Lamp Check channel.
 var voice_live: bool = false
 ## The backend running after the fallback chain ("none" when neither processor starts).
@@ -59,12 +57,12 @@ func _configure() -> String:
 ## The mode in force: backend none forces Mute on this platform.
 func effective_mode() -> int:
 	if backend == "none":
-		return MicMode.MUTE
+		return MicMode.Mode.MUTE
 	return int(Variants.number(mic_mode.call()))
 
 
 func may_open() -> bool:
-	return voice_live and effective_mode() == MicMode.USE
+	return voice_live and effective_mode() == MicMode.Mode.USE
 
 
 ## SND-10's label: no device (as Mute and speech-impairment show the same).

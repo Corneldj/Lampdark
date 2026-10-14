@@ -1,0 +1,23 @@
+{
+	"note": "SND-10's placeholder English text (GDD §14.4, §15.6; Gameplay §6.3). Copy review and the final legal notice come with STM-13; localisation with UI-07.",
+	"title": "Your microphone",
+	"screen": [
+		"LAMPBLACK uses your microphone for in-game voice, and for nothing else.",
+		"Teammates near your miner hear you. The creatures hear your voice as noise: the louder you speak, the further it carries.",
+		"Nothing you say is recorded or stored."
+	],
+	"use": "Use my microphone",
+	"mute": "Mute (callouts and taps only)",
+	"notice_link": "Read the full privacy notice",
+	"close": "Close",
+	"notice": [
+		"Your microphone",
+		"The microphone opens only for in-game voice: in a lobby, during a run, and at the Pithead and the Lamp Check. At every other time it is closed. If you choose Mute, it is never opened, and your system's microphone light stays off.",
+		"What leaves your PC: while voice is live and you are speaking, your voice is sent as compressed audio frames, each carrying its loudness, through the game server (in a friends lobby, the host's PC) to the teammates in range. No server, replay, clip or report keeps it.",
+		"Your calibration lines never leave your PC; only the thresholds they set are kept.",
+		"Your loudness band is kept in the run's record until the Lamp Check, then as seconds per band in telemetry for 90 days.",
+		"Nothing recognises, transcribes or identifies speech.",
+		"Mute (callouts and taps only): nothing from your microphone leaves your PC, and your crew sees the same label as for a player with no microphone or the speech-impairment option. You keep every way to play: callouts, taps and actions.",
+		"Your choice is logged with this notice's version and the time, on your PC and with us. You can change it in the options at any time. If this notice changes, we ask again."
+	]
+}

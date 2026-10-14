@@ -113,6 +113,11 @@ func send_raw(lane: int, framed: PackedByteArray) -> Error:
 	return transport.send(peer, lane, framed)
 
 
+## SND-10: the crew-list label flag, on joining and whenever it changes.
+func send_mic_label(muted: bool) -> Error:
+	return send_raw(Lane.Id.CONTROL, Protocol.mic_label(muted))
+
+
 func close() -> void:
 	transport.close()
 	state = State.IDLE

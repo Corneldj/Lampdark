@@ -12,7 +12,7 @@ GAME = Path(__file__).resolve().parents[2]
 COMMON_EXCLUDE = ["tests/*", "tools/*", "addons/gut/*", ".gutconfig.json"]
 # Cell data, templates and the material table are server-only (GEN-01, Gameplay §5.10).
 CLIENT_EXCLUDE = ["server/*", "data/maps/*", "data/templates/*", "data/world/*"] + COMMON_EXCLUDE
-SERVER_EXCLUDE = ["client/*"] + COMMON_EXCLUDE
+SERVER_EXCLUDE = ["client/*", "data/text/*"] + COMMON_EXCLUDE  # data/text: client-only text (SND-10's notice)
 RELEASE_EXCLUDE = ["*/debug/*"]
 
 

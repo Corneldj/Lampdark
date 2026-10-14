@@ -7,12 +7,12 @@ runs:
   steps:
     - name: List LFS objects
       shell: bash
-      run: git lfs ls-files --long | cut -d ' ' -f1 | sort > "$RUNNER_TEMP/lfs-ids.txt"
+      run: git lfs ls-files --long | cut -d ' ' -f1 | sort > .lfs-ids.txt
     - name: Restore LFS cache
       uses: actions/cache@v4
       with:
         path: .git/lfs
-        key: lfs-${{ hashFiles(format('{0}/lfs-ids.txt', runner.temp)) }}
+        key: lfs-${{ hashFiles('.lfs-ids.txt') }}
     - name: Pull LFS objects
       shell: bash
       run: git lfs pull

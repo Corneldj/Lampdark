@@ -13,11 +13,20 @@
 namespace lb::core::voice {
 
 constexpr int CAPTURE_RATE = 48000;
-constexpr int CAPTURE_BLOCK = 480;  // 10 ms, what both processors take
-constexpr int CAPTURE_FRAME = 960;  // 20 ms, what SND-06 and SND-07 take
+constexpr int CAPTURE_BLOCK = 480; // 10 ms, what both processors take
+constexpr int CAPTURE_FRAME = 960; // 20 ms, what SND-06 and SND-07 take
 
-enum class ApmBackend : uint8_t { WEBRTC, SPEEX, NONE };
-enum class NoiseLevel : uint8_t { LOW, MODERATE, HIGH, VERY_HIGH };
+enum class ApmBackend : uint8_t {
+	WEBRTC,
+	SPEEX,
+	NONE,
+};
+enum class NoiseLevel : uint8_t {
+	LOW,
+	MODERATE,
+	HIGH,
+	VERY_HIGH,
+};
 
 // "webrtc", "speex", "none"; false for anything else.
 bool parse_backend(const std::string &name, ApmBackend &out);

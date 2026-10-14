@@ -1,6 +1,8 @@
 # FND-04's lint stage: clang-format --dry-run over native/src and native/tests (never thirdparty
 # or godot-cpp). The project's own style: tabs, attached braces, indented case labels, and no
 # column limit, so lines are wrapped by hand where it reads best.
+# CI checks only changed lines (tools/build/ci_lint.sh). Without a column limit clang-format
+# splits a one-line enum apart, so write a new enum one value per line with a trailing comma.
 BasedOnStyle: LLVM
 UseTab: ForContinuationAndIndentation
 IndentWidth: 4

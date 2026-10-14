@@ -67,9 +67,12 @@ inline std::vector<float> echo_of(const std::vector<float> &far, int delay, floa
 		const long b = a - 240;
 		const long c = a - 700;
 		float v = 0.0f;
-		if (a >= 0) v += far[a];
-		if (b >= 0) v += 0.35f * far[b];
-		if (c >= 0) v -= 0.2f * far[c];
+		if (a >= 0)
+			v += far[a];
+		if (b >= 0)
+			v += 0.35f * far[b];
+		if (c >= 0)
+			v -= 0.2f * far[c];
 		out[i] = gain * v;
 	}
 	return out;

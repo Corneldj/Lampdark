@@ -1,0 +1,4 @@
+{
+	"note": "SND-10: the microphone notice's version. Raising it asks every player again at their next Play (GDD §15.6). The text is in mic_notice.<lang>.json; STM-13 supplies the legal text and the web policy URL.",
+	"version": 1
+}

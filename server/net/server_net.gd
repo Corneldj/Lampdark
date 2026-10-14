@@ -133,6 +133,11 @@ func _on_message(run: RunState, event: TransportEvent, now: int) -> void:
 	match type:
 		Protocol.Msg.PING:
 			transport.send(event.peer, Lane.Id.CONTROL, Protocol.pong(Protocol.read_i64(payload), now))
+		Protocol.Msg.MIC_LABEL:
+			if event.lane != Lane.Id.CONTROL or payload.size() != 1 or payload[0] > 1:
+				_count_bad(event.peer)
+			else:
+				session.mute_label = payload[0] == 1
 		Protocol.Msg.HELLO, Protocol.Msg.WELCOME, Protocol.Msg.REJECT, Protocol.Msg.PONG, Protocol.Msg.FRAME:
 			_count_bad(event.peer)
 		_:
@@ -195,6 +200,14 @@ func _client_tuning_if_changed(effective_hash: String) -> String:
 func _reject(session: Sessions.Session, reason: Protocol.Reject) -> void:
 	transport.send(session.peer, Lane.Id.CONTROL, Protocol.reject(reason))
 	_closing[session.peer] = 3  # let ENet deliver the Reject, then disconnect
+
+
+## SND-10: the crew-list label of the miner in `slot` (shown when unknown). UI-04 relays it.
+func mute_label(slot: int) -> bool:
+	for session: Sessions.Session in sessions.welcomed():
+		if session.slot == slot:
+			return session.mute_label
+	return true
 
 
 func _route(lane: int, slot: int, type: int, payload: PackedByteArray) -> void:

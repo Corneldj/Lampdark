@@ -45,8 +45,7 @@ namespace {
 // noise suppression at the chosen level, with a high-pass; both gain controllers off.
 class WebRtcProcessor final : public VoiceProcessor {
 public:
-	explicit WebRtcProcessor(NoiseLevel noise) :
-			apm_(webrtc::AudioProcessingBuilder().Create()), config_(CAPTURE_RATE, 1) {
+	explicit WebRtcProcessor(NoiseLevel noise) : apm_(webrtc::AudioProcessingBuilder().Create()), config_(CAPTURE_RATE, 1) {
 		if (!apm_) {
 			return;
 		}

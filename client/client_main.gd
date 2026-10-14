@@ -26,6 +26,8 @@ var audio_options: AudioOptions = null
 ## SND-05: the microphone, open only while the mic mode allows it and voice is live (SND-06 and
 ## SND-07 take its frames; SND-10 supplies the mode, Mute until its first-launch choice exists).
 var voice_capture: VoiceCapture = null
+## SND-10: the player's microphone choice (Mute until chosen), its consent log and the crew-list label.
+var mic_mode: MicMode = null
 var _events_played: int = 0
 ## NET-12: light-to-contents and about-turn probes on this client; a telemetry summary each minute
 ## (release builds keep no per-tile sample).
@@ -62,7 +64,7 @@ func start(client_config: ClientConfig) -> void:
 	elif not config.connect_lobby.is_empty():
 		Log.info("Steam lobby %s requested (lobbies arrive with STM-02)" % config.connect_lobby)
 	_start_input()
-	_show_dev_lobby()
+	_show_pithead()
 	set_process(true)
 
 
@@ -138,9 +140,13 @@ func _start_input() -> void:
 	add_child(deafness)
 	audio_options = AudioOptions.load_from()
 	audio_options.apply(events_player.mixer)
+	mic_mode = MicMode.new()
 	voice_capture = VoiceCapture.new()
+	voice_capture.mic_mode = func() -> int: return mic_mode.mode
+	voice_capture.state_changed.connect(func(_s: int) -> void: mic_mode.set_device_present(not voice_capture.no_device()))
+	mic_mode.label_changed.connect(_send_mic_label)
 	Log.info("voice: capture ready, backend %s, mic mode %s" % [voice_capture.backend,
-		VoiceCapture.MicMode.keys()[voice_capture.effective_mode()]])
+		MicMode.Mode.keys()[voice_capture.effective_mode()]])
 	_start_debug()
 
 
@@ -305,10 +311,43 @@ func _report_connection() -> void:
 		ClientConnection.State.CONNECTED:
 			Log.info("welcomed: slot %d, server tick %d, %d Hz" % [connection.welcome.slot,
 				connection.welcome.server_tick, connection.welcome.tick_hz])
+			if mic_mode != null:
+				_send_mic_label(mic_mode.show_mute_label())
 		ClientConnection.State.REJECTED:
 			Log.warn("refused by the server: %s" % RejectText.text(connection.reject_reason))
 		ClientConnection.State.DROPPED:
 			Log.warn("connection lost: %s" % connection.drop_reason)
+
+
+## SND-10: the label flag on joining and on every change; nothing else about voice goes to the server.
+func _send_mic_label(muted: bool) -> void:
+	if connection != null and connection.state == ClientConnection.State.CONNECTED:
+		connection.send_mic_label(muted)
+
+
+## Placeholder Pithead until MOD-04: one Play button. Play leads through the first-launch screens
+## (the comfort step, the microphone choice; SND-10) before any lobby.
+func _show_pithead() -> void:
+	var play: Button = Button.new()
+	play.name = "Play"
+	play.text = "Play"
+	play.custom_minimum_size = Vector2(320, 64)
+	play.set_anchors_preset(Control.PRESET_CENTER)
+	play.pressed.connect(func() -> void:
+		play.queue_free()
+		_start_first_launch())
+	add_child(play)
+	Log.info("pithead shown")
+
+
+func _start_first_launch() -> void:
+	var flow: FirstLaunch = FirstLaunch.new(mic_mode)
+	flow.name = "FirstLaunch"
+	flow.finished.connect(func() -> void:
+		flow.queue_free()
+		Log.info("microphone: %s under notice %d" % [MicMode.MODE_NAMES[mic_mode.mode], mic_mode.notice_version])
+		_show_dev_lobby())
+	add_child(flow)
 
 
 ## Placeholder until STM-02's dev lobby screen exists.

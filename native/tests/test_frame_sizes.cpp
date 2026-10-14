@@ -90,7 +90,7 @@ TEST_CASE("SND-05: open counts, close zeroes everything, and a closed device yie
 	CHECK_FALSE(rig.mic->pop_frame(f));
 	CHECK_FALSE(rig.fake->feed(talk.data(), 480)); // the device is closed
 	CHECK(rig.mic->open(""));
-	CHECK(rig.mic->open(""));  // already open: no second open
+	CHECK(rig.mic->open("")); // already open: no second open
 	CHECK(rig.mic->open_count() == 2);
 }
 

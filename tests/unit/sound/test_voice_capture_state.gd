@@ -12,7 +12,7 @@ func before_all() -> void:
 	Tuning.load_client()
 
 
-func _capture(mode: int = VoiceCapture.MicMode.USE) -> VoiceCapture:
+func _capture(mode: int = MicMode.Mode.USE) -> VoiceCapture:
 	var v: VoiceCapture = VoiceCapture.new("fake")
 	v.tap_far_end = false
 	v.native.fake_add_device("usb-1", "USB headset", true)
@@ -22,7 +22,7 @@ func _capture(mode: int = VoiceCapture.MicMode.USE) -> VoiceCapture:
 
 func test_mute_and_speech_impairment_never_open_the_device() -> void:
 	var before: int = LbVoiceCapture.total_open_count()
-	for mode: int in [VoiceCapture.MicMode.MUTE, VoiceCapture.MicMode.SPEECH_IMPAIRMENT]:
+	for mode: int in [MicMode.Mode.MUTE, MicMode.Mode.SPEECH_IMPAIRMENT]:
 		var v: VoiceCapture = _capture(mode)
 		v.voice_live = true
 		for t: int in 600:  # ten seconds of frames
@@ -57,7 +57,7 @@ func test_opens_only_while_voice_is_live_and_closes_on_the_tick_it_stops() -> vo
 
 
 func test_switching_to_mute_closes_at_once() -> void:
-	var mode: Dictionary = {"m": VoiceCapture.MicMode.USE}
+	var mode: Dictionary = {"m": MicMode.Mode.USE}
 	var v: VoiceCapture = VoiceCapture.new("fake")
 	v.tap_far_end = false
 	v.native.fake_add_device("usb-1", "USB headset", true)
@@ -65,7 +65,7 @@ func test_switching_to_mute_closes_at_once() -> void:
 	v.voice_live = true
 	v.tick(0)
 	assert_true(v.native.is_open())
-	mode["m"] = VoiceCapture.MicMode.MUTE
+	mode["m"] = MicMode.Mode.MUTE
 	v.tick(16667)
 	assert_false(v.native.is_open())
 
@@ -137,7 +137,7 @@ func test_backend_none_forces_mute() -> void:
 	v.backend = "none"
 	v.voice_live = true
 	v.tick(0)
-	assert_eq(v.effective_mode(), VoiceCapture.MicMode.MUTE)
+	assert_eq(v.effective_mode(), MicMode.Mode.MUTE)
 	assert_eq(v.native.open_count(), 0)
 
 

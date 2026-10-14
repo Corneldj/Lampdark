@@ -7,6 +7,8 @@ GAME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$GAME_DIR"
 WHAT="${1:-all}"
 mkdir -p build/ci
+# A fresh clone has no .godot/ cache: import first, so every class_name resolves.
+"${GODOT:-godot}" --headless --path . --import > build/ci/import.log 2>&1 || true
 status=0
 if [[ "$WHAT" == gut || "$WHAT" == all ]]; then
 	./tools/build/run_unit_tests.sh tests/reports/unit.xml 2>&1 | tee build/ci/gut.log | grep -aE "^Tests|Passing Tests|Failing Tests|Risky|\[Failed\]|sample final"

@@ -14,6 +14,9 @@ class Session:
 	var connected_usec: int = 0
 	## FND-08: granted the debug channel at the handshake (never on a release server).
 	var debug: bool = false
+	## SND-10: the crew-list label ('Mute (callouts and taps only)'), as the client last sent it.
+	## Shown until the client says otherwise; UI-04's crew list relays it, and nothing else about voice.
+	var mute_label: bool = true
 
 
 var max_slots: int = 5

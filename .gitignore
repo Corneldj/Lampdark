@@ -13,3 +13,4 @@
 /native/src/core/version.gen.h
 /native/tests/*.o
 /native/.sconsign*.dblite
+/.lfs-ids.txt

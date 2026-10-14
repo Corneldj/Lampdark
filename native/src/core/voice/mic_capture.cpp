@@ -238,8 +238,7 @@ void FakeCaptureDriver::close() {
 
 // ---- MicCapture ----
 
-MicCapture::MicCapture(std::unique_ptr<CaptureDriver> driver) :
-		driver_(std::move(driver)), far_(CAPTURE_RATE / 2), frames_(16), proc_us_(512, 0) {}
+MicCapture::MicCapture(std::unique_ptr<CaptureDriver> driver) : driver_(std::move(driver)), far_(CAPTURE_RATE / 2), frames_(16), proc_us_(512, 0) {}
 
 MicCapture::~MicCapture() {
 	close();
