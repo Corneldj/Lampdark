@@ -101,6 +101,16 @@
 			"kind": "param",
 			"note": "ticket NET-06"
 		},
+		"net.dev_lobby_port_offset": {
+			"value": 1,
+			"type": "int",
+			"unit": "port",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket STM-02: the dev-mode lobby rendezvous listens on the game server's port plus this (dev, QA and kill-test servers only)"
+		},
 		"net.dev_port": {
 			"value": 24600,
 			"type": "int",
@@ -327,9 +337,19 @@
 			"unit": "count",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket STM-02"
+		},
+		"net.invite_code_retry_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket STM-02: a code lookup that finds nothing searches once more after this long (Steam indexes a new lobby's data within about 2 s, measured on app 5110670) before reporting 'No crew with that code'"
 		},
 		"net.knock_off_wall_s": {
 			"value": 2,

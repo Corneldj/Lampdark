@@ -8,6 +8,8 @@ const STATS_EVERY_TICKS: int = 1200
 ## NET-08: the stream audit, loaded by path in dev and QA servers only (tools/ is not in a pack).
 const STREAM_AUDIT: String = "res://tools/stream_audit/stream_audit.gd"
 
+## STM-02: dev-mode lobbies, outside release builds only.
+var rendezvous: LobbyRendezvous = null
 var config: ServerConfig = null
 var run: RunState = null
 var loop: SimLoop = null
@@ -61,6 +63,8 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	loop.pump(TickTimer.now_usec())
+	if rendezvous != null:
+		rendezvous.poll()
 	if run.tick - _last_stats_tick >= STATS_EVERY_TICKS:
 		_last_stats_tick = run.tick
 		_log_stats()
@@ -125,7 +129,22 @@ func _start_network() -> bool:
 		_audit.call(&"attach", run, net)
 		Log.info("stream audit on; report to %s" % config.stream_audit_path)
 	Log.info("listening on %s:%d (ENet, %d slots)" % [bind_address, transport.bound_port(), slots])
+	if not config.build.is_release():
+		_start_rendezvous(bind_address, transport.bound_port())
 	return true
+
+
+## STM-02: dev-mode lobbies (the client's fake lobby backend meets here) beside the game port, on dev, QA and
+## kill-test servers only. A port already taken (another server beside this one) is no failure.
+func _start_rendezvous(bind_address: String, game_port: int) -> void:
+	var t: EnetTransport = EnetTransport.new()
+	t.build = config.build
+	var port: int = LobbyRendezvousWire.port_for(game_port)
+	if t.listen(bind_address, port) != OK:
+		Log.warn("lobby rendezvous: port %d is taken; dev lobbies are off on this server" % port)
+		return
+	rendezvous = LobbyRendezvous.new(t)
+	Log.info("lobby rendezvous on %s:%d" % [bind_address, port])
 
 
 ## FND-08: the server console on stdin, when stdin is a terminal and the debug channel exists.

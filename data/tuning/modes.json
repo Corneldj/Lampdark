@@ -87,7 +87,7 @@
 			"unit": "players",
 			"source": "Gameplay §13.5, A.10",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket MOD-03"
 		},

@@ -223,3 +223,16 @@ func test_the_failure_screen_works_by_controller_alone() -> void:
 		assert_eq(codes.size(), 2, "Enter on the focused button too")
 	assert_eq(SteamFailureScreen.body_key(SteamApi.Init.NO_STEAM_CLIENT), "steam.failure.no_client")
 	assert_eq(SteamFailureScreen.body_key(SteamApi.Init.VERSION_MISMATCH), "steam.failure.out_of_date")
+
+
+func test_steamids_survive_exactly() -> void:
+	# STM-02 found 64-bit IDs rounded through Variants.number's double: 76561198030964382 read back
+	# as ...384. SteamIDs and lobby IDs go through Variants.whole.
+	var real_id: int = 76561197960265728 + 70698654
+	assert_eq(real_id, 76561198030964382)
+	assert_ne(int(Variants.number(real_id)), real_id, "a double cannot hold it")
+	assert_eq(Variants.whole(real_id), real_id)
+	assert_eq(Variants.whole(str(real_id)), real_id, "from JSON's strings too")
+	assert_eq(Variants.whole(3.9), 3)
+	var src: String = FileAccess.get_file_as_string("res://shared/platform/steam/steam_api.gd")
+	assert_false(src.contains("Variants.number"), "the adapter reads every Steam integer exactly")

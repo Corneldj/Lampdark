@@ -1,5 +1,5 @@
 {
-	"hash": "9d659f0cb35fce2b4d9956e3f74602233bbdb97329661e2abe8934af070f82f4",
+	"hash": "a0c3d611abcb52ca583cc9e6f169552e4f6d1e50048444c2930ef19e456c087d",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -430,6 +430,13 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"modes.friends_lobby_max": {
+			"value": 5,
+			"type": "int",
+			"unit": "players",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"movement.body_radius": {
 			"value": 0.35,
 			"type": "float",
@@ -556,6 +563,13 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"net.dev_lobby_port_offset": {
+			"value": 1,
+			"type": "int",
+			"unit": "port",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"net.dev_port": {
 			"value": 24600,
 			"type": "int",
@@ -623,6 +637,20 @@
 			"value": 100.0,
 			"type": "float",
 			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.invite_code_length": {
+			"value": 6,
+			"type": "int",
+			"unit": "count",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.invite_code_retry_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
 			"visibility": "client",
 			"kind": "param"
 		},

@@ -1,0 +1,27 @@
+{
+	"note": "STM-02: the M1 dev lobby (UI-04's Pithead replaces it). UI-07 localises these.",
+	"strings": {
+		"lobby.title": "LAMPBLACK - dev lobby",
+		"lobby.dev_identity": "(dev identity)",
+		"lobby.create": "Open a crew",
+		"lobby.code_hint": "Crew code",
+		"lobby.join": "Join",
+		"lobby.server_hint": "Server host:port",
+		"lobby.direct": "Direct connect",
+		"lobby.code": "Code: %s",
+		"lobby.copy": "Copy code",
+		"lobby.invite": "Invite friends",
+		"lobby.invite_none": "Share the code: the Steam overlay is off",
+		"lobby.ready": "Ready",
+		"lobby.not_ready": "Not ready",
+		"lobby.start": "Go down",
+		"lobby.leave": "Leave",
+		"lobby.host": "host",
+		"lobby.working": "Working...",
+		"lobby.no_crew": "No crew with that code",
+		"lobby.different_version": "Different version",
+		"lobby.full": "That crew is full",
+		"lobby.gone": "That crew has gone",
+		"lobby.create_failed": "Could not open a crew"
+	}
+}

@@ -50,7 +50,8 @@ const MENU_LAYER: int = 20
 var menus: CanvasLayer = null
 ## STM-01: Steam (or dev mode), brought up before anything else.
 var steam: SteamService = null
-var _lobby_label: Label = null
+## STM-02: the friends lobby (Steam's, or the dev server's rendezvous in dev mode).
+var lobby: LobbyService = null
 ## UI-01: the in-play UI (only the design's private elements).
 var in_play: InPlayLayer = null
 var _ui_violations_seen: Dictionary = {}
@@ -77,6 +78,7 @@ func start(client_config: ClientConfig) -> void:
 	if not config.bot_script.is_empty():
 		_start_bot()
 		return
+	_start_lobby()
 	if not config.connect_target.is_empty():
 		_connect(config.connect_target)
 	elif not config.connect_lobby.is_empty():
@@ -116,8 +118,32 @@ func _start_steam() -> bool:
 			_show_steam_failure()
 			return false
 	steam.overlay_toggled.connect(_on_overlay_toggled)
-	steam.persona_changed.connect(func(_id: int) -> void: _refresh_lobby())
 	return true
+
+
+## STM-02: the lobby service on Steam's backend, or (dev mode) on the dev server's rendezvous at the
+## --connect host (else this machine), on the game port plus net.dev_lobby_port_offset.
+func _start_lobby() -> void:
+	MenuInput.install()
+	var target: String = config.connect_target if not config.connect_target.is_empty() else "127.0.0.1:%d" % Tuning.i(&"net.dev_port")
+	var host: String = target.substr(0, target.rfind(":"))
+	var port: int = target.substr(target.rfind(":") + 1).to_int()
+	var backend: LobbyBackend = null
+	if steam.available():
+		backend = SteamLobbyBackend.new(steam.api)
+	else:
+		var fake: FakeLobbyBackend = FakeLobbyBackend.new(EnetTransport.new(), steam.steam_id, steam.persona_name())
+		fake.aim(host, LobbyRendezvousWire.port_for(port))
+		backend = fake
+	lobby = LobbyService.new(backend, steam, config.build.is_release())
+	lobby.server_address = "" if config.build.is_release() else target
+	lobby.connect_requested.connect(func(address: String) -> void:
+		if connection == null:
+			_connect(address))
+	add_child(lobby)
+	if not config.connect_lobby.is_empty():
+		Log.info("lobby: +connect_lobby at launch")
+		lobby.join(config.connect_lobby.to_int())
 
 
 func _show_steam_failure() -> void:
@@ -481,25 +507,21 @@ func _start_first_launch() -> void:
 	_menus().add_child(flow)
 
 
-## Placeholder until STM-02's dev lobby screen exists.
+## STM-02's dev lobby (UI-04's Pithead replaces it). Without a lobby service (a bare test), a label.
 func _show_dev_lobby() -> void:
-	var label: Label = Label.new()
-	label.name = "DevLobby"
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_menus().add_child(label)
-	_lobby_label = label
-	_refresh_lobby()
-	Log.info("dev lobby shown: %s" % label.text.replace("\n", " | "))
-
-
-## The dev lobby shows who you are (STM-01): the display name and SteamID, or the dev identity.
-func _refresh_lobby() -> void:
-	if _lobby_label == null:
+	if lobby == null:
+		var label: Label = Label.new()
+		label.name = "DevLobby"
+		label.text = "LAMPBLACK\ndev lobby"
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.set_anchors_preset(Control.PRESET_FULL_RECT)
+		_menus().add_child(label)
+		Log.info("dev lobby shown")
 		return
-	if steam == null:
-		_lobby_label.text = "LAMPBLACK\ndev lobby (STM-02)"
-		return
-	var who: String = "%s\n%d%s" % [steam.display_name(steam.steam_id), steam.steam_id, " (dev identity)" if steam.fake_identity else ""]
-	_lobby_label.text = "LAMPBLACK\ndev lobby (STM-02)\n\n" + who
+	var screen: DevLobby = DevLobby.new(lobby, steam, not config.build.is_release(), lobby.server_address)
+	screen.direct_connect.connect(func(address: String) -> void:
+		if connection == null and not address.is_empty():
+			_connect(address))
+	_menus().add_child(screen)
+	Log.info("dev lobby shown: %s" % screen.who.text.replace("\n", " | "))

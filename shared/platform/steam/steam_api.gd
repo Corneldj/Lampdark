@@ -13,6 +13,23 @@ const SINGLETON: StringName = &"Steam"
 
 signal overlay_toggled(active: bool)
 signal persona_changed(steam_id: int)
+## STM-02's lobby callbacks: created (ok, lobby), entered (lobby, ChatRoomEnterResponse), changed
+## (members or data), a search's results, and an invite or friends-list join to act on.
+signal lobby_created(ok: bool, lobby_id: int)
+signal lobby_entered(lobby_id: int, response: int)
+signal lobby_changed(lobby_id: int)
+signal lobby_list(lobby_ids: PackedInt64Array)
+signal join_requested(lobby_id: int)
+
+## ELobbyType and ELobbyDistanceFilter values (STM-02).
+const LOBBY_PUBLIC: int = 2
+const DISTANCE_WORLDWIDE: int = 3
+const COMPARISON_EQUAL: int = 0
+const RESULT_OK: int = 1
+const FRIEND_FLAG_IMMEDIATE: int = 4
+
+const _LOBBY_SIGNALS: Array[StringName] = [&"lobby_created", &"lobby_joined", &"lobby_chat_update", &"lobby_data_update",
+	&"lobby_match_list", &"join_requested"]
 
 var _steam: Object = null
 
@@ -34,10 +51,12 @@ func init(app_id: int) -> Dictionary:
 		return {"status": Init.FAILED_GENERIC, "verbal": "GodotSteam is not loaded"}
 	_steam = Engine.get_singleton(SINGLETON)
 	var r: Dictionary = Variants.dict(_steam.call(&"steamInitEx", app_id, false))
-	var status: int = int(Variants.number(r.get("status", Init.FAILED_GENERIC)))
+	var status: int = Variants.whole(r.get("status", Init.FAILED_GENERIC))
 	if status == Init.OK:
 		_steam.connect(&"overlay_toggled", _on_overlay_toggled)
 		_steam.connect(&"persona_state_change", _on_persona_state_change)
+		for sig: StringName in _LOBBY_SIGNALS:
+			_steam.connect(sig, Callable(self, "_on_" + str(sig)))
 	else:
 		_steam = null
 	return {"status": status, "verbal": str(r.get("verbal", ""))}
@@ -52,12 +71,14 @@ func shutdown() -> void:
 	if _steam != null:
 		_steam.disconnect(&"overlay_toggled", _on_overlay_toggled)
 		_steam.disconnect(&"persona_state_change", _on_persona_state_change)
+		for sig: StringName in _LOBBY_SIGNALS:
+			_steam.disconnect(sig, Callable(self, "_on_" + str(sig)))
 		_steam.call(&"steamShutdown")
 		_steam = null
 
 
 func steam_id() -> int:
-	return int(Variants.number(_steam.call(&"getSteamID"))) if _steam != null else 0
+	return Variants.whole(_steam.call(&"getSteamID")) if _steam != null else 0
 
 
 func persona_name() -> String:
@@ -80,7 +101,111 @@ func game_language() -> String:
 func hardware() -> Hardware:
 	if _steam == null:
 		return Hardware.NONE
-	return clampi(int(Variants.number(_steam.call(&"isRunningOnSteamHardware"))), 0, Hardware.STEAM_FRAME) as Hardware
+	return clampi(Variants.whole(_steam.call(&"isRunningOnSteamHardware")), 0, Hardware.STEAM_FRAME) as Hardware
+
+
+## STM-02: ISteamMatchmaking and the overlay's invite dialog. Results arrive as the signals above.
+func create_lobby(max_members: int) -> void:
+	if _steam != null:
+		_steam.call(&"createLobby", LOBBY_PUBLIC, max_members)
+
+
+func join_lobby(lobby_id: int) -> void:
+	if _steam != null:
+		_steam.call(&"joinLobby", lobby_id)
+
+
+func leave_lobby(lobby_id: int) -> void:
+	if _steam != null:
+		_steam.call(&"leaveLobby", lobby_id)
+
+
+func set_lobby_data(lobby_id: int, key: String, value: String) -> void:
+	if _steam != null:
+		_steam.call(&"setLobbyData", lobby_id, key, value)
+
+
+func lobby_data(lobby_id: int, key: String) -> String:
+	return str(_steam.call(&"getLobbyData", lobby_id, key)) if _steam != null else ""
+
+
+func set_lobby_member_data(lobby_id: int, key: String, value: String) -> void:
+	if _steam != null:
+		_steam.call(&"setLobbyMemberData", lobby_id, key, value)
+
+
+func lobby_member_data(lobby_id: int, member: int, key: String) -> String:
+	return str(_steam.call(&"getLobbyMemberData", lobby_id, member, key)) if _steam != null else ""
+
+
+func lobby_members(lobby_id: int) -> PackedInt64Array:
+	var out: PackedInt64Array = PackedInt64Array()
+	if _steam == null:
+		return out
+	for i: int in Variants.whole(_steam.call(&"getNumLobbyMembers", lobby_id)):
+		out.append(Variants.whole(_steam.call(&"getLobbyMemberByIndex", lobby_id, i)))
+	return out
+
+
+func lobby_owner(lobby_id: int) -> int:
+	return Variants.whole(_steam.call(&"getLobbyOwner", lobby_id)) if _steam != null else 0
+
+
+func set_lobby_joinable(lobby_id: int, joinable: bool) -> void:
+	if _steam != null:
+		_steam.call(&"setLobbyJoinable", lobby_id, joinable)
+
+
+func set_lobby_member_limit(lobby_id: int, limit: int) -> void:
+	if _steam != null:
+		_steam.call(&"setLobbyMemberLimit", lobby_id, limit)
+
+
+## A search with string-equality filters, worldwide (Steam's default searches nearby regions only).
+func request_lobby_list(filters: Dictionary) -> void:
+	if _steam == null:
+		return
+	for key: Variant in filters.keys():
+		_steam.call(&"addRequestLobbyListStringFilter", str(key), str(filters[key]), COMPARISON_EQUAL)
+	_steam.call(&"addRequestLobbyListDistanceFilter", DISTANCE_WORLDWIDE)
+	_steam.call(&"requestLobbyList")
+
+
+func invite_dialog(lobby_id: int) -> void:
+	if _steam != null:
+		_steam.call(&"activateGameOverlayInviteDialog", lobby_id)
+
+
+## Whether `steam_id_of` is the user's Steam friend (an admission vouch, STM-02).
+func is_friend(steam_id_of: int) -> bool:
+	return _steam != null and Variants.flag(_steam.call(&"hasFriend", steam_id_of, FRIEND_FLAG_IMMEDIATE))
+
+
+func _on_lobby_created(result: int, lobby_id: int) -> void:
+	lobby_created.emit(result == RESULT_OK, lobby_id)
+
+
+func _on_lobby_joined(lobby_id: int, _permissions: int, _locked: bool, response: int) -> void:
+	lobby_entered.emit(lobby_id, response)
+
+
+func _on_lobby_chat_update(lobby_id: int, _changed_id: int, _making_change_id: int, _chat_state: int) -> void:
+	lobby_changed.emit(lobby_id)
+
+
+func _on_lobby_data_update(_success: int, lobby_id: int, _member_id: int) -> void:
+	lobby_changed.emit(lobby_id)
+
+
+func _on_lobby_match_list(lobbies: Array) -> void:
+	var ids: PackedInt64Array = PackedInt64Array()
+	for raw: Variant in lobbies:
+		ids.append(Variants.whole(raw))
+	lobby_list.emit(ids)
+
+
+func _on_join_requested(lobby_id: int, _steam_id: int) -> void:
+	join_requested.emit(lobby_id)
 
 
 func _on_overlay_toggled(active: bool, _user_initiated: bool, _app_id: int) -> void:

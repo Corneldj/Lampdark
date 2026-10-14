@@ -25,6 +25,21 @@ static func number(value: Variant) -> float:
 	return 0.0
 
 
+## An exact integer: an int as it is (64-bit IDs survive, which number()'s double does not), a float
+## truncated, a numeric string parsed; anything else 0. STM-01 and STM-02 read SteamIDs and lobby IDs
+## through it.
+static func whole(value: Variant) -> int:
+	if value is int:
+		var i: int = value
+		return i
+	if value is float:
+		var f: float = value
+		return int(f)
+	if value is String or value is StringName:
+		return str(value).to_int()
+	return 0
+
+
 ## True only for a real `true` (JSON booleans); anything else is false.
 static func flag(value: Variant) -> bool:
 	if value is bool:

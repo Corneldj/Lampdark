@@ -4,8 +4,8 @@ extends GutTest
 
 
 func test_app_ids() -> void:
-	assert_eq(int(Variants.number(ProjectSettings.get_setting("lampblack/steam/app_id", 0))), 5110670, "dev and QA")
-	var release: int = int(Variants.number(ProjectSettings.get_setting("lampblack/steam/app_id.lb_release", 0)))
+	assert_eq(Variants.whole(ProjectSettings.get_setting("lampblack/steam/app_id", 0)), 5110670, "dev and QA")
+	var release: int = Variants.whole(ProjectSettings.get_setting("lampblack/steam/app_id.lb_release", 0))
 	assert_eq(release, 5110670, "release: the real app")
 	assert_ne(release, 480)
 	assert_eq(SteamService.app_id(), 5110670, "this (editor, untagged) run reads the base setting")

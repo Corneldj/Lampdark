@@ -49,7 +49,7 @@ func _init(steam_api: SteamApi = null) -> void:
 ## The app ID for this build: lampblack/steam/app_id with its feature-tag overrides (.lb_release,
 ## and later .lb_playtest, .lb_demo).
 static func app_id() -> int:
-	return int(Variants.number(ProjectSettings.get_setting_with_override(SETTING_APP_ID)))
+	return Variants.whole(ProjectSettings.get_setting_with_override(SETTING_APP_ID))
 
 
 ## What an init status means for this build (the ticket's table).
@@ -79,7 +79,7 @@ func boot(release: bool, no_steam: bool, persona: String) -> Boot:
 		mode = Mode.OFF
 		return Boot.QUIT_RELAUNCHING
 	var r: Dictionary = api.init(id)
-	init_status = int(Variants.number(r["status"]))
+	init_status = Variants.whole(r["status"])
 	if init_status != SteamApi.Init.OK:
 		var why: String = "init status %d (%s)" % [init_status, str(r["verbal"])]
 		if outcome_for(init_status, release) == Boot.FAIL:
@@ -126,7 +126,7 @@ func persona_name() -> String:
 func display_name(of_steam_id: int) -> String:
 	if streamer_mode:
 		if lamp_numbers.has(of_steam_id):
-			return UiText.text("steam.lamp_number") % int(Variants.number(lamp_numbers[of_steam_id]))
+			return UiText.text("steam.lamp_number") % Variants.whole(lamp_numbers[of_steam_id])
 		return UiText.text("steam.lamp_unknown")
 	if of_steam_id == steam_id:
 		return _persona
@@ -153,7 +153,7 @@ func steam_hardware() -> SteamApi.Hardware:
 ## write batch.
 func add_shutdown_hook(order: int, label: String, hook: Callable) -> void:
 	_hooks.append([order, label, hook])
-	_hooks.sort_custom(func(a: Array, b: Array) -> bool: return int(Variants.number(a[0])) < int(Variants.number(b[0])))
+	_hooks.sort_custom(func(a: Array, b: Array) -> bool: return Variants.whole(a[0]) < Variants.whole(b[0]))
 
 
 ## Runs the hooks in order, then shuts Steam down. Once only; on window close and on leaving the tree.
