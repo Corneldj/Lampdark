@@ -72,6 +72,8 @@ public:
 
 	int64_t material_at(::godot::Vector2i tile) const;
 	int64_t state_at(::godot::Vector2i tile) const;
+	// SND-01's zone id of a tile (0: none, or not loaded), for GEN-03's validation.
+	int64_t zone_at(::godot::Vector2i tile) const;
 	int64_t effective_material(::godot::Vector2i tile) const;
 	bool is_walkable(::godot::Vector2i tile, bool doors_open) const;
 	bool is_solid(::godot::Vector2i tile) const;

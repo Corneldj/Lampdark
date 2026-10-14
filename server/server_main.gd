@@ -31,6 +31,10 @@ func start(server_config: ServerConfig) -> void:
 	# A dedicated-server export runs headless: no window, no audio device (GDD §15.1).
 	Log.info("display=%s audio=%s" % [DisplayServer.get_name(), AudioServer.get_driver_name()])
 
+	if not config.map_name.is_empty() and FixedMapLoader.manifest(config.map_name).is_empty():
+		Log.error("no fixed map named '%s' (data/maps/%s/manifest.json)" % [config.map_name, config.map_name])
+		get_tree().quit(ExitCode.BAD_ARGUMENTS)
+		return
 	run = RunState.create(_run_seed(), config.mode, config.offline)
 	if run == null or not run.startup_errors().is_empty():
 		Log.error("the run could not be created")
@@ -95,7 +99,22 @@ func _start_network() -> bool:
 	net = ServerNet.new(transport, slots)
 	net.flavour = config.build.flavour
 	net.qa_token = "" if config.build.is_release() else config.qa_token
-	ServerSystems.install(run, net)
+	var mine: Mine = null
+	if not config.map_name.is_empty():
+		mine = Mine.new()
+		var started: int = TickTimer.now_usec()
+		var cells: int = FixedMapLoader.load_cells(mine, config.map_name)
+		if cells < 0:
+			Log.error("the map %s did not load" % config.map_name)
+			get_tree().quit(ExitCode.FATAL)
+			return false
+		Log.info("map %s: %d cells in %.1f ms" % [config.map_name, cells, (TickTimer.now_usec() - started) / 1000.0])
+	ServerSystems.install(run, net, mine)
+	if mine != null:
+		var placed: Dictionary = FixedMapLoader.populate(run, config.map_name, true, true)
+		Log.info("map %s placed: %d coat heaps, %d creatures, %d items, %d hooks" % [config.map_name,
+			Variants.array(placed["heaps"]).size(), Variants.dict(placed["creatures"]).size(), Variants.array(placed["items"]).size(),
+			int(Variants.number(placed["hooks"]))])
 	_start_console()
 	if not config.record_inputs_path.is_empty():
 		run.inputs.recorder = InputLog.begin(run, "", config.record_inputs_path, config.tuning_profile)
@@ -186,5 +205,7 @@ func _finish_records() -> void:
 func _run_seed() -> int:
 	if config.has_seed:
 		return config.run_seed
+	if not config.map_name.is_empty():
+		return FixedMapLoader.run_seed(FixedMapLoader.manifest(config.map_name))  # GEN-03: repeatable
 	var bytes: PackedByteArray = Crypto.new().generate_random_bytes(8)
 	return bytes.decode_s64(0)

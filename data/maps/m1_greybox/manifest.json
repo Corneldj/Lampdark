@@ -1,0 +1,30 @@
+{
+	"format": 1,
+	"name": "m1_greybox",
+	"run_seed": "20261014",
+	"blind_side": "west",
+	"base_camp": [
+		0,
+		0
+	],
+	"cells": [
+		[
+			0,
+			-1
+		],
+		[
+			1,
+			-1
+		],
+		[
+			1,
+			0
+		],
+		[
+			0,
+			1
+		]
+	],
+	"placements": "placements.json",
+	"note": "GEN-03's M1 grey box: base camp (blind side west) and four hand-made cells beyond its gates. Edges out of these five cells are shut rock."
+}

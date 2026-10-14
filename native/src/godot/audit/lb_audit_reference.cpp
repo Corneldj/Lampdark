@@ -191,14 +191,13 @@ double LbAuditReference::reach_cost(const Array &origins, Vector2i to, double ma
 	}
 	return ref::reach_cost(from, pos_of(to), max_cost, voice, closed_cost, [&map](ref::Pos p) -> uint8_t {
 		const lb::core::world::Coord c{p.x, p.y};
-		if (map.is_walkable(c)) {
-			return ref::OPEN;
-		}
 		const auto t = map.tile_at(c);
-		if (t && (t->material == static_cast<uint8_t>(lb::core::world::TileMaterial::STEEL) || t->material == static_cast<uint8_t>(lb::core::world::TileMaterial::WOODEN_DOOR))) {
-			return ref::PORTAL_CLOSED;
+		const bool door = t && (t->material == static_cast<uint8_t>(lb::core::world::TileMaterial::STEEL) || t->material == static_cast<uint8_t>(lb::core::world::TileMaterial::WOODEN_DOOR));
+		if (map.is_walkable(c)) {
+			// A door or gate, or floor of no zone (an opening): a portal tile.
+			return door || (t && t->zone == 0) ? ref::PORTAL_OPEN : ref::OPEN;
 		}
-		return ref::SOLID;
+		return door ? ref::PORTAL_CLOSED : ref::SOLID;
 	});
 }
 

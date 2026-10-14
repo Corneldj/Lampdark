@@ -238,6 +238,7 @@ void LbMine::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("loaded_cells"), &LbMine::loaded_cells);
 	ClassDB::bind_method(D_METHOD("material_at", "tile"), &LbMine::material_at);
 	ClassDB::bind_method(D_METHOD("state_at", "tile"), &LbMine::state_at);
+	ClassDB::bind_method(D_METHOD("zone_at", "tile"), &LbMine::zone_at);
 	ClassDB::bind_method(D_METHOD("effective_material", "tile"), &LbMine::effective_material);
 	ClassDB::bind_method(D_METHOD("is_walkable", "tile", "doors_open"), &LbMine::is_walkable, DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("is_solid", "tile"), &LbMine::is_solid);
@@ -318,6 +319,11 @@ Array LbMine::loaded_cells() const {
 int64_t LbMine::material_at(Vector2i tile) const {
 	std::optional<world::Tile> t = map_.tile_at(coord(tile));
 	return t ? t->material : -1;
+}
+
+int64_t LbMine::zone_at(Vector2i tile) const {
+	const auto t = map_.tile_at(coord(tile));
+	return t ? static_cast<int64_t>(t->zone) : 0;
 }
 
 int64_t LbMine::state_at(Vector2i tile) const {
@@ -408,6 +414,11 @@ Array LbMine::anchors(Vector2i cell) const {
 		d["w"] = a.w;
 		d["h"] = a.h;
 		d["kind"] = String::utf8(a.kind.c_str());
+		PackedStringArray tags;
+		for (const std::string &t : a.tags) {
+			tags.push_back(String::utf8(t.c_str()));
+		}
+		d["tags"] = tags;
 		out.push_back(d);
 	}
 	return out;

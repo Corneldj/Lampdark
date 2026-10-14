@@ -282,7 +282,9 @@ TEST_CASE("NET-08: the reference's reach is a lower bound: eight neighbours at 1
 		return ref::OPEN;
 	};
 	CHECK(ref::reach_cost({{0, 0}}, {4, 4}, 40.0, false, 12.0, kind) == doctest::Approx(4.0)); // diagonal steps cost 1
-	CHECK(ref::reach_cost({{0, 2}}, {9, 2}, 40.0, false, 12.0, kind) == doctest::Approx(9.0 + 12.0));
+	CHECK(ref::reach_cost({{0, 2}}, {9, 2}, 40.0, false, 12.0, kind) == doctest::Approx(7.0 + 12.0)); // the door's tile free, onto and off
 	CHECK(ref::reach_cost({{0, 2}}, {9, 2}, 40.0, true, 12.0, kind) < 0.0); // voice: the door stops it
-	CHECK(ref::reach_cost({{0, 2}}, {9, 2}, 20.0, false, 12.0, kind) < 0.0); // beyond the budget
+	CHECK(ref::reach_cost({{0, 2}}, {9, 2}, 18.0, false, 12.0, kind) < 0.0); // beyond the budget
+	// SND-01's example: a 14 np strike at a shut gate's inner face reaches the road side at 2.
+	CHECK(ref::reach_cost({{4, 2}}, {6, 2}, 40.0, false, 12.0, kind) == doctest::Approx(12.0));
 }

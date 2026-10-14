@@ -1,0 +1,118 @@
+{
+	"format": 1,
+	"note": "GEN-03's defaults; QA-01 owns them. World tiles. Coat heaps hang on the coat chambers' rib hooks.",
+	"creatures": [
+		{
+			"kind": "MOTH",
+			"tile": [
+				4,
+				-19
+			],
+			"note": "asleep at the start roost"
+		},
+		{
+			"kind": "TAPPER",
+			"tile": [
+				28,
+				-12
+			],
+			"note": "in the north-east pillar, the rich rock farthest from the gates"
+		}
+	],
+	"coat_heaps": [
+		[
+			2,
+			-19
+		],
+		[
+			3,
+			-19
+		],
+		[
+			5,
+			-19
+		],
+		[
+			6,
+			-19
+		],
+		[
+			21,
+			13
+		],
+		[
+			21,
+			14
+		],
+		[
+			21,
+			16
+		],
+		[
+			21,
+			17
+		]
+	],
+	"items": [
+		{
+			"kind": "FUSE",
+			"tile": [
+				31,
+				13
+			],
+			"note": "the east dead end"
+		},
+		{
+			"kind": "MAGNETO",
+			"tile": [
+				23,
+				-8
+			],
+			"note": "the 5x5 chamber"
+		},
+		{
+			"kind": "ROPE_CLAMP",
+			"tile": [
+				16,
+				31
+			],
+			"note": "the deepest chamber"
+		},
+		{
+			"kind": "GAUZE_LAMP",
+			"tile": [
+				4,
+				-10
+			],
+			"oil": 0.5,
+			"notches": 1,
+			"note": "the north spur's dead end"
+		},
+		{
+			"kind": "GAUZE_LAMP",
+			"tile": [
+				10,
+				27
+			],
+			"oil": 0.3,
+			"notches": 2,
+			"note": "the south stall"
+		},
+		{
+			"kind": "OIL_FLASK",
+			"tile": [
+				30,
+				-8
+			],
+			"note": "the parallel road"
+		},
+		{
+			"kind": "OIL_FLASK",
+			"tile": [
+				33,
+				9
+			],
+			"note": "the east arm"
+		}
+	]
+}

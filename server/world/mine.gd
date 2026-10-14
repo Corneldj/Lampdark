@@ -85,8 +85,11 @@ func path_distance(from: Vector2i, to: Vector2i, max_tiles: float = -1.0, doors_
 	return answer
 
 
-## Loads every cell file of a fixed map (GEN-02's base camp, GEN-03's grey box) at once.
+## Loads every cell file of a fixed map (GEN-02's base camp, GEN-01's test map) at once; a map with
+## a manifest (GEN-03's grey box) loads base camp and exactly its listed cells (FixedMapLoader).
 func load_fixed_map(map_name: String) -> int:
+	if not FixedMapLoader.manifest(map_name).is_empty():
+		return FixedMapLoader.load_cells(self, map_name)
 	var dir: String = "res://data/maps/%s" % map_name
 	var count: int = 0
 	for file: String in DirAccess.get_files_at(dir):

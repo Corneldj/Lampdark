@@ -13,7 +13,8 @@ double reach_cost(const std::vector<Pos> &origins, Pos to, double max_cost, bool
 	std::priority_queue<Item, std::vector<Item>, decltype(later)> open(later);
 	std::map<Pos, double> best;
 	for (const Pos &o : origins) {
-		if (kind(o) == OPEN && best.count(o) == 0) {
+		const uint8_t k = kind(o);
+		if ((k == OPEN || k == PORTAL_OPEN) && best.count(o) == 0) {
 			best[o] = 0.0;
 			open.push({0.0, o});
 		}
@@ -34,13 +35,15 @@ double reach_cost(const std::vector<Pos> &origins, Pos to, double max_cost, bool
 				}
 				const Pos n{it.second.x + dx, it.second.y + dy};
 				const uint8_t k = kind(n);
-				double step = 1.0;
+				const uint8_t here = kind(it.second);
+				const bool portal_step = k == PORTAL_OPEN || k == PORTAL_CLOSED || here == PORTAL_OPEN || here == PORTAL_CLOSED;
+				double step = portal_step ? 0.0 : 1.0;
 				if (k == PORTAL_CLOSED) {
 					if (voice) {
 						continue;
 					}
 					step += closed_cost;
-				} else if (k != OPEN) {
+				} else if (k != OPEN && k != PORTAL_OPEN) {
 					continue;
 				}
 				const double c = it.first + step;

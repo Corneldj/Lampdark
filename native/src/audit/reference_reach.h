@@ -4,6 +4,8 @@
 //   - Sound: -1 np a tile walked, -12 at a closed air door or shut gate. The search steps to all
 //     eight neighbours at a cost of 1, so it never finds a path longer than the Road Graph's: a
 //     delivery the reference cannot reach is a leak, never a disagreement over route shape.
+//     Portals are free (SND-01's rule, so a 14 np strike at a shut gate's inner face reaches the far
+//     side at exactly 2): a step onto or off a portal tile (an opening, a door, a gate) costs nothing.
 //   - Voice by road: the same, but a closed door or shut gate stops it.
 //   - Voice through rock: the tiles a straight line from centre to centre touches (corners count
 //     both ways); never brick, never a door or gate, and only so many solid tiles.
@@ -19,6 +21,7 @@ enum TileKind : uint8_t {
 	OPEN = 0,
 	SOLID = 1,
 	PORTAL_CLOSED = 2,
+	PORTAL_OPEN = 3,
 };
 
 // The cheapest cost from any origin to `to`, or a negative number when nothing reaches it within

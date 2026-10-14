@@ -26,6 +26,9 @@ var exit_after_ticks: int = 0
 var record_inputs_path: String = ""
 ## NET-08: audit every record sent and write the report here as JSON at exit (dev and QA only).
 var stream_audit_path: String = ""
+## GEN-03: a fixed map from data/maps/<name>/ (m1_greybox: the M1 kill test's grey box), loaded with
+## no generator code. Empty: no mine (until world generation lands).
+var map_name: String = ""
 ## FND-09: write tick costs, input counters and the final state hash here as JSON at exit.
 var stats_path: String = ""
 ## A tuning profile from data/tuning/profiles/ (dev and QA only). Empty means the base data.
