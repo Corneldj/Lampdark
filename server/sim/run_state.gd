@@ -80,6 +80,8 @@ var air_doors: AirDoorSystem = null
 var tells: OverheadTells = null
 ## SND-04's deafened state.
 var deafen: Deafen = null
+## SND-07's voice forwarding (routes, direct lines, shared channels); outside the state hash.
+var voice: VoiceSystem = null
 ## DIR-04's depth helpers are static (Depth): which ring counts, D, the relax lengths, Level names.
 ## True while frozen (knock-off, host migration): only the network stage runs.
 var frozen: bool = false

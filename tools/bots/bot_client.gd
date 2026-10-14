@@ -11,6 +11,7 @@ const Brain = preload("res://tools/bots/brain.gd")
 const BotContext = preload("res://tools/bots/bot_context.gd")
 const TICK_USEC: int = 50000
 
+var _voice_seq: int = 0
 var config: ClientConfig
 var connection: ClientConnection
 var brain: RefCounted
@@ -94,10 +95,11 @@ func _tick() -> void:
 		connection.inputs.queue_action(int(Variants.number(action[0])) as ActionRecord.Kind,
 			int(Variants.number(action[1])), ticks, int(Variants.number(action[2])))
 	for voice: Array in ctx.voice:
-		var payload: PackedByteArray = PackedByteArray()
-		payload.resize(1 + int(Variants.number(voice[1])))
-		payload[0] = int(Variants.number(voice[0]))
-		connection.send(Lane.Id.VOICE, payload, Protocol.Msg.VOICE)
+		# SND-07's upstream packet; a bot's audio is a dummy payload in place of Opus.
+		var filler: PackedByteArray = PackedByteArray()
+		filler.resize(int(Variants.number(voice[1])))
+		connection.send_voice(VoicePackets.up(_voice_seq, int(Variants.number(voice[0])), 0, filler))
+		_voice_seq = (_voice_seq + 1) & 0xFFFF
 	var stamp: PackedInt64Array = connection.stamp_for_send(Transport.now_usec())
 	connection.inputs.send_tick(connection, record, stamp[0], stamp[1])
 

@@ -18,6 +18,11 @@ const BOT_TILES: Array[Vector2i] = [Vector2i(5, 13), Vector2i(16, 14), Vector2i(
 ## tiles: inside the wicked-up light only, so the margin's head start decides when they draw).
 const CONTENT_TILES: Array[Vector2i] = [Vector2i(8, 13), Vector2i(8, 15), Vector2i(13, 12), Vector2i(7, 14), Vector2i(14, 13),
 	Vector2i(13, 14)]
+## SND-07's mouth-to-ear: a talker in the room, within talk range of every probe bot, sending a
+## marked frame every 20 ms over the same emulated link. Each probe bot plays it through its own
+## VoicePlayback (no audio, the timing only): mouth to ear is the frame's first sample (its send
+## time less the 20 ms frame) to its playout, plus the Voice bus's buffer and the driver's latency.
+const TALKER_TILE: Vector2i = Vector2i(12, 14)
 
 
 ## args: rtt_ms (120), loss (0.02, a fraction), seconds (60), seed (1), plant_margin_delay_ms (0),
@@ -41,6 +46,18 @@ static func run(args: Dictionary) -> Dictionary:
 		probes.append(ClientProbes.new())
 	for i: int in CONTENT_TILES.size():
 		s.add_miner("contents_%d" % i, CONTENT_TILES[i])
+	var talker: MinerHandle = s.add_miner("talker", TALKER_TILE)
+	talker.link(rtt, loss * 100.0)
+	var playbacks: Array[VoicePlayback] = []
+	var ear: Array[float] = []
+	var frame_ms: float = Tuning.f(&"voice.frame_ms")
+	# The Voice bus's buffer and the audio driver's own output latency (Godot's default 15 ms).
+	var output_ms: float = Tuning.f(&"voice.output_buffer_ms") + float(Variants.number(ProjectSettings.get_setting("audio/driver/output_latency", 15)))
+	for i: int in bots.size():
+		var vp: VoicePlayback = VoicePlayback.new()
+		vp.probe_heard.connect(func(latency_usec: int) -> void: ear.append(latency_usec / 1000.0 + frame_ms + output_ms))
+		playbacks.append(vp)
+	var talk: Dictionary = {"seq": 0, "next_usec": 0}
 	var delay_ms: float = float(Variants.number(args.get("plant_margin_delay_ms", 0.0)))
 	if delay_ms > 0.0:
 		s.run.replication.plant_margin_delay(ceili(delay_ms / 50.0))
@@ -48,11 +65,18 @@ static func run(args: Dictionary) -> Dictionary:
 	s.step(warmup)
 	var origin_usec: int = Transport.now_usec()
 	s.on_poll = func(_sc: Scenario) -> void:
+		var now: int = Transport.now_usec()
 		for i: int in bots.size():
 			var h: MinerHandle = bots[i]
+			playbacks[i].tick(h.connection, now)
 			if h.connection == null or h.connection.view == null or h.prediction == null:
 				continue
-			probes[i].on_frame(Transport.now_usec(), h.connection.view, h.prediction.lamp(), h.prediction.state.facing)
+			probes[i].on_frame(now, h.connection.view, h.prediction.lamp(), h.prediction.state.facing)
+		if talker.is_connected_now() and now >= int(Variants.number(talk["next_usec"])):
+			var seq: int = int(Variants.number(talk["seq"]))
+			talker.connection.send_voice(VoicePackets.probe(seq & 0xFFFF, 2, now))
+			talk["seq"] = seq + 1
+			talk["next_usec"] = now + roundi(frame_ms * 1000.0)
 	var bytes_down_start: Array[Dictionary] = []
 	var bytes_up_start: Array[Dictionary] = []
 	for h: MinerHandle in bots:
@@ -92,8 +116,10 @@ static func run(args: Dictionary) -> Dictionary:
 		"light_pass": ProbeMath.passes(light_s, light_target), "turn_pass": ProbeMath.passes(turn_s, turn_target),
 		"held_pass": held_max <= 1, "probe_cost_usec_per_frame_max": cost,
 		"tick_cost": ProbeLog.tick_cost(s.run), "bots": per_bot,
-		"mouth_to_ear": "not measured: SND-07's voice forwarding carries the probe's marked frame",
-		"targets": {"light_p95_ms": light_target, "turn_p95_ms": turn_target, "held_frames": 1},
+		"mouth_to_ear": ProbeMath.stats(ear),
+		"mouth_to_ear_pass": ProbeMath.passes(ProbeMath.stats(ear), Tuning.f(&"net.probe_mouth_to_ear_ms")),
+		"targets": {"light_p95_ms": light_target, "turn_p95_ms": turn_target, "held_frames": 1,
+			"mouth_to_ear_p95_ms": Tuning.f(&"net.probe_mouth_to_ear_ms")},
 		"csv": "\n".join(rows) + "\n",
 	}
 	out["criterion4_pass"] = Variants.flag(out["light_pass"]) and Variants.flag(out["turn_pass"]) and Variants.flag(out["held_pass"])
@@ -125,6 +151,9 @@ static func markdown(r: Dictionary) -> String:
 		lines.append("| %s | %d | %.0f ms | %.0f ms | %.0f ms | p95 under %.0f ms | %s |" % [key.replace("_", " "), st["n"], st["p50"], st["p95"], st["max"], target,
 			"pass" if ok else "FAIL"])
 	lines.append("| about-turn held geometry | | | | %d frames | the next frame | %s |" % [r["about_turn_held_frames_max"], "pass" if Variants.flag(r["held_pass"]) else "FAIL"])
+	var ear: Dictionary = r["mouth_to_ear"]
+	lines.append("| mouth to ear (SND-07) | %d | %.0f ms | %.0f ms | %.0f ms | p95 under %.0f ms | %s |" % [ear["n"], ear["p50"], ear["p95"], ear["max"],
+		float(Variants.number(Variants.dict(r["targets"])["mouth_to_ear_p95_ms"])), "pass" if Variants.flag(r["mouth_to_ear_pass"]) else "FAIL"])
 	lines.append("")
 	lines.append("**Criterion 4: %s**" % ("PASS" if Variants.flag(r["criterion4_pass"]) else "FAIL"))
 	lines.append("")
@@ -138,5 +167,5 @@ static func markdown(r: Dictionary) -> String:
 		lines.append("Bot %d: down %.1f kbps (+ voice %.1f), up %.1f kbps (+ voice %.1f)." % [i, b["down"]["game_kbps"], b["down"]["voice_kbps"],
 			b["up"]["game_kbps"], b["up"]["voice_kbps"]])
 	lines.append("")
-	lines.append("Probe cost: %.1f us a frame at most (budget 100 us). Mouth-to-ear: %s." % [r["probe_cost_usec_per_frame_max"], r["mouth_to_ear"]])
+	lines.append("Probe cost: %.1f us a frame at most (budget 100 us). Mouth to ear counts the 20 ms frame, the Voice bus's buffer and the audio driver's output latency." % [r["probe_cost_usec_per_frame_max"]])
 	return "\n".join(lines) + "\n"

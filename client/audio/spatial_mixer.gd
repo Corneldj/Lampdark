@@ -35,7 +35,8 @@ func _ready() -> void:
 	for g: int in GROUPS.size():
 		var gen: AudioStreamGenerator = AudioStreamGenerator.new()
 		gen.mix_rate = AudioServer.get_mix_rate()
-		gen.buffer_length = BUFFER_S
+		# SND-07: live voice runs a shorter buffer for mouth to ear under 250 ms.
+		gen.buffer_length = Tuning.f(&"voice.output_buffer_ms") / 1000.0 if GROUPS[g] == "Voice" else BUFFER_S
 		var p: AudioStreamPlayer = AudioStreamPlayer.new()
 		p.name = GROUPS[g]
 		p.stream = gen
@@ -67,6 +68,24 @@ static func group_of(bus: String) -> int:
 func add(samples: PackedFloat32Array, rate: float, at: Vector2, gain_db: float, bus: String, loop: bool = false,
 		positional: bool = true) -> int:
 	return native.add(samples, rate, at.x, at.y, gain_db, group_of(bus), positional, loop)
+
+
+## SND-07: a voice stream at `at` (48 kHz mono), filled as frames decode; its id.
+func open_stream(at: Vector2, gain_db: float, bus: String, positional: bool = true) -> int:
+	return native.open_stream(48000.0, at.x, at.y, gain_db, group_of(bus), positional)
+
+
+func append(id: int, pcm: PackedFloat32Array) -> bool:
+	return native.append(id, pcm)
+
+
+func set_gain(id: int, gain_db: float) -> void:
+	native.set_gain(id, gain_db)
+
+
+## Ends a stream once what it holds has played.
+func close_stream(id: int) -> void:
+	native.close_stream(id)
 
 
 func remove(id: int) -> void:

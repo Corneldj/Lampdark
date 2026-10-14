@@ -30,6 +30,9 @@ var voice_capture: VoiceCapture = null
 var mic_mode: MicMode = null
 ## SND-06: the own voice's loudness band (SND-07 sends it; the breath-cloud shows it).
 var voice_bands: VoiceBands = null
+## SND-07: the own voice upstream, and the others' voices played.
+var voice_sender: VoiceSender = null
+var voice_playback: VoicePlayback = null
 var _events_played: int = 0
 ## NET-12: light-to-contents and about-turn probes on this client; a telemetry summary each minute
 ## (release builds keep no per-tile sample).
@@ -91,6 +94,7 @@ func _process(delta: float) -> void:
 			voice_capture.voice_live = connection.state == ClientConnection.State.CONNECTED
 			voice_capture.tick(Time.get_ticks_usec())
 			voice_bands.ptt_held = router != null and router.push_to_talk_held
+			voice_playback.tick(connection, Transport.now_usec())
 			if world_view != null:
 				world_view.breath.set_band(voice_bands.band, Time.get_ticks_msec() / 1000.0)
 		if connection.state == ClientConnection.State.CONNECTED and connection.last_frame_tick > _input_frame:
@@ -150,7 +154,13 @@ func _start_input() -> void:
 	voice_capture.mic_mode = func() -> int: return mic_mode.mode
 	voice_bands = VoiceBands.new()
 	voice_capture.state_changed.connect(_on_voice_state)
-	voice_capture.frame_ready.connect(func(pcm: PackedFloat32Array, _t: int) -> void: voice_bands.push(pcm))
+	voice_capture.frame_ready.connect(_on_voice_frame)
+	voice_sender = VoiceSender.new()
+	voice_sender.send = func(packet: PackedByteArray) -> void:
+		if connection != null and connection.state == ClientConnection.State.CONNECTED:
+			connection.send_voice(packet)
+	voice_playback = VoicePlayback.new()
+	voice_playback.mixer = events_player.mixer
 	mic_mode.label_changed.connect(_send_mic_label)
 	Log.info("voice: capture ready, backend %s, mic mode %s" % [voice_capture.backend,
 		MicMode.Mode.keys()[voice_capture.effective_mode()]])
@@ -333,7 +343,14 @@ func _on_voice_state(state: int) -> void:
 	if state == VoiceCapture.State.OPEN:
 		voice_bands.set_thresholds(Calibration.thresholds_for(voice_capture.native.device_id()))
 	else:
+		voice_sender.stop()
 		voice_bands.reset()
+
+
+## SND-06 measures each clean frame, then SND-07 sends it if it may go out.
+func _on_voice_frame(pcm: PackedFloat32Array, _ticks_usec: int) -> void:
+	voice_bands.push(pcm)
+	voice_sender.on_frame(pcm, voice_bands)
 
 
 ## SND-10: the label flag on joining and on every change; nothing else about voice goes to the server.

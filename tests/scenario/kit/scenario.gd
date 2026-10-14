@@ -276,6 +276,8 @@ func _step_once() -> void:
 	for sub: int in SUBSTEPS:
 		Transport.virtual_clock_usec += TICK_USEC / SUBSTEPS
 		_poll_clients()
+		# As the server's loop does between ticks: answer pings and forward voice (SND-07) on arrival.
+		net.service()
 		if on_poll.is_valid():
 			on_poll.call(self)
 		if sub == SEND_SUBSTEP:
@@ -369,10 +371,10 @@ func _think(h: MinerHandle, t: int) -> InputRecord:
 func _send_voice(h: MinerHandle, band: int, payload_bytes: int) -> void:
 	if not h.is_connected_now():
 		return
-	var payload: PackedByteArray = PackedByteArray()
-	payload.resize(1 + payload_bytes)
-	payload[0] = band
-	if h.connection.send(Lane.Id.VOICE, payload, Protocol.Msg.VOICE) == OK:
+	# SND-07's upstream packet; the kit's audio is a dummy payload in place of Opus.
+	var filler: PackedByteArray = PackedByteArray()
+	filler.resize(payload_bytes)
+	if h.connection.send_voice(VoicePackets.up(h.voice_frames_sent & 0xFFFF, band, 0, filler)) == OK:
 		h.voice_frames_sent += 1
 
 

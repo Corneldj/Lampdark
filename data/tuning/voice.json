@@ -52,7 +52,7 @@
 			"unit": "dB",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket SND-07"
 		},
@@ -244,7 +244,7 @@
 			"unit": "dB",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket SND-07"
 		},
@@ -300,15 +300,39 @@
 			"kind": "param",
 			"note": "ticket SND-09"
 		},
-		"voice.jitter_buffer_ms": {
-			"value": 60,
+		"voice.jitter_buffer_max_ms": {
+			"value": 120,
 			"type": "float",
 			"unit": "ms",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
-			"note": "ticket SND-07"
+			"min": 40,
+			"max": 400,
+			"note": "ticket SND-07: the jitter buffer's ceiling"
+		},
+		"voice.jitter_buffer_min_ms": {
+			"value": 40,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"min": 20,
+			"max": 200,
+			"note": "ticket SND-07: the jitter buffer's floor (it adapts between streams)"
+		},
+		"voice.jitter_buffer_ms": {
+			"value": 40,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-07: the jitter buffer's target for a client's first stream (later ones follow the measured jitter); 40, not the first-proposed 60, to keep mouth to ear under 250 ms at 120 ms (NET-12's probe)"
 		},
 		"voice.knock_count": {
 			"value": 3,
@@ -382,9 +406,21 @@
 			"unit": "kbps",
 			"source": "GDD §15.5, C.3",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket SND-07"
+		},
+		"voice.output_buffer_ms": {
+			"value": 30,
+			"type": "float",
+			"unit": "ms",
+			"source": "Proposed (GDD §15.5: mouth to ear under 250 ms)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"min": 15,
+			"max": 100,
+			"note": "ticket SND-07: the Voice bus's output buffer (the other buses keep SND-04's 50 ms)"
 		},
 		"voice.player_volume_max_db": {
 			"value": 0,
@@ -436,6 +472,18 @@
 			"kind": "param",
 			"note": "ticket SND-12"
 		},
+		"voice.route_refresh_s": {
+			"value": 0.25,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"min": 0.05,
+			"max": 1.0,
+			"note": "ticket SND-07: how often a speaking miner's listeners are worked out again (and on every band change)"
+		},
 		"voice.running_loss": {
 			"value": 0.2,
 			"type": "float",
@@ -455,6 +503,16 @@
 			"visibility": "client",
 			"kind": "param",
 			"note": "ticket SND-05"
+		},
+		"voice.scream_cap_dbfs": {
+			"value": -1,
+			"type": "float",
+			"unit": "dBFS",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-07: a scream frame's playback ceiling (the other bands' is the next band's threshold plus voice.band_cap_headroom_db)"
 		},
 		"voice.scream_np": {
 			"value": 28,
@@ -495,6 +553,16 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "ticket SND-07"
+		},
+		"voice.smear_level_dbfs": {
+			"value": -60,
+			"type": "float",
+			"unit": "dBFS",
+			"source": "Proposed (§6.4)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-07: the room-tone smear a run of lost frames fades into"
 		},
 		"voice.speaker_warning_erl_db": {
 			"value": 20,
@@ -606,6 +674,16 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "ticket SND-12"
+		},
+		"voice.telephone_hiss_dbfs": {
+			"value": -50,
+			"type": "float",
+			"unit": "dBFS",
+			"source": "Proposed (GDD §14.2)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-07: a phone line's hiss under its telephone band (LFT-12 shares it)"
 		},
 		"voice.threshold_scream_dbfs": {
 			"value": -12,

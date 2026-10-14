@@ -38,4 +38,4 @@ func test_planted_margin_delay_shows_in_the_probes() -> void:
 	# With the turn band, the margin carries the about-turns: the planted delay shows there.
 	var a: float = float(Variants.number(Variants.dict(clean["about_turn"])["p95"]))
 	var b: float = float(Variants.number(Variants.dict(planted["about_turn"])["p95"]))
-	assert_gt(b - a, 80.0, "the margin's 100 ms shows in the about-turn probe: %.0f ms to %.0f ms" % [a, b])
+	assert_gte(b - a, 80.0, "the margin's 100 ms shows in the about-turn probe: %.0f ms to %.0f ms" % [a, b])

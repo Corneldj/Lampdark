@@ -28,6 +28,12 @@ public:
 	int64_t add(const ::godot::PackedFloat32Array &samples, double rate, double x, double y, double gain_db, int64_t group,
 			bool positional, bool loop);
 	bool remove(int64_t id);
+	// SND-07: a voice stream (starts empty), its samples as they decode, its gain, and its end.
+	int64_t open_stream(double rate, double x, double y, double gain_db, int64_t group, bool positional);
+	bool append(int64_t id, const ::godot::PackedFloat32Array &samples);
+	void set_gain(int64_t id, double gain_db);
+	void close_stream(int64_t id);
+	int64_t queued(int64_t id) const;
 	bool has(int64_t id) const;
 	void move(int64_t id, double x, double y);
 	int64_t count() const;

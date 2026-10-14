@@ -48,8 +48,52 @@ bool Mixer::remove(uint32_t id) {
 	return true;
 }
 
+bool Mixer::append(uint32_t id, const float *samples, size_t count) {
+	auto it = sources_.find(id);
+	if (it == sources_.end() || !it->second.d.streaming || it->second.closed) {
+		return false;
+	}
+	Source &s = it->second;
+	// Drop what has played, keeping one sample for the interpolation.
+	const size_t played = static_cast<size_t>(s.cursor);
+	if (played > 1) {
+		s.d.samples.erase(s.d.samples.begin(), s.d.samples.begin() + static_cast<std::ptrdiff_t>(played - 1));
+		s.cursor -= static_cast<double>(played - 1);
+	}
+	s.d.samples.insert(s.d.samples.end(), samples, samples + count);
+	return true;
+}
+
+void Mixer::set_gain(uint32_t id, double gain_db) {
+	auto it = sources_.find(id);
+	if (it != sources_.end()) {
+		it->second.d.gain_db = gain_db;
+	}
+}
+
+void Mixer::close_stream(uint32_t id) {
+	auto it = sources_.find(id);
+	if (it != sources_.end()) {
+		it->second.closed = true;
+	}
+}
+
+size_t Mixer::queued(uint32_t id) const {
+	auto it = sources_.find(id);
+	if (it == sources_.end()) {
+		return 0;
+	}
+	const double left = static_cast<double>(it->second.d.samples.size()) - 1.0 - it->second.cursor;
+	return left > 0.0 ? static_cast<size_t>(left) : 0;
+}
+
 float Mixer::next_sample(Source &s, double gain, double step, bool &finished) {
 	const size_t n = s.d.samples.size();
+	if (s.d.streaming && (n < 2 || s.cursor >= static_cast<double>(n - 1))) {
+		// A stream waiting for its next frame plays silence; it ends only once closed and drained.
+		finished = s.closed;
+		return s.rear.process(0.0f);
+	}
 	if (n == 0) {
 		finished = true;
 		return 0.0f;

@@ -8,7 +8,9 @@ on:
 jobs:
   native:
     runs-on: ubuntu-24.04
-    timeout-minutes: 40
+    # A cold build (godot-cpp, WebRTC audio processing, both targets, both platforms) runs ~45 min on
+    # a hosted runner; the SCons cache makes later ones a fraction of that.
+    timeout-minutes: 90
     env:
       LB_SCONS_CACHE: ${{ github.workspace }}/.scons-cache
       # Shared runners report the core's timing budgets rather than gate on them (QA-03 holds them).
@@ -21,13 +23,20 @@ jobs:
       - name: Install the toolchains
         run: tools/build/ci_setup_linux.sh native
       - name: Restore the SCons cache
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
           path: ${{ env.LB_SCONS_CACHE }}
           key: scons-${{ hashFiles('versions.json', 'native/SConstruct') }}-${{ github.sha }}
           restore-keys: scons-${{ hashFiles('versions.json', 'native/SConstruct') }}-
       - name: Build, doctest, layering, imports, digest
         run: tools/build/ci_native.sh
+      # Saved even when a later step fails, so a build that ran out of time seeds the next.
+      - name: Save the SCons cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.LB_SCONS_CACHE }}
+          key: scons-${{ hashFiles('versions.json', 'native/SConstruct') }}-${{ github.sha }}
       - name: Doctest report
         if: always()
         uses: mikepenz/action-junit-report@v5

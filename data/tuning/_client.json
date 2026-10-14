@@ -1,5 +1,5 @@
 {
-	"hash": "165f6639f01b2fb66a2048d928eac4a72350e1c8816adf22f59595d7e7133c6a",
+	"hash": "da90b8a00a37c7227743248c29b06c255286734a52f4222ceddffdee22d17dac",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -966,6 +966,13 @@
 				"none"
 			]
 		},
+		"voice.band_cap_headroom_db": {
+			"value": 6.0,
+			"type": "float",
+			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"voice.band_hysteresis_s": {
 			"value": 0.3,
 			"type": "float",
@@ -1062,6 +1069,13 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"voice.edge_gain_db": {
+			"value": -12.0,
+			"type": "float",
+			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"voice.far_end_buffer_s": {
 			"value": 0.25,
 			"type": "float",
@@ -1073,6 +1087,31 @@
 		},
 		"voice.frame_ms": {
 			"value": 20.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.jitter_buffer_max_ms": {
+			"value": 120.0,
+			"type": "float",
+			"unit": "ms",
+			"min": 40.0,
+			"max": 400.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.jitter_buffer_min_ms": {
+			"value": 40.0,
+			"type": "float",
+			"unit": "ms",
+			"min": 20.0,
+			"max": 200.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.jitter_buffer_ms": {
+			"value": 40.0,
 			"type": "float",
 			"unit": "ms",
 			"visibility": "client",
@@ -1091,10 +1130,40 @@
 				"very_high"
 			]
 		},
+		"voice.opus_bitrate_kbps": {
+			"value": 24,
+			"type": "int",
+			"unit": "kbps",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.output_buffer_ms": {
+			"value": 30.0,
+			"type": "float",
+			"unit": "ms",
+			"min": 15.0,
+			"max": 100.0,
+			"visibility": "client",
+			"kind": "param"
+		},
 		"voice.sample_rate_hz": {
 			"value": 48000,
 			"type": "int",
 			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.scream_cap_dbfs": {
+			"value": -1.0,
+			"type": "float",
+			"unit": "dBFS",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.smear_level_dbfs": {
+			"value": -60.0,
+			"type": "float",
+			"unit": "dBFS",
 			"visibility": "client",
 			"kind": "param"
 		},
@@ -1141,6 +1210,13 @@
 			],
 			"type": "float_list",
 			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.telephone_hiss_dbfs": {
+			"value": -50.0,
+			"type": "float",
+			"unit": "dBFS",
 			"visibility": "client",
 			"kind": "param"
 		},

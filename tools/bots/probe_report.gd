@@ -32,6 +32,7 @@ func _initialize() -> void:
 				_args["plant_margin_delay_ms"] = value.to_float()
 			_:
 				printerr("probe_report: unknown argument %s" % key)
+				_done = true  # quit() is deferred: never run (or write a report into the working directory)
 				quit(2)
 				return
 		i += 2

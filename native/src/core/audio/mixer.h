@@ -27,6 +27,9 @@ struct SourceDesc {
 	uint8_t group = 0;
 	bool positional = true;
 	bool loop = false;
+	// SND-07: a stream (live voice): samples are appended as they arrive; starved, it plays silence
+	// and waits; it ends only once closed and drained.
+	bool streaming = false;
 };
 
 class Mixer {
@@ -53,6 +56,12 @@ public:
 	bool has(uint32_t id) const { return sources_.count(id) != 0; }
 	void move(uint32_t id, double x, double y);
 	size_t count() const { return sources_.size(); }
+	// SND-07's streams: append samples (at the source's rate), set the gain, close (end when drained),
+	// and how many samples wait to play.
+	bool append(uint32_t id, const float *samples, size_t count);
+	void set_gain(uint32_t id, double gain_db);
+	void close_stream(uint32_t id);
+	size_t queued(uint32_t id) const;
 
 	// Renders `frames` stereo frames of one group into out (interleaved L, R), advancing those
 	// sources; finished non-looping sources are dropped.
@@ -75,6 +84,7 @@ private:
 		std::vector<float> left, right;
 		size_t read = 0;
 		bool ended = false;
+		bool closed = false; // a stream that takes no more samples
 	};
 	// The source's next mono sample after resampling, gain and the rear low-pass; `finished` once it
 	// has none (a one-shot's end).

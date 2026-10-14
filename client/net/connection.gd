@@ -44,6 +44,10 @@ var ring_messages: int = 0
 var ambient_cues: Array[Dictionary] = []
 ## SND-04: Deafened records in arrival order ({duration_s, dip_db}); the audio side drains them.
 var deafened: Array[Dictionary] = []
+## SND-07: voice packets from the server in arrival order, [packet, arrival usec]; VoicePlayback
+## drains them (a bounded queue: older ones go first if nobody does).
+var voice_in: Array[Array] = []
+const VOICE_IN_MAX: int = 256
 ## Audio events received, each once, in arrival order (SND-03 plays them).
 var events: Array[Dictionary] = []
 var _event_numbers: Dictionary = {}
@@ -113,6 +117,11 @@ func send_raw(lane: int, framed: PackedByteArray) -> Error:
 	return transport.send(peer, lane, framed)
 
 
+## SND-07: one voice packet upstream (VoicePackets.up, .end or .probe), on the voice lane.
+func send_voice(packet: PackedByteArray) -> Error:
+	return send_raw(Lane.Id.VOICE, Protocol.frame(Protocol.Msg.VOICE, packet))
+
+
 ## SND-10: the crew-list label flag, on joining and whenever it changes.
 func send_mic_label(muted: bool) -> Error:
 	return send_raw(Lane.Id.CONTROL, Protocol.mic_label(muted))
@@ -180,6 +189,11 @@ func _on_message(event: TransportEvent, now: int) -> void:
 			var cue: Dictionary = AmbientMessages.decode(payload)
 			if not cue.is_empty():
 				ambient_cues.append(cue)
+		Protocol.Msg.VOICE:
+			if event.lane == Lane.Id.VOICE and payload.size() >= VoicePackets.DOWN_HEADER:
+				voice_in.append([payload, now])
+				if voice_in.size() > VOICE_IN_MAX:
+					voice_in.pop_front()
 		Protocol.Msg.DEAFENED:
 			var d: Dictionary = DeafenedMessages.decode(payload)
 			if not d.is_empty():

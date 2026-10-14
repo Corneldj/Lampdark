@@ -11,9 +11,11 @@ var handshake_timeout_usec: int = 5000000
 var build_id: String = Protocol.build_id()
 ## Per-peer count of malformed or unknown messages (NET-13 reads it).
 var bad_messages: Dictionary = {}
-## lane -> Array of [slot, message type, payload]: game traffic for NET-03 (inputs) and SND-07
-## (voice). Each owner takes and clears its lane every tick.
+## lane -> Array of [slot, message type, payload]: game traffic for NET-03 (inputs). Each owner takes
+## and clears its lane every tick.
 var routed: Dictionary = {}
+## SND-07: VoiceSystem.on_voice(slot, payload) -> bool; voice packets go to it as they arrive.
+var voice: Callable = Callable()
 ## FND-08: this server's build flavour (a release client never joins a dev or QA server, nor the
 ## reverse) and its QA token: a dev or QA server opens the debug lane to a client presenting it,
 ## and a dev server also to a local client without one. A release server opens it to nobody.
@@ -53,10 +55,26 @@ func tick(run: RunState) -> void:
 func service() -> void:
 	var now: int = Transport.now_usec()
 	for event: TransportEvent in transport.poll():
-		if event.kind == TransportEvent.Kind.MESSAGE and _answer_ping(event, now):
+		if event.kind == TransportEvent.Kind.MESSAGE and (_answer_ping(event, now) or _take_voice(event)):
 			continue
 		_buffered.append(event)
 	transport.flush()
+
+
+## SND-07: a voice packet from a welcomed client goes to VoiceSystem the moment it arrives (never
+## waiting for the tick); a malformed one counts against the peer.
+func _take_voice(event: TransportEvent) -> bool:
+	if not voice.is_valid() or event.lane != Lane.Id.VOICE:
+		return false
+	var session: Sessions.Session = sessions.for_peer(event.peer)
+	if session == null or not session.welcomed or _closing.has(event.peer):
+		return false
+	var message: Dictionary = Protocol.unframe(event.data)
+	if message.is_empty() or int(Variants.number(message["type"])) != Protocol.Msg.VOICE:
+		return false
+	if not Variants.flag(voice.call(session.slot, message["payload"])):
+		_count_bad(event.peer)
+	return true
 
 
 func _answer_ping(event: TransportEvent, now: int) -> bool:
@@ -133,6 +151,9 @@ func _on_message(run: RunState, event: TransportEvent, now: int) -> void:
 	match type:
 		Protocol.Msg.PING:
 			transport.send(event.peer, Lane.Id.CONTROL, Protocol.pong(Protocol.read_i64(payload), now))
+		Protocol.Msg.VOICE when voice.is_valid() and event.lane == Lane.Id.VOICE:
+			if not Variants.flag(voice.call(session.slot, payload)):
+				_count_bad(event.peer)
 		Protocol.Msg.MIC_LABEL:
 			if event.lane != Lane.Id.CONTROL or payload.size() != 1 or payload[0] > 1:
 				_count_bad(event.peer)

@@ -105,6 +105,9 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.deafen = Deafen.new()
 	run.deafen.bind(run)
 	run.add_system(run.deafen)
+	run.voice = VoiceSystem.new()
+	run.voice.bind(run, net)
+	run.add_system(run.voice)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:

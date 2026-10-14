@@ -31,7 +31,22 @@ if grep -nE '\b(print|printerr|print_rich|Log\.)' "$cal" || [ "$(grep -cE 'store
 	echo "FAIL $cal writes or logs more than the thresholds store" >&2
 	status=1
 fi
+# SND-07: the server never decodes, mixes or keeps a voice frame. One native library serves both
+# ends, so the check is that no server script names a decoder or player, the forwarder includes no
+# Opus code, and the voice system stores no packet beyond the call that forwards it.
+if grep -rnE '\b(LbOpusDecoder|LbOpusEncoder|LbVoicePlayout|VoicePlayback|LbVoiceCapture)\b' server/ --include=*.gd; then
+	echo "FAIL the server names an Opus coder or voice player" >&2
+	status=1
+fi
+if grep -nE '#include.*(opus|voice_playout|jitter_buffer)' native/src/core/voice/voice_forwarder.* native/src/godot/voice/lb_voice_forwarder.*; then
+	echo "FAIL the voice forwarder includes Opus or playout code" >&2
+	status=1
+fi
+if grep -nE '^var [a-z_]+: (Array\[PackedByteArray\]|PackedByteArray)' server/systems/sound/voice_system.gd; then
+	echo "FAIL the voice system keeps packets" >&2
+	status=1
+fi
 grep -q '^#define MA_NO_ENCODING' native/thirdparty/miniaudio/lb_miniaudio.h || { echo "FAIL miniaudio is built with its encoder" >&2; status=1; }
 grep -q '("WEBRTC_APM_DEBUG_DUMP", "0")' native/SConstruct || { echo "FAIL WebRTC's debug dumps are not compiled out" >&2; status=1; }
-[ "$status" -eq 0 ] && echo "ok   the capture path cannot write, print, log or send microphone audio"
+[ "$status" -eq 0 ] && echo "ok   the capture path cannot write, print, log or send microphone audio; the server never decodes or keeps voice"
 exit "$status"

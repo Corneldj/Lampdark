@@ -17,6 +17,11 @@ void LbAudioMixer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_rear", "start_deg", "min_hz"), &LbAudioMixer::set_rear);
 	ClassDB::bind_method(D_METHOD("add", "samples", "rate", "x", "y", "gain_db", "group", "positional", "loop"), &LbAudioMixer::add);
 	ClassDB::bind_method(D_METHOD("remove", "id"), &LbAudioMixer::remove);
+	ClassDB::bind_method(D_METHOD("open_stream", "rate", "x", "y", "gain_db", "group", "positional"), &LbAudioMixer::open_stream);
+	ClassDB::bind_method(D_METHOD("append", "id", "samples"), &LbAudioMixer::append);
+	ClassDB::bind_method(D_METHOD("set_gain", "id", "gain_db"), &LbAudioMixer::set_gain);
+	ClassDB::bind_method(D_METHOD("close_stream", "id"), &LbAudioMixer::close_stream);
+	ClassDB::bind_method(D_METHOD("queued", "id"), &LbAudioMixer::queued);
 	ClassDB::bind_method(D_METHOD("has", "id"), &LbAudioMixer::has);
 	ClassDB::bind_method(D_METHOD("move", "id", "x", "y"), &LbAudioMixer::move);
 	ClassDB::bind_method(D_METHOD("count"), &LbAudioMixer::count);
@@ -89,6 +94,34 @@ int64_t LbAudioMixer::add(const PackedFloat32Array &samples, double rate, double
 	d.positional = positional;
 	d.loop = loop;
 	return mixer_->add(d);
+}
+
+int64_t LbAudioMixer::open_stream(double rate, double x, double y, double gain_db, int64_t group, bool positional) {
+	audio::SourceDesc d;
+	d.rate = rate;
+	d.x = x;
+	d.y = y;
+	d.gain_db = gain_db;
+	d.group = static_cast<uint8_t>(group & 0xFF);
+	d.positional = positional;
+	d.streaming = true;
+	return mixer_->add(d);
+}
+
+bool LbAudioMixer::append(int64_t id, const PackedFloat32Array &samples) {
+	return mixer_->append(static_cast<uint32_t>(id), samples.ptr(), static_cast<size_t>(samples.size()));
+}
+
+void LbAudioMixer::set_gain(int64_t id, double gain_db) {
+	mixer_->set_gain(static_cast<uint32_t>(id), gain_db);
+}
+
+void LbAudioMixer::close_stream(int64_t id) {
+	mixer_->close_stream(static_cast<uint32_t>(id));
+}
+
+int64_t LbAudioMixer::queued(int64_t id) const {
+	return static_cast<int64_t>(mixer_->queued(static_cast<uint32_t>(id)));
 }
 
 bool LbAudioMixer::remove(int64_t id) {
