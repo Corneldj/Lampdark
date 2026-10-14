@@ -15,6 +15,7 @@ extends RefCounted
 ##   tuning set <key> <value>                           tuning reload
 ##   ring_override <0-4|off>                            seed
 ##   listener_mode <facing|screen_up>                   deafen <me|slot> [seconds]
+##   sdr_fake <lag_ms> <loss_pct> | sdr_fake off
 
 const CREATURES: Array[String] = ["moth", "tapper", "stythe"]
 const LAYERS: Array[String] = ["entities", "creatures", "light", "vision", "sound", "director", "lies"]
@@ -47,6 +48,8 @@ const SPEC: Dictionary = {
 		"help": "the ears face the miner's way, or north (criterion 5's A/B)"},
 	"deafen": {"usage": "deafen <me|slot> [seconds]", "where": Where.SERVER, "taints": true,
 		"help": "deafens a miner as a shot would (until MNR-16)"},
+	"sdr_fake": {"usage": "sdr_fake <lag_ms> <loss_pct> | sdr_fake off", "where": Where.CLIENT, "taints": false,
+		"help": "Steam's fake lag (round trip) and loss on this client's SDR connections (STM-03; M2's bad-connection tests)"},
 }
 
 
@@ -156,6 +159,16 @@ static func parse(line: String) -> Dictionary:
 			if a.size() != 1 or not ["facing", "screen_up"].has(a[0].to_lower()):
 				return _usage(name)
 			args["mode"] = a[0].to_lower()
+		"sdr_fake":
+			if a.size() == 1 and a[0].to_lower() == "off":
+				args["lag_ms"] = 0
+				args["loss_pct"] = 0.0
+			elif a.size() == 2 and a[0].is_valid_int() and a[1].is_valid_float():
+				args["lag_ms"] = clampi(a[0].to_int(), 0, 2000)
+				args["loss_pct"] = clampf(a[1].to_float(), 0.0, 50.0)
+				out["clamped"] = args["lag_ms"] != a[0].to_int() or args["loss_pct"] != a[1].to_float()
+			else:
+				return _usage(name)
 		"deafen":
 			if a.is_empty() or a.size() > 2 or (a.size() == 2 and not a[1].is_valid_float()):
 				return _usage(name)

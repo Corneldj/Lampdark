@@ -105,6 +105,12 @@ func is_connected_to(peer: int) -> bool:
 	return _live.has(peer)
 
 
+## STM-03: the identity the transport itself authenticated for this peer (SDR: the remote SteamID);
+## "" where the transport authenticates nobody (ENet, the in-process hub).
+func verified_identity(_peer: int) -> String:
+	return ""
+
+
 ## FND-08: the peer runs on this machine (a dev server grants it the debug lane without a token).
 func is_local_peer(peer: int) -> bool:
 	return _is_local(peer)

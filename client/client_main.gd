@@ -118,6 +118,10 @@ func _start_steam() -> bool:
 			_show_steam_failure()
 			return false
 	steam.overlay_toggled.connect(_on_overlay_toggled)
+	if not config.sdr_fake.is_empty() and steam.available():
+		var parts: PackedStringArray = config.sdr_fake.split(",")
+		if SdrTransport.set_fake_conditions(steam.api, config.build, parts[0].to_int(), parts[1].to_float()):
+			Log.info("steam: SDR fake conditions %s (lag ms, loss %%)" % config.sdr_fake)
 	return true
 
 
@@ -276,6 +280,7 @@ func _start_debug() -> void:
 	debug.name = "Debug"
 	debug.set(&"connection", connection)
 	debug.set(&"listener", listener)
+	debug.set(&"steam", steam)
 	var origin: Callable = func() -> Vector2:
 		if connection == null or connection.view == null or connection.view.own.is_empty():
 			return Vector2.ZERO

@@ -14,7 +14,7 @@ enum Kind { FLAG, INT, PORT, ENUM, STRING, HOST_PORT, U64 }
 
 const USAGE: String = ("usage: lampblack [--server] [--mode friends|public|nightshift] [--transport enet|sdr|loopback]"
 	+ " [--loopback] [--port <n>] [--offline] [--parent-pid <pid>] [--control-port <n>] [--resume <path>]"
-	+ " [--connect <host:port>] [--no-steam] [--name <persona>] [--seed <u64>] [--map <name>] [--qa-token <t>] [--bot <brain>]"
+	+ " [--connect <host:port>] [--no-steam] [--name <persona>] [--sdr-fake <lag_ms,loss_pct>] [--seed <u64>] [--map <name>] [--qa-token <t>] [--bot <brain>]"
 	+ " [--bot-seed <u64>] [--link <rtt_ms,loss_pct>] [--receive-log <path>] [--record-inputs <path>] [--stream-audit <path>]"
 	+ " [--stats-out <path>] [--exit-after-ticks <n>] [--tuning-profile <name>] [--tuning-hot-reload]"
 	+ " [--log <path>] [--log-level debug|info|warn|error]")
@@ -35,6 +35,7 @@ const SPEC: Dictionary = {
 	"--connect": [Kind.HOST_PORT, true, []],
 	"--no-steam": [Kind.FLAG, true, []],
 	"--name": [Kind.STRING, true, []],
+	"--sdr-fake": [Kind.STRING, true, []],
 	"--seed": [Kind.U64, true, []],
 	"--qa-token": [Kind.STRING, true, []],
 	"--bot": [Kind.STRING, true, []],
@@ -188,6 +189,12 @@ func _apply(name: String, kind: Kind, value: String, options: Array) -> void:
 			client.no_steam = true
 		"--name":
 			client.persona_name = value
+		"--sdr-fake":
+			var parts: PackedStringArray = value.split(",")
+			if parts.size() != 2 or not parts[0].is_valid_int() or not parts[1].is_valid_float():
+				_fail("--sdr-fake needs lag_ms,loss_pct")
+				return
+			client.sdr_fake = value
 		"--seed":
 			var parsed: Array = parse_u64(value)
 			if not parsed[0]:

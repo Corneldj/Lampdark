@@ -32,10 +32,6 @@ func init(_app_id: int) -> Dictionary:
 	return {"status": init_status, "verbal": "fake"}
 
 
-func run_callbacks() -> void:
-	calls.append("run_callbacks")
-
-
 func shutdown() -> void:
 	calls.append("shutdown")
 	_up = false
@@ -184,3 +180,69 @@ func add_lobby(owner: int, data: Dictionary) -> int:
 	next_lobby += 1
 	lobbies[lid] = {"owner": owner, "limit": 5, "joinable": true, "data": data.duplicate(), "members": [owner], "member_data": {}}
 	return lid
+
+
+## STM-03: Steam Networking Sockets through fake_sns.gd (set by its join()).
+var sns_net: RefCounted = null
+
+
+func sns_warm_up() -> void:
+	calls.append("sns_warm_up")
+
+
+func sns_set_global_int(config: int, value: int) -> bool:
+	if sns_net != null:
+		Variants.dict(sns_net.get(&"global_config"))[config] = value
+	return true
+
+
+func sns_set_global_float(config: int, value: float) -> bool:
+	if sns_net != null:
+		Variants.dict(sns_net.get(&"global_config"))[config] = value
+	return true
+
+
+func sns_listen(virtual_port: int) -> int:
+	return Variants.whole(sns_net.call(&"listen", id, virtual_port))
+
+
+func sns_close_listen(_socket: int) -> void:
+	pass
+
+
+func sns_connect(remote_steam_id: int, virtual_port: int) -> int:
+	return Variants.whole(sns_net.call(&"connect_to", id, remote_steam_id, virtual_port))
+
+
+func sns_accept(handle: int) -> int:
+	return Variants.whole(sns_net.call(&"accept", handle))
+
+
+func sns_close(handle: int, _reason: int, _message: String, _linger: bool) -> void:
+	sns_net.call(&"close", handle)
+
+
+func sns_send(handle: int, data: PackedByteArray, flags: int) -> int:
+	return Variants.whole(sns_net.call(&"send", handle, data, flags))
+
+
+func sns_receive(handle: int, max_messages: int) -> Array:
+	return Variants.array(sns_net.call(&"receive", handle, max_messages))
+
+
+func sns_flush(_handle: int) -> void:
+	sns_net.set(&"flushes", Variants.whole(sns_net.get(&"flushes")) + 1)
+
+
+func sns_info(handle: int) -> Dictionary:
+	return Variants.dict(sns_net.call(&"info", handle))
+
+
+func sns_status(_handle: int) -> Dictionary:
+	return {"ping": 37, "connection_quality_local": 0.98}
+
+
+func run_callbacks() -> void:
+	calls.append("run_callbacks")
+	if sns_net != null:
+		sns_net.call(&"deliver", id)

@@ -177,6 +177,12 @@ func _on_hello(run: RunState, session: Sessions.Session, hello: Protocol.Hello, 
 		Log.info("peer %d refused: a %s client on a %s server" % [session.peer, _flavour_name(hello.flavour), _flavour_name(flavour)])
 		_reject(session, Protocol.Reject.FLAVOUR_MISMATCH)
 		return
+	var verified: String = transport.verified_identity(session.peer)
+	if not verified.is_empty() and verified != hello.identity:
+		# STM-03: over SDR the connection's SteamID is Steam's word; a Hello claiming another is refused.
+		Log.info("peer %d refused: identity %s on a connection from %s" % [session.peer, hello.identity, verified])
+		_reject(session, Protocol.Reject.AUTH_FAILED)
+		return
 	if not sessions.seat(session, hello.identity, hello.seat_request):
 		_reject(session, Protocol.Reject.FULL)
 		return

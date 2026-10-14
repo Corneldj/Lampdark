@@ -1,5 +1,5 @@
 {
-	"hash": "a0c3d611abcb52ca583cc9e6f169552e4f6d1e50048444c2930ef19e456c087d",
+	"hash": "08a23a0a502f7d4dd6278dd8266227daa19e4b77ec6ddf08919dcac6d94703c9",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -686,6 +686,13 @@
 			"value": 120.0,
 			"type": "float",
 			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.sdr_virtual_port": {
+			"value": 0,
+			"type": "int",
+			"unit": "count",
 			"visibility": "client",
 			"kind": "param"
 		},

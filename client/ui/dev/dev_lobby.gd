@@ -95,8 +95,8 @@ func _ready() -> void:
 
 func refresh() -> void:
 	if steam != null:
-		who.text = "%s\n%d%s" % [steam.display_name(steam.steam_id), steam.steam_id,
-			(" " + UiText.text("lobby.dev_identity")) if steam.fake_identity else ""]
+		who.text = "%s\n%d%s\n%s" % [steam.display_name(steam.steam_id), steam.steam_id,
+			(" " + UiText.text("lobby.dev_identity")) if steam.fake_identity else "", steam.relay_text()]
 	var in_lobby: bool = lobby.state == LobbyService.State.IN_LOBBY
 	var busy: bool = lobby.state != LobbyService.State.IDLE and not in_lobby
 	_idle_box.visible = not in_lobby

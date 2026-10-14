@@ -801,11 +801,11 @@
 			"value": 0,
 			"type": "int",
 			"unit": "count",
-			"source": "Proposed (one listen socket per server)",
+			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
-			"note": "ticket STM-03"
+			"note": "ticket STM-03: the base virtual port of a server's SDR listen sockets (one listener per connection group: base, base + 1, base + 2)"
 		},
 		"net.server_memory_limit_mb": {
 			"value": 256,

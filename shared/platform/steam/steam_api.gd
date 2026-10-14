@@ -20,6 +20,11 @@ signal lobby_entered(lobby_id: int, response: int)
 signal lobby_changed(lobby_id: int)
 signal lobby_list(lobby_ids: PackedInt64Array)
 signal join_requested(lobby_id: int)
+## STM-03's Steam Networking Sockets: a connection's state changed (info as GodotSteam reports it:
+## identity, listen_socket, connection_state, end_reason, end_debug, info_flags ...), and the relay
+## network's availability (k_ESteamNetworkingAvailability: 100 is current).
+signal sns_status_changed(handle: int, info: Dictionary, old_state: int)
+signal relay_status(available: int, debug_message: String)
 
 ## ELobbyType and ELobbyDistanceFilter values (STM-02).
 const LOBBY_PUBLIC: int = 2
@@ -27,6 +32,25 @@ const DISTANCE_WORLDWIDE: int = 3
 const COMPARISON_EQUAL: int = 0
 const RESULT_OK: int = 1
 const FRIEND_FLAG_IMMEDIATE: int = 4
+
+## Steam Networking Sockets (STM-03): connection states, send flags, info flags and config keys.
+enum SnsState { NONE = 0, CONNECTING = 1, FINDING_ROUTE = 2, CONNECTED = 3, CLOSED_BY_PEER = 4, PROBLEM = 5 }
+const SNS_SEND_UNRELIABLE: int = 0
+const SNS_SEND_RELIABLE: int = 8
+const SNS_INFO_UNAUTHENTICATED: int = 1
+const SNS_INFO_UNENCRYPTED: int = 2
+const SNS_INFO_RELAYED: int = 16
+const SNS_CONFIG_ICE_ENABLE: int = 104
+const SNS_ICE_DISABLE: int = 0
+const SNS_CONFIG_TIMEOUT_INITIAL: int = 24
+const SNS_CONFIG_TIMEOUT_CONNECTED: int = 25
+const SNS_CONFIG_FAKE_LOSS_SEND: int = 2
+const SNS_CONFIG_FAKE_LOSS_RECV: int = 3
+const SNS_CONFIG_FAKE_LAG_SEND: int = 4
+const SNS_CONFIG_FAKE_LAG_RECV: int = 5
+const SNS_CONFIG_FAKE_REORDER_SEND: int = 6
+const SNS_CONFIG_FAKE_REORDER_TIME: int = 8
+const SNS_END_APP_GENERIC: int = 1000
 
 const _LOBBY_SIGNALS: Array[StringName] = [&"lobby_created", &"lobby_joined", &"lobby_chat_update", &"lobby_data_update",
 	&"lobby_match_list", &"join_requested"]
@@ -57,6 +81,8 @@ func init(app_id: int) -> Dictionary:
 		_steam.connect(&"persona_state_change", _on_persona_state_change)
 		for sig: StringName in _LOBBY_SIGNALS:
 			_steam.connect(sig, Callable(self, "_on_" + str(sig)))
+		_steam.connect(&"network_connection_status_changed", _on_network_connection_status_changed)
+		_steam.connect(&"relay_network_status", _on_relay_network_status)
 	else:
 		_steam = null
 	return {"status": status, "verbal": str(r.get("verbal", ""))}
@@ -73,6 +99,8 @@ func shutdown() -> void:
 		_steam.disconnect(&"persona_state_change", _on_persona_state_change)
 		for sig: StringName in _LOBBY_SIGNALS:
 			_steam.disconnect(sig, Callable(self, "_on_" + str(sig)))
+		_steam.disconnect(&"network_connection_status_changed", _on_network_connection_status_changed)
+		_steam.disconnect(&"relay_network_status", _on_relay_network_status)
 		_steam.call(&"steamShutdown")
 		_steam = null
 
@@ -179,6 +207,83 @@ func invite_dialog(lobby_id: int) -> void:
 ## Whether `steam_id_of` is the user's Steam friend (an admission vouch, STM-02).
 func is_friend(steam_id_of: int) -> bool:
 	return _steam != null and Variants.flag(_steam.call(&"hasFriend", steam_id_of, FRIEND_FLAG_IMMEDIATE))
+
+
+## STM-03: Steam Networking Sockets (the user's interface; a game-server identity is STM-04's).
+## Authentication and relay access warmed up at boot, so a first connect does not wait on them.
+func sns_warm_up() -> void:
+	if _steam != null:
+		_steam.call(&"initAuthentication")
+		_steam.call(&"initRelayNetworkAccess")
+
+
+func sns_relay_status() -> int:
+	return Variants.whole(_steam.call(&"getRelayNetworkStatus")) if _steam != null else 0
+
+
+func sns_set_global_int(config: int, value: int) -> bool:
+	return _steam != null and Variants.flag(_steam.call(&"setGlobalConfigValueInt32", config, value))
+
+
+func sns_set_global_float(config: int, value: float) -> bool:
+	return _steam != null and Variants.flag(_steam.call(&"setGlobalConfigValueFloat", config, value))
+
+
+func sns_listen(virtual_port: int) -> int:
+	return Variants.whole(_steam.call(&"createListenSocketP2P", virtual_port, {})) if _steam != null else 0
+
+
+func sns_close_listen(socket: int) -> void:
+	if _steam != null:
+		_steam.call(&"closeListenSocket", socket)
+
+
+func sns_connect(remote_steam_id: int, virtual_port: int) -> int:
+	return Variants.whole(_steam.call(&"connectP2P", remote_steam_id, virtual_port, {})) if _steam != null else 0
+
+
+func sns_accept(handle: int) -> int:
+	return Variants.whole(_steam.call(&"acceptConnection", handle)) if _steam != null else 0
+
+
+func sns_close(handle: int, reason: int, message: String, linger: bool) -> void:
+	if _steam != null:
+		_steam.call(&"closeConnection", handle, reason, message, linger)
+
+
+## EResult (1 is OK).
+func sns_send(handle: int, data: PackedByteArray, flags: int) -> int:
+	if _steam == null:
+		return 0
+	var r: Dictionary = Variants.dict(_steam.call(&"sendMessageToConnection", handle, data, flags))
+	return Variants.whole(r.get("result", 0))
+
+
+## The waiting messages, as [{payload: PackedByteArray, ...}].
+func sns_receive(handle: int, max_messages: int) -> Array:
+	return Variants.array(_steam.call(&"receiveMessagesOnConnection", handle, max_messages)) if _steam != null else []
+
+
+func sns_flush(handle: int) -> void:
+	if _steam != null:
+		_steam.call(&"flushMessagesOnConnection", handle)
+
+
+func sns_info(handle: int) -> Dictionary:
+	return Variants.dict(_steam.call(&"getConnectionInfo", handle)) if _steam != null else {}
+
+
+## Real-time status: ping, connection quality, bytes and packets per second, pending bytes.
+func sns_status(handle: int) -> Dictionary:
+	return Variants.dict(_steam.call(&"getConnectionRealTimeStatus", handle, 0, true)) if _steam != null else {}
+
+
+func _on_network_connection_status_changed(handle: int, info: Dictionary, old_state: int) -> void:
+	sns_status_changed.emit(handle, info, old_state)
+
+
+func _on_relay_network_status(available: int, _ping: int, _config: int, _relay: int, message: String) -> void:
+	relay_status.emit(available, message)
 
 
 func _on_lobby_created(result: int, lobby_id: int) -> void:

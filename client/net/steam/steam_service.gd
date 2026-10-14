@@ -34,6 +34,9 @@ var overlay_active: bool = false
 var streamer_mode: bool = false
 ## Each known miner's lamp number by SteamID (the lobby sets them, STM-02).
 var lamp_numbers: Dictionary = {}
+## STM-03: the relay network (k_ESteamNetworkingAvailability; 100 is current) and Steam's last word on it.
+var relay_available: int = 0
+var relay_message: String = ""
 var _persona: String = ""
 var _hooks: Array[Array] = []
 var _shut_down: bool = false
@@ -93,6 +96,8 @@ func boot(release: bool, no_steam: bool, persona: String) -> Boot:
 	_persona = api.persona_name()
 	api.overlay_toggled.connect(_on_overlay_toggled)
 	api.persona_changed.connect(_on_persona_changed)
+	api.relay_status.connect(_on_relay_status)
+	api.sns_warm_up()  # STM-03: relay access and the cert now, so a first connect does not wait
 	Log.info("steam: app %d, user %d, language %s, hardware %s, overlay %s" % [id, steam_id, api.game_language(),
 		SteamApi.Hardware.keys()[api.hardware()], "on" if api.overlay_enabled() else "off"])
 	return Boot.CONTINUE
@@ -168,6 +173,7 @@ func shutdown() -> void:
 	if mode == Mode.STEAM:
 		api.overlay_toggled.disconnect(_on_overlay_toggled)
 		api.persona_changed.disconnect(_on_persona_changed)
+		api.relay_status.disconnect(_on_relay_status)
 		api.shutdown()
 		Log.info("steam: shut down")
 	mode = Mode.OFF
@@ -180,6 +186,20 @@ func _notification(what: int) -> void:
 
 func _exit_tree() -> void:
 	shutdown()
+
+
+## STM-03: the relay network in a line for the dev lobby's diagnostics.
+func relay_text() -> String:
+	if mode != Mode.STEAM:
+		return "relays: off (dev mode)"
+	return "relays: ready" if relay_available == 100 else "relays: waiting (%d)" % relay_available
+
+
+func _on_relay_status(availability: int, message: String) -> void:
+	relay_available = availability
+	relay_message = message
+	if availability == 100:
+		Log.info("steam: relay network ready (%s)" % message)
 
 
 func _on_overlay_toggled(active: bool) -> void:

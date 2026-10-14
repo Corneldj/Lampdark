@@ -8,6 +8,8 @@ extends Node
 var connection: ClientConnection = null
 ## MinerListener (SND-04's ears), for listener_mode.
 var listener: MinerListener = null
+## STM-01's Steam, for sdr_fake (STM-03).
+var steam: SteamService = null
 ## () -> Vector2: the view's top-left in tiles (the camera's), for the truth view.
 var view_origin: Callable = func() -> Vector2: return Vector2.ZERO
 var console: DebugConsole = null
@@ -45,6 +47,14 @@ func run_line(line: String) -> String:
 			if listener == null or not listener.set_mode(str(a["mode"])):
 				return _say("not available: screen-up is compiled out of this build")
 			return _say("listener faces %s" % ("north" if str(a["mode"]) == "screen_up" else "the miner's way"))
+		"sdr_fake":
+			if steam == null or not steam.available():
+				return _say("not available: Steam is off (dev mode)")
+			var lag: int = Variants.whole(a["lag_ms"])
+			var loss: float = float(Variants.number(a["loss_pct"]))
+			if not SdrTransport.set_fake_conditions(steam.api, BuildInfo.detect(FeatureProvider.new()), lag, loss):
+				return _say("refused: no fake conditions in a release build")
+			return _say("SDR fake conditions: %d ms round trip, %.1f%% loss" % [lag, loss] if lag > 0 or loss > 0.0 else "SDR fake conditions off")
 	if connection == null or not connection.has_debug():
 		return _say("refused: no debug channel (a QA token, on a QA or dev server)")
 	if name == "truth" or name == "overlay":
