@@ -19,6 +19,8 @@ signal lobby_changed
 signal failed(text_key: String)
 ## M1: connect to the dev-transport server at host:port.
 signal connect_requested(address: String)
+## STM-04 (M2): connect over SDR to the host's server (lb_server: "<SteamID>:<virtual port>").
+signal connect_sdr_requested(identity: int, vport: int)
 
 var backend: LobbyBackend = null
 var steam: SteamService = null
@@ -36,6 +38,7 @@ var _lookup: Dictionary = {}
 var _lookup_retried: bool = false
 var _tries: int = 0
 var _connected_to: String = ""
+var _via_code: bool = false
 
 
 func _init(lobby_backend: LobbyBackend, steam_service: SteamService, release_build: bool) -> void:
@@ -126,6 +129,7 @@ func join_code(typed: String) -> void:
 		return
 	_set_state(State.SEARCHING)
 	_search = SearchFor.CODE_LOOKUP
+	_via_code = true
 	_lookup = LobbyMetadata.code_filters(c)
 	_lookup_retried = false
 	backend.search(_lookup)
@@ -194,6 +198,8 @@ func _write_member() -> void:
 	var d: Dictionary = LobbyMetadata.member_data(is_ready, steam.persona_name() if steam != null else "", 0, 0, false)
 	for key: Variant in d.keys():
 		backend.set_member_data(str(key), str(d[key]))
+	# STM-02's admission: how this member came in (a code, or an invite or friends-list join).
+	backend.set_member_data("lb_via", "code" if _via_code else "invite")
 
 
 func set_ready(on: bool) -> void:
@@ -214,6 +220,8 @@ func leave() -> void:
 		Log.info("lobby: left")
 	code = ""
 	is_ready = false
+	_via_code = false
+	_connected_to = ""
 	_search = SearchFor.NONE
 	if state != State.IDLE:
 		_set_state(State.IDLE)
@@ -236,7 +244,33 @@ func _on_changed() -> void:
 	if not release and not address.is_empty() and address != _connected_to:
 		_connected_to = address
 		connect_requested.emit(address)
+	var server: String = backend.data("lb_server")
+	if not server.is_empty() and server != _connected_to and not is_host():
+		var parts: PackedStringArray = server.split(":")
+		if parts.size() == 2 and parts[0].is_valid_int() and parts[1].is_valid_int():
+			_connected_to = server
+			connect_sdr_requested.emit(parts[0].to_int(), parts[1].to_int())
 	lobby_changed.emit()
+
+
+## STM-04: the host publishes its server's SDR identity and virtual port.
+func publish_server(identity: int, vport: int) -> void:
+	if is_host():
+		backend.set_data("lb_server", "%d:%d" % [identity, vport])
+
+
+## STM-04: the admission lists the host hands its server: {owner, ids, code_users, vouched}.
+## Vouched: the members who are the host's Steam friends (invites and friends-list joins).
+func admission_lists() -> Dictionary:
+	var ids: PackedInt64Array = backend.members()
+	var code_users: PackedInt64Array = PackedInt64Array()
+	var vouched: PackedInt64Array = PackedInt64Array()
+	for id: int in ids:
+		if backend.member_data(id, "lb_via") == "code":
+			code_users.append(id)
+		if backend.is_friend(id):
+			vouched.append(id)
+	return {"owner": backend.owner(), "ids": ids, "code_users": code_users, "vouched": vouched}
 
 
 ## The crew as the screen shows it: [{id, name, ready, host}]. Names go through STM-01's

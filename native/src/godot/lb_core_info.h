@@ -20,6 +20,9 @@ public:
 	// Asks the OS for 1 ms timer resolution (Windows: timeBeginPeriod); a no-op elsewhere.
 	// The headless server calls it so its sleeps to each tick deadline are precise (NET-01).
 	static bool request_timer_resolution_1ms();
+	// Whether any process with this ID is running (STM-04: a private host's server watches its
+	// parent, which Godot's OS.is_process_running cannot: it knows only its own children).
+	static bool process_alive(int64_t pid);
 };
 
 } // namespace lb::godot

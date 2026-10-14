@@ -36,6 +36,17 @@ for preset in "${presets[@]}"; do
 	if "$GODOT" --headless --path . "$mode" "$preset" "$path" >"$log" 2>&1 && [ -f "$path" ] \
 		&& ! grep -q "^ERROR" "$log"; then
 		echo "exported $preset -> $path"
+		# STM-04's Path A: GodotSteam Server beside each server export, loaded at run time.
+		case "$preset" in
+			*-server-*)
+				plat="linux64"
+				case "$preset" in windows-*) plat="win64" ;; esac
+				dest="$(dirname "$path")/steam_server"
+				mkdir -p "$dest/$plat"
+				cp server_steam/godotsteam_server.gdextension server_steam/license.md server_steam/.gdignore "$dest/"
+				cp server_steam/"$plat"/* "$dest/$plat/"
+				;;
+		esac
 	else
 		echo "export_all: $preset failed (see $log)" >&2
 		grep "^ERROR" -A1 "$log" >&2 || true

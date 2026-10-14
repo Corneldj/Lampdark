@@ -2,6 +2,7 @@ extends GutTest
 ## Every folder of the README's code layout exists, and nothing else sits at the top level (FND-01).
 
 const LAYOUT: Array[String] = [
+	"server_steam",
 	"addons",
 	"native",
 	"shared",

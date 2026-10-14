@@ -1,5 +1,5 @@
 {
-	"hash": "08a23a0a502f7d4dd6278dd8266227daa19e4b77ec6ddf08919dcac6d94703c9",
+	"hash": "2df07278ef7b3689e2b9909b19ac089612681b35e852bcb2413aea13c08dda7c",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -649,6 +649,13 @@
 		},
 		"net.invite_code_retry_s": {
 			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"net.local_server_ready_timeout_s": {
+			"value": 20.0,
 			"type": "float",
 			"unit": "s",
 			"visibility": "client",

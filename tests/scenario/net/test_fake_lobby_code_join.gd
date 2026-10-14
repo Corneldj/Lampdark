@@ -54,8 +54,8 @@ func test_a_dropped_member_leaves_the_lobby() -> void:
 
 func test_release_servers_never_start_the_rendezvous() -> void:
 	var src: String = FileAccess.get_file_as_string("res://server/server_main.gd")
-	assert_true(src.contains("\tif not config.build.is_release():\n\t\t_start_rendezvous(bind_address, transport.bound_port())"),
-		"dev, QA and kill-test servers only")
+	assert_true(src.contains("\tif not config.build.is_release() and not hosted:\n\t\t_start_rendezvous(bind_address, transport.bound_port())"),
+		"dev, QA and kill-test servers only (and never a private host's: its friends come through Steam)")
 	assert_eq(src.count("LobbyRendezvous.new("), 1)
 
 
@@ -64,6 +64,6 @@ func test_the_server_seats_no_more_than_the_lobby_holds() -> void:
 	# game server's slots are the lobby's limit, so a sixth player is refused there too.
 	var src: String = FileAccess.get_file_as_string("res://server/server_main.gd")
 	assert_true(src.contains("var slots: int = Tuning.i(&\"modes.friends_lobby_max\")"))
-	assert_true(src.contains("net = ServerNet.new(transport, slots)"))
+	assert_true(src.contains("net = ServerNet.new(game_transport, slots)"))
 	assert_eq(Tuning.i(&"modes.friends_lobby_max"), 5)
 	assert_eq(LobbyService.limit(), 5, "the lobby and the server agree")

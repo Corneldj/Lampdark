@@ -219,6 +219,7 @@ func test_identity_stats_and_settings() -> void:
 	assert_eq(s.verified_identity(Variants.whole(p[2])), str(CLIENT_ID), "Steam's word on who connected")
 	assert_eq(EnetTransport.new().verified_identity(1), "", "ENet authenticates nobody")
 	assert_almost_eq(s.stats(Variants.whole(p[2])).rtt_ms, 37.0, 0.01, "Steam's ping is the round trip")
+	assert_almost_eq(s.stats(Variants.whole(p[2])).loss, 0.02, 1e-6, "1 - Steam's local quality")
 	var cfg: Dictionary = net.get(&"global_config")
 	assert_eq(Variants.whole(cfg[SteamApi.SNS_CONFIG_ICE_ENABLE]), SteamApi.SNS_ICE_DISABLE, "relay only")
 	assert_eq(Variants.whole(cfg[SteamApi.SNS_CONFIG_TIMEOUT_CONNECTED]), roundi(Tuning.f(&"net.connection_timeout_s") * 1000.0))

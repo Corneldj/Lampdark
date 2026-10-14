@@ -46,5 +46,17 @@
 		"sha512": "dc749000b5562384bd935b3a4faf06c4ace6280571cd5dbfde89e12e6269d086582c03fc2244b661067c4dd662888d655051d2e1ad1f271e2856a5916ee8df23",
 		"steam_hardware": "isRunningOnSteamHardware (SDK 1.65); no fallback to the deprecated isSteamRunningOnSteamDeck needed",
 		"note": "STM-01. Only the Linux and Windows x64 libraries, steam_api redistributables and the MIT licence are vendored; the upstream updater plugin is left out. Our own godotsteam.gdextension lists only these platforms."
+	},
+	"godotsteam_server": {
+		"version": "4.12.1",
+		"steamworks_sdk": "1.65",
+		"path": "server_steam",
+		"platforms": [
+			"linux.x86_64",
+			"windows.x86_64"
+		],
+		"source": "https://codeberg.org/godotsteam/godotsteam-server/releases/download/v4.12.1-gde/godotsteam-server-4.12.1-gdextension-plugin-4.4.zip",
+		"sha512": "fd9ba0e6effa50192c2d0158fa3e12bdd47cade81fa273b888a733e3e1bd3e147c0cb72105442cd9708cf854128721af19c40295e018d8f71f3a95008a4a15e8",
+		"note": "STM-04 Path A. Outside the project (.gdignore): it cannot share a process with GodotSteam. export_all.sh copies it beside each server export (steam_server/); the server loads it at run time."
 	}
 }

@@ -52,6 +52,9 @@ var menus: CanvasLayer = null
 var steam: SteamService = null
 ## STM-02: the friends lobby (Steam's, or the dev server's rendezvous in dev mode).
 var lobby: LobbyService = null
+## STM-04: a private host's server process, and Path B's relay.
+var local_server: LocalServerHost = null
+var host_relay: HostRelay = null
 ## UI-01: the in-play UI (only the design's private elements).
 var in_play: InPlayLayer = null
 var _ui_violations_seen: Dictionary = {}
@@ -140,7 +143,15 @@ func _start_lobby() -> void:
 		fake.aim(host, LobbyRendezvousWire.port_for(port))
 		backend = fake
 	lobby = LobbyService.new(backend, steam, config.build.is_release())
-	lobby.server_address = "" if config.build.is_release() else target
+	# A typed or launch server address takes M1's path (lb_dev_addr: the kill test's studio server, a
+	# dev server); without one, a host with Steam runs its own server (STM-04).
+	if config.build.is_release():
+		lobby.server_address = ""
+	elif not config.connect_target.is_empty() or not steam.available():
+		lobby.server_address = target
+	lobby.state_changed.connect(_on_lobby_state)
+	lobby.lobby_changed.connect(_send_members)
+	lobby.connect_sdr_requested.connect(_connect_sdr)
 	lobby.connect_requested.connect(func(address: String) -> void:
 		if connection == null:
 			_connect(address))
@@ -179,6 +190,8 @@ func _process(delta: float) -> void:
 			get_tree().quit(code)
 			set_process(false)
 		return
+	if host_relay != null:
+		host_relay.poll()
 	if connection != null:
 		connection.poll()
 		_report_connection()
@@ -435,11 +448,97 @@ func _start_bot() -> void:
 
 
 ## A direct ENet connection (NET-02), for development and the M1 kill test.
+## STM-04: a host with Steam runs its own server when its crew opens, and stops it when it leaves.
+func _on_lobby_state(state: LobbyService.State) -> void:
+	if state == LobbyService.State.IN_LOBBY and lobby.is_host() and steam.available() and lobby.server_address.is_empty() and local_server == null:
+		_start_hosting()
+	elif state == LobbyService.State.IDLE and local_server != null:
+		_stop_hosting()
+
+
+func _start_hosting() -> void:
+	local_server = LocalServerHost.new()
+	add_child(local_server)
+	local_server.server_ready.connect(_on_server_ready)
+	local_server.ended.connect(_on_server_ended)
+	if not local_server.reattach():
+		if not local_server.start(LocalServerHost.default_path(config.host_relay)):
+			lobby.failed.emit("lobby.run_ended")
+			return
+	lobby.failed.emit("lobby.hosting")
+
+
+func _on_server_ready(info: Dictionary) -> void:
+	var vport: int = Variants.whole(info["vport"])
+	var identity: int = Variants.whole(info["identity"])
+	if local_server.path == LocalServerHost.Path.B:
+		var sdr: SdrTransport = SdrTransport.new(steam.api)
+		sdr.admission = func(id: int) -> bool:
+			var l: Dictionary = lobby.admission_lists()
+			var members: PackedInt64Array = l["ids"]
+			var vouched_ids: PackedInt64Array = l["vouched"]
+			var code_ids: PackedInt64Array = l["code_users"]
+			var vouched: Dictionary = {}
+			for v: int in vouched_ids:
+				vouched[v] = true
+			var codes: Dictionary = {}
+			for c: int in code_ids:
+				codes[c] = true
+			return LobbyAdmission.judge(id, Variants.whole(l["owner"]), members, codes, vouched, PackedInt64Array(), 1 << 30) == LobbyAdmission.Verdict.SEAT
+		host_relay = HostRelay.new(sdr, Variants.whole(info["game"]), str(info["token"]))
+		if host_relay.listen(vport) != OK:
+			Log.error("host relay: no SDR listen socket")
+		identity = steam.steam_id
+	lobby.publish_server(identity, vport)
+	_send_members()
+	if connection == null:
+		_connect("127.0.0.1:%d" % Variants.whole(info["game"]))
+
+
+func _send_members() -> void:
+	if local_server == null or not lobby.is_host():
+		return
+	var l: Dictionary = lobby.admission_lists()
+	var ids: PackedInt64Array = l["ids"]
+	var code_users: PackedInt64Array = l["code_users"]
+	var vouched: PackedInt64Array = l["vouched"]
+	local_server.send_members(Variants.whole(l["owner"]), ids, code_users, vouched)
+
+
+func _on_server_ended(_code: int, crashed: bool) -> void:
+	if host_relay != null:
+		host_relay.close()
+		host_relay = null
+	if crashed:
+		lobby.failed.emit("lobby.run_ended")
+	local_server.queue_free()
+	local_server = null
+
+
+func _stop_hosting() -> void:
+	if local_server != null:
+		local_server.stop()
+
+
+## STM-04 (M2): a friend reaches the host's server over SDR (lb_server).
+func _connect_sdr(identity: int, vport: int) -> void:
+	if connection != null:
+		return
+	connection = ClientConnection.new(SdrTransport.new(steam.api))
+	connection.identity = str(steam.steam_id)
+	connection.qa_token = config.qa_token
+	if connection.start(str(identity), vport):
+		Log.info("connecting over SDR to %d (virtual port %d)" % [identity, vport])
+	else:
+		Log.error("could not start an SDR connection to %d" % identity)
+
+
 func _connect(target: String) -> void:
 	var host: String = target.substr(0, target.rfind(":"))
 	var port: int = target.substr(target.rfind(":") + 1).to_int()
 	connection = ClientConnection.new(EnetTransport.new())
-	connection.identity = steam.persona_name()
+	# With Steam, the identity is the SteamID (the server checks it where the transport knows it).
+	connection.identity = str(steam.steam_id) if steam.available() else steam.persona_name()
 	connection.qa_token = config.qa_token
 	connection.seat_request = Protocol.Seat.BOT if not config.bot_script.is_empty() else Protocol.Seat.PLAYER
 	if connection.start(host, port):

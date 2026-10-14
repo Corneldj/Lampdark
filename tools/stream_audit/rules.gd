@@ -26,6 +26,7 @@ const MESSAGES: Dictionary = {
 	"DEBUG_TAG": "debug",
 	"MIC_LABEL": "client_only",
 	"KNOCKS": "knocks",
+	"RELAY_TAG": "client_only",  # STM-04: the host's relay to its own server, never downstream
 }
 
 ## Each record a frame carries -> its rule (client_view's layout, FrameDecoder's fields).

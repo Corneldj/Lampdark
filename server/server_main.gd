@@ -10,6 +10,16 @@ const STREAM_AUDIT: String = "res://tools/stream_audit/stream_audit.gd"
 
 ## STM-02: dev-mode lobbies, outside release builds only.
 var rendezvous: LobbyRendezvous = null
+## STM-04: a private host's server (spawned with --parent-pid): its control link, Path A's game-server
+## Steam (GodotSteam Server, loaded at run time) and SDR listener, and the empty-server linger.
+var host_link: HostLink = null
+var steam_server: SteamServerApi = null
+var sdr: SdrTransport = null
+var _game_port: int = 0
+var _ready_printed: bool = false
+var _had_client: bool = false
+var _empty_since_usec: int = -1
+var _finishing: bool = false
 var config: ServerConfig = null
 var run: RunState = null
 var loop: SimLoop = null
@@ -62,6 +72,11 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
+	if steam_server != null:
+		steam_server.run_callbacks()
+	if host_link != null:
+		host_link.poll()
+		_linger()
 	loop.pump(TickTimer.now_usec())
 	if rendezvous != null:
 		rendezvous.poll()
@@ -86,21 +101,27 @@ func _process(_delta: float) -> void:
 ## Listens with the chosen transport and registers the network stages (NET-02). SDR arrives
 ## with STM-03. Release builds bind ENet only to 127.0.0.1.
 func _start_network() -> bool:
-	if config.transport == ServerConfig.TransportKind.SDR:
-		Log.error("the SDR transport arrives with STM-03")
-		get_tree().quit(ExitCode.BIND_FAILED)
-		return false
+	var hosted: bool = config.parent_pid > 0
 	var transport: EnetTransport = EnetTransport.new()
 	transport.build = config.build
-	var port: int = config.port if config.port > 0 else Tuning.i(&"net.dev_port")
-	var bind_address: String = "127.0.0.1" if config.transport == ServerConfig.TransportKind.LOOPBACK or config.build.is_release() else "*"
+	# A private host's server takes any free loopback port (the ready line names it).
+	var port: int = config.port if config.port > 0 else (0 if hosted else Tuning.i(&"net.dev_port"))
+	var loopback: bool = hosted or config.transport != ServerConfig.TransportKind.ENET or config.build.is_release()
+	var bind_address: String = "127.0.0.1" if loopback else "*"
 	var error: Error = transport.listen(bind_address, port)
 	if error != OK:
 		Log.error("could not listen on %s:%d (%s)" % [bind_address, port, error_string(error)])
 		get_tree().quit(ExitCode.BIND_FAILED)
 		return false
+	_game_port = transport.bound_port()
+	var game_transport: Transport = transport
+	if config.transport == ServerConfig.TransportKind.SDR and not config.offline:
+		if not _start_steam_server():
+			return false
+		var both: Array[Transport] = [transport, sdr]
+		game_transport = MultiTransport.new(both)
 	var slots: int = Tuning.i(&"modes.friends_lobby_max") if Tuning.current.has_key(&"modes.friends_lobby_max") else 5
-	net = ServerNet.new(transport, slots)
+	net = ServerNet.new(game_transport, slots)
 	net.flavour = config.build.flavour
 	net.qa_token = "" if config.build.is_release() else config.qa_token
 	var mine: Mine = null
@@ -129,9 +150,116 @@ func _start_network() -> bool:
 		_audit.call(&"attach", run, net)
 		Log.info("stream audit on; report to %s" % config.stream_audit_path)
 	Log.info("listening on %s:%d (ENet, %d slots)" % [bind_address, transport.bound_port(), slots])
-	if not config.build.is_release():
+	if not config.build.is_release() and not hosted:
 		_start_rendezvous(bind_address, transport.bound_port())
+	if hosted and not _start_host_link():
+		return false
+	if steam_server == null:
+		_print_ready(0)
 	return true
+
+
+## STM-04's Path A: GodotSteam Server, loaded at run time from beside the executable (an exported
+## server; an editor or source run already holds GodotSteam, and the two cannot share a process),
+## logged on anonymously; SDR listens once Steam says so.
+func _start_steam_server() -> bool:
+	var path: String = OS.get_executable_path().get_base_dir().path_join("steam_server/godotsteam_server.gdextension")
+	if not SteamServerApi.load_extension(path):
+		Log.error("Path A needs GodotSteam Server beside an exported server (%s); use the host relay (--host-relay)" % path)
+		get_tree().quit(ExitCode.STEAM_INIT_FAILED)
+		return false
+	steam_server = SteamServerApi.new()
+	var r: Dictionary = steam_server.init(Variants.whole(ProjectSettings.get_setting_with_override("lampblack/steam/app_id")))
+	if Variants.whole(r["status"]) != SteamServerApi.Init.OK:
+		Log.error("the game-server API did not start: %s" % str(r["verbal"]))
+		get_tree().quit(ExitCode.STEAM_INIT_FAILED)
+		return false
+	sdr = SdrTransport.new(steam_server)
+	steam_server.logged_on.connect(_on_steam_logged_on)
+	Log.info("game server: logging on anonymously")
+	return true
+
+
+func _on_steam_logged_on(ok: bool, detail: String) -> void:
+	if not ok:
+		Log.error("game server: %s" % detail)
+		_finish(ExitCode.STEAM_INIT_FAILED, "steam logon failed")
+		return
+	steam_server.sns_warm_up()
+	var vport: int = Tuning.i(&"net.sdr_virtual_port")
+	if sdr.listen("", vport) != OK:
+		Log.error("game server: no SDR listen socket")
+		_finish(ExitCode.BIND_FAILED, "no sdr listen socket")
+		return
+	if host_link != null:
+		sdr.admission = host_link.admits
+	Log.info("game server %d listening on SDR (virtual port %d)" % [steam_server.steam_id(), vport])
+	_print_ready(steam_server.steam_id())
+
+
+func _start_host_link() -> bool:
+	host_link = HostLink.new()
+	if host_link.start(config.control_port, config.parent_pid, config.build) != OK:
+		Log.error("could not open the host link on loopback")
+		get_tree().quit(ExitCode.BIND_FAILED)
+		return false
+	net.relay_token = host_link.token  # Path B: the host's relay tags friends with it
+	host_link.status_of = func() -> Dictionary:
+		return {"clients": net.sessions.welcomed().size(), "identity": str(steam_server.steam_id() if steam_server != null else 0),
+			"logged_on": steam_server != null and steam_server.is_logged_on()}
+	host_link.shutdown_requested.connect(func() -> void: _finish(ExitCode.OK, "the host quit"))
+	host_link.parent_gone.connect(func() -> void:
+		Log.info("the host's client is gone; play goes on for whoever is connected (NET-11)"))
+	Log.info("host link on 127.0.0.1:%d (parent %d)" % [host_link.control_port, config.parent_pid])
+	return true
+
+
+## One line on stdout for the spawner (HostLinkWire.ready_line).
+func _print_ready(identity: int) -> void:
+	if _ready_printed or host_link == null:
+		return
+	_ready_printed = true
+	print(HostLinkWire.ready_line(host_link.control_port, host_link.token, _game_port, identity, Tuning.i(&"net.sdr_virtual_port")))
+
+
+## STM-04: a hosted server whose last client left goes after net.empty_server_linger_s.
+func _linger() -> void:
+	if net == null or _finishing:
+		return
+	var clients: int = net.sessions.welcomed().size()
+	if clients > 0:
+		_had_client = true
+		_empty_since_usec = -1
+		return
+	if not _had_client:
+		return
+	var now: int = TickTimer.now_usec()
+	if _empty_since_usec < 0:
+		_empty_since_usec = now
+	elif now - _empty_since_usec >= roundi(Tuning.f(&"net.empty_server_linger_s") * 1000000.0):
+		_finish(ExitCode.OK, "the last client left %.0f s ago" % Tuning.f(&"net.empty_server_linger_s"))
+
+
+## A clean end: the snapshot (NET-09), the host told, connections closed, Steam logged off.
+func _finish(code: int, why: String) -> void:
+	if _finishing:
+		return
+	_finishing = true
+	Log.info("server ending: %s" % why)
+	Log.info("snapshot: NET-09 takes it here (not yet built)")
+	if host_link != null:
+		host_link.say_bye(why)
+		for _i: int in 10:  # 100 ms for the bye to reach the host before the link goes
+			OS.delay_msec(10)
+			host_link.poll()
+		host_link.close()
+	if net != null:
+		net.transport.close()
+	if steam_server != null:
+		steam_server.shutdown()
+	_finish_records()
+	Log.close()
+	get_tree().quit(code)
 
 
 ## STM-02: dev-mode lobbies (the client's fake lobby backend meets here) beside the game port, on dev, QA and

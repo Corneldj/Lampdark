@@ -226,13 +226,15 @@ func _unwrap(peer: int, payload: PackedByteArray) -> TransportEvent:
 ## Steam's real-time status into NET-02's stats: ping as the round trip, 1 - quality as loss.
 func _refresh_stats(peer: int) -> void:
 	var conns: Array = Variants.dict(_peers[peer])["conns"]
-	var s: Dictionary = api.sns_status(Variants.whole(conns[0]))
+	# GodotSteam nests the figures: {response, connection_status: {ping, local_quality, ...}, lanes_status}.
+	var s: Dictionary = Variants.dict(api.sns_status(Variants.whole(conns[0])).get("connection_status", {}))
 	if s.is_empty():
 		return
 	var st: PeerStats = stats(peer)
 	st.rtt_ms = float(Variants.number(s.get("ping", st.rtt_ms)))
-	if s.has("connection_quality_local"):
-		st.loss = clampf(1.0 - float(Variants.number(s["connection_quality_local"])), 0.0, 1.0)
+	var quality: float = float(Variants.number(s.get("local_quality", -1.0)))
+	if quality >= 0.0:
+		st.loss = clampf(1.0 - quality, 0.0, 1.0)  # -1 while Steam has no estimate yet
 
 
 func _flush() -> void:

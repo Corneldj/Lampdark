@@ -13,6 +13,8 @@ const LAMP_CHECK: String = "lamp_check"
 const LOBBY_KEYS: Array[String] = ["lb_game", "lb_build", "lb_proto", "lb_mode", "lb_list", "lb_hard", "lb_hands", "lb_state",
 	"lb_resume", "lb_server", "lb_code", "lb_dev_addr"]
 const MEMBER_KEYS: Array[String] = ["lb_ready", "lb_name", "lb_lamp", "lb_badge", "lb_muted"]
+## STM-04: how a member came in ("code" or "invite"), for the host's admission lists.
+const MEMBER_VIA: String = "lb_via"
 ## MOD-03's RunOptions until it exists: the Escape, the Standard list, no hard variant, no Hands.
 const DEFAULT_OPTIONS: Dictionary = {"mode": "escape", "list": "standard", "hard": "", "hands": false}
 

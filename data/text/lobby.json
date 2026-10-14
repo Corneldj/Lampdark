@@ -22,6 +22,8 @@
 		"lobby.different_version": "Different version",
 		"lobby.full": "That crew is full",
 		"lobby.gone": "That crew has gone",
-		"lobby.create_failed": "Could not open a crew"
+		"lobby.create_failed": "Could not open a crew",
+		"lobby.run_ended": "The run has ended. It can be resumed.",
+		"lobby.hosting": "Starting the crew's server..."
 	}
 }

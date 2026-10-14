@@ -10,6 +10,8 @@ var connect_lobby: String = ""
 var no_steam: bool = false
 ## STM-03: Steam's fake SDR lag and loss, "lag_ms,loss_pct" (dev and QA only). Empty: none.
 var sdr_fake: String = ""
+## STM-04: host through the relay (Path B) rather than an anonymous game server (Path A).
+var host_relay: bool = false
 var persona_name: String = ""
 var qa_token: String = ""
 ## Headless bot brain (FND-09): tools/bots/brains/<name>.gd. Empty for a player.

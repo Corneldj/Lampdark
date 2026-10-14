@@ -7,6 +7,10 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <timeapi.h>
+#else
+#include <cerrno>
+#include <csignal>
+#include <sys/types.h>
 #endif
 
 using namespace godot;
@@ -19,6 +23,7 @@ void LbCoreInfo::_bind_methods() {
 	ClassDB::bind_static_method("LbCoreInfo", D_METHOD("has_debug_tools"), &LbCoreInfo::has_debug_tools);
 	ClassDB::bind_static_method("LbCoreInfo", D_METHOD("add_i64", "a", "b"), &LbCoreInfo::add_i64);
 	ClassDB::bind_static_method("LbCoreInfo", D_METHOD("request_timer_resolution_1ms"), &LbCoreInfo::request_timer_resolution_1ms);
+	ClassDB::bind_static_method("LbCoreInfo", D_METHOD("process_alive", "pid"), &LbCoreInfo::process_alive);
 }
 
 String LbCoreInfo::version() {
@@ -42,6 +47,24 @@ bool LbCoreInfo::request_timer_resolution_1ms() {
 	return timeBeginPeriod(1) == TIMERR_NOERROR;
 #else
 	return true;
+#endif
+}
+
+bool LbCoreInfo::process_alive(int64_t pid) {
+	if (pid <= 0) {
+		return false;
+	}
+#ifdef _WIN32
+	HANDLE h = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, static_cast<DWORD>(pid));
+	if (h == nullptr) {
+		return false;
+	}
+	DWORD code = 0;
+	const bool alive = GetExitCodeProcess(h, &code) != 0 && code == STILL_ACTIVE;
+	CloseHandle(h);
+	return alive;
+#else
+	return kill(static_cast<pid_t>(pid), 0) == 0 || errno == EPERM;
 #endif
 }
 

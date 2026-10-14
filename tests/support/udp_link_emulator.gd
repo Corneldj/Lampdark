@@ -21,6 +21,9 @@ var forwarded: int = 0
 ## uplink measurement adds the 28 bytes of IPv4 and UDP headers per datagram).
 var client_datagrams: int = 0
 var client_bytes: int = 0
+## STM-04: server to client, as the client's datagrams (UDP payload; add 28 per datagram for IPv4 and UDP).
+var server_datagrams: int = 0
+var server_bytes: int = 0
 var dropped: int = 0
 ## Datagrams released after a later-arriving one in the same direction.
 var reordered: int = 0
@@ -45,7 +48,10 @@ func pump(now_usec: int) -> void:
 		_client_port = _client_side.get_packet_port()
 		_schedule(now_usec, true, bytes)
 	while _server_side.get_available_packet_count() > 0:
-		_schedule(now_usec, false, _server_side.get_packet())
+		var down: PackedByteArray = _server_side.get_packet()
+		server_datagrams += 1
+		server_bytes += down.size()
+		_schedule(now_usec, false, down)
 	_queue.sort_custom(func(a: Array, b: Array) -> bool:
 		var a_time: int = a[0]
 		var b_time: int = b[0]

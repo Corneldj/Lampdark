@@ -21,6 +21,9 @@ var voice: Callable = Callable()
 ## and a dev server also to a local client without one. A release server opens it to nobody.
 var flavour: int = BuildInfo.detect(FeatureProvider.new()).flavour
 var qa_token: String = ""
+## STM-04: the host link's token; a relay tag carrying it (from a loopback peer) names a friend's
+## SteamID for Path B. Empty: no relay tags accepted.
+var relay_token: String = ""
 ## Debug-lane messages refused from sessions without the grant (FND-08's isolation checks).
 var debug_refused: int = 0
 ## Slots dropped during this tick's pump (cleared at the next).
@@ -138,6 +141,13 @@ func _on_message(run: RunState, event: TransportEvent, now: int) -> void:
 	if not session.welcomed:
 		if type == Protocol.Msg.HELLO and event.lane == Lane.Id.CONTROL:
 			_on_hello(run, session, Protocol.Hello.decode(payload), now)
+		elif type == Protocol.Msg.RELAY_TAG and event.lane == Lane.Id.CONTROL and session.relayed_identity.is_empty():
+			var tag: Array = Protocol.read_relay_tag(payload)
+			if relay_token.is_empty() or tag.is_empty() or str(tag[0]) != relay_token or not transport.is_local_peer(session.peer):
+				Log.info("peer %d refused: a relay tag without the host's token" % session.peer)
+				_reject(session, Protocol.Reject.AUTH_FAILED)
+			else:
+				session.relayed_identity = str(tag[1])
 		else:
 			_reject(session, Protocol.Reject.BAD_MESSAGE)
 		return
@@ -178,6 +188,8 @@ func _on_hello(run: RunState, session: Sessions.Session, hello: Protocol.Hello, 
 		_reject(session, Protocol.Reject.FLAVOUR_MISMATCH)
 		return
 	var verified: String = transport.verified_identity(session.peer)
+	if verified.is_empty():
+		verified = session.relayed_identity
 	if not verified.is_empty() and verified != hello.identity:
 		# STM-03: over SDR the connection's SteamID is Steam's word; a Hello claiming another is refused.
 		Log.info("peer %d refused: identity %s on a connection from %s" % [session.peer, hello.identity, verified])

@@ -5,7 +5,7 @@ class_name Protocol
 
 ## 2: FND-08's handshake carries the build flavour and the QA token, and Welcome the debug grant.
 ## 3: SND-10's MIC_LABEL, the crew-list label flag, client to server.
-const PROTOCOL_VERSION: int = 4
+const PROTOCOL_VERSION: int = 5
 
 enum Msg {
 	HELLO = 1,
@@ -28,6 +28,7 @@ enum Msg {
 	DEBUG_TAG = 18,  ## FND-08, debug lane only, QA and dev servers: an illusion's id, by tick and record number
 	MIC_LABEL = 19,  ## SND-10: the crew list's 'Mute (callouts and taps only)' flag, one byte, client to server, control lane
 	KNOCKS = 20,  ## SND-15: a fall's three knocks, no payload at all, control lane, to every conscious miner
+	RELAY_TAG = 21,  ## STM-04's Path B: before Hello, from the host's relay over loopback: "<host token>:<friend's SteamID>"
 }
 
 enum Reject {
@@ -196,3 +197,16 @@ static func read_i64(payload: PackedByteArray, index: int = 0) -> int:
 
 static func read_u8(payload: PackedByteArray) -> int:
 	return payload[0] if not payload.is_empty() else -1
+
+
+## STM-04: the relay tag's payload: the host token and the friend's authenticated SteamID.
+static func relay_tag(token: String, steam_id: int) -> PackedByteArray:
+	return frame(Msg.RELAY_TAG, ("%s:%d" % [token, steam_id]).to_utf8_buffer())
+
+
+## [token, steam_id] from a relay tag's payload ([] when malformed).
+static func read_relay_tag(payload: PackedByteArray) -> Array:
+	var parts: PackedStringArray = payload.get_string_from_utf8().split(":")
+	if parts.size() != 2 or not parts[1].is_valid_int():
+		return []
+	return [parts[0], parts[1].to_int()]

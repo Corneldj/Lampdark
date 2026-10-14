@@ -416,7 +416,7 @@
 			"unit": "s",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket STM-04"
 		},

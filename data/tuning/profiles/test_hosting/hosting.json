@@ -1,0 +1,6 @@
+{
+	"note": "STM-04's process tests: a hosted server whose last client left goes after 2 s, not 60.",
+	"keys": {
+		"net.empty_server_linger_s": {"value": 2}
+	}
+}

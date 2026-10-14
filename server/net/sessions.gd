@@ -17,6 +17,8 @@ class Session:
 	## SND-10: the crew-list label ('Mute (callouts and taps only)'), as the client last sent it.
 	## Shown until the client says otherwise; UI-04's crew list relays it, and nothing else about voice.
 	var mute_label: bool = true
+	## STM-04's Path B: the SteamID the host's relay vouched for (with the host token), "" otherwise.
+	var relayed_identity: String = ""
 
 
 var max_slots: int = 5

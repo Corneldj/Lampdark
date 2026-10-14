@@ -3,9 +3,11 @@
 #  1. The release flavour's app ID (lampblack/steam/app_id.lb_release, else lampblack/steam/app_id)
 #     is set and is not 480 (Spacewar); so are the playtest and demo overrides when present.
 #  2. No export ships steam_appid.txt: not in any pack, not beside any executable.
-#  3. No server export can start the client API: no GodotSteam in its pack, no Steam library beside it.
-#  4. Only shared/platform/steam/steam_api.gd names the Steam singleton, and server/ never names
-#     SteamApi or SteamService.
+#  3. No server export can start the client API: no GodotSteam in its pack and no client GodotSteam
+#     library beside it. A server may carry GodotSteam Server (the game-server API, STM-04's Path A)
+#     in steam_server/ beside the executable, loaded at run time, and only there.
+#  4. Only shared/platform/steam/steam_api.gd and steam_server_api.gd name a GodotSteam singleton, and
+#     server/ never names SteamApi or SteamService (the client adapter).
 set -uo pipefail
 
 GAME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -53,6 +55,10 @@ for pack in "${packs[@]}"; do
 			grep -q '^res://addons/godotsteam/' <<<"$contents" && fail "$preset: GodotSteam in a server pack"
 			libs="$(ls "$dir" | grep -E '(lib)?steam_api|godotsteam' || true)"
 			[ -n "$libs" ] && fail "$preset: Steam libraries beside a server: $(tr '\n' ' ' <<<"$libs")"
+			if [ -d "$dir/steam_server" ]; then
+				client_lib="$(find "$dir/steam_server" -name 'libgodotsteam.*' -o -name 'godotsteam.gdextension' | head -1)"
+				[ -n "$client_lib" ] && fail "$preset: the client GodotSteam in steam_server/: $client_lib"
+			fi
 			;;
 		*-client-*)
 			case "$preset" in
@@ -65,9 +71,9 @@ for pack in "${packs[@]}"; do
 	[ "$status" -eq 0 ] && echo "ok   $preset"
 done
 
-singleton="$(grep -rlE '(get_singleton|has_singleton)\(&?"Steam"|SINGLETON: StringName = &"Steam"|^[^#]*\bSteam\.[a-z]' \
-	--include='*.gd' client server shared tools 2>/dev/null | grep -v '^shared/platform/steam/steam_api.gd$' || true)"
-[ -n "$singleton" ] && fail "only shared/platform/steam/steam_api.gd may call GodotSteam: $(tr '\n' ' ' <<<"$singleton")"
+singleton="$(grep -rlE '(get_singleton|has_singleton)\(&?"Steam(Server)?"|SINGLETON: StringName = &"Steam(Server)?"|^[^#]*\bSteam(Server)?\.[a-z]' \
+	--include='*.gd' client server shared tools 2>/dev/null | grep -vE '^shared/platform/steam/steam(_server)?_api.gd$' || true)"
+[ -n "$singleton" ] && fail "only shared/platform/steam/steam_api.gd and steam_server_api.gd may call GodotSteam: $(tr '\n' ' ' <<<"$singleton")"
 server_refs="$(grep -rlE '\b(SteamApi|SteamService)\b' --include='*.gd' server 2>/dev/null || true)"
 [ -n "$server_refs" ] && fail "server code names the client Steam API: $(tr '\n' ' ' <<<"$server_refs")"
 [ "$status" -eq 0 ] && echo "ok   GodotSteam is called only by the adapter, and never by server code"

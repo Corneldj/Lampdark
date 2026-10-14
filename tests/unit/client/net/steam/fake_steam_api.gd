@@ -239,7 +239,9 @@ func sns_info(handle: int) -> Dictionary:
 
 
 func sns_status(_handle: int) -> Dictionary:
-	return {"ping": 37, "connection_quality_local": 0.98}
+	# As GodotSteam reports it (measured live in STM-04's spike).
+	return {"response": 1, "connection_status": {"state": 3, "ping": 37, "local_quality": 0.98, "remote_quality": 0.97,
+		"pending_unreliable": 0, "pending_reliable": 0, "queue_time": 0}, "lanes_status": []}
 
 
 func run_callbacks() -> void:
