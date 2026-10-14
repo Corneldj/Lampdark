@@ -27,7 +27,12 @@ jobs:
         with:
           path: ${{ env.LB_SCONS_CACHE }}
           key: scons-${{ hashFiles('versions.json', 'native/SConstruct') }}-${{ github.sha }}
-          restore-keys: scons-${{ hashFiles('versions.json', 'native/SConstruct') }}-
+          # Any earlier cache serves when the exact one misses: SCons keys every object by its own
+          # content, so a stale entry is never used, only skipped (an edit to SConstruct or
+          # versions.json then rebuilds what changed, not everything).
+          restore-keys: |
+            scons-${{ hashFiles('versions.json', 'native/SConstruct') }}-
+            scons-
       - name: Build, doctest, layering, imports, digest
         run: tools/build/ci_native.sh
       # Saved even when a later step fails, so a build that ran out of time seeds the next.
