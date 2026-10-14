@@ -73,7 +73,9 @@ func test_about_turn() -> void:
 	assert_eq(int(Variants.number(s["turns"])), 1)
 	assert_almost_eq(float(Variants.number(Variants.dict(s["turn"])["p95"])), 140.0, 0.01, "the reveal behind, tagged as the turn's")
 	assert_eq(int(Variants.number(s["turn_held_frames_max"])), 1, "held geometry on the next frame")
-	assert_lt(float(Variants.number(s["cost_usec_per_frame"])), 100.0, "under 0.1 ms a frame")
+	gut.p("probe cost %.1f us a frame (budget 100)" % float(Variants.number(s["cost_usec_per_frame"])))
+	if OS.get_environment("LB_TIMING_REPORT_ONLY").is_empty():
+		assert_lt(float(Variants.number(s["cost_usec_per_frame"])), 100.0, "under 0.1 ms a frame")
 
 
 func test_release_keeps_only_summaries() -> void:

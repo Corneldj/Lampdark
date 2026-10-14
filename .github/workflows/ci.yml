@@ -15,6 +15,11 @@ permissions:
   contents: read
   checks: write
 
+env:
+  # Shared runners report the timing budgets rather than gate on them (QA-03 holds them on real
+  # hardware): a busy Windows runner ran the 0.1 ms probe budget at 0.106.
+  LB_TIMING_REPORT_ONLY: "1"
+
 jobs:
   lint:
     runs-on: ubuntu-24.04

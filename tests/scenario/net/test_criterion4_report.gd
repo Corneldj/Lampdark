@@ -22,7 +22,8 @@ func test_short_run_at_120() -> void:
 	var tc: Dictionary = r["tick_cost"]
 	for key: String in ["tick", "visibility", "road_graph"]:
 		assert_gt(int(Variants.number(Variants.dict(tc[key])["p99_us"])), 0, "%s p99 reported" % key)
-	assert_lt(float(Variants.number(r["probe_cost_usec_per_frame_max"])), 100.0, "probes under 0.1 ms a frame")
+	if OS.get_environment("LB_TIMING_REPORT_ONLY").is_empty():  # shared CI runners report it only
+		assert_lt(float(Variants.number(r["probe_cost_usec_per_frame_max"])), 100.0, "probes under 0.1 ms a frame")
 	var bot: Dictionary = Variants.array(r["bots"])[0]
 	assert_gt(float(Variants.number(Variants.dict(bot["down"])["game_kbps"])), 1.0)
 	assert_gt(float(Variants.number(Variants.dict(bot["up"])["voice_kbps"])), 0.0, "voice counted apart")
