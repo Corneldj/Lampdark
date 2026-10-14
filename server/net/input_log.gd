@@ -11,10 +11,12 @@ extends RefCounted
 ##    "c": [[cue_id, shown_tick, fraction], ...] (NET-06, only when present), "k": acked frame (NET-06, -1 omitted)}
 ##   {"t": tick, "op": {...}}  a scenario-kit setup step applied before that tick (add_miner, set_gate,
 ##                              script_rolls), so a kit run replays too
+##   {"t": tick, "v": [[kind, slot, arg], ...]}  SND-09's voice facts applied that tick (VoiceFacts):
+##                              live voice arrives between ticks, so its effects ride the log as inputs
 ##   {"end": ticks run, "hash": "<state hash>"}
 
 const FORMAT: String = "lampblack-input-log"
-const VERSION: int = 1
+const VERSION: int = 2
 const FLAG_REAL: int = 1
 const FLAG_STARVED: int = 2
 const FLAG_STARVED_NOW: int = 4
@@ -32,6 +34,8 @@ var build: String = ""
 var by_tick: Dictionary = {}
 ## tick -> Array of op dictionaries, in the order applied.
 var ops_by_tick: Dictionary = {}
+## tick -> Array of voice facts ([kind, slot, arg]), in the order applied.
+var voice_by_tick: Dictionary = {}
 var end_tick: int = -1
 var end_hash: String = ""
 var _file: FileAccess = null
@@ -77,6 +81,13 @@ func append_op(tick: int, op: Dictionary) -> void:
 		_file.store_line(JSON.stringify({"t": tick, "op": op}))
 
 
+## SND-09: the voice facts a tick applied.
+func append_voice(tick: int, facts: Array) -> void:
+	voice_by_tick[tick] = facts.duplicate(true)
+	if _file != null:
+		_file.store_line(JSON.stringify({"t": tick, "v": facts}))
+
+
 ## Records the run's end and closes the file.
 func finish(ticks_run: int, state_hash: String) -> void:
 	end_tick = ticks_run
@@ -98,6 +109,8 @@ func save(path: String) -> Error:
 		tick_set[tick] = true
 	for tick: Variant in ops_by_tick.keys():
 		tick_set[tick] = true
+	for tick: Variant in voice_by_tick.keys():
+		tick_set[tick] = true
 	var ticks: Array = tick_set.keys()
 	ticks.sort()
 	for tick: Variant in ticks:
@@ -107,6 +120,8 @@ func save(path: String) -> Error:
 			var item: Array = Variants.array(raw)
 			var consumed: InputBuffer.Consumed = item[1]
 			file.store_line(JSON.stringify(_entry(int(Variants.number(tick)), int(Variants.number(item[0])), consumed)))
+		if voice_by_tick.has(tick):
+			file.store_line(JSON.stringify({"t": tick, "v": voice_by_tick[tick]}))
 	if end_tick >= 0:
 		file.store_line(JSON.stringify({"end": end_tick, "hash": end_hash}))
 	file.close()
@@ -145,6 +160,9 @@ static func load_file(path: String) -> InputLog:
 			var ops: Array = log.ops_by_tick.get(tick, [])
 			ops.append(Variants.dict(entry["op"]))
 			log.ops_by_tick[tick] = ops
+			continue
+		if entry.has("v"):
+			log.voice_by_tick[tick] = Variants.array(entry["v"])
 			continue
 		var list: Array = log.by_tick.get(tick, [])
 		list.append([int(Variants.number(entry.get("s", 0))), _consumed(entry)])

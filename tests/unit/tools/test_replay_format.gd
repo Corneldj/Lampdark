@@ -54,7 +54,7 @@ func test_not_a_log_is_refused() -> void:
 	file.store_line("{\"format\": \"something else\"}")
 	file.close()
 	assert_null(InputLog.load_file("user://fnd09_not_a_log.jsonl"))
-	assert_push_error("not a version 1 input log")
+	assert_push_error("not a version 2 input log")
 
 
 func test_a_tampered_log_misses_the_hash() -> void:

@@ -17,6 +17,9 @@ extends SimSystem
 
 ## SND-09: every valid frame's band, before routing or loss: (speaker slot, band).
 signal band_heard(slot: int, band: int)
+## SND-09: an utterance closed (`ended`) or split at voice.utterance_split_s: the frames the speaker
+## sent in it, the frames forwarded to each listener ({slot: count}) and its loudest band.
+signal utterance_closed(slot: int, frames: int, delivered: Dictionary, band: int, ended: bool)
 
 var forwarder: LbVoiceForwarder = LbVoiceForwarder.new()
 ## slot -> VoiceRoutes.Route; NORMAL unless an owning ticket sets one.
@@ -115,7 +118,8 @@ func on_voice(slot: int, payload: PackedByteArray) -> bool:
 		if ending:
 			return true  # an END with no utterance: nothing to close
 		_utterances += 1
-		st = {"band": band, "ended": false, "streams": {}, "refreshed_tick": -1, "utterance": _utterances, "rates": {}}
+		st = {"band": band, "ended": false, "streams": {}, "refreshed_tick": -1, "utterance": _utterances, "rates": {},
+			"frames": 0, "delivered": {}, "loudest": 0}
 		_speaking[slot] = st
 		_refresh(slot, st)
 	elif not ending and band != int(Variants.number(st["band"])):
@@ -132,11 +136,33 @@ func on_voice(slot: int, payload: PackedByteArray) -> bool:
 		if peer >= 0:
 			_net.transport.send(peer, Lane.Id.VOICE, Protocol.frame(Protocol.Msg.VOICE, bytes))
 			forwarded += 1
+		if not ending:
+			var delivered: Dictionary = st["delivered"]
+			var listener: int = int(Variants.number(item[0]))
+			delivered[listener] = int(Variants.number(delivered.get(listener, 0))) + 1
+	if not ending:
+		st["frames"] = int(Variants.number(st["frames"])) + 1
+		st["loudest"] = maxi(int(Variants.number(st["loudest"])), band)
+		if int(Variants.number(st["frames"])) >= roundi(Tuning.f(&"voice.utterance_split_s") / VoicePackets.FRAME_S):
+			_close_utterance(slot, st, false)  # long speech is credited promptly
 	if ending:
 		st["ended"] = true
+		_close_utterance(slot, st, true)
 		_log_utterance(slot, st)
 		forwarder.clear(slot)
 	return true
+
+
+## SND-09's evaluation window: hands the counts on and starts a new window.
+func _close_utterance(slot: int, st: Dictionary, ended: bool) -> void:
+	var frames: int = int(Variants.number(st["frames"]))
+	if frames > 0:
+		utterance_closed.emit(slot, frames, Variants.dict(st["delivered"]).duplicate(), int(Variants.number(st["loudest"])), ended)
+	elif ended:
+		utterance_closed.emit(slot, 0, {}, 0, true)
+	st["frames"] = 0
+	st["delivered"] = {}
+	st["loudest"] = 0
 
 
 ## SND-08's QA log (dev and QA builds; QA-01 checks it against §6.2): per listener, the band, the

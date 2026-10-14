@@ -25,6 +25,9 @@ class Event:
 	var duration_s: float = 0.5
 	var struck: bool = false
 	var mode: int = RoadGraphService.MODE_AIR
+	## False for SND-09's live-voice band events: creatures and the collapse hook hear them, but
+	## no player record is made (listeners hear the voice itself; no client learns a band).
+	var to_players: bool = true
 	var deliveries: Array = []
 	var collapses: PackedInt64Array = PackedInt64Array()
 
@@ -70,7 +73,8 @@ func system_name() -> String:
 
 ## Emits a sound at a tile. Options: source (entity id, server-only), voice_id (vocal types),
 ## level_np (required for voice and callouts: the band's np), duration_s, origins
-## (Array[Vector2i], several origins at once, e.g. the engine), mode (RoadGraphService.MODE_*).
+## (Array[Vector2i], several origins at once, e.g. the engine), mode (RoadGraphService.MODE_*),
+## players (false: no player deliveries, for live voice's band events).
 ## An origin in solid rock (the Tapper's taps on a wall face) enters the air at the open floor
 ## beside it: its walkable neighbours (north, east, south, west) replace it, since the Road Graph
 ## carries sound only through open tiles.
@@ -104,6 +108,7 @@ func emit(type: NoiseTypes.Type, tile: Vector2i, opts: Dictionary = {}) -> int:
 	event.duration_s = float(Variants.number(opts.get("duration_s", e.duration_s)))
 	event.struck = e.struck
 	event.mode = int(Variants.number(opts.get("mode", RoadGraphService.MODE_AIR)))
+	event.to_players = Variants.flag(opts.get("players", true))
 	_queue.append(event)
 	return event.id
 
@@ -196,7 +201,7 @@ func _dispatch(event: Event) -> void:
 	for raw: Variant in event.deliveries:
 		var d: Dictionary = Variants.dict(raw)
 		var listener: int = int(Variants.number(d["listener"]))
-		if creature_listeners.has(listener):
+		if creature_listeners.has(listener) or not event.to_players:
 			continue
 		var record: Dictionary = client_record(event, d)
 		# NET-08's audit only (SND-03's delivery log): never part of what a client may be told.

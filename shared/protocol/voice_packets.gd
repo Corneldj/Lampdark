@@ -18,6 +18,8 @@ const MAX_BAND: int = 4
 const UP_HEADER: int = 3
 const DOWN_HEADER: int = 15
 const POS_SCALE: int = 16
+## One Opus frame's length, seconds.
+const FRAME_S: float = 0.02
 
 
 static func up(seq: int, band: int, flags: int, opus: PackedByteArray) -> PackedByteArray:

@@ -82,6 +82,10 @@ var tells: OverheadTells = null
 var deafen: Deafen = null
 ## SND-07's voice forwarding (routes, direct lines, shared channels); outside the state hash.
 var voice: VoiceSystem = null
+## SND-09's band events (voice as noise) and the heard rule with the unheard timer.
+var voice_noise: VoiceNoise = null
+var heard: HeardTracker = null
+var voice_facts: VoiceFacts = null
 ## DIR-04's depth helpers are static (Depth): which ring counts, D, the relax lengths, Level names.
 ## True while frozen (knock-off, host migration): only the network stage runs.
 var frozen: bool = false
