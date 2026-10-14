@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdio>
+#include <cstdlib>
 #include <vector>
 
 using namespace lb::core;
@@ -103,6 +104,10 @@ TEST_CASE("10^7 hash_u64 calls fit the 100 ms budget") {
 	}
 	MESSAGE("10^7 hash_u64 calls: " << ms << " ms (sink " << sink << ")");
 #ifndef LB_DEBUG_TOOLS
-	CHECK(ms < 100.0);
+	// FND-04: CI's shared runners report the budget rather than gate on it (they run ~10% slow);
+	// it is held on the dev machine and QA-03's hardware.
+	if (std::getenv("LB_TIMING_REPORT_ONLY") == nullptr) {
+		CHECK(ms < 100.0);
+	}
 #endif
 }

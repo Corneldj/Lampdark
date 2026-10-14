@@ -11,6 +11,8 @@ jobs:
     timeout-minutes: 40
     env:
       LB_SCONS_CACHE: ${{ github.workspace }}/.scons-cache
+      # Shared runners report the core's timing budgets rather than gate on them (QA-03 holds them).
+      LB_TIMING_REPORT_ONLY: "1"
     steps:
       - uses: actions/checkout@v4
         with:
