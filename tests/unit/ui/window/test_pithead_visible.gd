@@ -14,6 +14,7 @@ func test_the_pithead_is_drawn_before_any_frame() -> void:
 	var cm: Node = script.new()
 	add_child_autofree(cm)
 	var cfg: ClientConfig = ClientConfig.new()
+	cfg.build.flavour = BuildInfo.Flavour.DEV  # a bare BuildInfo is release, which ignores --no-steam
 	cfg.no_steam = true
 	cm.call("start", cfg)
 	var play: Button = cm.find_child("Play", true, false)
