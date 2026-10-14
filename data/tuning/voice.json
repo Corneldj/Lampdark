@@ -226,6 +226,16 @@
 			"kind": "param",
 			"note": "unit as written: × range; ticket SND-08"
 		},
+		"voice.crackle_level_dbfs": {
+			"value": -40,
+			"type": "float",
+			"unit": "dBFS",
+			"source": "Proposed (GDD §14.2)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-08: the guttering-wick crackle under a voice near a Stythe whose tell plays"
+		},
 		"voice.device_poll_s": {
 			"value": 0.5,
 			"type": "float",
@@ -383,6 +393,26 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "ticket SND-08"
+		},
+		"voice.muffle_max_hz": {
+			"value": 8000,
+			"type": "float",
+			"unit": "Hz",
+			"source": "Proposed (GDD §14.2)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-08: the low-pass a barely muffled voice starts from, just past half range"
+		},
+		"voice.muffle_min_hz": {
+			"value": 800,
+			"type": "float",
+			"unit": "Hz",
+			"source": "Proposed (GDD §14.2)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket SND-08: a fully muffled voice's low-pass (the range's edge, or through rock)"
 		},
 		"voice.noise_suppression_level": {
 			"value": "moderate",

@@ -24,6 +24,9 @@ void LbVoicePlayout::configure(const Dictionary &d) {
 	}
 	p.smear_dbfs = d.get("smear_dbfs", -60.0);
 	p.hiss_dbfs = d.get("hiss_dbfs", -60.0);
+	p.muffle_min_hz = d.get("muffle_min_hz", 800.0);
+	p.muffle_max_hz = d.get("muffle_max_hz", 8000.0);
+	p.crackle_dbfs = d.get("crackle_dbfs", -40.0);
 	p_ = std::make_unique<cv::VoicePlayout>(p);
 }
 
@@ -74,6 +77,7 @@ Dictionary LbVoicePlayout::header() const {
 	d["telephone"] = (p_->flags() & cv::wire::TELEPHONE) != 0;
 	d["dry"] = (p_->flags() & cv::wire::DRY) != 0;
 	d["crackle"] = p_->crackle();
+	d["muffle"] = p_->muffle();
 	d["position"] = Vector2(static_cast<real_t>(p_->x()), static_cast<real_t>(p_->y()));
 	return d;
 }

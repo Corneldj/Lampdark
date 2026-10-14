@@ -57,7 +57,7 @@ bool VoicePlayout::push(const uint8_t *packet, size_t size, int64_t now_us) {
 		return false;
 	}
 	gain_db_ = static_cast<int8_t>(packet[5]);
-	crackle_ = packet[6];
+	treat_ = packet[6];
 	flags_ = head & (wire::MUFFLED | wire::TELEPHONE | wire::DRY);
 	int32_t x = 0, y = 0;
 	for (int i = 0; i < 4; i++) {
@@ -99,6 +99,34 @@ void VoicePlayout::telephone(std::vector<float> &pcm) {
 		noise_ = noise_ * 1664525u + 1013904223u;
 		x += hiss * (static_cast<double>(noise_ >> 8) / 8388608.0 - 1.0);
 		v = static_cast<float>(x);
+	}
+}
+
+// SND-08's treatment: the distance muffle (a low-pass falling from muffle_max_hz to muffle_min_hz
+// as the muffle rises) and the Stythe's crackle (sparse decaying pops under the voice, like a
+// guttering wick).
+void VoicePlayout::treat(std::vector<float> &pcm) {
+	const double m = muffle();
+	if (m > 0.0) {
+		const double ratio = params_.muffle_min_hz / params_.muffle_max_hz;
+		const double fc = params_.muffle_max_hz * std::pow(ratio, m); // determinism: allow (client voice playback)
+		const double a = 1.0 - std::exp(-2.0 * 3.14159265358979323846 * fc / 48000.0); // determinism: allow (client voice playback)
+		for (float &v : pcm) {
+			muffle_lp_ += a * (v - muffle_lp_);
+			v = static_cast<float>(muffle_lp_);
+		}
+	}
+	if (crackle()) {
+		const double amp = db_to_lin(params_.crackle_dbfs) * 4.0;
+		for (float &v : pcm) {
+			noise_ = noise_ * 1664525u + 1013904223u;
+			if ((noise_ >> 20) < 6) { // a pop about every 350 samples
+				crackle_env_ = 1.0;
+			}
+			crackle_env_ *= 0.985;
+			noise_ = noise_ * 1664525u + 1013904223u;
+			v += static_cast<float>(amp * crackle_env_ * (static_cast<double>(noise_ >> 8) / 8388608.0 - 1.0));
+		}
 	}
 }
 
@@ -170,6 +198,7 @@ std::vector<VoicePlayout::Out> VoicePlayout::pop(int64_t now_us) {
 				telephone(o.pcm);
 			}
 		}
+		treat(o.pcm);
 		outs.push_back(std::move(o));
 	}
 	return outs;

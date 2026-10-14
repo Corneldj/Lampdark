@@ -20,6 +20,7 @@ const NET_INPUT_DIGEST: int = 15  # hash, FND-09
 const NET_EVENT_ORDER: int = 16  # hash, NET-04
 const NET_TOKEN: int = 17  # stream, NET-04
 const RESCUE_SELF_RESCUE: int = 18  # stream, RSC-03
+const VOICE_LOSS: int = 19  # stream, SND-08
 
 const ALL: Dictionary = {
 	"gen.socket.open": 1,
@@ -40,4 +41,5 @@ const ALL: Dictionary = {
 	"net.event_order": 16,
 	"net.token": 17,
 	"rescue.self_rescue": 18,
+	"voice.loss": 19,
 }

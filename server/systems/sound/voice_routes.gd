@@ -37,7 +37,8 @@ static func route_band(route: Route, band: int) -> Array:
 
 
 ## One listener's delivery from `from` (tile, position) at `band`: {} when out of reach, else
-## {gain_db, muffled, position (apparent, tiles), via ("road" or "rock")}.
+## {gain_db, muffled, position (apparent, tiles), via ("road" or "rock"), distance, range}: SND-08
+## measures the rock line's distance against its own range (half the band's).
 static func reach(graph: LbRoadGraph, from_tile: Vector2i, from_pos: Vector2, to_tile: Vector2i, band: int, key: int) -> Dictionary:
 	var range_t: float = range_tiles(band)
 	if range_t <= 0.0:
@@ -51,7 +52,8 @@ static func reach(graph: LbRoadGraph, from_tile: Vector2i, from_pos: Vector2, to
 	if not d.is_empty():
 		var path: float = float(Variants.number(d.get("path_tiles", 0.0)))
 		var apparent: Vector2 = d.get("apparent", from_pos)
-		return {"gain_db": edge * clampf(path / range_t, 0.0, 1.0), "muffled": false, "position": apparent, "via": "road"}
+		return {"gain_db": edge * clampf(path / range_t, 0.0, 1.0), "muffled": false, "position": apparent, "via": "road",
+			"distance": path, "range": range_t}
 	var rock_range: float = range_t * Tuning.f(&"voice.rock_line_range_factor")
 	var line: Dictionary = graph.rock_line(from_tile, to_tile)
 	if line.is_empty() or Variants.flag(line.get("brick", false)) or Variants.flag(line.get("door", false)):
@@ -63,4 +65,4 @@ static func reach(graph: LbRoadGraph, from_tile: Vector2i, from_pos: Vector2, to
 		return {}
 	var face: Vector2i = line.get("listener_face", to_tile)
 	return {"gain_db": edge * clampf(dist / range_t, 0.0, 1.0), "muffled": true, "position": Vector2(face) + Vector2(0.5, 0.5),
-		"via": "rock"}
+		"via": "rock", "distance": dist, "range": rock_range}

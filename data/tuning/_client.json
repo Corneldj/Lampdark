@@ -1,5 +1,5 @@
 {
-	"hash": "da90b8a00a37c7227743248c29b06c255286734a52f4222ceddffdee22d17dac",
+	"hash": "c53876a279500987f7dd234b8c6ad965790b0dd65aa6139a52be0b8e63a30d05",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -1060,6 +1060,13 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"voice.crackle_level_dbfs": {
+			"value": -40.0,
+			"type": "float",
+			"unit": "dBFS",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"voice.device_poll_s": {
 			"value": 0.5,
 			"type": "float",
@@ -1114,6 +1121,20 @@
 			"value": 40.0,
 			"type": "float",
 			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.muffle_max_hz": {
+			"value": 8000.0,
+			"type": "float",
+			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.muffle_min_hz": {
+			"value": 800.0,
+			"type": "float",
+			"unit": "Hz",
 			"visibility": "client",
 			"kind": "param"
 		},

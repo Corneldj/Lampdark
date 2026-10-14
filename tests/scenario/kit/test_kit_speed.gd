@@ -2,7 +2,8 @@ extends "res://tests/scenario/kit/scenario_test.gd"
 ## FND-09's speed target (Proposed): 1,000 ticks of a four-miner scenario in under 2 s on a CI
 ## core. GEN-03's grey box does not exist yet, so this runs on the two-cell test map with the
 ## light passes on. The guard here is loose (4 s) so a slow runner does not flake; the measured
-## time is printed for the record.
+## time is printed for the record. With LB_TIMING_REPORT_ONLY set (shared CI runners, Wine), it is
+## only reported.
 
 func before_all() -> void:
 	assert_true(Tuning.load_server())
@@ -23,4 +24,5 @@ func test_a_thousand_ticks_of_four_miners() -> void:
 	assert_eq(s.run.tick, 1000)
 	for h: MinerHandle in s.miners:
 		assert_eq(h.inputs_sent, 1000)
-	assert_lt(seconds, 4.0, "well inside the loose guard")
+	if OS.get_environment("LB_TIMING_REPORT_ONLY").is_empty():
+		assert_lt(seconds, 4.0, "well inside the loose guard")

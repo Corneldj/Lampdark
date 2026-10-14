@@ -4,7 +4,8 @@ extends RefCounted
 ## Both ride Protocol.Msg.VOICE on the voice lane (unreliable, sequenced). Upstream, client to
 ## server: u16 seq, u8 head (band in bits 0-2; END, PROBE), then one 20 ms Opus frame. Downstream,
 ## server to a listener: u16 stream, u16 seq, u8 head (band; END, PROBE, MUFFLED, TELEPHONE, DRY),
-## i8 gain dB, u8 crackle, i32 x and y in 1/16 tiles (the apparent position), then the Opus frame.
+## i8 gain dB, u8 treatment (bit 0 SND-08's crackle; bits 1-7 its distance muffle, 0-127), i32 x and y
+## in 1/16 tiles (the apparent position), then the Opus frame. No loss rate or condition rides it.
 ## The stream id is new every utterance and per listener: nothing on the wire names a speaker.
 
 const BAND_MASK: int = 0x07
@@ -45,5 +46,5 @@ static func read_down(p: PackedByteArray) -> Dictionary:
 		return {}
 	return {"stream": p.decode_u16(0), "seq": p.decode_u16(2), "band": p[4] & BAND_MASK, "end": (p[4] & END) != 0,
 		"probe": (p[4] & PROBE) != 0, "muffled": (p[4] & MUFFLED) != 0, "telephone": (p[4] & TELEPHONE) != 0,
-		"dry": (p[4] & DRY) != 0, "gain_db": p.decode_s8(5), "crackle": p[6],
+		"dry": (p[4] & DRY) != 0, "gain_db": p.decode_s8(5), "crackle": (p[6] & 1) != 0, "muffle": (p[6] >> 1) / 127.0,
 		"position": Vector2(p.decode_s32(7), p.decode_s32(11)) / float(POS_SCALE), "opus": p.slice(DOWN_HEADER)}

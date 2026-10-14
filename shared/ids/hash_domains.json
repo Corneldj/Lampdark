@@ -179,6 +179,16 @@
 				"victim entity",
 				"grab id"
 			]
+		},
+		{
+			"name": "voice.loss",
+			"id": 19,
+			"owner": "SND-08",
+			"kind": "stream",
+			"keys": [
+				"utterance id",
+				"listener slot"
+			]
 		}
 	]
 }

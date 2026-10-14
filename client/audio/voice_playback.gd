@@ -92,7 +92,9 @@ func _new_playout() -> LbVoicePlayout:
 		else float(LbVoicePlayout.suggest_ms(jitter_ms, roundi(lo), roundi(hi), roundi(frame_ms)))
 	p.configure({"frame_ms": roundi(frame_ms), "min_ms": roundi(lo), "max_ms": roundi(hi), "start_ms": roundi(start),
 		"speech_low_hz": Tuning.f(&"voice.speech_band_low_hz"), "speech_high_hz": Tuning.f(&"voice.speech_band_high_hz"),
-		"cap_dbfs": caps(), "smear_dbfs": Tuning.f(&"voice.smear_level_dbfs"), "hiss_dbfs": Tuning.f(&"voice.telephone_hiss_dbfs")})
+		"cap_dbfs": caps(), "smear_dbfs": Tuning.f(&"voice.smear_level_dbfs"), "hiss_dbfs": Tuning.f(&"voice.telephone_hiss_dbfs"),
+		"muffle_min_hz": Tuning.f(&"voice.muffle_min_hz"), "muffle_max_hz": Tuning.f(&"voice.muffle_max_hz"),
+		"crackle_dbfs": Tuning.f(&"voice.crackle_level_dbfs")})
 	return p
 
 

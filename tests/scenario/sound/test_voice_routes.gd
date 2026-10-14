@@ -230,7 +230,8 @@ func test_stream_ids_are_new_every_utterance_and_headers_name_nobody() -> void:
 	assert_ne(ids[1], ids[2])
 	var keys: Array = VoicePackets.read_down(PackedByteArray([1, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])).keys()
 	keys.sort()
-	assert_eq(keys, ["band", "crackle", "dry", "end", "gain_db", "muffled", "opus", "position", "probe", "seq", "stream", "telephone"],
+	assert_eq(keys, ["band", "crackle", "dry", "end", "gain_db", "muffle", "muffled", "opus", "position", "probe", "seq", "stream",
+		"telephone"],
 		"a header's fields: nothing names a speaker or an entity")
 
 

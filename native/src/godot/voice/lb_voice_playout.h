@@ -26,7 +26,7 @@ public:
 	bool done() const;
 	double jitter_ms() const;
 	int64_t target_ms() const;
-	// {gain_db, muffled, telephone, dry, crackle, position (Vector2 tiles)}
+	// {gain_db, muffled, telephone, dry, crackle, muffle (0-1), position (Vector2 tiles)}
 	::godot::Dictionary header() const;
 	// The target a new stream should start from, given the jitter measured so far.
 	static int64_t suggest_ms(double jitter_ms, int64_t min_ms, int64_t max_ms, int64_t frame_ms);

@@ -27,6 +27,11 @@ struct PlayoutParams {
 	double hiss_dbfs = -60.0; // voice.telephone_hiss_dbfs
 	double telephone_low_hz = 300.0;
 	double telephone_high_hz = 3400.0;
+	// SND-08: the distance muffle's low-pass, from `muffle_max_hz` (barely) to `muffle_min_hz` (fully
+	// muffled), and the Stythe's crackle under the voice.
+	double muffle_min_hz = 800.0; // voice.muffle_min_hz
+	double muffle_max_hz = 8000.0; // voice.muffle_max_hz
+	double crackle_dbfs = -40.0; // voice.crackle_level_dbfs
 };
 
 class VoicePlayout {
@@ -54,16 +59,18 @@ public:
 	bool done() const { return jitter_.done(); }
 	double jitter_ms() const { return jitter_.jitter_ms(); }
 	int target_ms() const { return jitter_.target_ms(); }
-	// The latest header: gain, flags, crackle and the apparent position (tiles).
+	// The latest header: gain, flags, the treatment (crackle, muffle) and the apparent position (tiles).
 	int gain_db() const { return gain_db_; }
 	uint8_t flags() const { return flags_; }
-	uint8_t crackle() const { return crackle_; }
+	bool crackle() const { return (treat_ & 0x01) != 0; }
+	double muffle() const { return static_cast<double>(treat_ >> 1) / 127.0; }
 	double x() const { return x16_ / 16.0; }
 	double y() const { return y16_ / 16.0; }
 
 private:
 	void cap(std::vector<float> &pcm, int band, double &cut_db);
 	void telephone(std::vector<float> &pcm);
+	void treat(std::vector<float> &pcm);
 	std::vector<float> smear(bool fade_in);
 
 	PlayoutParams params_;
@@ -78,7 +85,9 @@ private:
 	int last_band_ = 1;
 	int gain_db_ = 0;
 	uint8_t flags_ = 0;
-	uint8_t crackle_ = 0;
+	uint8_t treat_ = 0;
+	double muffle_lp_ = 0.0;
+	double crackle_env_ = 0.0;
 	int32_t x16_ = 0;
 	int32_t y16_ = 0;
 };
