@@ -119,6 +119,8 @@ public:
 	double processing_us_p95() const;
 	uint64_t dropped_frames() const; // clean frames the game did not drain in time
 	uint64_t dropped_far_end() const; // far-end samples that found the ring full
+	// SND-06's speakers warning: the processor's echo return loss, dB (< 0: unknown).
+	double echo_return_loss_db() const { return erl_.load(std::memory_order_relaxed); }
 	// Only for tests: every buffer is zero (after close()).
 	bool buffers_zeroed() const;
 
@@ -130,6 +132,7 @@ private:
 	std::unique_ptr<VoiceProcessor> proc_;
 	bool open_ = false;
 	std::atomic<bool> lost_{false};
+	std::atomic<double> erl_{-1.0};
 	uint64_t open_count_ = 0;
 
 	SpscRing<float> far_; // game thread -> device thread, 48 kHz mono

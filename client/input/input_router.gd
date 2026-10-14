@@ -49,6 +49,8 @@ var ring_options: Array[String] = []
 var wheel: WheelInput = WheelInput.new()
 var ring_wheel: WheelInput = WheelInput.new()
 var facing_deg: float = 0.0
+## SND-06: push-to-talk (V; unbound on pad) held this tick. It gates sending only, never the band.
+var push_to_talk_held: bool = false
 var _prev: Dictionary = {}
 var _pressed_at: Dictionary = {}
 var _latches: Dictionary = {}
@@ -69,6 +71,7 @@ func sample(frame: Dictionary) -> InputRecord:
 	var now: float = Variants.number(frame.get("now_s", 0.0))
 	var down: Dictionary = Variants.dict(frame.get("down", {})).duplicate()
 	var pick_vec: Vector2 = frame.get("wheel_vec", Vector2.ZERO)
+	push_to_talk_held = Variants.flag(down.get("push_to_talk", false))
 	if context == InputContexts.Context.CLOSE_UP:
 		for action: String in InputContexts.CLOSE_UP_ACTIONS:
 			if _pressed(action, down):

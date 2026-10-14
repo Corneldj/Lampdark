@@ -28,6 +28,8 @@ var audio_options: AudioOptions = null
 var voice_capture: VoiceCapture = null
 ## SND-10: the player's microphone choice (Mute until chosen), its consent log and the crew-list label.
 var mic_mode: MicMode = null
+## SND-06: the own voice's loudness band (SND-07 sends it; the breath-cloud shows it).
+var voice_bands: VoiceBands = null
 var _events_played: int = 0
 ## NET-12: light-to-contents and about-turn probes on this client; a telemetry summary each minute
 ## (release builds keep no per-tile sample).
@@ -88,6 +90,9 @@ func _process(delta: float) -> void:
 		if voice_capture != null:
 			voice_capture.voice_live = connection.state == ClientConnection.State.CONNECTED
 			voice_capture.tick(Time.get_ticks_usec())
+			voice_bands.ptt_held = router != null and router.push_to_talk_held
+			if world_view != null:
+				world_view.breath.set_band(voice_bands.band, Time.get_ticks_msec() / 1000.0)
 		if connection.state == ClientConnection.State.CONNECTED and connection.last_frame_tick > _input_frame:
 			_input_frame = connection.last_frame_tick
 			var stamp: PackedInt64Array = connection.stamp_for_send(Transport.now_usec())
@@ -143,7 +148,9 @@ func _start_input() -> void:
 	mic_mode = MicMode.new()
 	voice_capture = VoiceCapture.new()
 	voice_capture.mic_mode = func() -> int: return mic_mode.mode
-	voice_capture.state_changed.connect(func(_s: int) -> void: mic_mode.set_device_present(not voice_capture.no_device()))
+	voice_bands = VoiceBands.new()
+	voice_capture.state_changed.connect(_on_voice_state)
+	voice_capture.frame_ready.connect(func(pcm: PackedFloat32Array, _t: int) -> void: voice_bands.push(pcm))
 	mic_mode.label_changed.connect(_send_mic_label)
 	Log.info("voice: capture ready, backend %s, mic mode %s" % [voice_capture.backend,
 		MicMode.Mode.keys()[voice_capture.effective_mode()]])
@@ -317,6 +324,16 @@ func _report_connection() -> void:
 			Log.warn("refused by the server: %s" % RejectText.text(connection.reject_reason))
 		ClientConnection.State.DROPPED:
 			Log.warn("connection lost: %s" % connection.drop_reason)
+
+
+## SND-05/06/10: the capture opened, closed or lost its device: the label follows, and the band
+## meter takes that device's thresholds (or the defaults), or falls silent.
+func _on_voice_state(state: int) -> void:
+	mic_mode.set_device_present(not voice_capture.no_device())
+	if state == VoiceCapture.State.OPEN:
+		voice_bands.set_thresholds(Calibration.thresholds_for(voice_capture.native.device_id()))
+	else:
+		voice_bands.reset()
 
 
 ## SND-10: the label flag on joining and on every change; nothing else about voice goes to the server.

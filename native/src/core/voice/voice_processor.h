@@ -41,6 +41,9 @@ public:
 	virtual void far_end(const float *block) = 0;
 	// One 10 ms block of microphone samples, cleaned in place.
 	virtual void capture(float *block) = 0;
+	// SND-06: the echo canceller's echo return loss (dB of far end to the echo it hears); small when
+	// the game's sound reaches the microphone (speakers), large or unknown (< 0) with headphones.
+	virtual double echo_return_loss_db() const { return -1.0; }
 };
 
 // Every number comes from tuning (data/tuning/voice.json), passed in by the client.

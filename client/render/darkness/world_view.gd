@@ -37,6 +37,8 @@ var shadows: ShadowLayer = null
 var dust: DustHaze = null
 var puffs: WallPuffs = null
 var _over: _OverLayer = null
+## SND-06: the own voice's breath-cloud, over the dark like the own miner.
+var breath: BreathCloud = null
 var _over_canvas: CanvasLayer = null
 var _material: ShaderMaterial = null
 var _mask: ImageTexture = null
@@ -86,6 +88,8 @@ func _init() -> void:
 	add_child(_over_canvas)
 	_over = _OverLayer.new()
 	_over_canvas.add_child(_over)
+	breath = BreathCloud.new()
+	_over_canvas.add_child(breath)
 
 
 ## NORMAL; BLACK (RSC-04's Dark: nothing drawn, the own miner hidden); COMING_ROUND (the server
@@ -141,6 +145,7 @@ func show_frame(drawn: DrawnSet, view: ReceivedView, view_origin: Vector2, miner
 				off[t] = int(Variants.number(Variants.dict(shown.tiles[raw]).get("colour", 1)))
 		marks = EdgeGlow.layout(rect, miner, facing, view.glow_mask, view.glow_colour, off)
 	_over.set_frame(not black, (miner - view_origin) * tile_px, f, exposure, tile_px, marks, view_origin)
+	breath.set_frame(not black, (miner - view_origin) * tile_px, f, tile_px, now_s)
 
 
 func _set_texture(img: Image) -> void:

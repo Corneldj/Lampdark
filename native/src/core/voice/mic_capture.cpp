@@ -291,6 +291,7 @@ void MicCapture::close() {
 	}
 	open_ = false;
 	lost_.store(false, std::memory_order_release);
+	erl_.store(-1.0, std::memory_order_relaxed);
 	proc_.reset();
 	far_.wipe();
 	frames_.wipe();
@@ -370,6 +371,7 @@ void MicCapture::on_data(const float *samples, uint32_t count) {
 			proc_->far_end(far_block_);
 		}
 		proc_->capture(block_);
+		erl_.store(proc_->echo_return_loss_db(), std::memory_order_relaxed);
 		const int64_t t1 = steady_usec();
 		if (stats_.try_lock()) {
 			proc_us_[proc_next_++ % proc_us_.size()] = static_cast<uint32_t>(t1 - t0);

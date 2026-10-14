@@ -1,5 +1,5 @@
 {
-	"hash": "f02ab43204c6b7d1918264fb9d757730612028845bbf9733f733607af3873fb2",
+	"hash": "165f6639f01b2fb66a2048d928eac4a72350e1c8816adf22f59595d7e7133c6a",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -947,6 +947,13 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"voice.agc_warning_margin_db": {
+			"value": 6.0,
+			"type": "float",
+			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"voice.apm_backend": {
 			"value": "webrtc",
 			"type": "string",
@@ -966,10 +973,51 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"voice.band_median_ms": {
+			"value": 100.0,
+			"type": "float",
+			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.breath_cloud_fade_s": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "s",
+			"min": 0.0,
+			"max": 1.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.breath_cloud_offset_tiles": {
+			"value": 0.45,
+			"type": "float",
+			"unit": "tiles",
+			"min": 0.0,
+			"max": 1.5,
+			"visibility": "client",
+			"kind": "param"
+		},
 		"voice.calibration_clamp_db": {
 			"value": 6.0,
 			"type": "float",
 			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.calibration_floor_dbfs": {
+			"value": -60.0,
+			"type": "float",
+			"unit": "dBFS",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.calibration_min_speech_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"min": 0.1,
+			"max": 3.0,
 			"visibility": "client",
 			"kind": "param"
 		},
@@ -1047,6 +1095,31 @@
 			"value": 48000,
 			"type": "int",
 			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.speaker_warning_erl_db": {
+			"value": 20.0,
+			"type": "float",
+			"unit": "dB",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.speech_band_high_hz": {
+			"value": 3400.0,
+			"type": "float",
+			"unit": "Hz",
+			"min": 2000.0,
+			"max": 8000.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.speech_band_low_hz": {
+			"value": 300.0,
+			"type": "float",
+			"unit": "Hz",
+			"min": 100.0,
+			"max": 1000.0,
 			"visibility": "client",
 			"kind": "param"
 		},

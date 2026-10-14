@@ -29,6 +29,8 @@ var state: State = State.CLOSED
 var needs_calibration: bool = false
 ## The device the last calibration line was taken on (SND-06 sets it after the roll call).
 var calibrated_device: String = ""
+## SND-06's per-device store: a device it has thresholds for needs no new calibration line.
+var calibration_path: String = Calibration.PATH
 ## Off in tests that have no audio server worth tapping.
 var tap_far_end: bool = true
 var _next_poll_usec: int = 0
@@ -111,8 +113,8 @@ func _try_open() -> void:
 		_set_state(State.NO_DEVICE)
 		return
 	var device: String = native.device_id()
-	if not calibrated_device.is_empty() and device != calibrated_device:
-		needs_calibration = true
+	# SND-06: a new device id starts on the defaults and repeats the calibration line (MOD-04).
+	needs_calibration = device != calibrated_device and not Calibration.is_calibrated(device, calibration_path)
 	_start_tap()
 	_set_state(State.OPEN)
 

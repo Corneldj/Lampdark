@@ -14,3 +14,4 @@
 /native/tests/*.o
 /native/.sconsign*.dblite
 /.lfs-ids.txt
+/.scons-cache/

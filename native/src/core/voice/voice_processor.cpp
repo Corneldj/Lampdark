@@ -75,10 +75,14 @@ public:
 		const float *src = block;
 		float *dst = block;
 		apm_->ProcessStream(&src, config_, config_, &dst);
+		const webrtc::AudioProcessingStats stats = apm_->GetStatistics();
+		erl_ = stats.echo_return_loss ? *stats.echo_return_loss : -1.0;
 	}
+	double echo_return_loss_db() const override { return erl_; }
 
 private:
 	rtc::scoped_refptr<webrtc::AudioProcessing> apm_;
+	double erl_ = -1.0;
 	webrtc::StreamConfig config_;
 	float far_[CAPTURE_BLOCK] = {};
 };

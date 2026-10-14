@@ -153,6 +153,7 @@ Dictionary LbVoiceCapture::stats() const {
 	d["processing_us_p95"] = m ? m->processing_us_p95() : 0.0;
 	d["dropped_frames"] = m ? static_cast<int64_t>(m->dropped_frames()) : 0;
 	d["dropped_far_end"] = m ? static_cast<int64_t>(m->dropped_far_end()) : 0;
+	d["echo_return_loss_db"] = m ? m->echo_return_loss_db() : -1.0;
 	return d;
 }
 

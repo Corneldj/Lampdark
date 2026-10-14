@@ -45,7 +45,7 @@ public:
 	void push_far_end(const ::godot::PackedVector2Array &frames, int64_t mix_rate);
 	// [[PackedFloat32Array pcm (960), int ticks_usec], ...], oldest first.
 	::godot::Array pop_frames();
-	// {device_latency_ms, processing_us_p95, dropped_frames, dropped_far_end}.
+	// {device_latency_ms, processing_us_p95, dropped_frames, dropped_far_end, echo_return_loss_db}.
 	::godot::Dictionary stats() const;
 	// Debug builds only (tests): the fake driver's controls.
 	void fake_add_device(const ::godot::String &id, const ::godot::String &name, bool is_default);
