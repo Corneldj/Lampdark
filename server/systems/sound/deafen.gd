@@ -10,7 +10,7 @@ extends SimSystem
 
 ## Never reach a deafened listener (§4.7, §7.6): the rock taps, voices and callouts; and every tell,
 ## which travels as a DIFFUSE record.
-const DROPPED_TYPES: Array[int] = [NoiseTypes.Type.ROCK_TAP, NoiseTypes.Type.VOICE, NoiseTypes.Type.CALLOUT]
+const DROPPED_TYPES: Array[int] = [NoiseTypes.Type.ROCK_TAP, NoiseTypes.Type.VOICE, NoiseTypes.Type.CALLOUT, NoiseTypes.Type.FALL_SCREAM]
 
 ## slot -> the tick the deafness ends (exclusive).
 var until: Dictionary = {}

@@ -76,10 +76,18 @@ func play(record: AudioRecord, number: int = 0) -> void:
 		return  # VIS-09's puffs and bursts are drawn, never played
 	var db: float = gain_db(record)
 	var samples: PackedFloat32Array = SampleBank.pcm(SampleBank.stream(record.type))
+	var rate: float = SampleBank.RATE
+	if record.type == NoiseTypes.Type.FALL_SCREAM and record.voice >= 0:
+		# SND-15: with no voice on the mic, the fallen's character screams (SND-13's line).
+		var ids: PackedStringArray = VoiceManifest.voice_ids()
+		var line: PackedFloat32Array = VoiceBank.pcm(ids[record.voice], "scream", "take_1") if record.voice < ids.size() else PackedFloat32Array()
+		if not line.is_empty():
+			samples = line
+			rate = 48000.0
 	var bus: String = bus_for(record)
 	var pitch: float = 1.0 + Tuning.f(&"noise.pitch_variation") * (float(posmod(number * 7919, 21)) / 10.0 - 1.0)
 	for at: Vector2 in emitters(record, number):
-		var id: int = mixer.add(samples, SampleBank.RATE * pitch, at, db, bus)
+		var id: int = mixer.add(samples, rate * pitch, at, db, bus)
 		voices.append([id, db, at, bus, pitch, record.type])
 	_enforce_cap()
 	caption.emit(record.type, null if (record.flags & AudioRecord.DIFFUSE) != 0 else record.apparent - listener)

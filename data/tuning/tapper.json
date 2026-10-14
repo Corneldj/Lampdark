@@ -52,7 +52,8 @@
 				"brood_burst",
 				"bess_whinny",
 				"voice",
-				"callout"
+				"callout",
+				"fall_scream"
 			],
 			"type": "string_list",
 			"unit": "enum",

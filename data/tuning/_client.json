@@ -1,5 +1,5 @@
 {
-	"hash": "c53876a279500987f7dd234b8c6ad965790b0dd65aa6139a52be0b8e63a30d05",
+	"hash": "312dde05d2fcc3e4067323452cfeb614c32a6cf4d2feb455db17e6e3e68fa07d",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -1121,6 +1121,20 @@
 			"value": 40.0,
 			"type": "float",
 			"unit": "ms",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.knock_count": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "knocks",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.knock_interval_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
 			"visibility": "client",
 			"kind": "param"
 		},

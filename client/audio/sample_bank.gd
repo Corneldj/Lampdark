@@ -84,6 +84,9 @@ static func make(kind: String, seconds: float, seed_value: int) -> AudioStreamWA
 				v = sin(TAU * 70.0 * t) * exp(-t * 18.0) + rng.randf_range(-0.3, 0.3) * exp(-t * 60.0)
 			"click":
 				v = rng.randf_range(-1.0, 1.0) * exp(-t * 120.0)
+			"knock":  # SND-15's placeholder: a dull knock on wood
+				v = sin(TAU * 160.0 * t) * exp(-t * 30.0) + 0.5 * sin(TAU * 410.0 * t) * exp(-t * 55.0) \
+					+ rng.randf_range(-0.4, 0.4) * exp(-t * 90.0)
 			"bell":
 				v = (sin(TAU * 880.0 * t) + 0.5 * sin(TAU * 1760.0 * t)) * exp(-t * 4.0)
 			"hum":

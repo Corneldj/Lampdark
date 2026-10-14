@@ -16,7 +16,7 @@ const TABLE: Dictionary = {
 	"backfire": 30, "roof_fall": 30,
 	"shot": 40, "firedamp_blast": 40,
 }
-const VOCAL: Array[String] = ["panting", "gasp", "cough", "trapped_cry", "voice", "callout"]
+const VOCAL: Array[String] = ["panting", "gasp", "cough", "trapped_cry", "voice", "callout", "fall_scream"]
 ## Gameplay §7.3: the Deaf hears these, and not these.
 const STRUCK: Array[String] = ["step_walk", "step_run", "flint_click", "lamp_hang_clink", "rock_tap", "rail_bang",
 	"stone_landing", "carry_knock", "phone_bell", "hold_bell", "gate", "hammer", "engine_crank", "engine_running",
@@ -38,7 +38,7 @@ func test_every_source_at_its_np() -> void:
 		if e != null:
 			var np: int = TABLE[id]
 			assert_eq(e.np, float(np), "%s at %d np" % [id, np])
-	assert_eq(catalogue.entries.size(), TABLE.size() + 2, "the table plus voice and callouts")
+	assert_eq(catalogue.entries.size(), TABLE.size() + 3, "the table plus voice, callouts and the fall's scream")
 
 
 func test_every_entry_is_complete() -> void:

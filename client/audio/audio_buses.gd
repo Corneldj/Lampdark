@@ -2,11 +2,12 @@ class_name AudioBuses
 extends RefCounted
 ## SND-03: the mix. Master (a hard limiter at noise.limiter_ceiling_dbfs, so a real scream or a shot
 ## stays loud but safe) <- Game (with Muffled: a low-pass at noise.muffle_lowpass_hz for sounds that
-## crossed a closed portal), Tells, Ambience, Voice, Callouts, Ringing, Pithead. Built at runtime
+## crossed a closed portal), Tells, Ambience, Voice, Callouts, Ringing, Knocks (SND-15: no option
+## touches it), Pithead. Built at runtime
 ## (idempotent); the Tells bus carries the tell volume option (noise.tell_volume_db's range), which
 ## scales only what was delivered; the Ringing bus carries the ringing volume option (SND-04).
 
-const BUSES: Array[String] = ["Game", "Muffled", "Tells", "Ambience", "Voice", "Callouts", "Ringing", "Pithead"]
+const BUSES: Array[String] = ["Game", "Muffled", "Tells", "Ambience", "Voice", "Callouts", "Ringing", "Knocks", "Pithead"]
 
 
 static func install() -> void:

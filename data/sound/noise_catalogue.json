@@ -517,6 +517,18 @@
 			"sample": "sfx.callout",
 			"owner": "SND-11",
 			"source": "Gameplay §6.2, §6.4"
+		},
+		{
+			"id": "fall_scream",
+			"np_key": "voice.scream_np",
+			"rate_key": "",
+			"duration_key": "voice.fall_scream_s",
+			"vocal": true,
+			"category": "voice",
+			"caption": "caption.noise.fall_scream",
+			"sample": "sfx.fall_scream",
+			"owner": "SND-15",
+			"source": "Gameplay §6.8, A.3"
 		}
 	],
 	"silent": [

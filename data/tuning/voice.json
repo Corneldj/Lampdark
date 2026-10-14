@@ -350,7 +350,7 @@
 			"unit": "knocks",
 			"source": "Gameplay §6.8, A.3",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket SND-15"
 		},
@@ -370,7 +370,7 @@
 			"unit": "s",
 			"source": "Gameplay §6.8, A.3 (\"about\")",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket SND-15"
 		},

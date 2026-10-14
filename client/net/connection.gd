@@ -44,6 +44,8 @@ var ring_messages: int = 0
 var ambient_cues: Array[Dictionary] = []
 ## SND-04: Deafened records in arrival order ({duration_s, dip_db}); the audio side drains them.
 var deafened: Array[Dictionary] = []
+## SND-15: KNOCKS messages not yet played (each is a fall's set; the message carries nothing).
+var knocks: int = 0
 ## SND-07: voice packets from the server in arrival order, [packet, arrival usec]; VoicePlayback
 ## drains them (a bounded queue: older ones go first if nobody does).
 var voice_in: Array[Array] = []
@@ -194,6 +196,9 @@ func _on_message(event: TransportEvent, now: int) -> void:
 				voice_in.append([payload, now])
 				if voice_in.size() > VOICE_IN_MAX:
 					voice_in.pop_front()
+		Protocol.Msg.KNOCKS:
+			if payload.is_empty():
+				knocks += 1
 		Protocol.Msg.DEAFENED:
 			var d: Dictionary = DeafenedMessages.decode(payload)
 			if not d.is_empty():

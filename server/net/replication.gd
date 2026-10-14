@@ -132,6 +132,7 @@ func tick(run: RunState) -> void:
 		_send_feel(run, session)
 		_send_ambient(run, session)
 		_send_deafened(run, session)
+		_send_knocks(run, session)
 		_send_ring(run, session)
 		var observer: int = session.slot if run.vision != null and run.vision.watched_entity(session.slot) != 0 else -1
 		var bytes: PackedByteArray = native.build(session.slot, observer, run.tick, _own_block(run, session.slot),
@@ -141,6 +142,8 @@ func tick(run: RunState) -> void:
 		net.transport.send(session.peer, Lane.Id.FRAMES, Protocol.frame(Protocol.Msg.FRAME, bytes))
 		tap.publish(session.slot, run.tick, bytes)
 		_number_illusions(run, session.slot)
+	if run.fall_audio != null:
+		run.fall_audio.outbox.clear()  # a miner with no client misses them
 	_illusions.clear()
 	_built_tick = run.tick
 	# Frames leave this tick, not at the next tick's poll.
@@ -318,6 +321,15 @@ func _send_deafened(run: RunState, session: Sessions.Session) -> void:
 		else:
 			keep.append(item)
 	run.deafen.outbox = keep
+
+
+## SND-15: a fall's knocks: an empty KNOCKS message per fall, to each conscious miner's client.
+func _send_knocks(run: RunState, session: Sessions.Session) -> void:
+	if run.fall_audio == null:
+		return
+	for slot: int in run.fall_audio.outbox:
+		if slot == session.slot:
+			net.transport.send(session.peer, Lane.Id.CONTROL, Protocol.frame(Protocol.Msg.KNOCKS, PackedByteArray()))
 
 
 ## FND-08: each illusion this client's frame carried, by the record number the build gave it

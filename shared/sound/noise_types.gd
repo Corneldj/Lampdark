@@ -49,6 +49,7 @@ enum Type {
 	FIREDAMP_BLAST = 41,
 	VOICE = 42,
 	CALLOUT = 43,
+	FALL_SCREAM = 44,
 }
 
 

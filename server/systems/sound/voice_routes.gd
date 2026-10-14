@@ -11,7 +11,7 @@ extends RefCounted
 ## lines (LFT-12's phones: telephone band) and shared channels (RSC-04's dream channel, RSC-06's
 ## Lamp Check: dry, unspatialised, to every member).
 
-enum Route { NORMAL, DRAGGED, FALL_SCREAM, CUT, COMING_ROUND, ASIDE }
+enum Route { NORMAL, DRAGGED, FALL_SCREAM, CUT, COMING_ROUND, ASIDE, FALL_MUFFLED }
 
 const RANGE_KEYS: Array[StringName] = [&"", &"voice.whisper_range_tiles", &"voice.talk_range_tiles",
 	&"voice.shout_range_tiles", &"voice.scream_range_tiles"]
@@ -31,6 +31,8 @@ static func route_band(route: Route, band: int) -> Array:
 			return [1, true, true]
 		Route.FALL_SCREAM:
 			return [3, false, true]
+		Route.FALL_MUFFLED:
+			return [1, true, true]  # SND-15: a drag victim's scream, muffled at whisper range
 		Route.CUT, Route.ASIDE:
 			return [band, false, false]
 	return [band, false, true]

@@ -38,6 +38,8 @@ var loss_logs: bool = false
 var _utterances: int = 0
 ## slot -> {band, ended, streams {listener: id}, refreshed_tick}
 var _speaking: Dictionary = {}
+## SND-15: slot -> the tick its last frame (not an END) arrived.
+var _last_frame_tick: Dictionary = {}
 var _next_stream: int = 0
 var _run: RunState = null
 var _net: ServerNet = null
@@ -113,6 +115,7 @@ func on_voice(slot: int, payload: PackedByteArray) -> bool:
 	var ending: bool = Variants.flag(head["end"])
 	if not ending:
 		band_heard.emit(slot, band)
+		_last_frame_tick[slot] = _run.tick if _run != null else 0
 	var st: Dictionary = Variants.dict(_speaking.get(slot, {}))
 	if st.is_empty() or Variants.flag(st["ended"]):
 		if ending:
@@ -163,6 +166,16 @@ func _close_utterance(slot: int, st: Dictionary, ended: bool) -> void:
 	st["frames"] = 0
 	st["delivered"] = {}
 	st["loudest"] = 0
+
+
+## SND-15: the mic is live: an utterance under way whose last frame (whisper or above) arrived
+## within the last 100 ms.
+func mic_live(slot: int) -> bool:
+	var st: Dictionary = Variants.dict(_speaking.get(slot, {}))
+	if st.is_empty() or Variants.flag(st["ended"]) or not _last_frame_tick.has(slot) or _run == null:
+		return false
+	var window: int = maxi(1, ceili(0.1 * Tuning.f(&"net.tick_hz")))
+	return _run.tick - int(Variants.number(_last_frame_tick[slot])) <= window
 
 
 ## SND-08's QA log (dev and QA builds; QA-01 checks it against §6.2): per listener, the band, the
@@ -257,7 +270,7 @@ func compute(slot: int, band: int, streams: Dictionary, rates: Dictionary = {}) 
 		if Variants.flag(rb[2]) and _run.road_graph != null:
 			var from_tile: Vector2i = speaker["tile"]
 			var from_pos: Vector2 = speaker["position"]
-			var lossless: bool = kind == VoiceRoutes.Route.FALL_SCREAM
+			var lossless: bool = kind == VoiceRoutes.Route.FALL_SCREAM or kind == VoiceRoutes.Route.FALL_MUFFLED
 			var speaker_stythe: bool = conditions.near_stythe(from_pos)
 			var running: float = Tuning.f(&"voice.running_loss") if conditions.running(slot) else 0.0
 			var clean: float = Tuning.f(&"voice.clean_range_fraction")
@@ -294,6 +307,8 @@ func compute(slot: int, band: int, streams: Dictionary, rates: Dictionary = {}) 
 				route["muffle"] = 1.0 if muffled else LbVoiceLoss.distance_muffle(d, rng, clean)
 				route["loss"] = lr["loss"]
 				out.append(route)
+	if int(Variants.number(route_of.get(slot, VoiceRoutes.Route.NORMAL))) == VoiceRoutes.Route.CUT:
+		return out  # SND-15's cut: gone for the living, phone lines too
 	for raw: Variant in Variants.dict(direct.get(slot, {})).keys():
 		var other: int = int(Variants.number(raw))
 		var existing: int = -1

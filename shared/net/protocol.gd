@@ -5,7 +5,7 @@ class_name Protocol
 
 ## 2: FND-08's handshake carries the build flavour and the QA token, and Welcome the debug grant.
 ## 3: SND-10's MIC_LABEL, the crew-list label flag, client to server.
-const PROTOCOL_VERSION: int = 3
+const PROTOCOL_VERSION: int = 4
 
 enum Msg {
 	HELLO = 1,
@@ -27,6 +27,7 @@ enum Msg {
 	DEBUG_TRUTH = 17,  ## FND-08, debug lane only: a truth-view snapshot (5 Hz)
 	DEBUG_TAG = 18,  ## FND-08, debug lane only, QA and dev servers: an illusion's id, by tick and record number
 	MIC_LABEL = 19,  ## SND-10: the crew list's 'Mute (callouts and taps only)' flag, one byte, client to server, control lane
+	KNOCKS = 20,  ## SND-15: a fall's three knocks, no payload at all, control lane, to every conscious miner
 }
 
 enum Reject {

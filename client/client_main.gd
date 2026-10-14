@@ -22,6 +22,7 @@ var beds: AmbientBeds = null
 ## SND-04: the ears on the own miner, the deafened ringing and dip, and the audio options.
 var listener: MinerListener = null
 var deafness: Deafness = null
+var knocks: KnocksPlayer = null
 var audio_options: AudioOptions = null
 ## SND-05: the microphone, open only while the mic mode allows it and voice is live (SND-06 and
 ## SND-07 take its frames; SND-10 supplies the mode, Mute until its first-launch choice exists).
@@ -147,6 +148,9 @@ func _start_input() -> void:
 	deafness = Deafness.new(beds)
 	deafness.name = "Deafness"
 	add_child(deafness)
+	knocks = KnocksPlayer.new(deafness)
+	knocks.name = "Knocks"
+	add_child(knocks)
 	audio_options = AudioOptions.load_from()
 	audio_options.apply(events_player.mixer)
 	mic_mode = MicMode.new()
@@ -279,6 +283,9 @@ func _play_audio() -> void:
 	while not connection.deafened.is_empty():
 		var record: Dictionary = connection.deafened.pop_front()
 		deafness.start(record)
+	while connection.knocks > 0:
+		connection.knocks -= 1
+		knocks.enqueue()
 	var sputters: Array[Vector2] = []
 	if (int(Variants.number(connection.view.own.get("flame", 0))) & FlameFlags.GUTTER) != 0:
 		sputters.append(connection.view.own["position"])

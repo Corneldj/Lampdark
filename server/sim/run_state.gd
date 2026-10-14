@@ -86,6 +86,8 @@ var voice: VoiceSystem = null
 var voice_noise: VoiceNoise = null
 var heard: HeardTracker = null
 var voice_facts: VoiceFacts = null
+## SND-15's fall scream, cut and knocks.
+var fall_audio: FallAudio = null
 ## DIR-04's depth helpers are static (Depth): which ring counts, D, the relax lengths, Level names.
 ## True while frozen (knock-off, host migration): only the network stage runs.
 var frozen: bool = false

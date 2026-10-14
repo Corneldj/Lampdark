@@ -31,7 +31,7 @@ static func level_np(route: VoiceRoutes.Route, band: int) -> float:
 	if band <= 0 or band > VoicePackets.MAX_BAND:
 		return 0.0
 	match route:
-		VoiceRoutes.Route.FALL_SCREAM, VoiceRoutes.Route.CUT:
+		VoiceRoutes.Route.FALL_SCREAM, VoiceRoutes.Route.FALL_MUFFLED, VoiceRoutes.Route.CUT:
 			return 0.0
 		VoiceRoutes.Route.ASIDE, VoiceRoutes.Route.COMING_ROUND:
 			return Tuning.f(NP_KEYS[1])

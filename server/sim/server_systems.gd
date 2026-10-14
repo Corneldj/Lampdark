@@ -116,6 +116,9 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.voice_facts = VoiceFacts.new()
 	run.voice_facts.bind(run)
 	run.add_system(run.voice_facts)
+	run.fall_audio = FallAudio.new()
+	run.fall_audio.bind(run)
+	run.add_system(run.fall_audio)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:
