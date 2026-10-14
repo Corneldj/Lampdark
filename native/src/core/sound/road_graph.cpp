@@ -7,6 +7,7 @@
 #include <cmath>
 #include <limits>
 #include <queue>
+#include <set>
 
 namespace lb::core::sound {
 
@@ -147,9 +148,11 @@ bool RoadGraph::stitch(Coord cell, const CellBlock &block) {
 }
 
 void RoadGraph::link_edges(Coord a, Coord b) {
-	// Pairs of walkable zone tiles facing each other across the shared edge, grouped by zone pair.
-	std::map<std::pair<uint32_t, uint32_t>, std::pair<std::vector<Coord>, std::vector<Coord>>> groups;
+	// One portal per pair of walkable zone tiles facing each other across the shared edge, so
+	// crossing costs exactly its one tile wherever it happens (NET-08's audit found a single wide
+	// edge portal letting sound run along the edge for free: 6 tiles for an 11-tile walk).
 	const bool horizontal = a.y == b.y;
+	std::set<uint32_t> touched;
 	for (int64_t k = 0; k < CELL_TILES; k++) {
 		Coord ta, tb;
 		if (horizontal) {
@@ -166,30 +169,27 @@ void RoadGraph::link_edges(Coord a, Coord b) {
 		if (!za || !zb) {
 			continue;
 		}
-		auto &group = groups[{*za, *zb}];
-		group.first.push_back(ta);
-		group.second.push_back(tb);
-	}
-	for (auto &entry : groups) {
 		Portal p;
 		p.live = true;
 		p.cell = a < b ? a : b;
 		p.kind = PortalKind::EDGE;
-		p.zone = {entry.first.first, entry.first.second};
-		p.side = {entry.second.first, entry.second.second};
+		p.zone = {*za, *zb};
+		p.side = {std::vector<Coord>{ta}, std::vector<Coord>{tb}};
 		p.cross_air = 1.0;
 		p.open = true;
-		p.centre = p.side[0][p.side[0].size() / 2];
+		p.centre = ta;
 		const uint32_t index = static_cast<uint32_t>(portals_.size());
 		zones_[p.zone[0]].portals.push_back(index);
 		zones_[p.zone[1]].portals.push_back(index);
 		portals_.push_back(std::move(p));
 		cell_portals_[a].push_back(index);
 		cell_portals_[b].push_back(index);
-		// The neighbour's zone gains a portal: its field and portal-to-portal costs.
-		const uint32_t other = portals_[index].zone[1];
-		build_field(other, index);
-		build_pp(other);
+		// The neighbour's zone gains a portal: its field now, its portal-to-portal costs below.
+		build_field(*zb, index);
+		touched.insert(*zb);
+	}
+	for (uint32_t z : touched) {
+		build_pp(z);
 	}
 }
 

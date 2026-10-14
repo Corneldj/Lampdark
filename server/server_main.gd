@@ -5,6 +5,8 @@ extends Node
 
 ## Log tick-rate statistics this often, in ticks (60 s at 20 Hz).
 const STATS_EVERY_TICKS: int = 1200
+## NET-08: the stream audit, loaded by path in dev and QA servers only (tools/ is not in a pack).
+const STREAM_AUDIT: String = "res://tools/stream_audit/stream_audit.gd"
 
 var config: ServerConfig = null
 var run: RunState = null
@@ -14,6 +16,7 @@ var _started_usec: int = 0
 var _last_stats_tick: int = 0
 ## FND-08: the server console reads stdin on its own thread (dev and QA, a terminal only).
 var _console_thread: Thread = null
+var _audit: RefCounted = null
 
 
 func start(server_config: ServerConfig) -> void:
@@ -97,6 +100,11 @@ func _start_network() -> bool:
 	if not config.record_inputs_path.is_empty():
 		run.inputs.recorder = InputLog.begin(run, "", config.record_inputs_path, config.tuning_profile)
 		Log.info("recording applied inputs to %s" % config.record_inputs_path)
+	if not config.stream_audit_path.is_empty() and not config.build.is_release() and ResourceLoader.exists(STREAM_AUDIT):
+		var audit_script: GDScript = load(STREAM_AUDIT)
+		_audit = audit_script.new()
+		_audit.call(&"attach", run, net)
+		Log.info("stream audit on; report to %s" % config.stream_audit_path)
 	Log.info("listening on %s:%d (ENet, %d slots)" % [bind_address, transport.bound_port(), slots])
 	return true
 
@@ -139,6 +147,13 @@ func _finish_records() -> void:
 	Log.info("final state hash %s after %d ticks" % [final_hash, run.tick])
 	if run.inputs != null and run.inputs.recorder != null:
 		run.inputs.recorder.finish(run.tick, final_hash)
+	if _audit != null:
+		var report: Dictionary = _audit.call(&"report")
+		Log.info("stream audit: %d violations" % int(Variants.number(report["violations"])))
+		var audit_file: FileAccess = FileAccess.open(config.stream_audit_path, FileAccess.WRITE)
+		if audit_file != null:
+			audit_file.store_string(JSON.stringify(report, "\t"))
+			audit_file.close()
 	if config.stats_path.is_empty():
 		return
 	var stages: Dictionary = {}

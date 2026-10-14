@@ -1,6 +1,7 @@
 // lampblack_core entry point (FND-02). Every native class registers here.
 
 #include "godot/audio/lb_audio_mixer.h"
+#include "godot/audit/lb_audit_reference.h"
 #include "godot/voice/lb_opus.h"
 #include "godot/voice/lb_band_meter.h"
 #include "godot/voice/lb_voice_forwarder.h"
@@ -52,6 +53,9 @@ void initialize_lampblack_core(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(lb::godot::LbFrameCodec);
 	GDREGISTER_CLASS(lb::godot::LbCreatureNav);
 	GDREGISTER_CLASS(lb::godot::LbAudioMixer);
+#ifdef LB_DEBUG_TOOLS
+	GDREGISTER_CLASS(lb::godot::LbAuditReference); // NET-08's stream audit: dev and QA only
+#endif
 	GDREGISTER_CLASS(lb::godot::LbOpusEncoder);
 	GDREGISTER_CLASS(lb::godot::LbOpusDecoder);
 	GDREGISTER_CLASS(lb::godot::LbVoiceCapture);

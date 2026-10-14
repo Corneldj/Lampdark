@@ -9,7 +9,8 @@ const MinerHandle = preload("res://tests/scenario/kit/miner_handle.gd")
 
 ## Fills `report` (the orchestrator's shape) for `servers` scenarios of `bots` brains each. A
 ## soak may define scenario_config(server) -> Dictionary (merged into Scenario.create's, e.g. a
-## fixture), spawn_tile(scenario, bot) -> Vector2i, prepare(scenario) (after the bots join) and
+## fixture), created(scenario) (before anyone joins), spawn_tile(scenario, bot) -> Vector2i,
+## prepare(scenario) (after the bots join) and
 ## inspect(scenario) -> Dictionary (before it closes; kept as the server's "inspect").
 static func run(profile: Dictionary, servers: int, bots: int, ticks: int, out_dir: String, brain_for: Callable, report: Dictionary,
 		soak: Object = null) -> void:
@@ -20,6 +21,8 @@ static func run(profile: Dictionary, servers: int, bots: int, ticks: int, out_di
 		if soak != null and soak.has_method(&"scenario_config"):
 			cfg.merge(Variants.dict(soak.call(&"scenario_config", s)), true)
 		var scenario: Scenario = Scenario.create(cfg)
+		if soak != null and soak.has_method(&"created"):
+			soak.call(&"created", scenario)  # before anyone joins (NET-08's audit attaches here)
 		for b: int in bots:
 			var spec: String = brain_for.call(n)
 			var tile: Vector2i = Vector2i.ZERO

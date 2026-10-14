@@ -15,7 +15,7 @@ enum Kind { FLAG, INT, PORT, ENUM, STRING, HOST_PORT, U64 }
 const USAGE: String = ("usage: lampblack [--server] [--mode friends|public|nightshift] [--transport enet|sdr|loopback]"
 	+ " [--loopback] [--port <n>] [--offline] [--parent-pid <pid>] [--control-port <n>] [--resume <path>]"
 	+ " [--connect <host:port>] [--no-steam] [--name <persona>] [--seed <u64>] [--qa-token <t>] [--bot <brain>]"
-	+ " [--bot-seed <u64>] [--link <rtt_ms,loss_pct>] [--receive-log <path>] [--record-inputs <path>]"
+	+ " [--bot-seed <u64>] [--link <rtt_ms,loss_pct>] [--receive-log <path>] [--record-inputs <path>] [--stream-audit <path>]"
 	+ " [--stats-out <path>] [--exit-after-ticks <n>] [--tuning-profile <name>] [--tuning-hot-reload]"
 	+ " [--log <path>] [--log-level debug|info|warn|error]")
 
@@ -42,6 +42,7 @@ const SPEC: Dictionary = {
 	"--link": [Kind.STRING, true, []],
 	"--receive-log": [Kind.STRING, true, []],
 	"--record-inputs": [Kind.STRING, true, []],
+	"--stream-audit": [Kind.STRING, true, []],
 	"--stats-out": [Kind.STRING, true, []],
 	"--exit-after-ticks": [Kind.INT, true, []],
 	"--tuning-profile": [Kind.STRING, true, []],
@@ -216,6 +217,8 @@ func _apply(name: String, kind: Kind, value: String, options: Array) -> void:
 			client.receive_log_path = value
 		"--record-inputs":
 			server.record_inputs_path = value
+		"--stream-audit":
+			server.stream_audit_path = value
 		"--stats-out":
 			server.stats_path = value
 		"--exit-after-ticks":

@@ -25,6 +25,12 @@ class Decoded:
 	var view: ReceivedView = null
 	## {number, type, start_tick, apparent (Vector2), remaining_np, duration_s, voice (or absent)}
 	var events: Array[Dictionary] = []
+	## What this frame itself carried (NET-08's audit judges these): the tiles and geometry it
+	## upserted, the tokens it upserted, and whether it carried the glow.
+	var tiles_sent: Array[Vector2i] = []
+	var geometry_sent: Array[Vector2i] = []
+	var tokens_sent: Array[int] = []
+	var glow_sent: bool = false
 
 
 ## Bounds-checked little-endian reading: an underrun flags the reader instead of erroring.
@@ -126,11 +132,13 @@ func decode(payload: PackedByteArray) -> Decoded:
 	for _i: int in r.u16():
 		var t: Vector2i = own + Vector2i(r.i8(), r.i8())
 		view.tiles[t] = PackedByteArray([r.u8(), r.u8(), r.u8()])
+		d.tiles_sent.append(t)
 	for _i: int in r.u16():
 		view.tiles.erase(own + Vector2i(r.i8(), r.i8()))
 	for _i: int in r.u16():
 		var t: Vector2i = own + Vector2i(r.i8(), r.i8())
 		view.geometry[t] = PackedByteArray([r.u8(), r.u8()])
+		d.geometry_sent.append(t)
 	for _i: int in r.u16():
 		var token: int = r.u16()
 		var level: int = r.u8()
@@ -144,9 +152,11 @@ func decode(payload: PackedByteArray) -> Decoded:
 			e["in_hand"] = r.u16()
 			e["flame"] = r.u8()
 		view.entities[token] = e
+		d.tokens_sent.append(token)
 	for _i: int in r.u16():
 		view.entities.erase(r.u16())
 	if r.u8() == 1:
+		d.glow_sent = true
 		view.glow_mask = r.u32()
 		view.glow_colour = PackedByteArray()
 		view.glow_colour.resize(32)

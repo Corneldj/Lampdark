@@ -78,6 +78,8 @@ public:
 	bool has_source(uint32_t id) const { return sources_.count(id) != 0; }
 	size_t source_count() const { return sources_.size(); }
 	std::optional<SourceDesc> source(uint32_t id) const;
+	// Every registered source's id, ascending (NET-08's audit snapshots the descriptions).
+	std::vector<uint32_t> source_ids() const;
 	// The radius multiplier in force (VIS-08's guttering and shrinking), 1 for none or no source.
 	double radius_mult(uint32_t id) const;
 	// A miner's own point lights (lamp in hand or on the hook, candle, flare) and their radius

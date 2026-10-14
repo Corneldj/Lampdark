@@ -94,6 +94,8 @@ jobs:
           path: native/bin
       - name: Bot self-test (under 90 s)
         run: tools/build/ci_tests.sh selftest
+      - name: Stream audit, 60 s of four bots (NET-08)
+        run: tools/stream_audit/run.sh push
       - name: Render tests (Xvfb, Mesa)
         run: tools/build/ci_tests.sh render
       - name: Keep the logs
@@ -104,6 +106,7 @@ jobs:
           path: |
             build/ci/
             build/soaks/selftest/
+            build/soaks/stream_audit_push/
           retention-days: 14
 
   exports:

@@ -24,6 +24,8 @@ var qa_token: String = ""
 var exit_after_ticks: int = 0
 ## FND-09: write every applied input here, in the replay format (dev and QA only).
 var record_inputs_path: String = ""
+## NET-08: audit every record sent and write the report here as JSON at exit (dev and QA only).
+var stream_audit_path: String = ""
 ## FND-09: write tick costs, input counters and the final state hash here as JSON at exit.
 var stats_path: String = ""
 ## A tuning profile from data/tuning/profiles/ (dev and QA only). Empty means the base data.

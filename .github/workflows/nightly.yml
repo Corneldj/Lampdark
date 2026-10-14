@@ -42,18 +42,31 @@ jobs:
           retention-days: 30
 
   stream_audit:
-    needs: soak
+    needs: native
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
       - uses: actions/download-artifact@v4
-        continue-on-error: true
         with:
-          name: nightly-soak
-          path: build/soaks/nightly_m1
-      - name: Stream audit over the soak's run records (NET-08)
+          name: native-bin
+          path: native/bin
+      - run: chmod +x native/bin/* || true
+      - name: Import the project
+        run: godot --headless --path . --import || true
+      - name: Stream audit, 30 minutes of four bots (NET-08)
         run: tools/build/ci_nightly_slot.sh stream_audit
+      - name: Keep the audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-stream-audit
+          path: build/soaks/stream_audit_nightly/
+          if-no-files-found: ignore
+          retention-days: 30
 
   seed_harness:
     needs: native

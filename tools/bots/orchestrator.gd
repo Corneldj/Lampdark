@@ -88,6 +88,9 @@ func _parse(args: PackedStringArray) -> bool:
 		printerr("no soak named '%s' (%s)" % [soak_name, path])
 		return false
 	var script: GDScript = load(path)
+	if script == null or not script.can_instantiate():
+		printerr("the soak '%s' does not load (a parse error above)" % soak_name)
+		return false
 	soak = script.new()
 	soak.setup({})
 	out_dir = ProjectSettings.globalize_path("res://build/soaks/%s" % soak_name)

@@ -28,6 +28,15 @@ std::optional<SourceDesc> LightGrid::source(uint32_t id) const {
 	return it->second.desc;
 }
 
+std::vector<uint32_t> LightGrid::source_ids() const {
+	std::vector<uint32_t> out;
+	out.reserve(sources_.size());
+	for (const auto &entry : sources_) {
+		out.push_back(entry.first);
+	}
+	return out;
+}
+
 double LightGrid::radius_mult(uint32_t id) const {
 	auto it = sources_.find(id);
 	return it == sources_.end() ? 1.0 : it->second.radius_mult;
