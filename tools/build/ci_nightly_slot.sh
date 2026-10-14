@@ -17,6 +17,9 @@ if [ ! -x "${entry[0]}" ]; then
 	exit 0
 fi
 echo "nightly slot $1: ${entry[*]}"
+# A fresh clone has no .godot/ cache: import first, so every class_name resolves (as ci_tests.sh).
+mkdir -p build/ci
+"${GODOT:-godot}" --headless --path . --import > build/ci/import_nightly_$1.log 2>&1 || true
 "${entry[@]}"
 code=$?
 [ "$code" -eq 0 ] && echo "nightly slot $1: passed" || echo "nightly slot $1: FAILED (exit $code)"
