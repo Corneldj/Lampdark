@@ -3,6 +3,7 @@
 // after close; the far end resampled from the game's mix rate; and the real miniaudio path on its
 // null device.
 
+#include <cstdlib>
 #include "doctest.h"
 
 #include <chrono>
@@ -142,7 +143,9 @@ TEST_CASE("SND-05: processing stays well inside the 30 ms budget per 10 ms block
 	const double p95 = rig.mic->processing_us_p95();
 	std::printf("    webrtc processing per 10 ms block: p95 %.0f us\n", p95);
 	CHECK(p95 > 0.0);
-	CHECK(p95 < 5000.0);
+	if (std::getenv("LB_TIMING_REPORT_ONLY") == nullptr) { // FND-04: reported on CI's shared runners
+		CHECK(p95 < 5000.0);
+	}
 }
 
 TEST_CASE("SND-05: miniaudio's null device runs the real driver path: open, frames, close") {

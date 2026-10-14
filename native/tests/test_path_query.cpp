@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "mine_fixture.h"
 
 #include <doctest.h>
@@ -100,6 +101,10 @@ TEST_CASE("a 70-tile flood through a road network fits its budget") {
 	MESSAGE("70-tile flood: " << reached << " tiles in " << ms << " ms");
 	CHECK(reached > 1000);
 #ifndef LB_DEBUG_TOOLS
-	CHECK(ms < 1.0); // GEN-01 proposes 0.2 ms for a typical road flood; this grid is denser
+	// GEN-01 proposes 0.2 ms for a typical road flood; this grid is denser. CI's shared runners
+	// report it rather than gate on it (FND-04, as test_hash.cpp).
+	if (std::getenv("LB_TIMING_REPORT_ONLY") == nullptr) {
+		CHECK(ms < 1.0);
+	}
 #endif
 }

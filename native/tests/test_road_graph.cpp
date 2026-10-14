@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include "road_fixture.h"
 
 #include <doctest.h>
@@ -290,6 +291,9 @@ TEST_CASE("five miners walking and talking, 40 events a tick, in a 9x9-cell wind
 	const int64_t p99 = samples[samples.size() * 99 / 100];
 	MESSAGE("road graph 40 events: p50 " << samples[samples.size() / 2] << " us, p99 " << p99 << " us");
 #ifndef LB_DEBUG_TOOLS
-	CHECK(p99 < 500);
+	// FND-04: CI's shared runners report the budget rather than gate on it (as test_hash.cpp).
+	if (std::getenv("LB_TIMING_REPORT_ONLY") == nullptr) {
+		CHECK(p99 < 500);
+	}
 #endif
 }

@@ -1,0 +1,20 @@
+{
+	"version": "v1",
+	"frozen": "2026-10-15",
+	"note": "QA-01's survey, item for item as 'M1 kill-test protocol.md' section 5. Never edit a frozen version: issue v2.",
+	"items": [
+		{"id": "S1", "criterion": 1, "when": "after play, waves 1 and 2", "text": "When you lost sight of a friend, how did it feel?",
+			"answers": ["1 Not at all frightening", "2", "3", "4", "5 Very frightening"], "scoring": "4 or 5 counts as frightening"},
+		{"id": "S2", "criterion": 3, "when": "at 20:00, play stopped (wave 1)", "text": "Right now, is the black screen giving you dread or boredom?",
+			"answers": ["Dread", "Boredom"], "forced": true},
+		{"id": "S2b", "question": "Q1", "when": "at 45:00 (wave 1)", "text": "Right now, is the black screen giving you dread or boredom?",
+			"answers": ["Dread", "Boredom"], "forced": true, "decides": false},
+		{"id": "S3", "criterion": 2, "when": "after play, wave 2", "text": "Which voice level felt safe to use?", "answers": ["Whisper", "Talk", "Shout"]},
+		{"id": "S4", "criterion": 2, "when": "after play, wave 2", "text": "Which voice level felt deadly?", "answers": ["Whisper", "Talk", "Shout"]},
+		{"id": "S5", "criterion": 2, "when": "after play, wave 2", "text": "When a friend's voice faded or broke up, did it feel like distance or like a bug?",
+			"answers": ["Distance", "A bug"]},
+		{"id": "Q3a", "question": "Q3", "when": "after play, wave 2", "text": "Were the falls your voice caused fair?", "answers": ["Fair", "Unfair"], "decides": false},
+		{"id": "Q6a", "question": "Q6", "when": "after play, the 140-degree arm only", "text": "Did falls from behind feel unfair?",
+			"answers": ["Fair", "Unfair"], "decides": false}
+	]
+}

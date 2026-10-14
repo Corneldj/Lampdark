@@ -67,11 +67,15 @@ std::vector<std::pair<uint32_t, std::vector<uint8_t>>> VoiceForwarder::forward(u
 	const uint8_t *opus = data + wire::UP_HEADER;
 	const size_t opus_size = size - wire::UP_HEADER;
 	out.reserve(s.routes.size());
+	// QA-01: the counts are audio frames only (Gameplay §6.2's loss table); an END is neither.
+	const bool end = (h.flags & wire::END) != 0;
 	for (const VoiceRoute &r : s.routes) {
 		Counts &c = s.counts[r.listener];
-		c.seen++;
+		if (!end) {
+			c.seen++;
+		}
 		// SND-08: an END always goes through (it carries no audio, and closes the stream).
-		if (r.loss > 0.0 && !(h.flags & wire::END)) {
+		if (r.loss > 0.0 && !end) {
 			auto lp = s.loss.find(r.listener);
 			if (lp == s.loss.end()) {
 				lp = s.loss.emplace(r.listener, LossProcess(run_seed_, s.utterance, r.listener, loss_params_)).first;
@@ -80,7 +84,9 @@ std::vector<std::pair<uint32_t, std::vector<uint8_t>>> VoiceForwarder::forward(u
 				continue; // dropped frames are never sent
 			}
 		}
-		c.sent++;
+		if (!end) {
+			c.sent++;
+		}
 		std::vector<uint8_t> b;
 		b.reserve(wire::DOWN_HEADER + opus_size);
 		put16(b, r.stream);

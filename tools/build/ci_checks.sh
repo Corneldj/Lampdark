@@ -29,4 +29,5 @@ step tuning_client_table "$GODOT" --headless --path . -s tools/build/gen_tuning_
 step tuning_keys "$GODOT" --headless --path . -s tools/build/gen_tuning_keys.gd -- --check
 step voice_set python3 tools/build/voice_import/voice_import.py check --decode
 step voice_tool python3 -m unittest discover -s tools/build/voice_import/tests
+step kill_test_tools python3 -m unittest discover -s tools/kill_test/tests
 exit $status

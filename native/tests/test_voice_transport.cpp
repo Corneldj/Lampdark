@@ -96,6 +96,25 @@ TEST_CASE("SND-07: the forwarder fans a frame out with each listener's header an
 	CHECK(w::DOWN_HEADER == 2 + 2 + 1 + 1 + 1 + 4 + 4);
 }
 
+TEST_CASE("QA-01: the forwarder's counts are audio frames only; an END goes through uncounted") {
+	VoiceForwarder f;
+	VoiceRoute r;
+	r.listener = 4;
+	r.stream = 9;
+	f.set_routes(0, {r});
+	const std::vector<uint8_t> opus = {1, 2, 3};
+	for (uint16_t seq = 0; seq < 5; ++seq) {
+		const std::vector<uint8_t> pkt = up(seq, 2, 0, opus);
+		CHECK(f.forward(0, pkt.data(), pkt.size()).size() == 1);
+	}
+	const std::vector<uint8_t> end = up(5, 2, w::END, {});
+	CHECK(f.forward(0, end.data(), end.size()).size() == 1); // the END still closes the stream
+	const auto counts = f.counts(0);
+	REQUIRE(counts.count(4) == 1);
+	CHECK(counts.at(4).seen == 5);
+	CHECK(counts.at(4).sent == 5);
+}
+
 TEST_CASE("SND-07: bands 5-7 and malformed packets are refused") {
 	VoiceForwarder f;
 	VoiceRoute r;
