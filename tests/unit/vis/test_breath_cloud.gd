@@ -39,4 +39,4 @@ func test_the_world_view_has_exactly_one_and_only_for_the_own_miner() -> void:
 	# with its own VoiceBands (client_main.gd).
 	var src: String = FileAccess.get_file_as_string("res://client/client_main.gd")
 	assert_eq(src.count("breath.set_band("), 1)
-	assert_true(src.contains("world_view.breath.set_band(voice_bands.band"))
+	assert_true(src.contains("world_view.breath.set_band(shown_band"))  # UI-01 gates it on sending()

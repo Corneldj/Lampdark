@@ -199,14 +199,9 @@ func caption_key(run: RunState, entity: int) -> String:
 ## What interacting again would do, or "" (a heap and a sleeping Moth: nothing, alike).
 func verb_key(run: RunState, entity: int) -> String:
 	var e: SimEntity = run.registry.get_entity(entity)
-	match e.kind:
-		WorldIds.EntityKind.ITEM:
-			return "verb.pick_up"
-		WorldIds.EntityKind.MINER:
-			return "verb.lift" if run.falls != null and run.falls.body_of(entity) != null else "verb.ring"
-		WorldIds.EntityKind.PHONE:
-			return "verb.crank"
-	return ""
+	var seen: int = int(Variants.number(SeenKind.Kind.get(str(WorldIds.EntityKind.find_key(e.kind)), 0)))
+	var down: bool = e.kind == WorldIds.EntityKind.MINER and run.falls != null and run.falls.body_of(entity) != null
+	return InteractionVerbs.for_seen(seen, MinerCues.LYING_BREATHING if down else 0)  # UI-01's glyph reads the same table
 
 
 ## 0-15 steps of vision.feel_bearing_step_deg from east, clockwise (+y down): the step whose

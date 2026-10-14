@@ -1,5 +1,5 @@
 {
-	"hash": "312dde05d2fcc3e4067323452cfeb614c32a6cf4d2feb455db17e6e3e68fa07d",
+	"hash": "9d659f0cb35fce2b4d9956e3f74602233bbdb97329661e2abe8934af070f82f4",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -136,6 +136,13 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"lamp.check_marks": {
+			"value": 4.0,
+			"type": "float",
+			"unit": "marks",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"lamp.douse_time": {
 			"value": 1.0,
 			"type": "float",
@@ -168,6 +175,13 @@
 			"value": 2.5,
 			"type": "float",
 			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"lamp.max_notches": {
+			"value": 3,
+			"type": "int",
+			"unit": "notches",
 			"visibility": "client",
 			"kind": "param"
 		},
@@ -944,6 +958,13 @@
 			"value": 0.12,
 			"type": "float",
 			"unit": "light",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"vision.touch_range_tiles": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "tiles",
 			"visibility": "client",
 			"kind": "param"
 		},

@@ -227,7 +227,7 @@
 			"unit": "tiles",
 			"source": "Gameplay §5.5 / A.1",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket VIS-07"
 		},

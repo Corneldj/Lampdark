@@ -1,0 +1,25 @@
+{
+	"note": "UI-01: the in-play elements' own text (Gameplay §14.3). Never a name, number, meter, clock or objective (test_no_forbidden_content.gd). Callout and job-page labels are SND-13's (data/text/callouts/en.json). UI-07 moves these to translation keys.",
+	"strings": {
+		"ui.aside": "Aside",
+		"ui.lamp_lit": "Lit",
+		"ui.lamp_out": "Out",
+		"wheel.signal.one": "One",
+		"wheel.signal.two": "Two",
+		"wheel.signal.three": "Three",
+		"wheel.signal.circle": "Circle",
+		"wheel.chalk.arrow": "→",
+		"wheel.chalk.cross": "X",
+		"wheel.chalk.bang": "!",
+		"wheel.chalk.0": "0",
+		"wheel.chalk.1": "1",
+		"wheel.chalk.2": "2",
+		"wheel.chalk.3": "3",
+		"wheel.chalk.4": "4",
+		"wheel.chalk.5": "5",
+		"wheel.chalk.6": "6",
+		"wheel.chalk.7": "7",
+		"wheel.chalk.8": "8",
+		"wheel.chalk.9": "9"
+	}
+}

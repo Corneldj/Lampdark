@@ -44,6 +44,9 @@ const DEBUG_CLIENT: String = "res://client/debug/debug_client.gd"
 var debug: Node = null
 ## VIS-05: the mine view and what it may draw.
 var world_view: WorldView = null
+## UI-01: the in-play UI (only the design's private elements).
+var in_play: InPlayLayer = null
+var _ui_violations_seen: Dictionary = {}
 var drawn: DrawnSet = DrawnSet.new()
 var _facing_seq: int = -1
 ## NET-12: the facing as drawn and heard: it turns toward the wanted one (the input's) at
@@ -97,7 +100,9 @@ func _process(delta: float) -> void:
 			voice_bands.ptt_held = router != null and router.push_to_talk_held
 			voice_playback.tick(connection, Transport.now_usec())
 			if world_view != null:
-				world_view.breath.set_band(voice_bands.band, Time.get_ticks_msec() / 1000.0)
+				var shown_band: int = InPlayLayer.breath_band(voice_bands.band, voice_bands.sending(),
+					mic_mode != null and mic_mode.voice_enabled(), router != null and router.aside_held)
+				world_view.breath.set_band(shown_band, Time.get_ticks_msec() / 1000.0)
 		if connection.state == ClientConnection.State.CONNECTED and connection.last_frame_tick > _input_frame:
 			_input_frame = connection.last_frame_tick
 			var stamp: PackedInt64Array = connection.stamp_for_send(Transport.now_usec())
@@ -137,6 +142,8 @@ func _start_input() -> void:
 	world_view = WorldView.new()
 	world_view.name = "WorldView"
 	add_child(world_view)
+	in_play = InPlayLayer.new()
+	add_child(in_play)
 	AudioBuses.install()
 	events_player = EventPlayer.new()
 	events_player.name = "EventPlayer"
@@ -242,7 +249,23 @@ func _follow_camera(delta: float) -> void:
 	var own_light: float = float(Variants.number(lights.get(Vector2i(floori(own.x), floori(own.y)), 0.0)))
 	world_view.show_frame(drawn, connection.view, camera.view_rect(own).position, own, _shown_facing, own_light,
 		lights, Time.get_ticks_msec() / 1000.0)
+	_show_in_play(own)
 	_probe(predicted)
+
+
+## UI-01: the in-play elements; debug and test builds check that nothing else is drawn.
+func _show_in_play(own: Vector2) -> void:
+	var screen: Vector2 = get_viewport().get_visible_rect().size
+	in_play.update({"view": connection.view, "view_origin": camera.view_rect(own).position,
+		"black": world_view.mode == WorldView.Mode.BLACK, "inventory": connection.inventory, "feel": connection.feel,
+		"router": router, "store": bindings, "wheel_anchor": source.wheel_anchor() if router.family == "kbm" else screen / 2.0,
+		"short_side": minf(screen.x, screen.y), "now_s": Time.get_ticks_msec() / 1000.0})
+	if config.build.is_release():
+		return
+	for v: String in in_play.check_frame([world_view.overlay_layer()]):
+		if not _ui_violations_seen.has(v):
+			_ui_violations_seen[v] = true
+			push_error("UI-01: unregistered in-play element %s" % v)
 
 
 ## NET-12: one probe frame against the lamp the client predicts, and a telemetry line each minute.

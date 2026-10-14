@@ -87,9 +87,16 @@ func _init() -> void:
 	_over_canvas.layer = 1
 	add_child(_over_canvas)
 	_over = _OverLayer.new()
+	ScreenElementRegistry.mark(_over, &"edge_glow")  # UI-01: the edge glow and the own miner
 	_over_canvas.add_child(_over)
 	breath = BreathCloud.new()
+	ScreenElementRegistry.mark(breath, &"breath_cloud")
 	_over_canvas.add_child(breath)
+
+
+## UI-01: the overlay layer drawn over the mine (its elements are checked against the whitelist).
+func overlay_layer() -> CanvasLayer:
+	return _over_canvas
 
 
 ## NORMAL; BLACK (RSC-04's Dark: nothing drawn, the own miner hidden); COMING_ROUND (the server

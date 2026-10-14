@@ -30,6 +30,11 @@ func push_event(event: InputEvent, store: BindingsStore) -> void:
 			_pulses[action] = true
 
 
+## Where the mouse stood when the open wheel opened (UI-01 draws the wheel there).
+func wheel_anchor() -> Vector2:
+	return _wheel_anchor
+
+
 func frame(now_s: float, store: BindingsStore) -> Dictionary:
 	var down: Dictionary = {}
 	for raw: Variant in store.bindings.keys():

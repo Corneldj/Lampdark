@@ -1,0 +1,17 @@
+{
+	"note": "UI-01: interaction verbs (shared/interaction_verbs.gd) and the interact ring's options (MNR-05). UI-07 moves these to translation keys.",
+	"strings": {
+		"verb.pick_up": "Pick up",
+		"verb.lift": "Lift",
+		"verb.ring": "Hands",
+		"verb.crank": "Crank",
+		"ring.hand_over": "Hand over",
+		"ring.douse": "Douse",
+		"ring.share_oil": "Share oil",
+		"ring.pass_flame": "Pass the flame",
+		"ring.lift": "Lift",
+		"ring.take": "Take",
+		"ring.cure": "Cure",
+		"ring.revive": "Revive"
+	}
+}
