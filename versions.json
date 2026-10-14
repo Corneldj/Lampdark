@@ -33,5 +33,18 @@
 		"version": "2.5.3",
 		"path": "native/thirdparty/doctest/doctest.h",
 		"source": "https://github.com/doctest/doctest/releases/tag/v2.5.3"
+	},
+	"godotsteam": {
+		"version": "4.23.1",
+		"steamworks_sdk": "1.65",
+		"path": "addons/godotsteam",
+		"platforms": [
+			"linux.x86_64",
+			"windows.x86_64"
+		],
+		"source": "https://codeberg.org/godotsteam/godotsteam/releases/download/v4.23.1/godotsteam-4.23.1-gdextension-plugin-4.4.zip.tar.xz",
+		"sha512": "dc749000b5562384bd935b3a4faf06c4ace6280571cd5dbfde89e12e6269d086582c03fc2244b661067c4dd662888d655051d2e1ad1f271e2856a5916ee8df23",
+		"steam_hardware": "isRunningOnSteamHardware (SDK 1.65); no fallback to the deprecated isSteamRunningOnSteamDeck needed",
+		"note": "STM-01. Only the Linux and Windows x64 libraries, steam_api redistributables and the MIT licence are vendored; the upstream updater plugin is left out. Our own godotsteam.gdextension lists only these platforms."
 	}
 }

@@ -1,10 +1,11 @@
 class_name UiText
 extends RefCounted
 ## UI-01: the in-play elements' text, by key only (data/text/*.json until UI-07's translations). An
-## unknown key shows nothing, never itself: no free text reaches the screen.
+## unknown key shows nothing, never itself: no free text reaches the screen. STM-01's Steam failure
+## screen and streamer-mode names read it too.
 
 const FILES: Array[String] = ["res://data/text/ui_inplay.json", "res://data/text/verbs.json", "res://data/text/items.json",
-	"res://data/text/captions_feel.json", "res://data/text/callouts/en.json"]
+	"res://data/text/captions_feel.json", "res://data/text/callouts/en.json", "res://data/text/steam.json"]
 
 static var _strings: Dictionary = {}
 

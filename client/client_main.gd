@@ -44,6 +44,13 @@ const DEBUG_CLIENT: String = "res://client/debug/debug_client.gd"
 var debug: Node = null
 ## VIS-05: the mine view and what it may draw.
 var world_view: WorldView = null
+## The menus (Pithead, first-launch screens, dev lobby, Steam failure) on their own layer: the mine
+## camera moves the default canvas, and the mine view is drawn on it.
+const MENU_LAYER: int = 20
+var menus: CanvasLayer = null
+## STM-01: Steam (or dev mode), brought up before anything else.
+var steam: SteamService = null
+var _lobby_label: Label = null
 ## UI-01: the in-play UI (only the design's private elements).
 var in_play: InPlayLayer = null
 var _ui_violations_seen: Dictionary = {}
@@ -60,6 +67,8 @@ var _bot: RefCounted = null
 
 func start(client_config: ClientConfig) -> void:
 	config = client_config
+	if not _start_steam():
+		return
 	if not Tuning.load_client():
 		Log.error("client tuning table failed to load")
 		get_tree().quit(ExitCode.FATAL)
@@ -79,12 +88,63 @@ func start(client_config: ClientConfig) -> void:
 
 func _ready() -> void:
 	set_process(false)
+	_menus()
+
+
+func _menus() -> CanvasLayer:
+	if menus == null:
+		menus = CanvasLayer.new()
+		menus.name = "Menus"
+		menus.layer = MENU_LAYER
+		add_child(menus)
+	return menus
+
+
+## STM-01's boot order: release builds relaunch through Steam when needed and quit; then Steam
+## initialises, or dev and QA builds fall back to dev mode, or a release build shows the failure
+## screen and exits 4. Bots never start Steam. False when the client must not go on.
+func _start_steam() -> bool:
+	steam = SteamService.new()
+	add_child(steam)
+	var no_steam: bool = config.no_steam or not config.bot_script.is_empty()
+	match steam.boot(config.build.is_release(), no_steam, config.persona_name):
+		SteamService.Boot.QUIT_RELAUNCHING:
+			Log.close()
+			get_tree().quit(ExitCode.OK)
+			return false
+		SteamService.Boot.FAIL:
+			_show_steam_failure()
+			return false
+	steam.overlay_toggled.connect(_on_overlay_toggled)
+	steam.persona_changed.connect(func(_id: int) -> void: _refresh_lobby())
+	return true
+
+
+func _show_steam_failure() -> void:
+	if DisplayServer.get_name() == "headless":
+		Log.close()
+		get_tree().quit(ExitCode.STEAM_INIT_FAILED)
+		return
+	var screen: SteamFailureScreen = SteamFailureScreen.new(steam.init_status)
+	screen.quit_requested.connect(func(code: int) -> void:
+		Log.close()
+		get_tree().quit(code))
+	_menus().add_child(screen)
+
+
+## STM-01: the overlay is like settings (GDD §14.3): every gameplay input lets go and the miner
+## stands where they are; nothing pauses online.
+func _on_overlay_toggled(active: bool) -> void:
+	Log.info("steam: overlay %s" % ("open" if active else "closed"))
+	if active and router != null:
+		router.release_all()
 
 
 func _process(delta: float) -> void:
 	if _bot != null:
 		var code: int = _bot.call(&"process")
 		if code >= 0:
+			steam.shutdown()
 			Log.close()
 			get_tree().quit(code)
 			set_process(false)
@@ -126,6 +186,7 @@ func _process(delta: float) -> void:
 		# SND-05: the device-open count for the session (never audio); Mute must leave it at 0.
 		Log.info("voice: the microphone opened %d times this session" % LbVoiceCapture.total_open_count())
 		Log.info("exit after %d ticks" % ticks)
+		steam.shutdown()  # STM-01: hooks, then Steam, before the log closes
 		Log.close()
 		get_tree().quit(ExitCode.OK)
 
@@ -142,6 +203,7 @@ func _start_input() -> void:
 	world_view = WorldView.new()
 	world_view.name = "WorldView"
 	add_child(world_view)
+	world_view.set_shown(false)  # until the first frame: the pithead and lobby must not be drawn over
 	in_play = InPlayLayer.new()
 	add_child(in_play)
 	AudioBuses.install()
@@ -217,7 +279,10 @@ func _sample_input(shown_tick: int) -> InputRecord:
 	router.know_inventory(connection.inventory)
 	router.know_ring(connection.ring)
 	source.wheel_open = router.picking()
-	var record: InputRecord = router.sample(source.frame(Time.get_ticks_msec() / 1000.0, bindings))
+	var frame: Dictionary = source.frame(Time.get_ticks_msec() / 1000.0, bindings)
+	if steam != null and steam.overlay_active:
+		frame = InputRouter.neutral_frame(frame)
+	var record: InputRecord = router.sample(frame)
 	for action: Array in router.actions:
 		connection.inputs.queue_action(int(Variants.number(action[0])) as ActionRecord.Kind, int(Variants.number(action[1])), shown_tick,
 			int(Variants.number(action[2])))
@@ -247,6 +312,8 @@ func _follow_camera(delta: float) -> void:
 	var server_lamp: Dictionary = {"position": own, "radius": radius}
 	var lights: Dictionary = OwnLampBlend.lights(drawn, connection.view, server_lamp, Variants.dict(predicted["lamp"]))
 	var own_light: float = float(Variants.number(lights.get(Vector2i(floori(own.x), floori(own.y)), 0.0)))
+	if not world_view.visible:
+		world_view.set_shown(true)
 	world_view.show_frame(drawn, connection.view, camera.view_rect(own).position, own, _shown_facing, own_light,
 		lights, Time.get_ticks_msec() / 1000.0)
 	_show_in_play(own)
@@ -341,7 +408,7 @@ func _connect(target: String) -> void:
 	var host: String = target.substr(0, target.rfind(":"))
 	var port: int = target.substr(target.rfind(":") + 1).to_int()
 	connection = ClientConnection.new(EnetTransport.new())
-	connection.identity = config.persona_name if not config.persona_name.is_empty() else "dev"
+	connection.identity = steam.persona_name()
 	connection.qa_token = config.qa_token
 	connection.seat_request = Protocol.Seat.BOT if not config.bot_script.is_empty() else Protocol.Seat.PLAYER
 	if connection.start(host, port):
@@ -400,7 +467,7 @@ func _show_pithead() -> void:
 	play.pressed.connect(func() -> void:
 		play.queue_free()
 		_start_first_launch())
-	add_child(play)
+	_menus().add_child(play)
 	Log.info("pithead shown")
 
 
@@ -411,16 +478,28 @@ func _start_first_launch() -> void:
 		flow.queue_free()
 		Log.info("microphone: %s under notice %d" % [MicMode.MODE_NAMES[mic_mode.mode], mic_mode.notice_version])
 		_show_dev_lobby())
-	add_child(flow)
+	_menus().add_child(flow)
 
 
 ## Placeholder until STM-02's dev lobby screen exists.
 func _show_dev_lobby() -> void:
 	var label: Label = Label.new()
 	label.name = "DevLobby"
-	label.text = "LAMPBLACK\ndev lobby (STM-02)"
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(label)
-	Log.info("dev lobby shown")
+	_menus().add_child(label)
+	_lobby_label = label
+	_refresh_lobby()
+	Log.info("dev lobby shown: %s" % label.text.replace("\n", " | "))
+
+
+## The dev lobby shows who you are (STM-01): the display name and SteamID, or the dev identity.
+func _refresh_lobby() -> void:
+	if _lobby_label == null:
+		return
+	if steam == null:
+		_lobby_label.text = "LAMPBLACK\ndev lobby (STM-02)"
+		return
+	var who: String = "%s\n%d%s" % [steam.display_name(steam.steam_id), steam.steam_id, " (dev identity)" if steam.fake_identity else ""]
+	_lobby_label.text = "LAMPBLACK\ndev lobby (STM-02)\n\n" + who

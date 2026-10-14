@@ -46,6 +46,11 @@ window/stretch/aspect="keep"
 
 enabled=PackedStringArray("res://addons/gut/plugin.cfg")
 
+[lampblack]
+
+steam/app_id=5110670
+steam/app_id.lb_release=5110670
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"

@@ -127,6 +127,28 @@ func know_ring(ring: Dictionary) -> void:
 			ring_options.append(str(raw))
 
 
+## STM-01: the Steam overlay opened. Every gameplay input lets go: toggled holds release, and the
+## next samples (fed neutral_frame while the overlay is up) hold nothing, move nowhere and pick
+## nothing, so the miner stands and a timed action is cancelled as on a drop. Nothing pauses.
+func release_all() -> void:
+	for raw: Variant in _latches.values():
+		var l: HoldLatch = raw
+		l.release()
+	record.move_dir = InputRecord.NO_DIRECTION
+	record.holds = 0
+
+
+## A frame with nothing held, no movement and a centred pick (a wheel then cancels); the cursor
+## stays where it was, so facing holds.
+static func neutral_frame(frame: Dictionary) -> Dictionary:
+	var out: Dictionary = frame.duplicate()
+	out["down"] = {}
+	out["move"] = Vector2.ZERO
+	out["face_stick"] = Vector2.ZERO
+	out["wheel_vec"] = Vector2.ZERO
+	return out
+
+
 ## The action a toggled hold drove has ended (or was refused): the next press starts afresh.
 func release_toggle(action: String) -> void:
 	if _latches.has(action):

@@ -24,9 +24,11 @@ run() {
 }
 
 run linux-server-qa "$BUILD/linux-server-qa/lampblack_server.x86_64"
-run linux-client-qa "$BUILD/linux-client-qa/lampblack.x86_64" --headless
+# Clients run with --no-steam: a smoke run must never sign a developer's running Steam in to the
+# game (STM-01's live check, tools/build/steam_live_check.sh, does that on purpose).
+run linux-client-qa "$BUILD/linux-client-qa/lampblack.x86_64" --headless --no-steam
 if [ -n "${WINE:-}" ]; then
 	run windows-server-qa "$WINE" "$BUILD/windows-server-qa/lampblack_server.exe"
-	run windows-client-qa "$WINE" "$BUILD/windows-client-qa/lampblack.console.exe" --headless
+	run windows-client-qa "$WINE" "$BUILD/windows-client-qa/lampblack.console.exe" --headless --no-steam
 fi
 exit "$status"

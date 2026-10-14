@@ -1,0 +1,12 @@
+{
+	"note": "STM-01: the Steam failure screen and streamer mode's names (GDD §14.3). UI-07 localises these.",
+	"strings": {
+		"steam.failure.title": "Steam is needed",
+		"steam.failure.no_client": "LAMPBLACK plays through Steam. Start Steam, sign in, and launch the game from your library.",
+		"steam.failure.out_of_date": "Your Steam client is out of date. Update Steam, then launch the game from your library.",
+		"steam.failure.other": "Steam could not be started for LAMPBLACK. Restart Steam, then launch the game from your library.",
+		"steam.failure.quit": "Quit",
+		"steam.lamp_number": "Lamp %d",
+		"steam.lamp_unknown": "A miner"
+	}
+}

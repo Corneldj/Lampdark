@@ -15,3 +15,5 @@
 
 # Vendored native runtimes (SND-04's Steam Audio) go through Git LFS
 native/thirdparty/steamaudio/lib/** filter=lfs diff=lfs merge=lfs -text
+addons/godotsteam/linux64/** filter=lfs diff=lfs merge=lfs -text
+addons/godotsteam/win64/** filter=lfs diff=lfs merge=lfs -text

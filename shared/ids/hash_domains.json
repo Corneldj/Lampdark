@@ -189,6 +189,15 @@
 				"utterance id",
 				"listener slot"
 			]
+		},
+		{
+			"name": "steam.fake_id",
+			"id": 20,
+			"owner": "STM-01",
+			"kind": "hash",
+			"keys": [
+				"the --name persona's UTF-8 bytes, one per key"
+			]
 		}
 	]
 }

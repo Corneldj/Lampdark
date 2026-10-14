@@ -99,6 +99,13 @@ func overlay_layer() -> CanvasLayer:
 	return _over_canvas
 
 
+## Shows or hides the whole mine view, overlay included. ClientMain keeps it hidden until the first
+## frame from a server arrives, so the menus before it are not drawn over in black.
+func set_shown(on: bool) -> void:
+	visible = on
+	_over_canvas.visible = on
+
+
 ## NORMAL; BLACK (RSC-04's Dark: nothing drawn, the own miner hidden); COMING_ROUND (the server
 ## already clamps what it sends to 4 tiles, VIS-03: drawn as normal).
 func set_view_mode(m: Mode) -> void:
