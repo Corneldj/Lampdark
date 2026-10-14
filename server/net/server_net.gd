@@ -24,6 +24,9 @@ var qa_token: String = ""
 ## STM-04: the host link's token; a relay tag carrying it (from a loopback peer) names a friend's
 ## SteamID for Path B. Empty: no relay tags accepted.
 var relay_token: String = ""
+
+## A client was welcomed into `slot` as `identity` (QA-01's M1 arrival gives it a miner).
+signal welcomed(slot: int, identity: String)
 ## Debug-lane messages refused from sessions without the grant (FND-08's isolation checks).
 var debug_refused: int = 0
 ## Slots dropped during this tick's pump (cleared at the next).
@@ -210,6 +213,7 @@ func _on_hello(run: RunState, session: Sessions.Session, hello: Protocol.Hello, 
 	welcome.debug = session.debug
 	transport.send(session.peer, Lane.Id.CONTROL, welcome.encode())
 	Log.info("slot %d welcomed: %s" % [session.slot, hello.identity])
+	welcomed.emit(session.slot, hello.identity)
 
 
 ## FND-08: never on a release server; on QA, only with this server's token; on dev, with the token

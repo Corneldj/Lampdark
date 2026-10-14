@@ -13,6 +13,8 @@ var rendezvous: LobbyRendezvous = null
 ## STM-04: a private host's server (spawned with --parent-pid): its control link, Path A's game-server
 ## Steam (GodotSteam Server, loaded at run time) and SDR listener, and the empty-server linger.
 var host_link: HostLink = null
+## QA-01: a welcomed player's miner, on servers with a map.
+var arrival: M1Arrival = null
 var steam_server: SteamServerApi = null
 var sdr: SdrTransport = null
 var _game_port: int = 0
@@ -137,6 +139,9 @@ func _start_network() -> bool:
 	ServerSystems.install(run, net, mine)
 	if mine != null:
 		var placed: Dictionary = FixedMapLoader.populate(run, config.map_name, true, true)
+		# QA-01's minimal M1 arrival: a welcomed player's miner on base camp's cage deck (MOD-04 replaces it).
+		arrival = M1Arrival.new(run, mine)
+		net.welcomed.connect(arrival.on_welcomed)
 		Log.info("map %s placed: %d coat heaps, %d creatures, %d items, %d hooks" % [config.map_name,
 			Variants.array(placed["heaps"]).size(), Variants.dict(placed["creatures"]).size(), Variants.array(placed["items"]).size(),
 			int(Variants.number(placed["hooks"]))])
