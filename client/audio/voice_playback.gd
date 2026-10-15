@@ -9,6 +9,9 @@ extends RefCounted
 ## mixer (headless bots, tests) the timing still runs and nothing plays.
 
 signal probe_heard(latency_usec: int)
+## UI-03: each frame of a stream as it plays ("frame", "conceal", "smear" or "end"), with its band
+## and the stream's header (position, telephone, dry): what the captions are built from.
+signal heard(stream: int, kind: String, band: int, header: Dictionary)
 
 ## The client's mixer (SND-04), or null.
 var mixer: SpatialMixer = null
@@ -42,7 +45,10 @@ func tick(connection: ClientConnection, now_usec: int) -> void:
 		var st: Dictionary = streams[raw]
 		var p: LbVoicePlayout = st["playout"]
 		for o: Variant in p.pop(now_usec):
-			_play(st, Variants.dict(o), now_usec)
+			var out: Dictionary = Variants.dict(o)
+			if int(Variants.number(out.get("probe_t0_usec", -1))) < 0:
+				heard.emit(int(Variants.number(raw)), str(out["kind"]), int(Variants.number(out.get("band", 0))), p.header())
+			_play(st, out, now_usec)
 		if p.done():
 			jitter_ms = p.jitter_ms()
 			if mixer != null and int(Variants.number(st["source"])) >= 0:

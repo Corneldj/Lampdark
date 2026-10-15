@@ -73,6 +73,6 @@ func test_a_frame_with_every_element_up_is_clean() -> void:
 
 func test_client_checks_every_frame_outside_release() -> void:
 	var src: String = FileAccess.get_file_as_string("res://client/client_main.gd")
-	assert_true(src.contains("in_play.check_frame([world_view.overlay_layer()])"))
+	assert_true(src.contains("in_play.check_frame([world_view.overlay_layer(), captions])"), "UI-03: the caption layer is checked too")
 	assert_true(src.contains("if config.build.is_release():\n\t\treturn\n\tfor v: String in in_play.check_frame("),
 		"release builds skip the walk; debug and test builds report each new violation")

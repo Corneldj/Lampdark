@@ -13,6 +13,10 @@ extends Node
 ## MinerListener's ears (which also set `listener`).
 
 signal caption(type: int, direction: Variant)
+## UI-03: the same moment, with the whole record (its voice and flags), `direction` as for caption.
+signal played(record: AudioRecord, direction: Variant)
+## UI-03: a flame began to gutter where this client hears it (offset from the listener, tiles).
+signal sputter_started(offset: Vector2)
 
 ## The one native mixer (SND-07's voice frames and SND-11's callouts play through it too).
 var mixer: SpatialMixer = null
@@ -90,7 +94,9 @@ func play(record: AudioRecord, number: int = 0) -> void:
 		var id: int = mixer.add(samples, rate * pitch, at, db, bus)
 		voices.append([id, db, at, bus, pitch, record.type])
 	_enforce_cap()
-	caption.emit(record.type, null if (record.flags & AudioRecord.DIFFUSE) != 0 else record.apparent - listener)
+	var direction: Variant = null if (record.flags & AudioRecord.DIFFUSE) != 0 else record.apparent - listener
+	caption.emit(record.type, direction)
+	played.emit(record, direction)
 
 
 ## The flames guttering now (tiles): an identity record's flame byte with FlameFlags.GUTTER, and the
@@ -100,6 +106,8 @@ func set_sputters(at: Array[Vector2]) -> void:
 		var gone: int = sputter_voices.pop_back()
 		mixer.remove(gone)
 	var bed: PackedFloat32Array = SampleBank.pcm(SampleBank.bed("sputter"))
+	for i: int in range(sputter_voices.size(), at.size()):
+		sputter_started.emit(at[i] - listener)
 	while sputter_voices.size() < at.size():
 		sputter_voices.append(mixer.add(bed, SampleBank.RATE, at[sputter_voices.size()], 0.0, "Game", true))
 	for i: int in at.size():

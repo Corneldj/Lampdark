@@ -67,7 +67,7 @@
 			"unit": "deg",
 			"source": "GDD §14.5",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "unit as written: degrees; ticket UI-03"
 		},
@@ -77,17 +77,17 @@
 			"unit": "s",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket UI-03"
 		},
 		"noise.caption_max_lines": {
 			"value": 4,
-			"type": "float",
+			"type": "int",
 			"unit": "lines",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket UI-03"
 		},

@@ -1,5 +1,5 @@
 {
-	"hash": "2df07278ef7b3689e2b9909b19ac089612681b35e852bcb2413aea13c08dda7c",
+	"hash": "969168797c2f532067ede6fdacb2cc700bdbbd59a709e13c2ba28e8ce7d5df7d",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -724,6 +724,27 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"noise.caption_arc_deg": {
+			"value": 45.0,
+			"type": "float",
+			"unit": "deg",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.caption_linger_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"noise.caption_max_lines": {
+			"value": 4,
+			"type": "int",
+			"unit": "lines",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"noise.diffuse_emitter_count": {
 			"value": 3,
 			"type": "int",
@@ -1120,6 +1141,13 @@
 			"unit": "s",
 			"min": 0.3,
 			"max": 1.0,
+			"visibility": "client",
+			"kind": "param"
+		},
+		"voice.caption_word_min_frames": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "share",
 			"visibility": "client",
 			"kind": "param"
 		},

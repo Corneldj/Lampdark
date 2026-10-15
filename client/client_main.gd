@@ -59,6 +59,8 @@ var host_relay: HostRelay = null
 var in_play: InPlayLayer = null
 ## UI-02's close-ups, over the mine and under the menus.
 var closeups: CloseupManager = null
+## UI-03's captions and subtitles.
+var captions: CaptionLayer = null
 var _closeup_messages_seen: int = 0
 var _ui_violations_seen: Dictionary = {}
 var drawn: DrawnSet = DrawnSet.new()
@@ -285,6 +287,12 @@ func _start_input() -> void:
 			connection.send_voice(packet)
 	voice_playback = VoicePlayback.new()
 	voice_playback.mixer = events_player.mixer
+	# UI-03: captions from exactly what plays, above the close-ups.
+	captions = CaptionLayer.new()
+	captions.name = "Captions"
+	captions.system.arcs_only = audio_options.direction_only_arcs()
+	captions.wire(events_player, voice_playback, beds, deafness, knocks, func() -> Vector2: return events_player.listener)
+	add_child(captions)
 	mic_mode.label_changed.connect(_send_mic_label)
 	Log.info("voice: capture ready, backend %s, mic mode %s" % [voice_capture.backend,
 		MicMode.Mode.keys()[voice_capture.effective_mode()]])
@@ -391,7 +399,7 @@ func _show_in_play(own: Vector2) -> void:
 		"short_side": minf(screen.x, screen.y), "now_s": Time.get_ticks_msec() / 1000.0})
 	if config.build.is_release():
 		return
-	for v: String in in_play.check_frame([world_view.overlay_layer()]):
+	for v: String in in_play.check_frame([world_view.overlay_layer(), captions]):
 		if not _ui_violations_seen.has(v):
 			_ui_violations_seen[v] = true
 			push_error("UI-01: unregistered in-play element %s" % v)

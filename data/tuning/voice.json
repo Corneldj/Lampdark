@@ -212,7 +212,7 @@
 			"unit": "share",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "unit as written: share of a word's frames; ticket UI-03"
 		},
