@@ -15,29 +15,31 @@ func test_one_of_each_enabled_kind() -> void:
 	s.add_miner("ann", s.fixture.spot("a"))
 	assert_ne(s.place_creature(WorldIds.EntityKind.MOTH, Vector2i(30, 2)), 0)
 	assert_ne(s.place_creature(WorldIds.EntityKind.TAPPER, Vector2i(30, 16)), 0)
+	assert_ne(s.place_creature(WorldIds.EntityKind.STYTHE, Vector2i(34, 8)), 0, "the Stythe is on since CRT-15")
 	assert_eq(s.place_creature(WorldIds.EntityKind.MOTH, Vector2i(32, 2)), 0, "a second Moth")
 	assert_push_error("one of each per run")
 	assert_eq(s.place_creature(WorldIds.EntityKind.TAPPER, Vector2i(32, 16)), 0, "a second Tapper")
 	assert_push_error("one of each per run")
-	assert_eq(s.place_creature(WorldIds.EntityKind.STYTHE, Vector2i(34, 8)), 0, "the Stythe is off in M1")
-	assert_eq(s.run.creatures.log.of_type(&"spawn_refused").size(), 1)
+	assert_eq(s.place_creature(WorldIds.EntityKind.STYTHE, Vector2i(35, 8)), 0, "a second Stythe")
+	assert_push_error("one of each per run")
 	s.step(5)
-	assert_eq(s.run.creatures.creatures.size(), 2)
+	assert_eq(s.run.creatures.creatures.size(), 3)
 	var kinds: Array[int] = []
 	for id: int in s.run.registry.ids():
 		var k: int = s.run.registry.get_entity(id).kind
 		if CreatureSystem.DOMAINS.has(k):
 			kinds.append(k)
 	kinds.sort()
-	assert_eq(kinds, [WorldIds.EntityKind.MOTH, WorldIds.EntityKind.TAPPER] as Array[int], "exactly one of each in the world")
+	var want: Array[int] = [WorldIds.EntityKind.MOTH, WorldIds.EntityKind.TAPPER, WorldIds.EntityKind.STYTHE]
+	want.sort()
+	assert_eq(kinds, want, "exactly one of each in the world")
 
 
-func test_stythe_when_enabled() -> void:
-	Tuning.set_dev_override("creatures.enabled", {"moth": 1, "tapper": 1, "stythe": 1})
+func test_a_disabled_kind_is_refused() -> void:
+	Tuning.set_dev_override("creatures.enabled", {"moth": 1, "tapper": 1, "stythe": 0})
 	var s: Scenario = make({"seed": 2, "fixture": W.hall()})
-	assert_ne(s.place_creature(WorldIds.EntityKind.STYTHE, Vector2i(34, 8)), 0)
-	assert_eq(s.place_creature(WorldIds.EntityKind.STYTHE, Vector2i(35, 8)), 0)
-	assert_push_error("one of each per run")
+	assert_eq(s.place_creature(WorldIds.EntityKind.STYTHE, Vector2i(34, 8)), 0, "off in creatures.enabled")
+	assert_eq(s.run.creatures.log.of_type(&"spawn_refused").size(), 1)
 	Tuning.clear_dev_overrides()
 
 

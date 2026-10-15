@@ -5,11 +5,11 @@
 			"value": {
 				"moth": 1,
 				"tapper": 1,
-				"stythe": 0
+				"stythe": 1
 			},
 			"type": "table",
 			"unit": "flag",
-			"note": "1 on, 0 off; the Stythe is off in M1 (dev); unit as written: flags; ticket CRT-01",
+			"note": "1 on, 0 off; the Stythe on since CRT-13 to 15 (user decision 2026-10-16; the M1 grey box places none); unit as written: flags; ticket CRT-01",
 			"source": "Proposed (dev)",
 			"starting": true,
 			"visibility": "server",

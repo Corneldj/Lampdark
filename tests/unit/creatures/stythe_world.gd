@@ -1,5 +1,5 @@
 extends RefCounted
-## CRT-13's tests: the Stythe enabled (it is off in the starting tuning, held for M2), placed before
+## CRT-13's tests: the Stythe enabled (on in the starting tuning since CRT-15; kept explicit), placed before
 ## anyone can see its tile, and lights planted exactly.
 
 const Scenario = preload("res://tests/scenario/kit/scenario.gd")

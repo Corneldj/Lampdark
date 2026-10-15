@@ -59,13 +59,14 @@ func test_clamps_and_unavailable() -> void:
 	assert_eq(WorldCoords.ring_of_point(Vector2(3, 3)), 4, "every ring lookup returns it")
 	assert_true(Variants.flag(D.run_line(s, "ring_override off")["ok"]))
 	assert_eq(WorldCoords.ring_of_point(Vector2(3, 3)), 0)
+	# A kind switched off in creatures.enabled (the Stythe here) is refused.
+	assert_true(Tuning.set_dev_override("creatures.enabled", {"moth": 1, "tapper": 1, "stythe": 0}).is_empty())
 	var tainted_before: bool = s.run.header.debug_tainted
 	var hash_before: String = s.run.state_hash()
 	for line: String in ["set_pull all 150", "set_intensity 0 50"]:
 		var n: Dictionary = D.run_line(s, line)
 		assert_false(Variants.flag(n["ok"]), line)
 		assert_string_contains(str(n["text"]), "not available", line)
-	# CRT-13 builds the Stythe; the starting tuning keeps it off, so the spawn is refused.
 	var sp: Dictionary = D.run_line(s, "spawn stythe 5 5")
 	assert_false(Variants.flag(sp["ok"]))
 	assert_string_contains(str(sp["text"]), "disabled", "spawn stythe: off in creatures.enabled")
