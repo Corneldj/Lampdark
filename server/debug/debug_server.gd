@@ -200,6 +200,8 @@ func _new_creature(kind: WorldIds.EntityKind) -> Creature:
 			return Moth.new()
 		WorldIds.EntityKind.TAPPER:
 			return Tapper.new()
+		WorldIds.EntityKind.STYTHE:
+			return StytheCreature.new()
 	return null
 
 

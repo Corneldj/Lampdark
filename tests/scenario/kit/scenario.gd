@@ -202,6 +202,8 @@ func place_creature(kind: WorldIds.EntityKind, tile: Vector2i, _creature_state: 
 		c = Moth.new()
 	elif kind == WorldIds.EntityKind.TAPPER:
 		c = Tapper.new()
+	elif kind == WorldIds.EntityKind.STYTHE:
+		c = StytheCreature.new()
 	if run.creatures.spawn(run, c, tile) != OK:
 		return 0
 	return c.entity_id

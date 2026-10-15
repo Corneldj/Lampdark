@@ -94,6 +94,8 @@ static func populate(run: RunState, map_name: String, base_camp: bool = true, fr
 				c = Moth.new()
 			"TAPPER":
 				c = Tapper.new()
+			"STYTHE":
+				c = StytheCreature.new()
 		if c == null or run.creatures == null:
 			continue
 		if run.creatures.place_now(run, c, tile) == OK:

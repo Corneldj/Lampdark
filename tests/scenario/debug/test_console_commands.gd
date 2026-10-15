@@ -60,10 +60,14 @@ func test_clamps_and_unavailable() -> void:
 	assert_eq(WorldCoords.ring_of_point(Vector2(3, 3)), 0)
 	var tainted_before: bool = s.run.header.debug_tainted
 	var hash_before: String = s.run.state_hash()
-	for line: String in ["set_pull all 150", "set_intensity 0 50", "spawn stythe 5 5"]:
+	for line: String in ["set_pull all 150", "set_intensity 0 50"]:
 		var n: Dictionary = D.run_line(s, line)
 		assert_false(Variants.flag(n["ok"]), line)
 		assert_string_contains(str(n["text"]), "not available", line)
+	# CRT-13 builds the Stythe; the starting tuning keeps it off, so the spawn is refused.
+	var sp: Dictionary = D.run_line(s, "spawn stythe 5 5")
+	assert_false(Variants.flag(sp["ok"]))
+	assert_string_contains(str(sp["text"]), "disabled", "spawn stythe: off in creatures.enabled")
 	assert_eq(s.run.state_hash(), hash_before, "unavailable commands change nothing")
 	assert_true(tainted_before, "(ring_override already tainted the run)")
 

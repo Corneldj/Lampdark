@@ -30,7 +30,7 @@ func stythe_dark_path_within(from: Vector2i, miner: Vector2, max_tiles: float = 
 	var limit: float = max_tiles if max_tiles > 0.0 else Tuning.f(&"creatures.guard_stythe_dark_path_tiles")
 	var params: Dictionary = NavModes.dark(thin)
 	params["max_expansions"] = Tuning.i(&"creatures.nav_guard_max_expansions")
-	return Variants.flag(native.stythe_dark_path_within(from, miner, limit, Tuning.f(&"tapper.reach_tiles"), params)["found"])
+	return Variants.flag(native.stythe_dark_path_within(from, miner, limit, Tuning.f(&"stythe.reach_tiles"), params)["found"])
 
 
 ## Within the Tapper's reach: 1.5 tiles or less from a usable wall face.
