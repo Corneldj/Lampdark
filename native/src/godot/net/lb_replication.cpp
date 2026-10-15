@@ -370,10 +370,14 @@ Dictionary LbReplication::sent_view(int64_t slot, int64_t tick) const {
 	Dictionary tiles;
 	for (const auto &[t, tv] : v.tiles) {
 		PackedByteArray b;
-		b.resize(3);
+		// MNR-10: a tile with chalk carries its five glyph bytes after the decals.
+		b.resize(tv.chalk != 0 ? 3 + static_cast<int64_t>(lb::core::vision::CHALK_SURFACES) : 3);
 		b[0] = tv.light;
 		b[1] = tv.colour;
 		b[2] = tv.decals;
+		for (size_t s = 0; tv.chalk != 0 && s < lb::core::vision::CHALK_SURFACES; s++) {
+			b[3 + static_cast<int64_t>(s)] = static_cast<uint8_t>((tv.chalk >> (8 * s)) & 0xFF);
+		}
 		tiles[Vector2i(static_cast<int32_t>(t.x), static_cast<int32_t>(t.y))] = b;
 	}
 	Dictionary geometry;

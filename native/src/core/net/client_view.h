@@ -25,7 +25,7 @@ namespace lb::core::net {
 
 using world::Coord;
 
-constexpr uint32_t FRAME_VERSION = 4; // 2: VIS-08 flame-state bytes; 3: SND-03 audio record fields; 4: VIS-09 dust flag, shading bits
+constexpr uint32_t FRAME_VERSION = 5; // 2: VIS-08 flame-state bytes; 3: SND-03 audio record fields; 4: VIS-09 dust flag, shading bits; 5: MNR-10 chalk glyphs
 constexpr uint8_t FLAG_FULL = 1;
 constexpr uint8_t FLAG_BLINDED = 2;
 constexpr uint8_t FLAG_DUST = 4;  // VIS-09: the Moth's dust settles on every lit tile this client sees
@@ -33,7 +33,8 @@ constexpr size_t GLOW_BUCKETS = 32;
 
 struct TileView {
 	uint8_t light = 0, colour = 0, decals = 0;
-	bool operator==(const TileView &o) const { return light == o.light && colour == o.colour && decals == o.decals; }
+	uint64_t chalk = 0; // MNR-10: vision::FrameTile::chalk's glyph bytes, with DECAL_CHALK only
+	bool operator==(const TileView &o) const { return light == o.light && colour == o.colour && decals == o.decals && chalk == o.chalk; }
 	bool operator!=(const TileView &o) const { return !(*this == o); }
 };
 

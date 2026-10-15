@@ -53,11 +53,19 @@ enum class Unseen : uint8_t { SEEN = 0, DARK = 1, OUTSIDE_CONE = 2, BITE = 3, NO
 // Perception levels for one entity.
 enum class Level : uint8_t { NONE = 0, TOKEN = 1, IDENTITY = 2 };
 
+// MNR-10: a floor tile's chalk, one glyph byte per surface: the floor (byte 0), then the rib
+// faces bordering it to the north, east, south and west (bytes 1-4); 0 is none. A glyph byte is
+// CHALK_PRESENT | kind (bits 0-3) | arrow direction (bits 4-6). Sent only with DECAL_CHALK, which
+// needs the small-thing threshold (0.30).
+constexpr size_t CHALK_SURFACES = 5;
+constexpr uint8_t CHALK_PRESENT = 0x80;
+
 struct FrameTile {
 	world::Coord tile;
 	uint8_t light = 0;   // quantised 0-255 from 0-1000
 	uint8_t colour = 0;  // light::ColourClass
 	uint8_t decals = 0;
+	uint64_t chalk = 0; // MNR-10: CHALK_SURFACES glyph bytes, byte i at bits 8i
 };
 
 struct FrameToken {
@@ -118,6 +126,9 @@ public:
 	void set_bite_tiles(uint32_t id, std::set<world::Coord> tiles);
 	void set_identity_threshold(uint32_t entity, int64_t thousandths); // < 0 clears it
 	void set_decals(world::Coord tile, uint8_t bits);
+	// MNR-10: a floor tile's chalk glyphs (FrameTile::chalk's packing); 0 clears them. The tile's
+	// DECAL_CHALK bit (set_decals) says whether there is any.
+	void set_chalk(world::Coord tile, uint64_t glyphs);
 
 	// GEN-01 changed tiles: recast every field whose window touches the rectangle.
 	void on_tiles_changed(int64_t x0, int64_t y0, int64_t x1, int64_t y1);
@@ -187,6 +198,7 @@ private:
 	std::map<uint32_t, Observer> observers_;
 	std::map<uint32_t, int64_t> identity_override_;
 	std::map<world::Coord, uint8_t> decals_;
+	std::map<world::Coord, uint64_t> chalk_;
 	std::map<world::Coord, uint8_t> shadows_;
 	size_t recasts_ = 0;
 	int64_t margin_nanos_ = 0;

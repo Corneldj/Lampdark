@@ -173,14 +173,25 @@ TEST_CASE("decals: blood at 0.12, chalk and line numbers at 0.30") {
 	w.settle();
 	Vision &v = *w.vision;
 	v.set_decals({12, 10}, DECAL_BLOOD | DECAL_CHALK);
+	v.set_chalk({12, 10}, 0x85);
 	v.set_decals({13, 10}, DECAL_CHALK | DECAL_LINE_NUMBER);
+	v.set_chalk({13, 10}, 0x8100000080ULL); // MNR-10: an arrow east on the floor, an X on the west face
 	v.set_observer(1, 1, 10.5, 10.5, EAST);
 	for (const FrameTile &t : v.compute(1, {}).tiles) {
 		if (t.tile == Coord{12, 10}) {
 			CHECK(t.decals == DECAL_BLOOD);
+			CHECK(t.chalk == 0); // below 0.30: no glyphs either
 		}
 		if (t.tile == Coord{13, 10}) {
 			CHECK(t.decals == (DECAL_CHALK | DECAL_LINE_NUMBER));
+			CHECK(t.chalk == 0x8100000080ULL);
+		}
+	}
+	// A chalk bit with no glyphs behind it is never sent.
+	v.set_chalk({13, 10}, 0);
+	for (const FrameTile &t : v.compute(1, {}).tiles) {
+		if (t.tile == Coord{13, 10}) {
+			CHECK(t.decals == DECAL_LINE_NUMBER);
 		}
 	}
 }

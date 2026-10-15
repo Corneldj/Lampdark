@@ -109,6 +109,8 @@ var lamp_signals: LampSignals = null
 var rock_taps: RockTaps = null
 ## MNR-12: tools, parts and springing a known trap on purpose.
 var tools_parts: ToolsParts = null
+## MNR-10: chalk marks and the 2 s mark.
+var chalk: Chalk = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

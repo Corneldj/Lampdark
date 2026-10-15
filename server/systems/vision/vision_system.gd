@@ -30,6 +30,8 @@ var bite_now: Array[Vector2i] = []
 ## VIS-10: blood trails, tile -> direction 0-7 (0 east, clockwise with +y down); GEN-13 keeps them,
 ## HAZ-03 erases them under a roof fall.
 var trails: Dictionary = {}
+## MNR-10: chalk by floor tile: its five glyph bytes (NET-08's audit compares what is sent).
+var chalk: Dictionary = {}
 ## Decal bits by tile, as handed to the native frames (blood and its direction; chalk later).
 var _decals: Dictionary = {}
 ## Whether the last tick handed observers a bite (so an ended bite is cleared once).
@@ -168,6 +170,19 @@ func bite_seen_by(miner: int) -> bool:
 		if int(Variants.number(_watched[raw])) == miner:
 			return native.bite_seen(int(Variants.number(raw)))
 	return false
+
+
+## MNR-10: a floor tile's chalk (ChalkMarks' five glyph bytes; all zero clears it). Sent only with
+## the chalk bit, at the small-thing threshold (0.30), never as a token.
+func set_chalk(tile: Vector2i, glyphs: PackedByteArray) -> void:
+	var packed: int = ChalkMarks.pack(glyphs)
+	native.set_chalk(tile, packed)
+	var bits: int = int(Variants.number(_decals.get(tile, 0))) & ~TileBits.DECAL_CHALK
+	_set_decal_bits(tile, bits | (TileBits.DECAL_CHALK if packed != 0 else 0))
+	if packed != 0:
+		chalk[tile] = glyphs
+	else:
+		chalk.erase(tile)
 
 
 ## VIS-10: a blood trail on `tile`, heading `direction` (0-7); where trails cross, the latest wins.

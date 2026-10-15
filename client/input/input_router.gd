@@ -46,6 +46,8 @@ var revolver_drawn: bool = false
 var slot_kinds: Array[int] = []
 var free_kind: int = ItemKinds.Kind.NONE
 var carrying: bool = false
+## MNR-10: the own miner carries chalk (InventoryWire; false under No Chalk): else its wheel stays shut.
+var has_chalk: bool = true
 ## RSC-04: coming round in the Dark (the callout wheel offers 'Help!' and a moan, no rings).
 var coming_round: bool = false
 var lamp_in_hand: bool = false
@@ -124,6 +126,7 @@ func know_inventory(inventory: Dictionary) -> void:
 	carrying = Variants.flag(inventory.get("two_handed", false))
 	free_kind = int(Variants.number(Variants.array(inventory["free"])[0]))
 	revolver_drawn = free_kind == ItemKinds.Kind.REVOLVER
+	has_chalk = Variants.flag(inventory.get("chalk", true))
 	slot_kinds.clear()
 	for raw: Variant in Variants.array(inventory.get("slots", [])):
 		slot_kinds.append(int(Variants.number(Variants.array(raw)[0])))
@@ -262,11 +265,14 @@ func _wheels(down: Dictionary, now: float, pick_vec: Vector2) -> void:
 	if context == InputContexts.Context.MINE and ring_options.is_empty():
 		for pair: Array in WHEELS:
 			var action: String = pair[0]
+			# MNR-10: with no chalk (No Chalk) its wheel never opens.
+			if action == "chalk_wheel" and not has_chalk:
+				continue
 			if _pressed(action, down):
 				var kind: int = pair[1]
 				wheel.open(action, kind, now, carrying and action == "callout")
 				wheel.timing = action == "callout" and store.callout_timing
-				wheel.combined = action == "signal_wheel" and _same_specs("signal_wheel", "chalk_wheel")
+				wheel.combined = action == "signal_wheel" and _same_specs("signal_wheel", "chalk_wheel") and has_chalk
 				context = InputContexts.Context.WHEEL
 				break
 	if context != InputContexts.Context.WHEEL:

@@ -211,7 +211,7 @@ std::vector<uint8_t> ClientView::build(uint32_t tick, const Desired &desired, ui
 	want.blinded = desired.frame.blinded;
 	want.dust = desired.dust;
 	for (const vision::FrameTile &t : desired.frame.tiles) {
-		want.tiles[t.tile] = TileView{t.light, t.colour, t.decals};
+		want.tiles[t.tile] = TileView{t.light, t.colour, t.decals, t.chalk};
 	}
 	want.geometry = base->geometry;
 	apply_held_rule(want, p.held_cells);
@@ -422,6 +422,22 @@ std::vector<uint8_t> ClientView::build(uint32_t tick, const Desired &desired, ui
 		w.u8(v.light);
 		w.u8(v.colour);
 		w.u8(v.decals);
+		// MNR-10: with the chalk bit, a mask of the surfaces marked, then their glyphs.
+		if ((v.decals & vision::DECAL_CHALK) != 0) {
+			uint8_t mask = 0;
+			for (size_t s = 0; s < vision::CHALK_SURFACES; s++) {
+				if (((v.chalk >> (8 * s)) & 0xFF) != 0) {
+					mask = static_cast<uint8_t>(mask | (1u << s));
+				}
+			}
+			w.u8(mask);
+			for (size_t s = 0; s < vision::CHALK_SURFACES; s++) {
+				const uint8_t g = static_cast<uint8_t>((v.chalk >> (8 * s)) & 0xFF);
+				if (g != 0) {
+					w.u8(g);
+				}
+			}
+		}
 		n++;
 	}
 	w.patch_u16(at, n);
@@ -635,6 +651,14 @@ Decoded decode_frame(const std::vector<uint8_t> &bytes, const std::map<uint32_t,
 		v.light = static_cast<uint8_t>(r.u8());
 		v.colour = static_cast<uint8_t>(r.u8());
 		v.decals = static_cast<uint8_t>(r.u8());
+		if ((v.decals & vision::DECAL_CHALK) != 0) {
+			const uint8_t mask = static_cast<uint8_t>(r.u8());
+			for (size_t s = 0; s < vision::CHALK_SURFACES; s++) {
+				if ((mask >> s) & 1u) {
+					v.chalk |= static_cast<uint64_t>(static_cast<uint8_t>(r.u8())) << (8 * s);
+				}
+			}
+		}
 		d.view.tiles[t] = v;
 	}
 	for (uint32_t i = 0, n = r.u16(); i < n && r.ok(); i++) {

@@ -91,6 +91,8 @@ var ref: LbAuditReference = LbAuditReference.new()
 var bite_tiles: Callable = func(_slot: int) -> Array[Vector2i]:
 	return run.vision.bite_now if run != null and run.vision != null else [] as Array[Vector2i]
 var decals: Callable = func() -> Dictionary: return run.vision.decal_bits() if run != null and run.vision != null else {}
+## MNR-10: the chalk glyphs on each floor tile (five bytes), what a chalked tile's record must carry.
+var chalk_truth: Callable = func() -> Dictionary: return run.vision.chalk if run != null and run.vision != null else {}
 var identity_overrides: Callable = func() -> Dictionary: return {}
 ## slot -> FrameDecoder
 var _decoders: Dictionary = {}
@@ -500,6 +502,14 @@ func _check_tiles(slot: int, d: FrameDecoder.Decoded, x: Dictionary) -> void:
 			allowed |= have & 6
 		if bits & ~allowed:
 			_fail(slot, "tile %s" % t, "tile", "decals %d; only %d are lit enough (blood 0.12, chalk and numbers 0.30)" % [bits, allowed])
+		# MNR-10: glyphs ride only with the chalk bit, and are the tile's own.
+		if (rec[2] & TileBits.DECAL_CHALK) == 0:
+			if rec.size() != 3:
+				_fail(slot, "tile %s" % t, "tile", "chalk glyphs without the chalk bit")
+		else:
+			var want_glyphs: PackedByteArray = Variants.dict(chalk_truth.call()).get(t, PackedByteArray())
+			if rec.slice(3) != want_glyphs:
+				_fail(slot, "tile %s" % t, "tile", "chalk %s; the tile has %s" % [rec.slice(3), want_glyphs])
 
 
 ## VIS-10: the hatch bit belongs on an egg-glow tile whose brightest source has the hatch tell.

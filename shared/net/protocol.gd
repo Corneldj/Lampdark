@@ -9,7 +9,8 @@ class_name Protocol
 ## 7: SND-11's CALLOUT record.
 ## 8: RSC-04's WATCH and REPLAY, and ActionRecord.Kind.WATCH.
 ## 9: MNR-09's ActionRecord.Kind.THROW.
-const PROTOCOL_VERSION: int = 9
+## 10: MNR-10's chalk glyphs on tile records (frame version 5).
+const PROTOCOL_VERSION: int = 10
 
 enum Msg {
 	HELLO = 1,

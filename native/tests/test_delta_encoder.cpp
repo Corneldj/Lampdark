@@ -302,3 +302,25 @@ TEST_CASE("SND-03: an audio record's level, flags, mask gain and points cross th
 	CHECK(v->voice == 5);
 	CHECK(v->points.empty());
 }
+
+TEST_CASE("MNR-10: chalk glyphs ride a tile with its chalk bit, and a changed glyph is sent again") {
+	ClientView server(0xC0FFEE, 1);
+	Client client;
+	const ReplicationParams p = roomy();
+	Desired d = room(10.0, 5.0, 90);
+	REQUIRE(!d.frame.tiles.empty());
+	d.frame.tiles[0].decals = vision::DECAL_CHALK;
+	d.frame.tiles[0].chalk = 0x8C000000ULL | 0x83ULL; // the floor and the south face
+	d.frame.tiles[1].decals = vision::DECAL_CHALK;
+	d.frame.tiles[1].chalk = 0x8100000000ULL; // the west face alone
+	REQUIRE(client.receive(server.build(1, d, 0xFFFF, 1, p)));
+	CHECK(client.latest().tiles.at(d.frame.tiles[0].tile).chalk == (0x8C000000ULL | 0x83ULL));
+	CHECK(client.latest().tiles.at(d.frame.tiles[1].tile).chalk == 0x8100000000ULL);
+	CHECK(client.latest().tiles.at(d.frame.tiles[2].tile).chalk == 0);
+	client.ack(server, 1);
+	d.frame.tiles[0].chalk = 0x8C000000ULL | 0xA0ULL; // the floor mark replaced
+	BuildStats st;
+	REQUIRE(client.receive(server.build(2, d, 0xFFFF, 1, p, &st)));
+	CHECK(st.tiles_sent == 1);
+	CHECK(client.latest().tiles.at(d.frame.tiles[0].tile).chalk == (0x8C000000ULL | 0xA0ULL));
+}

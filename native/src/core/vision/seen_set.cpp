@@ -83,6 +83,14 @@ void Vision::set_decals(Coord tile, uint8_t bits) {
 	}
 }
 
+void Vision::set_chalk(Coord tile, uint64_t glyphs) {
+	if (glyphs == 0) {
+		chalk_.erase(tile);
+	} else {
+		chalk_[tile] = glyphs;
+	}
+}
+
 void Vision::on_tiles_changed(int64_t x0, int64_t y0, int64_t x1, int64_t y1) {
 	for (auto &[id, o] : observers_) {
 		if (o.los.valid() && o.los.touches(x0, y0, x1, y1)) {
@@ -275,6 +283,15 @@ PerceptionFrame Vision::compute_frame(uint32_t id, const std::vector<sim::Mirror
 				}
 				if (light >= params.small_min) {
 					bits |= d->second & (DECAL_CHALK | DECAL_LINE_NUMBER);
+				}
+				// MNR-10: the glyphs ride with the chalk bit, never without it.
+				if ((bits & DECAL_CHALK) != 0) {
+					auto c = chalk_.find(t);
+					if (c != chalk_.end()) {
+						ft.chalk = c->second;
+					} else {
+						bits = static_cast<uint8_t>(bits & ~DECAL_CHALK);
+					}
 				}
 				ft.decals = bits;
 			}

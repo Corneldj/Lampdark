@@ -118,6 +118,9 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.tools_parts = ToolsParts.new()
 	run.tools_parts.bind(run)
 	run.add_system(run.tools_parts)
+	run.chalk = Chalk.new()
+	run.chalk.bind(run)
+	run.add_system(run.chalk)
 	# SND-12's lamp signals and rock taps.
 	run.lamp_signals = LampSignals.new()
 	run.lamp_signals.bind(run)

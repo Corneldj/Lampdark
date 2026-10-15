@@ -24,7 +24,8 @@ var verb: StringName = &""
 var ticks_needed: int = 1
 var ticks_done: int = 0
 var started_tick: int = 0
-## The InputRecord.HOLD_* bit that must stay held.
+## The InputRecord.HOLD_* bit that must stay held; 0 for none (MNR-10's chalk runs on by itself
+## once started, cancelled only by its constraints).
 var hold_bit: int = InputRecord.HOLD_INTERACT
 ## Which capability (MinerTransitions.CAPABILITIES) it needs: &"interact" or &"belt".
 var capability: StringName = &"interact"

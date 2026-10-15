@@ -444,7 +444,7 @@ func _advance(run: RunState, a: TimedAction, slot: int, bits: int) -> void:
 func _broken(run: RunState, a: TimedAction, slot: int, bits: int) -> StringName:
 	if _starved.has(slot):
 		return TimedAction.STARVED
-	if (bits & a.hold_bit) == 0:
+	if a.hold_bit != 0 and (bits & a.hold_bit) == 0:
 		return TimedAction.RELEASED
 	var all_partners: Array[int] = a.partners.duplicate()
 	if a.partner != 0 and not all_partners.has(a.partner):

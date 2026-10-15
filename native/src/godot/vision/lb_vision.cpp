@@ -37,6 +37,7 @@ void LbVision::_bind_methods() {
 	ClassDB::bind_integer_constant("LbVision", "", "COLOUR_HATCH_BIT", vision::COLOUR_HATCH_BIT);
 	ClassDB::bind_method(D_METHOD("set_identity_threshold", "entity", "light"), &LbVision::set_identity_threshold);
 	ClassDB::bind_method(D_METHOD("set_decals", "tile", "bits"), &LbVision::set_decals);
+	ClassDB::bind_method(D_METHOD("set_chalk", "tile", "glyphs"), &LbVision::set_chalk);
 	ClassDB::bind_method(D_METHOD("set_shadow_params", "params"), &LbVision::set_shadow_params);
 	ClassDB::bind_method(D_METHOD("update_shadows"), &LbVision::update_shadows);
 	ClassDB::bind_method(D_METHOD("set_turn_band", "id", "degrees"), &LbVision::set_turn_band);
@@ -195,6 +196,11 @@ void LbVision::set_decals(Vector2i tile, int64_t bits) {
 	vision_->set_decals(Coord{tile.x, tile.y}, static_cast<uint8_t>(bits));
 }
 
+void LbVision::set_chalk(Vector2i tile, int64_t glyphs) {
+	REQUIRE_VISION();
+	vision_->set_chalk(Coord{tile.x, tile.y}, static_cast<uint64_t>(glyphs));
+}
+
 void LbVision::on_tiles_changed(Vector2i, Rect2i rect, const String &) {
 	REQUIRE_VISION();
 	vision_->on_tiles_changed(rect.position.x, rect.position.y, rect.position.x + rect.size.x - 1, rect.position.y + rect.size.y - 1);
@@ -238,12 +244,14 @@ Dictionary LbVision::compute(int64_t id) {
 	const vision::PerceptionFrame f = vision_->compute(static_cast<uint32_t>(id), lb::core::sim::EntityMirror::current().entities());
 	PackedInt32Array xs, ys;
 	PackedByteArray lights, colours, decals;
+	PackedInt64Array chalk;
 	for (const vision::FrameTile &t : f.tiles) {
 		xs.push_back(static_cast<int32_t>(t.tile.x));
 		ys.push_back(static_cast<int32_t>(t.tile.y));
 		lights.push_back(t.light);
 		colours.push_back(t.colour);
 		decals.push_back(t.decals);
+		chalk.push_back(static_cast<int64_t>(t.chalk));
 	}
 	Dictionary tiles;
 	tiles["x"] = xs;
@@ -251,6 +259,7 @@ Dictionary LbVision::compute(int64_t id) {
 	tiles["light"] = lights;
 	tiles["colour"] = colours;
 	tiles["decals"] = decals;
+	tiles["chalk"] = chalk;
 	PackedByteArray sizes;
 	PackedVector2Array positions;
 	for (const vision::FrameToken &t : f.tokens) {

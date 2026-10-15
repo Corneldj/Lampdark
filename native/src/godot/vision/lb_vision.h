@@ -41,6 +41,8 @@ public:
 	bool bite_seen(int64_t id) const;
 	void set_identity_threshold(int64_t entity, double light);
 	void set_decals(::godot::Vector2i tile, int64_t bits);
+	// MNR-10: a floor tile's chalk glyphs (five bytes: the floor, then the faces N, E, S, W).
+	void set_chalk(::godot::Vector2i tile, int64_t glyphs);
 	// VIS-09: {enabled, min_light (0-1), lit_min (0-1), levels, width, never_cast: [kinds]}.
 	void set_shadow_params(const ::godot::Dictionary &d);
 	void update_shadows();

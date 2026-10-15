@@ -6,7 +6,7 @@ extends RefCounted
 ## for byte; a malformed frame, or one whose baseline the client no longer has, decodes to nothing
 ## and is not acknowledged.
 
-const VERSION: int = 4
+const VERSION: int = 5
 const FLAG_FULL: int = 1
 const FLAG_BLINDED: int = 2
 ## VIS-09: the moth's dust settles on every lit tile this client sees.
@@ -132,7 +132,14 @@ func decode(payload: PackedByteArray) -> Decoded:
 	var own: Vector2i = Vector2i(floori(x256 / 256.0), floori(y256 / 256.0))
 	for _i: int in r.u16():
 		var t: Vector2i = own + Vector2i(r.i8(), r.i8())
-		view.tiles[t] = PackedByteArray([r.u8(), r.u8(), r.u8()])
+		var rec: PackedByteArray = PackedByteArray([r.u8(), r.u8(), r.u8()])
+		# MNR-10: with the chalk bit, a mask of the surfaces marked and their glyphs (the record
+		# then carries all five, 0 for none).
+		if (rec[2] & TileBits.DECAL_CHALK) != 0:
+			var mask: int = r.u8()
+			for s: int in ChalkMarks.SURFACES:
+				rec.append(r.u8() if (mask >> s) & 1 else 0)
+		view.tiles[t] = rec
 		d.tiles_sent.append(t)
 	for _i: int in r.u16():
 		view.tiles.erase(own + Vector2i(r.i8(), r.i8()))
