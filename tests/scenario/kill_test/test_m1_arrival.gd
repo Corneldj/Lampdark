@@ -76,13 +76,21 @@ func test_a_real_server_with_the_grey_box_gives_a_client_its_miner() -> void:
 	var c: ClientConnection = ClientConnection.new(EnetTransport.new())
 	c.identity = "kill-tester"
 	var started: bool = false
-	var until: int = Time.get_ticks_msec() + 20000
+	var until: int = Time.get_ticks_msec() + 30000
 	while Time.get_ticks_msec() < until:
 		if not started:
 			await get_tree().create_timer(1.0).timeout
 			started = c.start("127.0.0.1", port)
 			continue
 		c.poll()
+		# A slow start (the server under Wine takes about 6 s to listen) outlasts one handshake: try
+		# again, as a player's client would.
+		if c.state == ClientConnection.State.DROPPED and c.frames_received == 0:
+			c.close()
+			c = ClientConnection.new(EnetTransport.new())
+			c.identity = "kill-tester"
+			started = false
+			continue
 		if c.state == ClientConnection.State.CONNECTED and not c.view.own.is_empty() and c.frames_received > 10:
 			break
 		await get_tree().process_frame

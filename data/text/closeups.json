@@ -1,0 +1,9 @@
+{
+	"note": "UI-02: the close-ups' placeholder titles (Gameplay §14.3). Their contents' text belongs to LFT-03, LFT-13, LFT-14 and LFT-15. UI-07 localises these.",
+	"strings": {
+		"closeup.map_table": "The Map Table",
+		"closeup.pocket_book": "Pocket Book",
+		"closeup.manual": "Emergency Winder: Instructions for Restoring to Service",
+		"closeup.switchboard": "The Switchboard"
+	}
+}

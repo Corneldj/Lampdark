@@ -251,7 +251,7 @@ func _blind(entity: int, on: bool) -> void:
 		return
 	for slot: int in _run.movement.miner_slots():
 		if _run.movement.miner(slot).entity_id == entity:
-			_run.vision.native.set_blinded(slot, on)
+			_run.vision.set_blind(slot, &"fallen", on)
 
 
 func _sorted_bodies() -> Array[int]:

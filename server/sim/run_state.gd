@@ -94,6 +94,8 @@ var voice: VoiceSystem = null
 var voice_noise: VoiceNoise = null
 var heard: HeardTracker = null
 var voice_facts: VoiceFacts = null
+## UI-02's close-ups: who reads which, and the board's seat.
+var closeups: CloseupState = null
 ## NET-07's run record (server-only, outside the state hash).
 var record: RunRecord = null
 ## SND-15's fall scream, cut and knocks.

@@ -5,7 +5,8 @@ class_name Protocol
 
 ## 2: FND-08's handshake carries the build flavour and the QA token, and Welcome the debug grant.
 ## 3: SND-10's MIC_LABEL, the crew-list label flag, client to server.
-const PROTOCOL_VERSION: int = 5
+## 6: UI-02's CLOSE_UP message and ActionRecord.Kind.CLOSE_UP.
+const PROTOCOL_VERSION: int = 6
 
 enum Msg {
 	HELLO = 1,
@@ -29,6 +30,7 @@ enum Msg {
 	MIC_LABEL = 19,  ## SND-10: the crew list's 'Mute (callouts and taps only)' flag, one byte, client to server, control lane
 	KNOCKS = 20,  ## SND-15: a fall's three knocks, no payload at all, control lane, to every conscious miner
 	RELAY_TAG = 21,  ## STM-04's Path B: before Hello, from the host's relay over loopback: "<host token>:<friend's SteamID>"
+	CLOSE_UP = 22,  ## UI-02: the own miner's close-up and the board's seat (CloseupKind), control lane, owner only
 }
 
 enum Reject {

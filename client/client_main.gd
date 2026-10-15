@@ -57,6 +57,9 @@ var local_server: LocalServerHost = null
 var host_relay: HostRelay = null
 ## UI-01: the in-play UI (only the design's private elements).
 var in_play: InPlayLayer = null
+## UI-02's close-ups, over the mine and under the menus.
+var closeups: CloseupManager = null
+var _closeup_messages_seen: int = 0
 var _ui_violations_seen: Dictionary = {}
 var drawn: DrawnSet = DrawnSet.new()
 var _facing_seq: int = -1
@@ -249,6 +252,11 @@ func _start_input() -> void:
 	world_view.set_shown(false)  # until the first frame: the pithead and lobby must not be drawn over
 	in_play = InPlayLayer.new()
 	add_child(in_play)
+	closeups = CloseupManager.new()
+	closeups.name = "Closeups"
+	closeups.input_context = CloseupInputContext.new(router, camera)
+	closeups.in_play_layer = in_play
+	add_child(closeups)
 	AudioBuses.install()
 	events_player = EventPlayer.new()
 	events_player.name = "EventPlayer"
@@ -330,6 +338,8 @@ func _sample_input(shown_tick: int) -> InputRecord:
 	for action: Array in router.actions:
 		connection.inputs.queue_action(int(Variants.number(action[0])) as ActionRecord.Kind, int(Variants.number(action[1])), shown_tick,
 			int(Variants.number(action[2])))
+	for ask: int in closeups.process_input(router):
+		connection.inputs.queue_action(ActionRecord.Kind.CLOSE_UP, ask, shown_tick, 0)
 	return record
 
 
@@ -356,6 +366,14 @@ func _follow_camera(delta: float) -> void:
 	var server_lamp: Dictionary = {"position": own, "radius": radius}
 	var lights: Dictionary = OwnLampBlend.lights(drawn, connection.view, server_lamp, Variants.dict(predicted["lamp"]))
 	var own_light: float = float(Variants.number(lights.get(Vector2i(floori(own.x), floori(own.y)), 0.0)))
+	if connection.closeup_messages != _closeup_messages_seen:
+		_closeup_messages_seen = connection.closeup_messages
+		closeups.apply(connection.closeup)
+	# UI-02: under a close-up that covers the screen nothing of the mine is drawn.
+	if closeups.covers_world():
+		if world_view.visible:
+			world_view.set_shown(false)
+		return
 	if not world_view.visible:
 		world_view.set_shown(true)
 	world_view.show_frame(drawn, connection.view, camera.view_rect(own).position, own, _shown_facing, own_light,

@@ -328,6 +328,15 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 				_fail(slot, "DEAFENED", "deafened", "not exactly {duration_s, dip_db}")
 			elif run.deafen == null or not run.deafen.is_deafened(slot):
 				_fail(slot, "DEAFENED", "deafened", "to a client whose miner is not deafened")
+		"closeup":
+			_lane(slot, lane, Lane.Id.CONTROL, type)
+			var c: Dictionary = CloseupKind.decode(payload)
+			var reader: int = run.vision.watched_entity(slot) if run.vision != null else 0
+			if c.is_empty() or CloseupKind.encode(int(Variants.number(c["kind"])) as CloseupKind.Kind,
+					int(Variants.number(c["seat"])) as CloseupKind.Seat) != payload:
+				_fail(slot, "CLOSE_UP", "closeup", "not exactly {kind, seat}")
+			elif run.closeups == null or int(Variants.number(c["kind"])) != run.closeups.kind_of(reader):
+				_fail(slot, "CLOSE_UP", "closeup", "a close-up this client's miner is not reading")
 		"knocks":
 			_lane(slot, lane, Lane.Id.CONTROL, type)
 			if not payload.is_empty():

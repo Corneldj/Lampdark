@@ -5,7 +5,8 @@ extends RefCounted
 ## hit.
 
 ## TAP_ROCK: MNR-15's tap on the rock (T, or LB tapped with the stick centred; SND-12 uses it).
-enum Kind { CALLOUT = 0, LAMP_SIGNAL = 1, CHALK = 2, RING_CHOICE = 3, TRIGGER = 4, TAP_ROCK = 5 }
+## CLOSE_UP: UI-02's request to open the Pocket Book, close a close-up or stay seated (CloseupKind.Ask).
+enum Kind { CALLOUT = 0, LAMP_SIGNAL = 1, CHALK = 2, RING_CHOICE = 3, TRIGGER = 4, TAP_ROCK = 5, CLOSE_UP = 6 }
 
 const SIZE: int = 11
 
@@ -40,4 +41,4 @@ static func unpack(from: StreamPeerBuffer) -> ActionRecord:
 
 ## True when the kind is known (always checked on the server).
 func is_valid() -> bool:
-	return kind >= Kind.CALLOUT and kind <= Kind.TAP_ROCK
+	return kind >= Kind.CALLOUT and kind <= Kind.CLOSE_UP

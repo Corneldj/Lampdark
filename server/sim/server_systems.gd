@@ -80,6 +80,9 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.revival = Revival.new()
 	run.revival.bind(run)
 	run.add_system(run.revival)
+	run.closeups = CloseupState.new()
+	run.closeups.bind(run, net)
+	run.add_system(run.closeups)
 	# A retreat drops the grab (CRT-01); a grab's end stands its creature's hunt down.
 	run.creatures.grab_release = func(_c: Creature, miner: int) -> void:
 		var g: GrabHold = run.holds.grab_of(miner)

@@ -17,6 +17,8 @@ var rtt_ms: Callable = func(_slot: int) -> float: return 0.0
 ## slot -> the miner's entity id; slot -> the last facing used.
 var _watched: Dictionary = {}
 var _facing: Dictionary = {}
+## slot -> {reason: true}
+var _blind_reasons: Dictionary = {}
 
 
 func _init(mine: Mine, light: LightSystem) -> void:
@@ -67,6 +69,23 @@ func unwatch(slot: int) -> void:
 	_facing.erase(slot)
 	frames.erase(slot)
 	native.remove_observer(slot)
+
+
+## A client's view goes black while any reason holds (RSC-01's fall, UI-02's close-up): its seen
+## set empties, so NET-04 sends only the own miner. Each reason is set and cleared on its own.
+func set_blind(slot: int, reason: StringName, on: bool) -> void:
+	var reasons: Dictionary = _blind_reasons.get(slot, {})
+	if on:
+		reasons[reason] = true
+	else:
+		reasons.erase(reason)
+	_blind_reasons[slot] = reasons
+	native.set_blinded(slot, not reasons.is_empty())
+
+
+func is_blind(slot: int, reason: StringName = &"") -> bool:
+	var reasons: Dictionary = _blind_reasons.get(slot, {})
+	return reasons.has(reason) if reason != &"" else not reasons.is_empty()
 
 
 func watched_entity(slot: int) -> int:

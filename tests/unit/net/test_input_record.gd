@@ -181,5 +181,5 @@ func test_schema_carries_intent_only() -> void:
 		for field: String in fields:
 			assert_null(forbidden.search(field), "%s is not a result field" % field)
 	var actions: PackedStringArray = PackedStringArray(ActionRecord.Kind.keys())
-	assert_eq(actions, PackedStringArray(["CALLOUT", "LAMP_SIGNAL", "CHALK", "RING_CHOICE", "TRIGGER", "TAP_ROCK"]),
+	assert_eq(actions, PackedStringArray(["CALLOUT", "LAMP_SIGNAL", "CHALK", "RING_CHOICE", "TRIGGER", "TAP_ROCK", "CLOSE_UP"]),
 		"a trigger carries its tick and aim; no action kind reports a hit")
