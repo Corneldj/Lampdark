@@ -3,7 +3,7 @@ extends Node2D
 ## MNR-10: chalk marks (Gameplay §4.5, §12.7). A drawn tile whose decal byte carries the chalk bit
 ## (sent only seen at 0.30 or more, VIS-03; never a token) brings its glyph bytes (ChalkMarks): a
 ## mark on the floor is drawn at the tile's centre, one on a rib face against that face. Arrows
-## point their way, an X, a '!' or a digit 0-9. Chalk white (Palette.CHALK_WHITE) shaded by the
+## point their way, an X, a '!' or a digit 0-9. In chalk white (Palette.CHALK_WHITE) shaded by the
 ## tile's own light, drawn only while seen. Placeholder glyphs until the hand-drawn set (assets).
 
 const DECAL_CHALK: int = 2
@@ -43,7 +43,7 @@ func marks() -> Dictionary:
 	return out
 
 
-## Chalk on a tile lit to `light` (0-1): white shaded like the floor under it.
+## A mark on a tile lit to `light` (0-1): chalk white shaded like the floor under it.
 static func colour_at(light: float) -> Color:
 	var k: float = clampf(0.35 + 0.65 * light, 0.0, 1.0)
 	return Color(Palette.CHALK_WHITE.r * k, Palette.CHALK_WHITE.g * k, Palette.CHALK_WHITE.b * k, ALPHA)

@@ -46,7 +46,7 @@ var revolver_drawn: bool = false
 var slot_kinds: Array[int] = []
 var free_kind: int = ItemKinds.Kind.NONE
 var carrying: bool = false
-## MNR-10: the own miner carries chalk (InventoryWire; false under No Chalk): else its wheel stays shut.
+## MNR-10: the own miner carries chalk (InventoryWire; false under the no-chalk rule): else its wheel stays shut.
 var has_chalk: bool = true
 ## RSC-04: coming round in the Dark (the callout wheel offers 'Help!' and a moan, no rings).
 var coming_round: bool = false
@@ -265,7 +265,7 @@ func _wheels(down: Dictionary, now: float, pick_vec: Vector2) -> void:
 	if context == InputContexts.Context.MINE and ring_options.is_empty():
 		for pair: Array in WHEELS:
 			var action: String = pair[0]
-			# MNR-10: with no chalk (No Chalk) its wheel never opens.
+			# MNR-10: with no chalk (the no-chalk rule) its wheel never opens.
 			if action == "chalk_wheel" and not has_chalk:
 				continue
 			if _pressed(action, down):
