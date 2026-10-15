@@ -23,7 +23,7 @@ func _interval(s: Scenario, st: StytheCreature) -> int:
 	for dx: float in [-2.5, 2.5, -1.5]:
 		_lamp(s, at + Vector2(dx, 0.0))
 	s.step(10)  # the shutters close (MNR-06's step), so no light pushes it off its tile
-	st.enter(s.run, &"hunt", "test")
+	st.enter(s.run, &"windup", "test")  # an active state that holds still (CRT-14 owns Hunt's moves)
 	var before: int = st.snuff.history.size()
 	for _i: int in 120:
 		s.step(1)
@@ -64,7 +64,7 @@ func test_nearest_in_reach_and_sight() -> void:
 	var beyond: GauzeLamp = _lamp(s, at + Vector2(-3.6, 0.0))
 	var hidden: GauzeLamp = _lamp(s, at + Vector2(2.0, 0.0))  # behind the pillar at (19, 2)
 	s.step(8)
-	st.enter(s.run, &"hunt", "test")
+	st.enter(s.run, &"windup", "test")  # an active state that holds still (CRT-14 owns Hunt's moves)
 	s.step(41)
 	assert_false(nearer.burning(), "the nearest first (shuttered: a flame all the same)")
 	assert_true(near.burning() and beyond.burning() and hidden.burning(), "one a snuff")
@@ -85,7 +85,7 @@ func test_beyond_it_and_never_while_idle() -> void:
 	s.run.light.grid.add_area("emergency", LbLightGrid.COLOUR_WHITE, 0, 0.6, [Vector2i(at) + Vector2i(-2, 0)])
 	s.run.light.grid.add_point("egg_glow", LbLightGrid.COLOUR_EGG_GLOW, 0, 0, 1.5, 0.2, at + Vector2(0.0, 0.0), 0)
 	s.step(2)
-	st.enter(s.run, &"hunt", "test")
+	st.enter(s.run, &"windup", "test")  # an active state that holds still (CRT-14 owns Hunt's moves)
 	s.step(100)
 	assert_eq(st.snuff.history.size(), 0, "flares, emergency lamps and egg-glow are beyond it")
 	assert_true(HandsAndBelt.burning_flare(flare))

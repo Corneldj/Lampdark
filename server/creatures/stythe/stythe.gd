@@ -13,17 +13,27 @@ extends Creature
 ## miner; lit to 0.30, a faceless figure (VIS-06); it casts no shadow (VIS-09). Server-only: its
 ## senses, memory, target and timers are never sent.
 
+## CRT-15's trail: every tile a dragged victim enters, with the drag's heading (0-7; -1 the grab).
+signal drag_tile_crossed(tile: Vector2i, dir: int)
+
 ## The lair (CRT-15, GEN-10 place it): where its territory and hunting range are measured from.
 var lair: Vector2i = Vector2i.ZERO
 ## CRT-17's Thin: every 0.30 in its rules reads 0.50.
 var thin: bool = false
 ## DIR-06's staged run 1: it never leaves its territory.
 var staged: Callable = func() -> bool: return false
+## LFT-09's apex: () -> Variant, the point at the gates to lurk near while the engine runs, or null.
+var apex_point: Callable = func() -> Variant: return null
+## CRT-15: the bodies it keeps (entity ids). CRT-14 adds a victim brought home.
+var kept: Array[int] = []
 ## MNR-08: (run, source, seconds) -> bool, an electric lamp drained instead of snuffed.
 var electric_drain: Callable = func(_r: RunState, _source: int, _seconds: float) -> bool: return false
 var senses: StytheSenses = StytheSenses.new()
 var move: StytheMove = StytheMove.new()
 var snuff: StytheSnuff = StytheSnuff.new()
+var hunt: StytheHunt = StytheHunt.new()
+var drag: StytheDrag = StytheDrag.new()
+var _breath: Tell = null
 ## Moving off a lit tile this tick (no wind-up, no snuff).
 var pushed: bool = false
 ## The light circled (Circle), and until when (CRT-14 sets it).
@@ -47,8 +57,10 @@ func define_states() -> Array[CreatureState]:
 		CreatureState.make(&"shadow", {}),
 		CreatureState.make(&"hunt", {"fills_cap_place": true, "chosen_entry": true, "plays_tell": true}),
 		CreatureState.make(&"windup", {"fills_cap_place": true, "plays_tell": true}),
-		CreatureState.make(&"drag", {"fills_cap_place": true, "plays_tell": true}),
-		CreatureState.make(&"collect", {"fills_cap_place": true, "plays_tell": true}),
+		# A drag holds its hunt's cap place through the hunt itself; one after a Collect holds none
+		# (Proposed), and Collect never does (§10.8).
+		CreatureState.make(&"drag", {"plays_tell": true}),
+		CreatureState.make(&"collect", {"plays_tell": true}),
 		CreatureState.make(&"keep", {}),
 		CreatureState.make(&"flee", {}),
 		CreatureState.make(&"circle", {}),
@@ -78,11 +90,78 @@ func is_active() -> bool:
 	return state != null and state.plays_tell
 
 
+## CRT-14's tell: the flames within stythe.tell_reach_tiles gutter (VIS-08) in the active states.
+func flame_tell() -> int:
+	return FlameFlags.GUTTER if is_active() else 0
+
+
+func flame_tell_reach() -> float:
+	return Tuning.f(&"stythe.tell_reach_tiles")
+
+
+## The tell plays (Hunt, WindUp, Drag, Collect): the gutter, the breath, the crackle, the bite.
+func tell_active() -> bool:
+	return is_active()
+
+
+## Where its tell plays now: its position while active, else none (SND-08, VIS-10 read it).
+func tell_points(run: RunState) -> Array:
+	return [position(run)] if tell_active() else []
+
+
+func keeps() -> bool:
+	return not kept.is_empty()
+
+
+## The breath (a diffuse tell all around) plays while an active state lasts.
+func enter(run: RunState, state_name: StringName, reason: String = "") -> void:
+	super(run, state_name, reason)
+	if system == null:
+		return
+	if is_active() and _breath == null:
+		_breath = system.begin_tell(run, self, &"stythe_breath", Tuning.f(&"stythe.tell_reach_tiles"))
+	elif not is_active() and _breath != null:
+		system.end_tell(run, _breath)
+		_breath = null
+
+
 func on_spawned(run: RunState) -> void:
 	if lair == Vector2i.ZERO:
 		lair = tile(run)
 	if run.mine != null:
 		run.mine.native.tiles_changed.connect(func(_cell: Vector2i, _rect: Rect2i, _reason: String) -> void: senses.on_tiles_changed())
+	# SND-08's crackle and VIS-10's bite read where its tell plays: ServerSystems wires them to
+	# tell_points() when it spawns (a creature reads only its own senses).
+
+
+func on_wind_up_finished(run: RunState, w: CreatureWindUp) -> void:
+	hunt.on_wind_up_finished(run, self, w)
+
+
+func on_grab_ended(run: RunState, grab: GrabHold, outcome: GrabHold.Outcome) -> void:
+	if drag.victim == grab.victim:
+		drag.victim = 0
+		drag.grab_id = -1
+	super(run, grab, outcome)
+
+
+func on_retreat_started(run: RunState, _cause: String) -> void:
+	hunt.on_retreat(run, self)
+
+
+func on_retreat_ended(run: RunState, _toward_base: bool) -> void:
+	enter(run, &"lurk", "retreat over")
+
+
+## Home with a victim (CRT-15 lays the body in its row): it keeps them, and guards.
+func reached_lair(run: RunState) -> void:
+	if drag.victim != 0 and not kept.has(drag.victim):
+		kept.append(drag.victim)
+	move.stop()
+	hunt.target = 0
+	if not drag.collected:
+		system.gate.stand_down(run, self, "home")
+	enter(run, &"keep", "lair reached")
 
 
 func shift_timers(by: int) -> void:
@@ -96,19 +175,26 @@ func shift_timers(by: int) -> void:
 
 func think(run: RunState) -> void:
 	senses.update(run, self)
+	if state.name == &"drag":
+		# Light on it breaks the drag (it flees); it is never merely pushed while dragging.
+		hunt.tick(run, self)
+		snuff.tick(run, self, is_active())
+		return
 	pushed = move.push_off_light(run, self)
 	if pushed:
 		move.tick(run, self, Tuning.f(&"stythe.speed"))
 		snuff.tick(run, self, is_active())
 		return
+	hunt.tick(run, self)
 	match state.name:
-		&"lurk":
+		&"lurk", &"keep":
 			_lurk(run)
 		&"circle":
 			if circle_seed.x != 2147483647:
 				move.circle(run, self, circle_seed)
 	snuff.tick(run, self, is_active())
-	move.tick(run, self, Tuning.f(&"stythe.circle_speed") if state.name == &"circle" else Tuning.f(&"stythe.speed"))
+	if state.name != &"drag":
+		move.tick(run, self, Tuning.f(&"stythe.circle_speed") if state.name == &"circle" else Tuning.f(&"stythe.speed"))
 
 
 ## Through the dark toward a miner (CRT-14's Hunt): never past its territory in a staged run.
@@ -138,6 +224,16 @@ func best_target(run: RunState) -> int:
 ## Lurk: a dark dead end or side road within its hunting range (its territory when staged), moved
 ## on every stythe.lurk_move_s: toward the newest remembered place, else the highest marked Pull.
 func _lurk(run: RunState) -> void:
+	# The engine (LFT-09): within stythe.apex_lurk_tiles of the gates, unless it keeps or retreats.
+	var apex: Variant = apex_point.call()
+	if apex != null and not keeps() and not is_retreating():
+		var at: Vector2 = apex
+		if position(run).distance_to(at) > Tuning.f(&"stythe.apex_lurk_tiles"):
+			var near: Variant = system.nav.native.reachable_dark_tile_nearest(Vector2i(floori(at.x), floori(at.y)), tile(run), move.params(self))
+			if near != null:
+				var n: Vector2i = near
+				move.head_for(run, self, n)
+			return
 	if lurk_until >= 0 and run.tick < lurk_until and lurk_spot.x != 2147483647:
 		move.head_for(run, self, lurk_spot)
 		return
@@ -175,7 +271,8 @@ func lurk_spots(run: RunState) -> Array[Vector2i]:
 	var out: Array[Vector2i] = []
 	if run.mine == null:
 		return out
-	var staged_now: bool = Variants.flag(staged.call())
+	var staged_now: bool = Variants.flag(staged.call()) or keeps()
+	var apex: Variant = apex_point.call() if not keeps() and not is_retreating() else null
 	var start: Vector2i = tile(run)
 	var seen: Dictionary = {start: true}
 	var queue: Array[Vector2i] = [start]
@@ -195,6 +292,9 @@ func lurk_spots(run: RunState) -> Array[Vector2i]:
 				queue.append(n)
 		if open <= 2 and t != start and unlit(run, t):
 			var ok: bool = senses.in_territory(run, self, t) if staged_now else senses.in_hunting_range(run, self, t)
+			if apex != null:
+				var ap: Vector2 = apex
+				ok = ok and (Vector2(t) + Vector2(0.5, 0.5)).distance_to(ap) <= Tuning.f(&"stythe.apex_lurk_tiles")
 			if ok:
 				out.append(t)
 	return out

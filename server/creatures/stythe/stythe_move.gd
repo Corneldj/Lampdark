@@ -5,12 +5,15 @@ extends RefCounted
 ## its path replanned at stythe.replan_hz and the same tick a tile on it lights (NavFollower checks
 ## the rest of its path every tick); with no dark path it goes to the reachable dark tile nearest its
 ## goal (NavFollower's DARK fallback). Light reaching its tile pushes it to the nearest dark tile
-## (`pushed`: no wind-up, no snuff meanwhile). Circling paces CRT-02's light_edge_ring round a light
+## (`pushed`: no wind-up, no snuff meanwhile), by the shortest way over any floor, lit or not, since
+## a dark path cannot start in light (shut doors and gates still stop it). Circling paces CRT-02's light_edge_ring round a light
 ## at stythe.circle_speed (Proposed). Server-only.
 
 var follower: NavFollower = NavFollower.new()
 ## The goal it was last sent toward (-huge: none).
 var goal: Vector2i = Vector2i(2147483647, 0)
+## DARK, or WALKER while pushed off light.
+var mode: NavModes.Mode = NavModes.Mode.DARK
 var _last_plan: int = -1
 var _ring: Array[Vector2i] = []
 var _ring_at: int = -1
@@ -22,10 +25,11 @@ func params(st: StytheCreature) -> Dictionary:
 
 
 ## Heads for `to` through the dark (a no-op while already heading there).
-func head_for(run: RunState, st: StytheCreature, to: Vector2i) -> void:
-	if to == goal and follower.status != NavFollower.Status.IDLE and follower.status != NavFollower.Status.BLOCKED:
+func head_for(run: RunState, st: StytheCreature, to: Vector2i, how: NavModes.Mode = NavModes.Mode.DARK) -> void:
+	if to == goal and how == mode and follower.status != NavFollower.Status.IDLE and follower.status != NavFollower.Status.BLOCKED:
 		return
 	goal = to
+	mode = how
 	_plan(run, st)
 
 
@@ -52,7 +56,7 @@ func push_off_light(run: RunState, st: StytheCreature) -> bool:
 	var to: Variant = st.system.nav.native.nearest_dark_tile(st.position(run), st.light_threshold(), 12)
 	if to != null:
 		var t: Vector2i = to
-		head_for(run, st, t)
+		head_for(run, st, t, NavModes.Mode.WALKER)
 	return true
 
 
@@ -88,4 +92,4 @@ func circle(run: RunState, st: StytheCreature, seed: Vector2i) -> void:
 
 func _plan(run: RunState, st: StytheCreature) -> void:
 	_last_plan = run.tick
-	follower.go(run, st.system.nav, st, goal, NavModes.Mode.DARK, params(st))
+	follower.go(run, st.system.nav, st, goal, mode, params(st) if mode == NavModes.Mode.DARK else {})

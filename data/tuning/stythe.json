@@ -107,6 +107,26 @@
 			"kind": "param",
 			"note": "ticket CRT-14"
 		},
+		"stythe.intake_np": {
+			"value": 6,
+			"type": "float",
+			"unit": "np",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14: the wind-up's sharp intake of breath, a local sound at the Stythe (no Road Graph event)"
+		},
+		"stythe.intake_reach_tiles": {
+			"value": 6,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-14: who hears the wind-up's intake of breath"
+		},
 		"stythe.drag_conscious_s": {
 			"value": 20,
 			"type": "float",

@@ -12,6 +12,7 @@ func before_all() -> void:
 
 
 func after_each() -> void:
+	super.after_each()
 	WorldCoords.ring_override = -1
 	Tuning.clear_dev_overrides()
 

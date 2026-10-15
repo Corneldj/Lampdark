@@ -63,7 +63,18 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	# CRT-09's Tapper drops a pinned miner's lamp at the wall when the pin runs out (MNR-06).
 	run.creatures.spawned.connect(func(c: Creature) -> void:
 		if c is Tapper:
-			(c as Tapper).drop_lamp = run.lamps.drop_at_wall)
+			(c as Tapper).drop_lamp = run.lamps.drop_at_wall
+		# CRT-14: the Stythe's tell reaches SND-08's crackle and VIS-10's bite.
+		if c is StytheCreature:
+			var st: StytheCreature = c as StytheCreature
+			if run.voice != null:
+				run.voice.conditions.stythe_tells = func() -> Array: return st.tell_points(run)
+			if run.vision != null:
+				run.vision.bite_sources = func(r: RunState) -> Array:
+					var out: Array = []
+					for p: Variant in st.tell_points(r):
+						out.append({"position": p, "thin": st.thin})
+					return out)
 	run.crew = CrewCensus.new()
 	run.crew.bind(run)
 	run.add_system(run.crew)

@@ -15,15 +15,14 @@ func test_never_leaves_its_territory() -> void:
 	var ann: MinerHandle = W.miner(s, "ann", Vector2i(140, 2))
 	s.step(2)
 	var furthest: float = 0.0
-	for i: int in 1200:
-		if i % 300 == 150:
-			st.enter(s.run, &"hunt", "test")
-		if st.state.name == &"hunt":
-			st.chase(s.run, ann.entity_id)
-		if i % 300 == 299:
-			st.enter(s.run, &"lurk", "test")
+	var hunted: bool = false
+	for i: int in 1600:
+		if i == 800:
+			W.pull(st, {ann.entity_id: 80.0})  # eligible anywhere: it hunts her, but staged it stays home
 		s.step(1)
+		hunted = hunted or st.hunt.target == ann.entity_id
 		furthest = maxf(furthest, st.senses.lair_distance(s.run, st, st.tile(s.run)))
+	assert_true(hunted, "it hunted her")
 	gut.p("furthest from the lair: %.1f tiles" % furthest)
 	assert_lte(furthest, Tuning.f(&"stythe.territory_tiles") + 1e-6, "inside its territory throughout")
 	assert_gt(furthest, 5.0, "it did move")

@@ -21,7 +21,7 @@ func _lasts(territory: bool) -> float:
 	st.electric_drain = func(_r: RunState, _s: int, seconds: float) -> bool:
 		battery[0] -= seconds
 		return true
-	st.enter(s.run, &"hunt", "test")
+	st.enter(s.run, &"windup", "test")  # an active state that holds still
 	var ticks: int = 0
 	while battery[0] > 0.0 and ticks < 2000:
 		s.step(1)

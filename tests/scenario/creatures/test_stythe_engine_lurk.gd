@@ -1,0 +1,27 @@
+extends "res://tests/scenario/kit/scenario_test.gd"
+## CRT-14 with an LFT-09 stub: while the engine runs the Stythe lurks within 40 tiles of the gates,
+## unless it keeps a body (then it stays in its territory).
+
+const H = preload("res://tests/scenario/creatures/stythe_hunt_world.gd")
+
+
+func before_all() -> void:
+	assert_true(Tuning.load_server())
+
+
+func test_lurks_near_the_gates_unless_it_keeps() -> void:
+	var s: Scenario = make({"seed": 1481, "fixture": H.road(150), "overrides": H.W.ON.merged({"stythe.lurk_move_s": [1.0, 2.0]})})
+	var st: StytheCreature = H.W.stythe(s, Vector2i(140, 2), Vector2i(140, 2))
+	var gates: Vector2 = Vector2(5.5, 2.5)
+	st.apex_point = func() -> Variant: return gates
+	s.step(400)
+	var near: float = st.position(s.run).distance_to(gates)
+	gut.p("from the gates: %.1f tiles" % near)
+	for _i: int in 600:
+		s.step(1)
+		assert_lte(st.position(s.run).distance_to(gates), maxf(near, 40.0) + 1e-3, "it stays by the gates")
+	assert_lte(st.position(s.run).distance_to(gates), 40.0 + 1e-3, "within 40 tiles")
+	st.kept.append(9999)
+	st.enter(s.run, &"keep", "test")
+	s.step(1200)
+	assert_true(st.senses.in_territory(s.run, st, st.tile(s.run)), "keeping a body: back in its territory")

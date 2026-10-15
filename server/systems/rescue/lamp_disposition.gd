@@ -51,6 +51,18 @@ static func resolve(run: RunState, miner: int, cause: int, ctx: Dictionary) -> S
 	return _drop(run, h, lamp, beside, false, "")
 
 
+## CRT-14: the Stythe's grab drops the victim's lamp, snuffed, at the grab point (where the trail
+## begins). "" when the hand was empty.
+static func drop_at_grab(run: RunState, miner: int, tile: Vector2i) -> String:
+	if run.inventory == null or not run.inventory.hands.has(miner):
+		return NO_LAMP
+	var h: HandsAndBelt = run.inventory.hands[miner]
+	if h.lamp_hand == null:
+		return NO_LAMP
+	_drop(run, h, h.lamp_hand, tile, true, "drag")
+	return AT_GRAB_POINT
+
+
 ## Lays the lamp on a tile, snuffing a flame if `snuff`.
 static func _drop(run: RunState, h: HandsAndBelt, lamp: Item, tile: Vector2i, snuff: bool, cause: String) -> String:
 	if lamp.kind == ItemKinds.Kind.GAUZE_LAMP and run.lamps != null and run.lamps.lamp_of_item(lamp) != null:
