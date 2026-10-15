@@ -31,6 +31,9 @@ const MESSAGES: Dictionary = {
 	"CALLOUT": "callout",  # SND-11: a callout as this client hears it (illusions and echoes alike)
 	"WATCH": "watch",  # RSC-04: a teammate's frames 45 s late, to the fallen only
 	"REPLAY": "replay",  # RSC-04: the victim's own frames before the fall, to the victim only
+	"SAVE_DATA": "save",  # NET-09: sealed sections and a plain header of versions, never in public
+	"JOURNAL": "save",  # NET-09: one sealed journal entry, never in public
+	"SAVE_ACK": "client_only",  # NET-09: a member's acknowledgement
 }
 
 ## Each record a frame carries -> its rule (client_view's layout, FrameDecoder's fields).

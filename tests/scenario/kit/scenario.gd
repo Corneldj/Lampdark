@@ -577,7 +577,7 @@ static func replay(path: String) -> Self:
 	if log == null:
 		return null
 	var cfg: Dictionary = {"seed": log.run_seed, "mode": LaunchArgs.MODES.get(log.mode, ServerConfig.Mode.FRIENDS),
-		"tuning_profile": log.tuning_profile}
+		"tuning_profile": log.tuning_profile, "saves": log.saves}
 	if not log.map_name.is_empty():
 		cfg["fixture"] = FixtureMap.from_spec(log.map_name)
 	var s: Self = create(cfg)

@@ -105,11 +105,12 @@ func _process(_delta: float) -> void:
 		_log_stats()
 	if loop.is_done():
 		Log.info("exit after %d ticks" % loop.ticks_run)
-		# NET-09: the run ends unfinished, as at any other server end: saved (or voided in public).
-		if run.saves != null:
-			run.saves.end_abnormally(run, "exit after %d ticks" % loop.ticks_run)
 		_log_stats()
 		_finish_records()
+		# NET-09: the run ends unfinished, as at any other server end: saved (or voided in public),
+		# after the final state hash (FND-09's replay ends where the run did).
+		if run.saves != null:
+			run.saves.end_abnormally(run, "exit after %d ticks" % loop.ticks_run)
 		Log.close()
 		get_tree().quit(ExitCode.OK)
 		return
@@ -282,8 +283,12 @@ func _finish(code: int, why: String) -> void:
 		return
 	_finishing = true
 	Log.info("server ending: %s" % why)
+	# The records (final state hash) first, then NET-09's last save while members are still connected.
+	_finish_records()
 	if run != null and run.saves != null:
 		run.saves.end_abnormally(run, why)
+		if net != null:
+			net.service()
 	if host_link != null:
 		host_link.say_bye(why)
 		for _i: int in 10:  # 100 ms for the bye to reach the host before the link goes
@@ -294,7 +299,6 @@ func _finish(code: int, why: String) -> void:
 		net.transport.close()
 	if steam_server != null:
 		steam_server.shutdown()
-	_finish_records()
 	Log.close()
 	get_tree().quit(code)
 

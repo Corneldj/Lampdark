@@ -277,6 +277,31 @@ func _on_delivered(slot: int, r: AudioRecord) -> void:
 		list = list.slice(list.size() - 1024)
 	_delivered[slot] = list
 
+
+## NET-09: saves reach members as opaque sealed bytes. Never in a public run; a snapshot's data on
+## bulk with a plain header of versions and chain fields only, a journal entry on control.
+const SAVE_HEADER_KEYS: Array[String] = ["build", "bundle", "generator", "kind", "mode", "parent_hash", "run_uuid", "seq", "templates"]
+
+
+func _check_save(slot: int, lane: int, type: int, payload: PackedByteArray) -> void:
+	var name: String = str(Protocol.Msg.find_key(type))
+	if run.header.mode == ServerConfig.Mode.PUBLIC:
+		_fail(slot, name, "save", "save data sent in a public run")
+	if type == Protocol.Msg.JOURNAL:
+		_lane(slot, lane, Lane.Id.CONTROL, type)
+		if SaveWire.read_journal(payload).is_empty():
+			_fail(slot, name, "save", "malformed")
+		return
+	_lane(slot, lane, Lane.Id.BULK, type)
+	var d: Dictionary = SaveWire.read_save_data(payload)
+	if d.is_empty():
+		_fail(slot, name, "save", "malformed")
+		return
+	var keys: Array = Variants.dict(d["header"]).keys()
+	keys.sort()
+	if keys != SAVE_HEADER_KEYS:
+		_fail(slot, name, "save", "a plain header beyond versions and chain fields: %s" % str(keys))
+
 #endregion
 
 #region Sends
@@ -337,6 +362,8 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 		"watch", "replay":
 			_lane(slot, lane, Lane.Id.CONTROL, type)
 			_check_dark(slot, type, payload)
+		"save":
+			_check_save(slot, lane, type, payload)
 		"callout":
 			_lane(slot, lane, Lane.Id.CONTROL, type)
 			var r: CalloutRecord = CalloutRecord.decode(payload)

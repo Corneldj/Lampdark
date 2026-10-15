@@ -30,6 +30,8 @@ var map_name: String = ""
 var tuning_profile: String = ""
 var tuning_hash: String = ""
 var build: String = ""
+## NET-09: whether the run was saving (a replay saves the same, so its state hash agrees).
+var saves: bool = false
 ## tick -> Array of [slot, InputBuffer.Consumed], in the order applied.
 var by_tick: Dictionary = {}
 ## tick -> Array of op dictionaries, in the order applied.
@@ -51,6 +53,7 @@ static func begin(run: RunState, map: String, path: String = "", profile: String
 	log.map_name = map
 	log.tuning_hash = run.header.tuning_hash
 	log.build = Protocol.build_id()
+	log.saves = run.saves != null and run.saves.enabled
 	if not path.is_empty():
 		log._file = FileAccess.open(path, FileAccess.WRITE)
 		if log._file == null:
@@ -146,6 +149,7 @@ static func load_file(path: String) -> InputLog:
 	log.tuning_profile = str(header.get("profile", ""))
 	log.tuning_hash = str(header.get("tuning_hash", ""))
 	log.build = str(header.get("build", ""))
+	log.saves = Variants.flag(header.get("saves", false))
 	while not file.eof_reached():
 		var line: String = file.get_line()
 		if line.is_empty():
@@ -172,7 +176,7 @@ static func load_file(path: String) -> InputLog:
 
 func _header() -> Dictionary:
 	return {"format": FORMAT, "version": VERSION, "seed": LaunchArgs.u64_to_string(run_seed), "mode": mode,
-		"map": map_name, "profile": tuning_profile, "tuning_hash": tuning_hash, "build": build}
+		"map": map_name, "profile": tuning_profile, "tuning_hash": tuning_hash, "build": build, "saves": saves}
 
 
 static func flags_of(c: InputBuffer.Consumed) -> int:

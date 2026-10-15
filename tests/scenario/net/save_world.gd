@@ -36,8 +36,11 @@ static func miner(s: Scenario, name: String, tile: Vector2i) -> MinerHandle:
 
 
 ## Steps until the run has written `n` saves; false if not within `ticks`.
+## The writes run on a worker thread: they are waited for, so the files are there to read.
 static func until_saved(s: Scenario, n: int, ticks: int = 700) -> bool:
-	return s.run_until(func(sc: Scenario) -> bool: return sc.run.saves.written.size() >= n, ticks)
+	var ok: bool = s.run_until(func(sc: Scenario) -> bool: return sc.run.saves.written.size() >= n, ticks)
+	s.run.saves.flush()
+	return ok
 
 
 static func snapshot_path(s: Scenario) -> String:
