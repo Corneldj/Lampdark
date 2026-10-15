@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "core/sim/entity_mirror.h"
+#include "core/vision/bite.h"
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/packed_byte_array.hpp>
@@ -29,6 +30,11 @@ void LbVision::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("lit_in_sight", "from", "range", "min_light", "excluded"), &LbVision::lit_in_sight);
 	ClassDB::bind_method(D_METHOD("set_radius_clamp", "id", "tiles"), &LbVision::set_radius_clamp);
 	ClassDB::bind_method(D_METHOD("set_bite_tiles", "id", "tiles"), &LbVision::set_bite_tiles);
+	ClassDB::bind_method(D_METHOD("bite_tiles", "at", "range", "below"), &LbVision::bite_tiles);
+	ClassDB::bind_method(D_METHOD("bite_seen", "id"), &LbVision::bite_seen);
+	ClassDB::bind_integer_constant("LbVision", "", "DECAL_DIR_SHIFT", vision::DECAL_DIR_SHIFT);
+	ClassDB::bind_integer_constant("LbVision", "", "DECAL_DIR_MASK", vision::DECAL_DIR_MASK);
+	ClassDB::bind_integer_constant("LbVision", "", "COLOUR_HATCH_BIT", vision::COLOUR_HATCH_BIT);
 	ClassDB::bind_method(D_METHOD("set_identity_threshold", "entity", "light"), &LbVision::set_identity_threshold);
 	ClassDB::bind_method(D_METHOD("set_decals", "tile", "bits"), &LbVision::set_decals);
 	ClassDB::bind_method(D_METHOD("set_shadow_params", "params"), &LbVision::set_shadow_params);
@@ -161,6 +167,22 @@ void LbVision::set_bite_tiles(int64_t id, const Array &tiles) {
 		set.insert(Coord{t.x, t.y});
 	}
 	vision_->set_bite_tiles(static_cast<uint32_t>(id), std::move(set));
+}
+
+Array LbVision::bite_tiles(Vector2 at, int64_t range, double below) const {
+	Array out;
+	if (vision_ == nullptr || mine_.is_null() || light_.is_null()) {
+		return out;
+	}
+	const int64_t below_q = static_cast<int64_t>(std::llround(below * 1000.0));
+	for (const Coord &t : vision::bite_tiles(mine_->map(), *light_->core(), at.x, at.y, range, below_q)) {
+		out.push_back(Vector2i(static_cast<int32_t>(t.x), static_cast<int32_t>(t.y)));
+	}
+	return out;
+}
+
+bool LbVision::bite_seen(int64_t id) const {
+	return vision_ != nullptr && vision_->bite_seen(static_cast<uint32_t>(id));
 }
 
 void LbVision::set_identity_threshold(int64_t entity, double light) {

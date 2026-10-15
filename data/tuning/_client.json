@@ -1,5 +1,5 @@
 {
-	"hash": "98246daf31e29acda010e89e9339ce0cda9043849dd033ef24be4f3903ebef2d",
+	"hash": "3d2f07e397ecf875f8c247daf9ee56e22098f00f991be2928d14b551045b2221",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -436,6 +436,13 @@
 			"unit": "count",
 			"visibility": "client",
 			"kind": "fixed"
+		},
+		"marks.egg_glow_pulse_hz": {
+			"value": 1,
+			"type": "int",
+			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
 		},
 		"mine.pencil_slow_cursor_scale": {
 			"value": 0.35,

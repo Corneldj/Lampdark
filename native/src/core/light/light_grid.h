@@ -29,6 +29,7 @@ constexpr uint32_t UNHELD = 4;           // set down or hung (CRT-04)
 constexpr uint32_t CANNOT_TAKE = 8;      // the Moth cannot take it (gob fire, electric lamp)
 constexpr uint32_t NO_FLAME_STATES = 16; // shows no flame states (flare)
 constexpr uint32_t BEYOND_SNUFF = 32;    // the Stythe cannot snuff it
+constexpr uint32_t HATCH_TELL = 64; // VIS-10: an egg-glow in its last 60 s (CRT-06); tiles it lights pulse
 } // namespace flag
 
 struct SourceDesc {

@@ -88,8 +88,9 @@ var net: ServerNet = null
 var ref: LbAuditReference = LbAuditReference.new()
 ## Truth not yet wired on the server (VIS-10's bite, decals, identity overrides, VIS-03's clamp): the
 ## owning ticket sets these when it lands, and tests plant them.
-var bite_tiles: Callable = func(_slot: int) -> Array[Vector2i]: return [] as Array[Vector2i]
-var decals: Callable = func() -> Dictionary: return {}
+var bite_tiles: Callable = func(_slot: int) -> Array[Vector2i]:
+	return run.vision.bite_now if run != null and run.vision != null else [] as Array[Vector2i]
+var decals: Callable = func() -> Dictionary: return run.vision.decal_bits() if run != null and run.vision != null else {}
 var identity_overrides: Callable = func() -> Dictionary: return {}
 ## slot -> FrameDecoder
 var _decoders: Dictionary = {}
@@ -480,8 +481,16 @@ func _check_tiles(slot: int, d: FrameDecoder.Decoded, x: Dictionary) -> void:
 		var packed: int = int(Variants.number(detail[t]))
 		var value: int = packed >> 4
 		var want: int = clampi((value * 255 + 500) / 1000, 0, 255)
-		if rec[0] != want or rec[1] != (packed & 15):
-			_fail(slot, "tile %s" % t, "tile", "light %d colour %d; the reference has %d and %d" % [rec[0], rec[1], want, packed & 15])
+		var colour: int = rec[1] & ~TileBits.COLOUR_HATCH_BIT
+		if rec[0] != want or colour != (packed & 15):
+			_fail(slot, "tile %s" % t, "tile", "light %d colour %d; the reference has %d and %d" % [rec[0], colour, want, packed & 15])
+		if (rec[1] & TileBits.COLOUR_HATCH_BIT) != 0 and not _hatching(t, packed & 15):
+			_fail(slot, "tile %s" % t, "tile", "the hatch bit on a tile no hatching egg-glow lights")
+		# VIS-10: a trail's direction rides only with its blood, and is the trail's own.
+		var dir: int = (rec[2] & TileBits.DECAL_DIR_MASK) >> TileBits.DECAL_DIR_SHIFT
+		var truth_dir: int = (int(Variants.number(truth.get(t, 0))) & TileBits.DECAL_DIR_MASK) >> TileBits.DECAL_DIR_SHIFT
+		if (dir != 0 and (rec[2] & TileBits.DECAL_BLOOD) == 0) or ((rec[2] & TileBits.DECAL_BLOOD) != 0 and dir != truth_dir):
+			_fail(slot, "tile %s" % t, "tile", "trail direction %d; the trail has %d" % [dir, truth_dir])
 		var bits: int = rec[2] & 7
 		var have: int = int(Variants.number(truth.get(t, 0)))
 		var allowed: int = 0
@@ -491,6 +500,14 @@ func _check_tiles(slot: int, d: FrameDecoder.Decoded, x: Dictionary) -> void:
 			allowed |= have & 6
 		if bits & ~allowed:
 			_fail(slot, "tile %s" % t, "tile", "decals %d; only %d are lit enough (blood 0.12, chalk and numbers 0.30)" % [bits, allowed])
+
+
+## VIS-10: the hatch bit belongs on an egg-glow tile whose brightest source has the hatch tell.
+func _hatching(tile: Vector2i, colour: int) -> bool:
+	if colour != LbLightGrid.COLOUR_EGG_GLOW or run.light == null:
+		return false
+	var src: int = int(Variants.number(run.light.grid.brightest_source(tile).get("id", 0)))
+	return src != 0 and (int(Variants.number(run.light.grid.source_info(src).get("flags", 0))) & LbLightGrid.FLAG_HATCH_TELL) != 0
 
 
 func _check_geometry(slot: int, d: FrameDecoder.Decoded, x: Dictionary) -> void:

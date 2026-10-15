@@ -19,10 +19,24 @@ var _watched: Dictionary = {}
 var _facing: Dictionary = {}
 ## slot -> {reason: true}
 var _blind_reasons: Dictionary = {}
+## VIS-10: (run) -> [{position: Vector2, thin: bool}], every Stythe whose tell plays (CRT-14: Hunt,
+## WindUp, Drag, Collect; CRT-17 flags the Thin). None until the Stythe lands.
+var bite_sources: Callable = func(_r: RunState) -> Array: return []
+## VIS-10: this tick's bitten tiles (BiteSystem, after light pass 2), the same for every observer.
+var bite_now: Array[Vector2i] = []
+## VIS-10: blood trails, tile -> direction 0-7 (0 east, clockwise with +y down); GEN-13 keeps them,
+## HAZ-03 erases them under a roof fall.
+var trails: Dictionary = {}
+## Decal bits by tile, as handed to the native frames (blood and its direction; chalk later).
+var _decals: Dictionary = {}
+## Whether the last tick handed observers a bite (so an ended bite is cleared once).
+var _bite_applied: bool = false
 
 
 func _init(mine: Mine, light: LightSystem) -> void:
 	native.attach(mine.native, light.grid)
+	# VIS-10: a cell evicted and loaded again gets its trails back (the record outlives the cell).
+	mine.native.cell_loaded.connect(_on_cell_loaded)
 	native.set_params({
 		"cone_deg": Tuning.f(&"vision.cone_deg"),
 		"seen_min": Tuning.f(&"vision.seen_light_min"),
@@ -111,8 +125,12 @@ func tick(run: RunState) -> void:
 			if consumed != null:
 				_facing[slot] = consumed.record.facing
 		native.set_observer(slot, entity.id, entity.position, int(Variants.number(_facing[slot])))
+		# Only while there is a bite, or one to clear (tests may plant one straight into the native).
+		if not bite_now.is_empty() or _bite_applied:
+			native.set_bite_tiles(slot, bite_now)
 		native.set_turn_band(slot, turn_band_deg(float(Variants.number(rtt_ms.call(slot)))))
 		frames[slot] = native.compute(slot)
+	_bite_applied = not bite_now.is_empty()
 
 
 ## NET-12's turn band for a client with this round trip: how far its miner can turn (at
@@ -122,6 +140,80 @@ static func turn_band_deg(rtt: float) -> float:
 	var hz: float = Tuning.f(&"net.tick_hz")
 	var lag_s: float = rtt / 1000.0 + Tuning.f(&"net.input_buffer_target_ticks") / hz + 1.0 / hz + Tuning.f(&"vision.turn_band_extra_s")
 	return minf(Tuning.f(&"movement.turn_rate_deg_s") * lag_s, Tuning.f(&"vision.turn_band_max_deg"))
+
+
+## VIS-10: the bite round every Stythe whose tell plays: its floor tiles within
+## vision.bite_range_tiles lit below vision.bite_below_light (the Thin: _thin).
+func compute_bite(run: RunState) -> void:
+	var tiles: Dictionary = {}
+	for raw: Variant in Variants.array(bite_sources.call(run)):
+		var src: Dictionary = Variants.dict(raw)
+		var below: float = Tuning.f(&"vision.bite_below_light_thin") if Variants.flag(src.get("thin", false)) else Tuning.f(&"vision.bite_below_light")
+		var at: Vector2 = src["position"]
+		for t: Vector2i in native.bite_tiles(at, roundi(Tuning.f(&"vision.bite_range_tiles")), below):
+			tiles[t] = true
+	var keys: Array = tiles.keys()
+	keys.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
+	bite_now.clear()
+	for t: Vector2i in keys:
+		bite_now.append(t)
+
+
+## VIS-10, for DIR-01: the last frame of `miner`'s slot left out a bitten tile it would have seen.
+func bite_seen_by(miner: int) -> bool:
+	for raw: Variant in _watched.keys():
+		if int(Variants.number(_watched[raw])) == miner:
+			return native.bite_seen(int(Variants.number(raw)))
+	return false
+
+
+## VIS-10: a blood trail on `tile`, heading `direction` (0-7); where trails cross, the latest wins.
+func mark_trail(tile: Vector2i, direction: int) -> void:
+	trails[tile] = posmod(direction, 8)
+	var bits: int = int(Variants.number(_decals.get(tile, 0))) & ~(TileBits.DECAL_BLOOD | TileBits.DECAL_DIR_MASK)
+	_set_decal_bits(tile, bits | TileBits.DECAL_BLOOD | (posmod(direction, 8) << TileBits.DECAL_DIR_SHIFT))
+
+
+## HAZ-03: a roof fall erases a trail.
+func erase_trail(tile: Vector2i) -> void:
+	trails.erase(tile)
+	_set_decal_bits(tile, int(Variants.number(_decals.get(tile, 0))) & ~(TileBits.DECAL_BLOOD | TileBits.DECAL_DIR_MASK))
+
+
+## The trail direction (0-7) of a move from `from` to `to`: the octant of the heading, decided by
+## comparisons only (tan 22.5 degrees), so every platform agrees.
+static func trail_direction(from: Vector2, to: Vector2) -> int:
+	var d: Vector2 = to - from
+	var ax: float = absf(d.x)
+	var ay: float = absf(d.y)
+	const TAN_22_5: float = 0.41421356
+	if ay <= ax * TAN_22_5:
+		return 0 if d.x >= 0.0 else 4
+	if ax <= ay * TAN_22_5:
+		return 2 if d.y >= 0.0 else 6
+	if d.x >= 0.0:
+		return 1 if d.y >= 0.0 else 7
+	return 3 if d.y >= 0.0 else 5
+
+
+func _on_cell_loaded(cell: Vector2i) -> void:
+	for raw: Variant in _decals.keys():
+		var t: Vector2i = raw
+		if WorldCoords.cell_of(t) == cell:
+			native.set_decals(t, int(Variants.number(_decals[raw])))
+
+
+## Decal bits by tile as the frames get them (NET-08's audit compares against these).
+func decal_bits() -> Dictionary:
+	return _decals
+
+
+func _set_decal_bits(tile: Vector2i, bits: int) -> void:
+	if bits == 0:
+		_decals.erase(tile)
+	else:
+		_decals[tile] = bits
+	native.set_decals(tile, bits)
 
 
 ## This tick's frame for a slot, or {} if it has none.

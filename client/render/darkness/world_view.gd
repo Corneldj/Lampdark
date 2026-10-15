@@ -34,6 +34,9 @@ var _pool_material: ShaderMaterial = null
 var _entities: _EntityLayer = null
 ## VIS-09's tells, in the world viewport so VIS-05's mask has the last word on black.
 var shadows: ShadowLayer = null
+## VIS-10: blood trails on the floor and the egg-glow's hatch pulse.
+var trails: TrailDecal = null
+var egg_glow: EggGlowView = null
 var dust: DustHaze = null
 var puffs: WallPuffs = null
 var _over: _OverLayer = null
@@ -67,8 +70,12 @@ func _init() -> void:
 	_pool.size = base
 	_pool.material = _pool_material
 	world.add_child(_pool)
+	trails = TrailDecal.new()
+	world.add_child(trails)
 	shadows = ShadowLayer.new()
 	world.add_child(shadows)
+	egg_glow = EggGlowView.new()
+	world.add_child(egg_glow)
 	_entities = _EntityLayer.new()
 	world.add_child(_entities)
 	dust = DustHaze.new()
@@ -134,7 +141,9 @@ func show_frame(drawn: DrawnSet, view: ReceivedView, view_origin: Vector2, miner
 	_pool_material.set_shader_parameter("brightness", brightness)
 	_pool_material.set_shader_parameter("lamp_glow", lamp_glow)
 	_pool_material.set_shader_parameter("max_channel", flash.max_channel())
+	trails.set_frame(shown, view, view_origin, tile_px)
 	shadows.set_frame(shown, view, view_origin, tile_px)
+	egg_glow.set_frame(shown, view_origin, tile_px, now_s)
 	_entities.set_frame(shown, view, view_origin, tile_px, tokens, now_s)
 	dust.set_frame(shown, view, view_origin, tile_px, now_s)
 	puffs.set_frame(view_origin, tile_px, now_s)

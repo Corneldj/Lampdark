@@ -40,6 +40,13 @@ struct VisionParams {
 // Decal bits on a tile (blood trails at the trail threshold; chalk and line numbers at the
 // small-thing threshold).
 enum Decal : uint8_t { DECAL_BLOOD = 1, DECAL_CHALK = 2, DECAL_LINE_NUMBER = 4 };
+// VIS-10: a blood trail's direction, one of 8 (0 east, then clockwise with +y down), in bits 3-5;
+// sent only with DECAL_BLOOD.
+constexpr uint8_t DECAL_DIR_SHIFT = 3;
+constexpr uint8_t DECAL_DIR_MASK = 0x38;
+// VIS-10: a seen tile's colour byte carries this bit when its brightest source is an egg-glow with
+// the hatch tell raised (light::flag::HATCH_TELL): a boolean, never a time.
+constexpr uint8_t COLOUR_HATCH_BIT = 0x80;
 
 enum class Unseen : uint8_t { SEEN = 0, DARK = 1, OUTSIDE_CONE = 2, BITE = 3, NO_LOS = 4, BEYOND_RANGE = 5, BLINDED = 6, UNKNOWN = 7 };
 
@@ -124,6 +131,12 @@ public:
 	Level sees_entity(uint32_t id, const sim::MirrorEntity &e);
 	Unseen unseen_reason(uint32_t id, const sim::MirrorEntity &e);
 	bool is_seen_by_any(world::Coord tile);
+	// VIS-10: whether the last frame left out a bitten tile this observer would otherwise have seen
+	// (DIR-01's "seeing a creature").
+	bool bite_seen(uint32_t id) const {
+		auto it = observers_.find(id);
+		return it != observers_.end() && it->second.bite_seen;
+	}
 	// VIS-04: seen by any miner, or in any miner's margin (CRT-01's spawn guard).
 	bool is_seen_or_margin_of_any(world::Coord tile);
 	// The band a tile falls in for an observer's own lights: 0 none, 1 geometry only, 2 entities too.
@@ -165,6 +178,7 @@ private:
 		double clamp = 0.0;
 		double turn_band = 0.0;
 		std::set<world::Coord> bite;
+		bool bite_seen = false;
 		LosField los;
 	};
 

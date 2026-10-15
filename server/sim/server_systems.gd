@@ -33,6 +33,7 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 					return net.transport.stats(session.peer).rtt_ms
 			return 0.0
 		run.add_system(run.vision)
+		run.add_system(BiteSystem.new())  # VIS-10
 	run.noise = NoiseSystem.new(run.road_graph)
 	run.add_system(run.noise)
 	run.movement = MovementSystem.new(mine)

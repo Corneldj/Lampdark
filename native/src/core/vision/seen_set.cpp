@@ -235,6 +235,7 @@ PerceptionFrame Vision::compute_frame(uint32_t id, const std::vector<sim::Mirror
 		return frame;
 	}
 	frame.glow.assign(static_cast<size_t>(bucket_count()), GlowBucket{});
+	o->bite_seen = false;
 	if (o->blinded) {
 		frame.blinded = true;
 		return frame;
@@ -245,7 +246,11 @@ PerceptionFrame Vision::compute_frame(uint32_t id, const std::vector<sim::Mirror
 	std::vector<std::array<int64_t, 8>> colour_counts(frame.glow.size(), std::array<int64_t, 8>{});
 	o->los.for_each([&](Coord t) {
 		int64_t light = 0;
-		if (tile_state(*o, cone, t, light) != Unseen::SEEN) {
+		const Unseen state = tile_state(*o, cone, t, light);
+		if (state == Unseen::BITE && light_.tile_light(t).value >= params.seen_min) {
+			o->bite_seen = true; // a tile it would have seen, taken by the bite
+		}
+		if (state != Unseen::SEEN) {
 			return;
 		}
 		const double cx = static_cast<double>(t.x) + 0.5;
@@ -256,11 +261,17 @@ PerceptionFrame Vision::compute_frame(uint32_t id, const std::vector<sim::Mirror
 			ft.tile = t;
 			ft.light = lb::core::light::quantise_u8(light);
 			ft.colour = static_cast<uint8_t>(tl.colour);
+			if (tl.colour == light::ColourClass::EGG_GLOW) {
+				const auto src = light_.source(tl.brightest);
+				if (src && (src->flags & light::flag::HATCH_TELL) != 0) {
+					ft.colour = static_cast<uint8_t>(ft.colour | COLOUR_HATCH_BIT);
+				}
+			}
 			auto d = decals_.find(t);
 			if (d != decals_.end()) {
 				uint8_t bits = 0;
 				if ((d->second & DECAL_BLOOD) && light >= params.trail_min) {
-					bits |= DECAL_BLOOD;
+					bits |= static_cast<uint8_t>(DECAL_BLOOD | (d->second & DECAL_DIR_MASK));
 				}
 				if (light >= params.small_min) {
 					bits |= d->second & (DECAL_CHALK | DECAL_LINE_NUMBER);

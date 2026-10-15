@@ -29,7 +29,9 @@ func build(view: ReceivedView, predicted: Dictionary, input_ack: int, facing_seq
 		var t: Vector2i = raw
 		var b: PackedByteArray = view.tiles[raw]
 		var g: PackedByteArray = held.get(t, PackedByteArray([WorldIds.TileMaterial.FLOOR, 0]))
-		tiles[t] = {"light": b[0] / 255.0, "colour": b[1], "material": g[0], "state": g[1], "provisional": false}
+		# VIS-10: the colour byte's top bit is the egg-glow hatch tell, never a colour class.
+		tiles[t] = {"light": b[0] / 255.0, "colour": b[1] & ~TileBits.COLOUR_HATCH_BIT, "hatch": (b[1] & TileBits.COLOUR_HATCH_BIT) != 0,
+			"material": g[0], "state": g[1], "provisional": false}
 	# Provisional while the server has not yet answered a turn, or while the predicted own lamp is
 	# larger than the server's (a wick step up, the shutter opening: VIS-06 draws the pool at once).
 	var lamp_ahead: bool = float(Variants.number(Variants.dict(predicted.get("lamp", {})).get("radius", 0.0))) \

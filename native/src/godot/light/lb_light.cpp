@@ -78,6 +78,7 @@ void LbLightGrid::_bind_methods() {
 	ClassDB::bind_integer_constant("LbLightGrid", "", "FLAG_CANNOT_TAKE", light::flag::CANNOT_TAKE);
 	ClassDB::bind_integer_constant("LbLightGrid", "", "FLAG_NO_FLAME_STATES", light::flag::NO_FLAME_STATES);
 	ClassDB::bind_integer_constant("LbLightGrid", "", "FLAG_BEYOND_SNUFF", light::flag::BEYOND_SNUFF);
+	ClassDB::bind_integer_constant("LbLightGrid", "", "FLAG_HATCH_TELL", light::flag::HATCH_TELL);
 }
 
 void LbLightGrid::attach(const Ref<LbMine> &mine) {

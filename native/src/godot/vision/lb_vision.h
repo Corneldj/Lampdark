@@ -35,6 +35,10 @@ public:
 	::godot::PackedInt64Array lit_in_sight(::godot::Vector2i from, double range, double min_light, const ::godot::PackedInt64Array &excluded) const;
 	void set_radius_clamp(int64_t id, double tiles);
 	void set_bite_tiles(int64_t id, const ::godot::Array &tiles);
+	// VIS-10: the bite round a point (core/vision/bite.h), as tiles; and whether the last frame left
+	// out a bitten tile the observer would have seen.
+	::godot::Array bite_tiles(::godot::Vector2 at, int64_t range, double below) const;
+	bool bite_seen(int64_t id) const;
 	void set_identity_threshold(int64_t entity, double light);
 	void set_decals(::godot::Vector2i tile, int64_t bits);
 	// VIS-09: {enabled, min_light (0-1), lit_min (0-1), levels, width, never_cast: [kinds]}.
