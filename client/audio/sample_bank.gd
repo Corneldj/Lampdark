@@ -30,15 +30,35 @@ static func stream(type: int) -> AudioStreamWAV:
 	return s
 
 
-## A named bed layer (drips, timber, air, seam, hum, draught): a quiet loop.
+## A named bed layer (drips, timber, air, seam, hum, draught): a quiet loop. Placeholders with no
+## steady hiss: sparse drips, a rare low creak, a faint deep rumble; the flame's sputter keeps its
+## noise (it plays only while a flame gutters).
 static func bed(layer: String) -> AudioStreamWAV:
 	var key: String = "bed:" + layer
 	if _cache.has(key):
 		var cached: AudioStreamWAV = _cache[key]
 		return cached
-	var s: AudioStreamWAV = make("hum" if layer == "hum" else "hiss", 2.0, layer.hash())
+	var kind: String = "hiss"
+	var seconds: float = 2.0
+	var level: float = 1.0
+	match layer:
+		"hum":
+			kind = "hum"
+		"drips":
+			kind = "drips"
+			seconds = 7.0
+			level = 0.5
+		"timber", "seam":
+			kind = "creak"
+			seconds = 9.0 if layer == "timber" else 13.0
+			level = 0.3
+		"air", "draught":
+			kind = "rumble"
+			seconds = 6.0
+			level = 0.18
+	var s: AudioStreamWAV = make(kind, seconds, layer.hash(), level)
 	s.loop_mode = AudioStreamWAV.LOOP_FORWARD
-	s.loop_end = int(2.0 * RATE)
+	s.loop_end = int(seconds * RATE)
 	_cache[key] = s
 	return s
 
@@ -69,14 +89,25 @@ static func ringing(seconds: float) -> AudioStreamWAV:
 	return s
 
 
-static func make(kind: String, seconds: float, seed_value: int) -> AudioStreamWAV:
+## A placeholder of `kind`, normalised to `level` of full scale.
+static func make(kind: String, seconds: float, seed_value: int, level: float = 1.0) -> AudioStreamWAV:
 	var n: int = int(seconds * RATE)
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = seed_value
 	var samples: PackedFloat32Array = PackedFloat32Array()
 	samples.resize(n)
 	var peak: float = 1e-9
+	match kind:
+		"drips":
+			_drips(samples, rng)
+		"creak":
+			_creak(samples, rng)
+		"rumble":
+			_rumble(samples, rng)
 	for i: int in n:
+		if kind == "drips" or kind == "creak" or kind == "rumble":
+			peak = maxf(peak, absf(samples[i]))
+			continue
 		var t: float = float(i) / RATE
 		var v: float = 0.0
 		match kind:
@@ -102,9 +133,67 @@ static func make(kind: String, seconds: float, seed_value: int) -> AudioStreamWA
 	var data: PackedByteArray = PackedByteArray()
 	data.resize(n * 2)
 	for i: int in n:
-		data.encode_s16(i * 2, clampi(roundi(samples[i] / peak * 32767.0), -32768, 32767))
+		data.encode_s16(i * 2, clampi(roundi(samples[i] / peak * level * 32767.0), -32768, 32767))
 	var wav: AudioStreamWAV = AudioStreamWAV.new()
 	wav.format = AudioStreamWAV.FORMAT_16_BITS
 	wav.mix_rate = RATE
 	wav.data = data
 	return wav
+
+
+## Three to five water drips over the loop: a short falling blip and a fainter echo, silence between.
+static func _drips(out: PackedFloat32Array, rng: RandomNumberGenerator) -> void:
+	var n: int = out.size()
+	var count: int = rng.randi_range(3, 5)
+	for _d: int in count:
+		var at: int = rng.randi_range(0, n - int(0.5 * RATE))
+		var pitch: float = rng.randf_range(1100.0, 1900.0)
+		var gain: float = rng.randf_range(0.4, 1.0)
+		for echo: int in 2:
+			var start: int = at + echo * int(0.13 * RATE)
+			var g: float = gain * (1.0 if echo == 0 else 0.25)
+			var phase: float = 0.0
+			for i: int in int(0.09 * RATE):
+				if start + i >= n:
+					break
+				var t: float = float(i) / RATE
+				phase += TAU * pitch * (1.0 - 0.45 * minf(t / 0.03, 1.0)) / RATE
+				out[start + i] += g * sin(phase) * exp(-t * 55.0)
+
+
+## One slow low creak somewhere in the loop: a wavering low tone under a bell-shaped swell.
+static func _creak(out: PackedFloat32Array, rng: RandomNumberGenerator) -> void:
+	var n: int = out.size()
+	var length: int = int(rng.randf_range(0.7, 1.3) * RATE)
+	var at: int = rng.randi_range(0, n - length - 1)
+	var base: float = rng.randf_range(85.0, 140.0)
+	var phase: float = 0.0
+	var smooth: float = 0.0
+	for i: int in length:
+		var t: float = float(i) / length
+		var f: float = base * (1.0 + 0.08 * sin(TAU * 3.0 * t) + rng.randf_range(-0.04, 0.04))
+		phase += TAU * f / RATE
+		var raw: float = (fposmod(phase / TAU, 1.0) * 2.0 - 1.0)  # a soft sawtooth, then smoothed
+		smooth += (raw - smooth) * 0.08
+		out[at + i] += smooth * sin(PI * t)
+
+
+## A faint deep rumble: noise low-passed twice (nothing above a few hundred hertz), its end
+## crossfaded into its start so the loop has no seam.
+static func _rumble(out: PackedFloat32Array, rng: RandomNumberGenerator) -> void:
+	var n: int = out.size()
+	var fade: int = int(0.5 * RATE)
+	var a: float = 0.0
+	var b: float = 0.0
+	var k: float = 1.0 - exp(-TAU * 90.0 / RATE)
+	var full: PackedFloat32Array = PackedFloat32Array()
+	full.resize(n + fade)
+	for i: int in n + fade:
+		a += (rng.randf_range(-1.0, 1.0) - a) * k
+		b += (a - b) * k
+		full[i] = b
+	for i: int in n:
+		out[i] = full[i]
+	for i: int in fade:
+		var w: float = float(i) / fade
+		out[i] = full[n + i] * (1.0 - w) + full[i] * w
