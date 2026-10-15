@@ -115,6 +115,8 @@ var tools_parts: ToolsParts = null
 var chalk: Chalk = null
 ## MNR-16: the revolver, its shots and its retreat counters.
 var revolver: Revolver = null
+## NET-11: drops, seats held and retaken.
+var drops: DropHandler = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

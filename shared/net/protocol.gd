@@ -10,7 +10,8 @@ class_name Protocol
 ## 8: RSC-04's WATCH and REPLAY, and ActionRecord.Kind.WATCH.
 ## 9: MNR-09's ActionRecord.Kind.THROW.
 ## 10: MNR-10's chalk glyphs on tile records (frame version 5).
-const PROTOCOL_VERSION: int = 10
+## 11: NET-11's Reject.SEAT_KEPT.
+const PROTOCOL_VERSION: int = 11
 
 enum Msg {
 	HELLO = 1,
@@ -48,6 +49,7 @@ enum Reject {
 	AUTH_FAILED = 5,
 	BAD_MESSAGE = 6,
 	FLAVOUR_MISMATCH = 7,  ## FND-08: a release build never meets a dev or QA one
+	SEAT_KEPT = 8,  ## NET-11: past the public retake window, a Hired Hand keeps the place
 }
 
 enum Seat { PLAYER = 0, BOT = 1 }

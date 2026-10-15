@@ -7,6 +7,7 @@
 		"run_closed": "That run has ended.",
 		"auth_failed": "Steam could not confirm your identity.",
 		"bad_message": "The connection sent something unexpected.",
-		"flavour_mismatch": "That game is a test build, and this one is not (or the other way round)."
+		"flavour_mismatch": "That game is a test build, and this one is not (or the other way round).",
+		"seat_kept": "A Hired Hand has kept your place in that run."
 	}
 }

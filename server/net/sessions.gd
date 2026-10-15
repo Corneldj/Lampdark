@@ -57,15 +57,17 @@ func find_by_token(token: String) -> Session:
 	return session
 
 
-## Seats a session in the lowest free slot. Returns false when every slot is taken.
-func seat(session: Session, identity: String, seat_kind: int) -> bool:
+## Seats a session in the lowest free slot, never one in `held` (NET-11: a dropped player's), or in
+## `forced` when it is free (a rejoining player's own). Returns false when no slot is to be had.
+func seat(session: Session, identity: String, seat_kind: int, held: Dictionary = {}, forced: int = -1) -> bool:
 	var taken: Dictionary = {}
 	for other: Variant in _by_peer.values():
 		var s: Session = other
 		if s.welcomed:
 			taken[s.slot] = true
 	for slot: int in max_slots:
-		if not taken.has(slot):
+		var fits: bool = slot == forced if forced >= 0 else not held.has(slot)
+		if fits and not taken.has(slot):
 			session.slot = slot
 			session.identity = identity
 			session.seat = seat_kind

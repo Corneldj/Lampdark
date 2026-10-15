@@ -206,6 +206,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.diff_log.bind(run)
 	run.add_system(run.diff_log)
 	# NET-07: last, so every signal it listens to exists.
+	# NET-11: drops by the miner's state, and retaking the seat.
+	run.drops = DropHandler.new()
+	run.drops.bind(run, net)
+	run.add_system(run.drops)
 	run.record = RunRecord.new()
 	run.record.bind(run, net)
 	run.add_system(run.record)

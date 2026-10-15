@@ -186,6 +186,10 @@ func _on_message(event: TransportEvent, now: int) -> void:
 			early_messages += 1
 		return
 	match type:
+		Protocol.Msg.REJECT:
+			# NET-11: removed mid-run (MOD-11's kick or ejection): back to the Pithead.
+			reject_reason = Protocol.read_u8(payload)
+			state = State.REJECTED
 		Protocol.Msg.PONG:
 			clock.on_pong(Protocol.read_i64(payload, 0), Protocol.read_i64(payload, 1), now)
 		Protocol.Msg.FEEL:

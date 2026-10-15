@@ -27,6 +27,11 @@ var relay_token: String = ""
 
 ## A client was welcomed into `slot` as `identity` (QA-01's M1 arrival gives it a miner).
 signal welcomed(slot: int, identity: String)
+## NET-11: a dropped player retook its reserved seat (MOD-08 hands the miner back).
+signal rejoined(slot: int, identity: String)
+
+## NET-11: who holds which place, dropped players' seats included.
+var seats: SeatTable = SeatTable.new()
 ## Debug-lane messages refused from sessions without the grant (FND-08's isolation checks).
 var debug_refused: int = 0
 ## Slots dropped during this tick's pump (cleared at the next).
@@ -198,9 +203,19 @@ func _on_hello(run: RunState, session: Sessions.Session, hello: Protocol.Hello, 
 		Log.info("peer %d refused: identity %s on a connection from %s" % [session.peer, hello.identity, verified])
 		_reject(session, Protocol.Reject.AUTH_FAILED)
 		return
-	if not sessions.seat(session, hello.identity, hello.seat_request):
+	# NET-11: a dropped player retakes its own seat; a removed one, or one whose place a Hand now
+	# keeps, is refused; a newcomer never gets a seat held for someone.
+	var verdict: Dictionary = seats.on_hello(hello.identity, hello.session_token, run.tick if run != null else 0,
+		run != null and run.header.mode == ServerConfig.Mode.PUBLIC)
+	if verdict.has("reject"):
+		Log.info("peer %d refused: %s" % [session.peer, Protocol.reject_name(int(Variants.number(verdict["reject"])))])
+		_reject(session, int(Variants.number(verdict["reject"])) as Protocol.Reject)
+		return
+	var forced: int = int(Variants.number(verdict.get("slot", -1)))
+	if not sessions.seat(session, hello.identity, hello.seat_request, seats.held_slots(), forced):
 		_reject(session, Protocol.Reject.FULL)
 		return
+	seats.on_seated(hello.identity, session.slot, session.token, run.tick if run != null else 0)
 	session.debug = debug_granted(hello.qa_token, transport.is_local_peer(session.peer))
 	var welcome: Protocol.Welcome = Protocol.Welcome.new()
 	welcome.slot = session.slot
@@ -214,6 +229,8 @@ func _on_hello(run: RunState, session: Sessions.Session, hello: Protocol.Hello, 
 	transport.send(session.peer, Lane.Id.CONTROL, welcome.encode())
 	Log.info("slot %d welcomed: %s" % [session.slot, hello.identity])
 	welcomed.emit(session.slot, hello.identity)
+	if forced >= 0:
+		rejoined.emit(session.slot, hello.identity)
 
 
 ## FND-08: never on a release server; on QA, only with this server's token; on dev, with the token
@@ -243,6 +260,15 @@ func _client_tuning_if_changed(effective_hash: String) -> String:
 func _reject(session: Sessions.Session, reason: Protocol.Reject) -> void:
 	transport.send(session.peer, Lane.Id.CONTROL, Protocol.reject(reason))
 	_closing[session.peer] = 3  # let ENet deliver the Reject, then disconnect
+
+
+## NET-11: sends `slot`'s client away with `reason` (Reject.REMOVED: MOD-11's kicks and ejections).
+func remove(slot: int, reason: Protocol.Reject) -> bool:
+	for session: Sessions.Session in sessions.welcomed():
+		if session.slot == slot:
+			_reject(session, reason)
+			return true
+	return false
 
 
 ## SND-10: the crew-list label of the miner in `slot` (shown when unknown). UI-04 relays it.
