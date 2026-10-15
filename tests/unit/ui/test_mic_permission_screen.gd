@@ -148,3 +148,30 @@ func test_play_in_the_client_leads_through_the_screens_to_the_lobby() -> void:
 	(flow.step as MicPermissionScreen).mute_button.pressed.emit()
 	await wait_physics_frames(2)
 	assert_not_null(cm.find_child("DevLobby", true, false), "the lobby once chosen")
+
+
+## In play the lobby gives way to the mine; refused or lost, it comes back to connect again; and a
+## client already in play (launched with --connect) skips it after the first-launch screens.
+func test_the_lobby_hides_in_play_and_returns_on_a_drop() -> void:
+	var script: GDScript = load("res://client/client_main.gd")
+	var cm: Node = script.new()
+	cm.set("mic_mode", _mode())
+	add_child_autofree(cm)
+	cm.set("_first_launch_done", true)
+	cm.call("_show_dev_lobby")
+	assert_not_null(cm.find_child("DevLobby", true, false), "the lobby")
+	var c: ClientConnection = ClientConnection.new(InProcessTransport.new(InProcessTransport.Hub.new()))
+	c.welcome = Protocol.Welcome.new()
+	c.state = ClientConnection.State.CONNECTED
+	cm.set("connection", c)
+	cm.call("_report_connection")
+	await wait_physics_frames(2)
+	assert_null(cm.find_child("DevLobby", true, false), "hidden in play")
+	cm.call("_show_dev_lobby")
+	assert_null(cm.find_child("DevLobby", true, false), "not shown again while in play")
+	assert_false(Variants.flag(cm.call("_may_connect")), "no second connection while in play")
+	c.state = ClientConnection.State.DROPPED
+	cm.call("_report_connection")
+	await wait_physics_frames(2)
+	assert_not_null(cm.find_child("DevLobby", true, false), "back to the lobby on a drop")
+	assert_true(Variants.flag(cm.call("_may_connect")), "free to connect again")

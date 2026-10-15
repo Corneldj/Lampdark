@@ -9,6 +9,8 @@ var ticks: int = 0
 var connection: ClientConnection = null
 var _accumulated: float = 0.0
 var _reported_state: int = -1
+## The first-launch screens are done (the lobby may show).
+var _first_launch_done: bool = false
 ## MNR-15: the bindings (user://input.cfg), the router that turns them into intents, and the
 ## Godot device source; one input record per received frame until NET-05's predicted tick.
 var bindings: BindingsStore = BindingsStore.new()
@@ -163,7 +165,7 @@ func _start_lobby() -> void:
 	lobby.lobby_changed.connect(_send_members)
 	lobby.connect_sdr_requested.connect(_connect_sdr)
 	lobby.connect_requested.connect(func(address: String) -> void:
-		if connection == null:
+		if _may_connect():
 			_connect(address))
 	add_child(lobby)
 	if not config.connect_lobby.is_empty():
@@ -620,12 +622,35 @@ func _report_connection() -> void:
 		ClientConnection.State.CONNECTED:
 			Log.info("welcomed: slot %d, server tick %d, %d Hz" % [connection.welcome.slot,
 				connection.welcome.server_tick, connection.welcome.tick_hz])
+			_hide_dev_lobby()
 			if mic_mode != null:
 				_send_mic_label(mic_mode.show_mute_label())
 		ClientConnection.State.REJECTED:
 			Log.warn("refused by the server: %s" % RejectText.text(connection.reject_reason))
+			_lobby_again()
 		ClientConnection.State.DROPPED:
 			Log.warn("connection lost: %s" % connection.drop_reason)
+			_lobby_again()
+
+
+## No connection under way: none yet, or the last one refused or lost (a new one rejoins, NET-11).
+func _may_connect() -> bool:
+	return connection == null or connection.state == ClientConnection.State.REJECTED \
+		or connection.state == ClientConnection.State.DROPPED
+
+
+## In play the lobby gives way to the mine (it would cover it and take the mouse).
+func _hide_dev_lobby() -> void:
+	var screen: Node = _menus().get_node_or_null("DevLobby")
+	if screen != null:
+		screen.queue_free()
+		Log.info("dev lobby hidden: in play")
+
+
+## Refused or lost: back to the lobby (once the first-launch screens are done), to connect again.
+func _lobby_again() -> void:
+	if _first_launch_done and _menus().get_node_or_null("DevLobby") == null:
+		_show_dev_lobby()
 
 
 ## SND-05/06/10: the capture opened, closed or lost its device: the label follows, and the band
@@ -672,12 +697,16 @@ func _start_first_launch() -> void:
 	flow.finished.connect(func() -> void:
 		flow.queue_free()
 		Log.info("microphone: %s under notice %d" % [MicMode.MODE_NAMES[mic_mode.mode], mic_mode.notice_version])
+		_first_launch_done = true
 		_show_dev_lobby())
 	_menus().add_child(flow)
 
 
 ## STM-02's dev lobby (UI-04's Pithead replaces it). Without a lobby service (a bare test), a label.
 func _show_dev_lobby() -> void:
+	if connection != null and connection.state == ClientConnection.State.CONNECTED:
+		Log.info("dev lobby skipped: already in play")
+		return
 	if lobby == null:
 		var label: Label = Label.new()
 		label.name = "DevLobby"
@@ -690,7 +719,7 @@ func _show_dev_lobby() -> void:
 		return
 	var screen: DevLobby = DevLobby.new(lobby, steam, not config.build.is_release(), lobby.server_address)
 	screen.direct_connect.connect(func(address: String) -> void:
-		if connection == null and not address.is_empty():
+		if _may_connect() and not address.is_empty():
 			_connect(address))
 	_menus().add_child(screen)
 	Log.info("dev lobby shown: %s" % screen.who.text.replace("\n", " | "))
