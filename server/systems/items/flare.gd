@@ -57,6 +57,8 @@ func flame_cause() -> String:
 
 func bind(run: RunState) -> void:
 	_run = run
+	if run.diff_log != null:
+		run.diff_log.items.advances[item_kind()] = advance_lying
 	if run.inventory != null:
 		run.inventory.use_handlers[ItemKinds.Kind.FLARE] = func(r: RunState, entity: int, slot: int) -> void:
 			var a: TimedAction = strike_action(r, entity, slot)

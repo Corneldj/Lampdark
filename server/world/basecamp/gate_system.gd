@@ -20,6 +20,8 @@ const BODY_KINDS: Array[WorldIds.EntityKind] = [WorldIds.EntityKind.MINER, World
 const SPILL_KIND: String = "gate_spill"
 ## Base camp's cell (GEN-02).
 const CELL: Vector2i = Vector2i.ZERO
+## GEN-13: a gate's diff-log key is this and its side.
+const DIFF_PREFIX: String = "gate:"
 
 var gates: Array[Gate] = []
 ## The diff log's gate entries (GEN-13 takes them over): {tick, side, open}.
@@ -50,6 +52,11 @@ func install(run: RunState, specs: Array[Dictionary], fresh: bool) -> void:
 	_cell_loaded = run.mine != null and run.mine.native.is_loaded(CELL)
 	if run.inventory != null:
 		run.inventory.targets.providers.append(_lever_targets)
+	# GEN-13: each gate's state is a barrier record in base camp's cell.
+	if run.diff_log != null:
+		run.diff_log.register(DiffLog.Kind.BARRIER, func(r: RunState, _cell: Vector2i, key: String, p: Dictionary, _t: int) -> void:
+			restore(r, [{"side": key.trim_prefix(DIFF_PREFIX), "open": Variants.flag(p.get("open", false)),
+				"opened_tick": int(Variants.number(p.get("opened_tick", -1)))}]), Callable(), Callable(), DIFF_PREFIX)
 	if fresh:
 		for g: Gate in gates:
 			_apply(run, g, false)
@@ -198,6 +205,8 @@ func _flip(run: RunState, g: Gate, to_open: bool) -> void:
 		g.holders[int(Variants.number(raw))] = true
 	g.actions.clear()
 	diff_log.append({"tick": run.tick, "side": g.side, "open": to_open})
+	if run.diff_log != null:
+		run.diff_log.record(CELL, DiffLog.Kind.BARRIER, DIFF_PREFIX + g.side, {"open": to_open, "opened_tick": g.opened_tick})
 	if run.noise != null:
 		run.noise.emit(NoiseTypes.Type.GATE, g.middle(), {"origins": g.clang_origins()})
 	flipped.emit(g.side, to_open)
@@ -238,6 +247,8 @@ func _clear_items(run: RunState, g: Gate) -> void:
 			continue
 		var way: Vector2i = g.outward if (e.position - centre).dot(Vector2(g.outward)) >= 0.0 else -g.outward
 		run.registry.move(e.id, Vector2(e.tile() + way) + Vector2(0.5, 0.5))
+		if run.inventory != null:
+			run.inventory.world.moved(run, e.id)
 
 
 ## Base camp's cell evicted and reloaded comes back as authored: the record is put back quietly.

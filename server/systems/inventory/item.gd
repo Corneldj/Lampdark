@@ -9,6 +9,9 @@ var uid: int = 0
 var kind: ItemKinds.Kind = ItemKinds.Kind.NONE
 var count: int = 1
 var state: Dictionary = {}
+## GEN-10's placement ID for a generated item (hash of cell, anchor and kind), else empty; GEN-13
+## keys its diff record on it so generation never brings back a taken one.
+var placement: String = ""
 
 
 static func make(item_uid: int, item_kind: ItemKinds.Kind, item_count: int = 1, item_state: Dictionary = {}) -> Item:

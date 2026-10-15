@@ -49,6 +49,32 @@ func system_name() -> String:
 
 func bind(run: RunState) -> void:
 	_run = run
+	if run.diff_log != null:
+		run.diff_log.items.advances[ItemKinds.Kind.GAUZE_LAMP] = advance_lying
+
+
+## GEN-13: a lamp left lying while its cell was gone, advanced from one tick to another as if it
+## had burned there all along (MNR-07's rate at its place, shutter and wick, and the seam's drink
+## of its ring), Dry if that empties it. `state` carries its phase as "lamp_phase".
+func advance_lying(state: Dictionary, at: Vector2, from_tick: int, to_tick: int) -> Variant:
+	var lit: bool = Variants.flag(state.get("lit", false))
+	var phase: int = int(Variants.number(state.get("lamp_phase", LampRules.Phase.BURNING if lit else LampRules.Phase.OUT)))
+	if phase != LampRules.Phase.BURNING or to_tick <= from_tick:
+		return state
+	var tile: Vector2i = Vector2i(floori(at.x), floori(at.y))
+	var place: LampRules.Place = LampRules.Place.HUNG if hooks.has(tile) else LampRules.Place.FLOOR
+	var per_tick: float = 1.0 / (Tuning.f(&"lamp.fill_minutes") * 60.0 * Tuning.f(&"net.tick_hz"))
+	var closed: bool = Variants.flag(state.get("shutter", false))
+	var wick: int = int(Variants.number(state.get("wick", LampRules.WICK_NORMAL)))
+	var rate: float = per_tick * LampRules.burn_factor(place, closed, wick) \
+		* Tuning.by_ring(&"lamp.seam_drink_by_ring", clampi(WorldCoords.ring_of_point(at), 0, 4))
+	var oil: float = float(Variants.number(state.get("oil", 1.0))) - rate * (to_tick - from_tick)
+	if oil <= 1e-9:
+		oil = 0.0
+		state["lit"] = false
+		state["lamp_phase"] = LampRules.Phase.DRY
+	state["oil"] = oil
+	return state
 
 
 #region API
@@ -525,6 +551,10 @@ func _adopt(it: Item, place: LampRules.Place, holder: int, at: Vector2) -> Gauze
 	l.shutter_closed = Variants.flag(it.state.get("shutter", false)) or place == LampRules.Place.SLOT
 	l.oil = float(Variants.number(it.state.get("oil", it.state.get("fills", 1))))
 	l.notches = int(Variants.number(it.state.get("notches", Tuning.i(&"lamp.max_notches"))))
+	# GEN-13: a lamp put back by a replay keeps its phase (Dry, Hoarded).
+	if it.state.has("restore_phase"):
+		l.phase = int(Variants.number(it.state["restore_phase"])) as LampRules.Phase
+		it.state.erase("restore_phase")
 	lamps[l.uid] = l
 	_mirror(l)
 	return l

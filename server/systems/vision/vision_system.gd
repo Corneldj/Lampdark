@@ -6,6 +6,9 @@ extends SimSystem
 ## cached per miner, the cone, light thresholds, tokens by size class, the detail region and
 ## the edge glow. Server-only.
 
+## GEN-13: a trail tile smeared (direction 0-7) or wiped (-1); the diff log keeps it.
+signal trail_changed(tile: Vector2i, direction: int)
+
 const CLASSES: String = "res://data/world/perception_classes.json"
 const SIZES: Dictionary = {"none": 0, "miner": 1, "large": 2, "small": 4}
 
@@ -170,6 +173,7 @@ func bite_seen_by(miner: int) -> bool:
 ## VIS-10: a blood trail on `tile`, heading `direction` (0-7); where trails cross, the latest wins.
 func mark_trail(tile: Vector2i, direction: int) -> void:
 	trails[tile] = posmod(direction, 8)
+	trail_changed.emit(tile, posmod(direction, 8))
 	var bits: int = int(Variants.number(_decals.get(tile, 0))) & ~(TileBits.DECAL_BLOOD | TileBits.DECAL_DIR_MASK)
 	_set_decal_bits(tile, bits | TileBits.DECAL_BLOOD | (posmod(direction, 8) << TileBits.DECAL_DIR_SHIFT))
 
@@ -177,6 +181,7 @@ func mark_trail(tile: Vector2i, direction: int) -> void:
 ## HAZ-03: a roof fall erases a trail.
 func erase_trail(tile: Vector2i) -> void:
 	trails.erase(tile)
+	trail_changed.emit(tile, -1)
 	_set_decal_bits(tile, int(Variants.number(_decals.get(tile, 0))) & ~(TileBits.DECAL_BLOOD | TileBits.DECAL_DIR_MASK))
 
 

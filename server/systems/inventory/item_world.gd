@@ -7,7 +7,11 @@ extends RefCounted
 
 ## entity -> Item
 var items: Dictionary = {}
-## GEN-13's entries: {tick, op, uid, kind, count, entity, tile, miner}.
+## GEN-13: every logged change (a put or a move: the item lies at `entity`; a take: `entity` is
+## gone; in hands: `entity` is 0). ItemDiff keeps the cells' records from it.
+signal logged(op: StringName, item: Item, entity: int)
+
+## Every change: {tick, op, uid, kind, count, entity, tile, miner}.
 var changes: Array[Dictionary] = []
 var _next_uid: int = 1
 
@@ -52,12 +56,22 @@ func item_at(entity: int) -> Item:
 	return items.get(entity, null)
 
 
+## An item lying at `entity` was moved by something other than a take and a put (a shutting gate).
+func moved(run: RunState, entity: int) -> void:
+	if items.has(entity):
+		var it: Item = items[entity]
+		_log(run, &"moved", it, entity, run.registry.get_entity(entity).tile(), 0)
+
+
 ## Logs a change that happens in a miner's hands (spent, swapped, moved by a flip).
 func note(run: RunState, op: StringName, item: Item, miner: int) -> void:
 	_log(run, op, item, 0, Vector2i.ZERO, miner)
 
 
 func _log(run: RunState, op: StringName, item: Item, entity: int, tile: Vector2i, miner: int) -> void:
+	# GEN-13's replay puts back what was already there: not a change.
+	if op == &"replay":
+		return
 	var row: Dictionary = {"tick": run.tick, "op": op, "uid": item.uid, "kind": item.kind, "count": item.count,
 		"entity": entity, "tile": tile, "miner": miner}
 	# MNR-09: a candle's or flare's remaining time, so a replay advances it (GEN-13).
@@ -65,6 +79,7 @@ func _log(run: RunState, op: StringName, item: Item, entity: int, tile: Vector2i
 		row["burn_ticks"] = int(Variants.number(item.state["burn_ticks"]))
 		row["lit"] = Variants.flag(item.state.get("lit", false))
 	changes.append(row)
+	logged.emit(op, item, entity)
 
 
 func write_state(writer: SimStateWriter) -> void:

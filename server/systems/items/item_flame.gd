@@ -68,6 +68,18 @@ func lit_at(run: RunState, it: Item, tile: Vector2i, cause: String) -> void:
 		run.lamps.naked_flame.emit(tile, flame_cause())
 
 
+## GEN-13: one lying while its cell was gone, advanced as if it had burned there; null once burnt
+## out (the diff log then drops it). Subclasses register it in bind().
+func advance_lying(state: Dictionary, _at: Vector2, from_tick: int, to_tick: int) -> Variant:
+	if not Variants.flag(state.get("lit", false)) or to_tick <= from_tick:
+		return state
+	var left: int = int(Variants.number(state.get("burn_ticks", full_burn_ticks()))) - (to_tick - from_tick)
+	if left <= 0:
+		return null
+	state["burn_ticks"] = left
+	return state
+
+
 ## Burns, moves the light and drops burnt-out items. `on_place` (optional) may act on each burning
 ## place first and return false to skip it (a candle put on the belt goes out).
 func burn(run: RunState) -> void:

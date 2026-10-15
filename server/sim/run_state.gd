@@ -36,6 +36,8 @@ var sessions: Dictionary = {}
 var inputs: InputService = null
 ## The world, when the run has one (GEN-01, VIS-02); ServerSystems sets them.
 var mine: Mine = null
+## GEN-13: what play changed in the mine, by cell.
+var diff_log: DiffLog = null
 var light: LightSystem = null
 var road_graph: RoadGraphService = null
 ## VIS-03's seen sets, the only door to NET-04's encoder.

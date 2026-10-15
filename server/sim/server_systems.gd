@@ -14,6 +14,8 @@ const DEBUG_INSTALL: String = "res://server/debug/debug_install.gd"
 ## from the OS; the scenario kit passes one derived from its own seed so its runs replay.
 static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: int = 0) -> void:
 	run.add_system(net)
+	# GEN-13: first, so every owner registers its handlers as it binds; bound near the end.
+	run.diff_log = DiffLog.new()
 	run.inputs = InputService.new(net)
 	run.add_system(run.inputs)
 	run.now_judge = NowJudge.new()
@@ -166,6 +168,23 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 		run.air_doors = AirDoorSystem.new()
 		run.air_doors.bind(run)
 		run.add_system(run.air_doors)
+	# GEN-13: after every owner, so a committed cell replays once their own load hooks have run.
+	if run.vision != null:
+		run.vision.trail_changed.connect(func(tile: Vector2i, direction: int) -> void:
+			if direction < 0:
+				run.diff_log.erase_blood(tile)
+			else:
+				run.diff_log.mark_blood(tile, direction))
+		run.diff_log.register(DiffLog.Kind.BLOOD, func(r: RunState, _cell: Vector2i, _key: String, p: Dictionary, _t: int) -> void:
+			for raw: Variant in Variants.array(p["smears"]):
+				var smear: Dictionary = raw
+				var tile: Vector2i = smear["tile"]
+				var direction: int = int(Variants.number(smear["direction"]))
+				# Usually still in the vision's memory (it outlives the cell): only a resume needs it.
+				if int(Variants.number(r.vision.trails.get(tile, -1))) != direction:
+					r.vision.mark_trail(tile, direction))
+	run.diff_log.bind(run)
+	run.add_system(run.diff_log)
 	# NET-07: last, so every signal it listens to exists.
 	run.record = RunRecord.new()
 	run.record.bind(run, net)

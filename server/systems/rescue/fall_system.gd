@@ -46,6 +46,8 @@ var _next_fall_id: int = 1
 ## Records of this tick's falls, emitted by Emit after MNR-03's flush.
 var _to_emit: Array[Dictionary] = []
 var _run: RunState = null
+## GEN-13: entity -> [cell, payload] of its body record.
+var _body_records: Dictionary = {}
 
 
 func stage() -> int:
@@ -65,6 +67,56 @@ func bind(run: RunState) -> void:
 	if run.miner_state != null:
 		run.miner_state.state_changed.connect(_on_state_changed)
 	run.add_system(Emit.new(self))
+	if run.diff_log != null:
+		run.diff_log.register(DiffLog.Kind.BODY, _replay_body)
+		run.diff_log.on_sync(sync_body_records)
+		run.diff_log.on_refresh(sync_body_records)
+
+
+## GEN-13: every body at rest (not carried or dragged) has a record in its cell: where it lies,
+## on a table, dead, kept in the lair. A body moved gets its record moved; one that rises loses it.
+func sync_body_records(run: RunState) -> void:
+	var seen: Dictionary = {}
+	for entity: int in _sorted_bodies():
+		var b: BodyState = bodies[entity]
+		seen[entity] = true
+		if b.carried_by != 0 or b.dragged_by != 0 or not run.registry.has(entity):
+			continue
+		var e: SimEntity = run.registry.get_entity(entity)
+		var cell: Vector2i = WorldCoords.cell_of(e.tile())
+		var p: Dictionary = {"x": e.position.x, "y": e.position.y, "table": b.on_table, "dead": b.dead, "kept": b.kept_in_lair}
+		var was: Array = _body_records.get(entity, [])
+		if not was.is_empty() and was[0] == cell and was[1] == p:
+			continue
+		if not was.is_empty():
+			var old: Vector2i = was[0]
+			if old != cell:
+				run.diff_log.erase(old, DiffLog.Kind.BODY, "m%d" % entity)
+		run.diff_log.record(cell, DiffLog.Kind.BODY, "m%d" % entity, p)
+		_body_records[entity] = [cell, p]
+	for raw: Variant in _body_records.keys():
+		if not seen.has(raw):
+			var gone: Array = _body_records[raw]
+			var gone_cell: Vector2i = gone[0]
+			run.diff_log.erase(gone_cell, DiffLog.Kind.BODY, "m%d" % int(Variants.number(raw)))
+			_body_records.erase(raw)
+
+
+## A body's record put back: it lies where recorded (a resume, or a cell committed again).
+func _replay_body(run: RunState, cell: Vector2i, key: String, p: Dictionary, _t: int) -> void:
+	var entity: int = int(key.trim_prefix("m"))
+	if not run.registry.has(entity):
+		return
+	var at: Vector2 = Vector2(Variants.number(p["x"]), Variants.number(p["y"]))
+	var b: BodyState = body_of(entity)
+	if b != null and (b.carried_by != 0 or b.dragged_by != 0):
+		return
+	if run.registry.get_entity(entity).position != at:
+		if run.movement != null:
+			run.movement.place(run, entity, at)
+		else:
+			run.registry.move(entity, at)
+	_body_records[entity] = [cell, p]
 
 
 ## Emits `fell` for this tick's falls (Emit calls it, after MNR-03's flush).

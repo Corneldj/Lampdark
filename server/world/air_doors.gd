@@ -48,6 +48,9 @@ class Door:
 		return false
 
 
+## GEN-13: a door's diff-log key is this and its key.
+const DIFF_PREFIX: String = "door:"
+
 ## Doors in loaded cells, by key.
 var doors: Dictionary = {}
 ## Every door's state ever set, by key (kept while its cell is evicted; GEN-13 saves it).
@@ -81,6 +84,8 @@ func bind(run: RunState) -> void:
 		_on_cell_loaded(cell)
 	if run.inventory != null:
 		run.inventory.targets.providers.append(_door_targets)
+	if run.diff_log != null:
+		run.diff_log.register(DiffLog.Kind.BARRIER, _replay_door, Callable(), _door_default, DIFF_PREFIX)
 
 
 func door_at(tile: Vector2i) -> Door:
@@ -198,6 +203,25 @@ func _flip(run: RunState, d: Door, to_open: bool) -> void:
 	states[d.key()] = to_open
 	_apply(d, to_open)
 	diff_log.append({"tick": run.tick, "door": d.key(), "open": to_open})
+	if run.diff_log != null:
+		run.diff_log.record(d.cell, DiffLog.Kind.BARRIER, DIFF_PREFIX + d.key(), {"open": to_open})
+
+
+## GEN-13: a door's recorded state, put back when its cell is committed (or a save resumes).
+func _replay_door(_r: RunState, _cell: Vector2i, key: String, p: Dictionary, _t: int) -> void:
+	var k: String = key.trim_prefix(DIFF_PREFIX)
+	var want_open: bool = Variants.flag(p.get("open", false))
+	states[k] = want_open
+	if doors.has(k):
+		var d: Door = doors[k]
+		# Its own load hook has usually applied the state already: no second barrier change.
+		if d.open != want_open:
+			_apply(d, want_open)
+
+
+## A door as generated (mine.air_door_initial_shut) needs no record.
+func _door_default(_cell: Vector2i, _key: String, p: Dictionary) -> bool:
+	return Variants.flag(p.get("open", false)) != Tuning.b(&"mine.air_door_initial_shut")
 
 
 func _apply(d: Door, to_open: bool) -> void:
