@@ -313,6 +313,14 @@ func _poll_clients() -> void:
 				h.slot = h.connection.welcome.slot
 
 
+## An action's tick is the frame the client shows when it is issued (NET-03), as client_main
+## stamps it: what NET-06 rewinds a trigger to.
+func _shown_tick(h: MinerHandle, t: int) -> int:
+	if h.connection == null or not h.is_connected_now():
+		return t
+	return int(h.connection.shown_stamp(Transport.now_usec())[0])
+
+
 func _client_tick(h: MinerHandle, t: int) -> void:
 	if h.connection == null:
 		return
@@ -334,7 +342,7 @@ func _client_tick(h: MinerHandle, t: int) -> void:
 		for raw: Variant in h.inputs.actions_at(t):
 			var action: Array = Variants.array(raw)
 			h.connection.inputs.queue_action(int(Variants.number(action[0])) as ActionRecord.Kind,
-				int(Variants.number(action[1])), t, int(Variants.number(action[2])))
+				int(Variants.number(action[1])), _shown_tick(h, t), int(Variants.number(action[2])))
 	if not h.is_connected_now():
 		return
 	var stamp: PackedInt64Array = h.connection.stamp_for_send(Transport.now_usec())
@@ -364,7 +372,7 @@ func _think(h: MinerHandle, t: int) -> InputRecord:
 	var record: InputRecord = h.brain.call(&"think", ctx)
 	for action: Array in ctx.actions:
 		h.connection.inputs.queue_action(int(Variants.number(action[0])) as ActionRecord.Kind,
-			int(Variants.number(action[1])), t, int(Variants.number(action[2])))
+			int(Variants.number(action[1])), _shown_tick(h, t), int(Variants.number(action[2])))
 	for voice: Array in ctx.voice:
 		_send_voice(h, int(Variants.number(voice[0])), int(Variants.number(voice[1])))
 	return record

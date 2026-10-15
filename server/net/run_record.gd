@@ -75,6 +75,8 @@ var _lies: Array = []
 var _falls: Array = []
 var _deaths: Array = []
 var _decisions_seen: int = 0
+## MNR-16: shots already written.
+var _shots_seen: int = 0
 var _doors_seen: int = 0
 var _last_sound: int = 0
 var _last_sources: Dictionary = {}
@@ -419,6 +421,10 @@ func _tick_entry(run: RunState) -> Dictionary:
 	if run.defender != null and run.defender.decisions.size() > _decisions_seen:
 		e["dr"] = _plain(run.defender.decisions.slice(_decisions_seen))
 		_decisions_seen = run.defender.decisions.size()
+	# MNR-16: every shot (shooter, origin, aim, what it hit, the outcome) for RSC-07's card.
+	if run.revolver != null and run.revolver.shots.size() > _shots_seen:
+		e["shot"] = _plain(run.revolver.shots.slice(_shots_seen))
+		_shots_seen = run.revolver.shots.size()
 	for pair: Array in [["v", _voice], ["g", _creature_log], ["lie", _lies], ["fall", _falls], ["death", _deaths]]:
 		var list: Array = pair[1]
 		if not list.is_empty():

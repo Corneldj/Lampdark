@@ -113,6 +113,8 @@ var rock_taps: RockTaps = null
 var tools_parts: ToolsParts = null
 ## MNR-10: chalk marks and the 2 s mark.
 var chalk: Chalk = null
+## MNR-16: the revolver, its shots and its retreat counters.
+var revolver: Revolver = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

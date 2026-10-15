@@ -25,6 +25,8 @@ var spent: Dictionary = {}
 var _run: RunState = null
 ## kind -> (run, entity, slot) -> void: the owning ticket's use of a belt item (MNR-06 to MNR-16).
 var use_handlers: Dictionary = {}
+## MNR-16: Use on an empty selected slot: (run, entity, slot) -> void (a drawn revolver goes back).
+var empty_slot_use: Callable = Callable()
 ## (run, slot) -> int: the held bits, for tests; unset reads NET-03's consumed input.
 var holds_source: Callable = Callable()
 var _starved: Dictionary = {}
@@ -302,6 +304,9 @@ func _start_pick_up(run: RunState, entity: int, item_entity: int) -> void:
 		return
 	if h.free_hand_blocked(&"pick_up"):
 		return
+	# MNR-16: a Hired Hand never picks up the revolver.
+	if item.kind == ItemKinds.Kind.REVOLVER and ToolsParts.is_hand(run, entity):
+		return
 	if ItemKinds.hand_class(item.kind) == ItemKinds.HandClass.FREE_ONLY and h.free_hand != null:
 		return
 	var a: TimedAction = TimedAction.make(entity, &"pick_up", Tuning.f(&"lamp.pick_up_time" if ItemKinds.is_lamp(item.kind) else &"items.pick_up_time"),
@@ -408,6 +413,9 @@ func _use(run: RunState, entity: int, slot: int) -> void:
 	var h: HandsAndBelt = hands_of(entity)
 	var item: Item = h.slots[h.selected]
 	# Both hands full (a carry): no kit, flare, revolver or anything else from the belt (§4.3).
+	if item == null and not h.two_handed and empty_slot_use.is_valid() and _allowed(run, entity, &"belt"):
+		empty_slot_use.call(run, entity, slot)
+		return
 	if item == null or h.two_handed or not _allowed(run, entity, &"belt"):
 		return
 	if ItemKinds.is_lamp(item.kind):

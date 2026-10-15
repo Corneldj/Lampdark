@@ -2,7 +2,7 @@ extends "res://tests/scenario/kit/scenario_test.gd"
 ## SND-04 (Gameplay §4.7, §7.6): miners stand 2, 3 and 4 tiles from a shot. The first two (within
 ## revolver.deafen_radius) are deafened with the shooter; the third is not. A Tapper's taps (a rock-tap
 ## event, CRT-09) reach the third but not the first two; a hammer reaches the first two 20 dB down.
-## MNR-16 owns who stands within the radius and the trigger; this test stands in for it.
+## MNR-16's real shot deafens them.
 
 const A = preload("res://tests/unit/sound/audio_world.gd")
 ## The tap's three points (the open floor beside three wall faces; NoiseSystem.emit now does this
@@ -25,18 +25,19 @@ func _of(h: MinerHandle, type: int) -> Array[Dictionary]:
 func test_shot_deafens_within_three() -> void:
 	var s: Scenario = make({"seed": 304, "fixture": A.hall()})
 	var shot: Vector2i = Vector2i(10, 3)
-	var shooter: MinerHandle = s.add_miner("shooter", shot)
+	var shooter: MinerHandle = s.add_miner("shooter", shot, {"facing_deg": 90.0})
+	shooter.brain = null
+	shooter.at(0).face(90.0)
 	var two: MinerHandle = s.add_miner("two", shot + Vector2i(2, 0))
 	var three: MinerHandle = s.add_miner("three", shot + Vector2i(3, 0))
 	var four: MinerHandle = s.add_miner("four", shot + Vector2i(4, 0))
 	s.step(2)
-	# MNR-16's stand-in: the shooter and every miner within the radius (straight line here).
-	var radius: float = Tuning.f(&"revolver.deafen_radius")
-	s.run.deafen.deafen(s.run, shooter.slot)
-	for h: MinerHandle in [two, three, four]:
-		var m: MovementSystem.Miner = s.run.movement.miner(h.slot)
-		if Vector2(m.state.x, m.state.y).distance_to(Vector2(shot) + Vector2(0.5, 0.5)) <= radius + 1e-6:
-			s.run.deafen.deafen(s.run, h.slot)
+	# MNR-16's real shot: drawn, aimed, the trigger (aimed away from everyone).
+	s.run.inventory.hands_of(shooter.entity_id).free_hand = Revolver.make(s.run)
+	shooter.at(s.run.tick).hold(InputRecord.HOLD_AIM, 30)
+	s.step(3)
+	shooter.at(s.run.tick).press(ActionRecord.Kind.TRIGGER, 0, 90.0)
+	assert_true(s.run_until(func(sc: Scenario) -> bool: return not sc.run.revolver.shots.is_empty(), 10), "the shot")
 	assert_true(s.run.deafen.is_deafened(shooter.slot), "the shooter")
 	assert_true(s.run.deafen.is_deafened(two.slot), "2 tiles")
 	assert_true(s.run.deafen.is_deafened(three.slot), "3 tiles")

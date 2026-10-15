@@ -59,6 +59,8 @@ class Flush:
 		owner.flush(run.tick)
 
 
+## MNR-16: cues other systems add (the revolver raised: MinerCues.AIMING): (entity) -> int.
+var extra_cues: Callable = Callable()
 var hurt_ticks: int = 1200
 var rock_touched_ticks: int = 12000
 var _miners: Dictionary = {}
@@ -205,6 +207,8 @@ func cues(entity: int) -> int:
 		bits |= MinerCues.LYING_BREATHING | (MinerCues.DRAGGED if m.dragged else 0)
 	if m.life == Life.DEAD:
 		bits |= MinerCues.LYING_STILL
+	if extra_cues.is_valid():
+		bits |= int(Variants.number(extra_cues.call(entity)))
 	return bits
 
 

@@ -14,6 +14,7 @@ const HALF_IN_WALL: int = 1 << 5  ## Grabbed by a Tapper pin
 const DRAGGED: int = 1 << 6       ## Grabbed by a Stythe drag (or a body being dragged)
 const LYING_BREATHING: int = 1 << 7  ## Unconscious
 const LYING_STILL: int = 1 << 8      ## Dead
+const AIMING: int = 1 << 9           ## MNR-16: the revolver raised, aimed
 ## VIS-06: the cap badge (0-5: clear, green, violet, grey, rose, brown; 7 none) in bits 13-15, on the
 ## same identity-only record: a fringe token never shows it.
 const BADGE_SHIFT: int = 13
