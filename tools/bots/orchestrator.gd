@@ -17,6 +17,9 @@ var soak: Soak
 var soak_name: String = ""
 var out_dir: String = ""
 var base_port: int = 47900
+## Ports between soak servers: each dev or QA server also opens its STM-02 lobby rendezvous at its
+## game port + net.dev_lobby_port_offset (1), which must never be another server's game port.
+const PORT_STRIDE: int = 4
 var accelerated: bool = false
 var processes: Array[Dictionary] = []
 var _started_usec: int = 0
@@ -155,10 +158,14 @@ func _spawn(kind: String, name: String, args: PackedStringArray) -> void:
 	processes.append({"kind": kind, "name": name, "pid": pid, "ended": "", "exit_code": -1})
 
 
+func _port_of(server: int) -> int:
+	return base_port + server * PORT_STRIDE
+
+
 func _start_servers() -> void:
 	for s: int in _servers():
 		var name: String = "server_%d" % s
-		_spawn("server", name, PackedStringArray(["--server", "--port", str(base_port + s),
+		_spawn("server", name, PackedStringArray(["--server", "--port", str(_port_of(s)),
 			"--seed", str(int(Variants.number(soak.profile["seed"])) + s),
 			"--exit-after-ticks", str(_bot_ticks() + SERVER_GRACE_TICKS),
 			"--record-inputs", out_dir.path_join(name + ".inputs.jsonl"),
@@ -171,7 +178,7 @@ func _start_bots() -> void:
 		for b: int in _bots():
 			var name: String = "bot_%d_%d" % [s, b]
 			var args: PackedStringArray = PackedStringArray(["--bot", _brain(n), "--bot-seed", str(int(Variants.number(soak.profile["seed"])) * 100 + n),
-				"--connect", "127.0.0.1:%d" % (base_port + s), "--name", name,
+				"--connect", "127.0.0.1:%d" % _port_of(s), "--name", name,
 				"--exit-after-ticks", str(_bot_ticks()), "--receive-log", out_dir.path_join(name + ".recv.log")])
 			if not str(soak.profile.get("link", "")).is_empty():
 				args.append_array(PackedStringArray(["--link", str(soak.profile["link"])]))
@@ -196,7 +203,7 @@ func _finish() -> int:
 	for s: int in _servers():
 		var name: String = "server_%d" % s
 		var stats: Dictionary = _read_json(out_dir.path_join(name + ".stats.json"))
-		Variants.array(report["servers"]).append({"index": s, "port": base_port + s, "stats": stats,
+		Variants.array(report["servers"]).append({"index": s, "port": _port_of(s), "stats": stats,
 			"log": out_dir.path_join(name + ".log"), "input_log": out_dir.path_join(name + ".inputs.jsonl")})
 		Variants.array(report["applied_input_logs"]).append(out_dir.path_join(name + ".inputs.jsonl"))
 	for p: Dictionary in processes:
