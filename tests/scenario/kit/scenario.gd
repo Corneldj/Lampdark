@@ -145,6 +145,11 @@ func _build(cfg: Dictionary) -> void:
 		if fixture.load_into(mine) <= 0:
 			push_error("Scenario: the fixture loaded no cells")
 	ServerSystems.install(run, net, mine, LbHash.sub_seed(_seed, HashDomain.NET_TOKEN, PackedInt64Array([-1]), 0) | 1)
+	# NET-09: a scenario writes no save unless it asks ("saves": true), each into its own folder.
+	run.header.run_uuid = "%016x" % LbHash.sub_seed(_seed, HashDomain.NET_TOKEN, PackedInt64Array([-9]), 0)
+	run.saves.enabled = Variants.flag(cfg.get("saves", false)) and mode != ServerConfig.Mode.PUBLIC
+	run.saves.journal.enabled = run.saves.enabled
+	run.saves.save_dir = "user://kit_saves/%d" % _seed
 	for raw: Variant in Variants.array(cfg.get("systems", [])):
 		var system: SimSystem = raw
 		run.add_system(system)
@@ -179,6 +184,18 @@ func add_miner(name: String, tile: Vector2i, options: Dictionary = {}) -> MinerH
 		push_error("Scenario: %s was not welcomed" % name)
 	_place(h, tile)
 	recorder.append_op(run.tick, {"op": "add_miner", "name": name, "tile": [tile.x, tile.y], "slot": h.slot})
+	return h
+
+
+## NET-09: a player of a resumed run comes back. Their client connects and retakes the seat the save
+## held for them; no miner is placed (the run has theirs). Returns the handle (entity_id 0 if the
+## save held no seat for `name`).
+func rejoin(name: String) -> MinerHandle:
+	var h: MinerHandle = _new_handle(name)
+	if not _connect(h, ""):
+		push_error("Scenario: %s was not welcomed back" % name)
+	var seat: SeatTable.Seat = net.seats.seat_of(name)
+	h.entity_id = seat.miner if seat != null else 0
 	return h
 
 
@@ -479,6 +496,8 @@ func _connect(h: MinerHandle, token: String, settle: bool = true) -> bool:
 	h.connection.identity = h.name
 	h.connection.session_token = token
 	h.connection.qa_token = str(h.options.get("qa_token", ""))
+	# NET-09: each member keeps its copy of the saves in a folder of its own.
+	h.connection.saves.root = "user://kit_client_saves/%d/%s" % [_seed, h.name]
 	if previous != null:
 		h.connection.inputs = previous.inputs
 	if not h.connection.start(HOST, PORT):

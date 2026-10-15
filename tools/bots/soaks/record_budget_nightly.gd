@@ -5,7 +5,9 @@ extends "res://tools/bots/soak.gd"
 ## net.record_buffer_estimate_mb plus 20% (GDD §15.3: "about 25 MB"; compressed, it holds far less),
 ## and the whole record (ring, pinned windows and the open blocks) within net.record_memory_mb
 ## throughout. Every fall must pin a window that seals and replays after the ring has rolled past
-## it. test_record_budget_soak.gd runs it short on every push.
+## it. NET-09: the run is saved throughout (a friends run), every save within net.save_budget_mb and
+## each section within its own budget (GDD §15.9: a Full run's save is 50 MB at most), with a
+## snapshot every net.snapshot_interval_s. test_record_budget_soak.gd runs it short on every push.
 
 const MAP: String = "m1_greybox"
 const FALLS: int = 20
@@ -23,7 +25,7 @@ func setup(_ctx: Dictionary) -> void:
 
 
 func scenario_config(_server: int) -> Dictionary:
-	return {"fixture": MAP}
+	return {"fixture": MAP, "saves": true}
 
 
 func spawn_tile(_scenario: RefCounted, bot: int) -> Vector2i:
@@ -100,6 +102,17 @@ func inspect(scenario: RefCounted) -> Dictionary:
 	out["keyframe_misses"] = r.keyframe_misses
 	out["late_acks"] = r.late_acks
 	out["record_usec"] = run.timer.summary(TickTimer.system_key(r))
+	var biggest: Dictionary = {}
+	var capture_max: int = 0
+	for row: Dictionary in run.saves.written:
+		if int(Variants.number(row["bytes"])) > int(Variants.number(biggest.get("bytes", -1))):
+			biggest = row
+		capture_max = maxi(capture_max, int(Variants.number(row["capture_usec"])))
+	out["saves_written"] = run.saves.written.size()
+	out["save_bytes_max"] = int(Variants.number(biggest.get("bytes", 0)))
+	out["save_sections_max"] = biggest.get("sections", {})
+	out["save_breaches"] = run.saves.breaches.size()
+	out["save_capture_usec_max"] = capture_max
 	return out
 
 
@@ -123,6 +136,16 @@ func verify(report: Dictionary) -> Array[String]:
 		var high: float = float(Variants.number(st.get("ring_max", 0)))
 		if high > target * 1.2:
 			errors.append("server %s: the ring reached %.1f MB, over %.0f MB + 20%%" % [s.get("index"), high / mb, target / mb])
+		var save_budget: float = Tuning.f(&"net.save_budget_mb") * mb
+		var save_max: float = float(Variants.number(st.get("save_bytes_max", 0)))
+		if save_max > save_budget:
+			errors.append("server %s: a save reached %.1f MB, over %.0f MB" % [s.get("index"), save_max / mb, save_budget / mb])
+		if int(Variants.number(st.get("save_breaches", 0))) > 0:
+			errors.append("server %s: %s save sections over their budgets" % [s.get("index"), st.get("save_breaches")])
+		var every: float = Tuning.f(&"net.snapshot_interval_s") * Tuning.f(&"net.tick_hz")
+		var want: int = floori(float(Variants.number(st.get("ticks", 0))) / every) - 1
+		if int(Variants.number(st.get("saves_written", 0))) < want:
+			errors.append("server %s: %s saves written, at least %d expected" % [s.get("index"), st.get("saves_written"), want])
 		if int(Variants.number(st.get("keyframe_misses", 0))) > 0:
 			errors.append("server %s: %s keyframe views the encoder no longer held" % [s.get("index"), st.get("keyframe_misses")])
 	return errors

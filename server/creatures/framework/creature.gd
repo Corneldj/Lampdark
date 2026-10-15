@@ -138,3 +138,25 @@ func on_grab_ended(run: RunState, _grab: GrabHold, _outcome: GrabHold.Outcome) -
 	grabbing = 0
 	if system != null:
 		system.gate.stand_down(run, self, "grab ended")
+
+
+## NET-09: what this kind keeps through a resume, beyond its place and its random stream.
+func save_extra() -> Dictionary:
+	return {}
+
+
+func load_extra(_run: RunState, _extra: Dictionary) -> void:
+	pass
+
+
+## NET-09 (Proposed): the state a resume starts it in, from the one it was saved in. A creature
+## resumes calm where it stood: a hunt, a wind-up, a drag in flight does not survive the end.
+func resume_state(saved: StringName) -> StringName:
+	return saved if saved == state_order()[0] else state_order()[0]
+
+
+func state_order() -> Array[StringName]:
+	var out: Array[StringName] = []
+	for s: CreatureState in define_states():
+		out.append(s.name)
+	return out

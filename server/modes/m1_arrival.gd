@@ -50,6 +50,14 @@ func arrival_tiles() -> Array[Vector2i]:
 
 
 ## ServerNet's welcomed: a miner for a new identity.
+## NET-09: a resumed run's miners, by their players' identities, so a returning player retakes theirs.
+func adopt(seats: SeatTable) -> void:
+	for raw: Variant in seats.seats.keys():
+		var s: SeatTable.Seat = seats.seats[raw]
+		if s.miner != 0:
+			miners[str(raw)] = s.miner
+
+
 func on_welcomed(slot: int, identity: String) -> void:
 	if miners.has(identity):
 		Log.info("arrival: %s is back (slot %d); NET-11 hands its miner back" % [identity, slot])

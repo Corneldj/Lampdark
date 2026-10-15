@@ -37,3 +37,16 @@ func write_state(_writer: SimStateWriter) -> void:
 
 func read_state(_reader: SimStateReader) -> void:
 	pass
+
+
+## NET-09: the system's lasting state for a snapshot or a knock-off save, as plain values
+## (var_to_bytes-able: no objects, no callables). {} when it keeps nothing a resume needs:
+## transient state (actions, wind-ups, the noise log) starts afresh on a resume.
+func save_state() -> Dictionary:
+	return {}
+
+
+## NET-09: a resume puts back what save_state() wrote, after every system is installed and the
+## registry restored (the systems load in stage order).
+func load_state(_run: RunState, _state: Dictionary) -> void:
+	pass

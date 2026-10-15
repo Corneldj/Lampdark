@@ -15,6 +15,7 @@
 #include "godot/world/lb_diff_store.h"
 #include "godot/creatures/lb_creature_nav.h"
 #include "godot/net/lb_replication.h"
+#include "godot/net/lb_seal.h"
 #include "godot/rng/lb_hash.h"
 #include "godot/rng/lb_rng.h"
 #include "godot/sim/lb_entity_mirror.h"
@@ -43,6 +44,7 @@ void initialize_lampblack_core(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(lb::godot::LbWorld);
 	GDREGISTER_CLASS(lb::godot::LbEntityIds);
 	GDREGISTER_CLASS(lb::godot::LbDiffStore);
+	GDREGISTER_CLASS(lb::godot::LbSeal);
 	GDREGISTER_CLASS(lb::godot::LbEntityMirror);
 	GDREGISTER_CLASS(lb::godot::LbCellData);
 	GDREGISTER_CLASS(lb::godot::LbMine);

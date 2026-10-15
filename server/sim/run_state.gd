@@ -20,6 +20,10 @@ class Header:
 	var tuning_hash: String = ""
 	## FND-08: a state-changing debug command ran (set once, never cleared; telemetry carries it).
 	var debug_tainted: bool = false
+	## NET-09: the run's identity for its saves (random; the scenario kit's from its seed), and the
+	## fixed map it plays on (GEN-03), which a resume loads again.
+	var run_uuid: String = ""
+	var map_name: String = ""
 
 
 var header: Header = Header.new()
@@ -117,6 +121,8 @@ var chalk: Chalk = null
 var revolver: Revolver = null
 ## NET-11: drops, seats held and retaken.
 var drops: DropHandler = null
+## NET-09: snapshots, knock-off saves and the journal.
+var saves: Saves = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.
@@ -131,6 +137,8 @@ var frozen: bool = false
 var _startup_errors: PackedStringArray = PackedStringArray()
 ## Every stream handed out, by domain and keys, so a debug build can script its next draws.
 var _streams: Dictionary = {}
+## NET-09: stream states from a save, for streams not handed out yet.
+var _restored_streams: Dictionary = {}
 var _scripted: Dictionary = {}
 
 
@@ -178,11 +186,35 @@ func stream(domain: int, keys: PackedInt64Array) -> LbRng:
 	var rng: LbRng = LbRng.from_seed(LbHash.sub_seed(header.run_seed, domain, keys, 0))
 	var key: String = _stream_key(domain, keys)
 	_streams[key] = rng
+	# NET-09: a resumed run's stream picks up where it was.
+	if _restored_streams.has(key):
+		rng.set_state(int(Variants.number(_restored_streams[key])))
+		_restored_streams.erase(key)
 	if _scripted.has(key):
 		var values: PackedInt64Array = _scripted[key]
 		_scripted.erase(key)
 		rng.call(&"script_values", values)
 	return rng
+
+
+## NET-09: every stream's state, by key (sealed in saves: FND-06's stream states never leave them).
+## A resumed stream nobody has asked for yet keeps its saved state.
+func stream_states() -> Dictionary:
+	var out: Dictionary = _restored_streams.duplicate()
+	for raw: Variant in _streams.keys():
+		var rng: LbRng = _streams[raw]
+		out[raw] = rng.get_state()
+	return out
+
+
+## NET-09: puts saved stream states back, now for streams that exist, later for the rest.
+func restore_streams(states: Dictionary) -> void:
+	for raw: Variant in states.keys():
+		if _streams.has(raw):
+			var rng: LbRng = _streams[raw]
+			rng.set_state(int(Variants.number(states[raw])))
+		else:
+			_restored_streams[raw] = states[raw]
 
 
 ## Debug builds only (FND-09, QA-02): the next draws of a stream return these raw values, then

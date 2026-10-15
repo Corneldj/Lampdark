@@ -16,6 +16,8 @@ var offline: bool = false
 var parent_pid: int = 0
 var control_port: int = 0
 var resume_path: String = ""
+## NET-09: where saves are written, one folder per run UUID (STM-05 points it at the Cloud-synced folder).
+var save_dir: String = "user://saves"
 ## A fixed run seed (dev and QA only). Unsigned 64-bit, held in an int's bits.
 var has_seed: bool = false
 var run_seed: int = 0

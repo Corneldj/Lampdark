@@ -67,7 +67,7 @@ static func placements(map_name: String) -> Dictionary:
 ## Once the run's systems are installed on the loaded mine: base camp's state (when `base_camp`),
 ## the hooks, the coat heaps, the creatures and the items. Returns what it placed:
 ## {heaps: [entity ids], creatures: {kind: entity id}, items: [kind names], hooks: n}.
-static func populate(run: RunState, map_name: String, base_camp: bool = true, fresh: bool = true) -> Dictionary:
+static func populate(run: RunState, map_name: String, base_camp: bool = true, fresh: bool = true, with_placements: bool = true) -> Dictionary:
 	var m: Dictionary = manifest(map_name)
 	var out: Dictionary = {"heaps": [], "creatures": {}, "items": [], "hooks": 0}
 	if base_camp and m.has("base_camp") and run.base_camp == null:
@@ -80,6 +80,9 @@ static func populate(run: RunState, map_name: String, base_camp: bool = true, fr
 				if str(a.get("type", "")) == "timber_hook":
 					run.lamps.hooks[WorldCoords.tile_of(cell, Vector2i(int(Variants.number(a["x"])), int(Variants.number(a["y"]))))] = true
 					out["hooks"] = int(Variants.number(out["hooks"])) + 1
+	# NET-09: a resume's entities, items and lairs come from its save; only the map's hooks are made.
+	if not with_placements:
+		return out
 	var p: Dictionary = placements(map_name)
 	for raw: Variant in Variants.array(p.get("coat_heaps", [])):
 		var t: Array = raw

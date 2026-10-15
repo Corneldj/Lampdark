@@ -254,3 +254,22 @@ func write_state(writer: SimStateWriter) -> void:
 		writer.put_i64(m.state.gait)
 		m.modifiers.write_state(writer)
 		m.stamina.write_state(writer)
+
+
+## NET-09: each miner's place, facing and stamina.
+func save_state() -> Dictionary:
+	var out: Dictionary = {}
+	for slot: int in miner_slots():
+		var m: Miner = _miners[slot]
+		out[slot] = {"entity": m.entity_id, "x": m.state.x, "y": m.state.y, "facing": m.state.facing,
+			"stamina": StateDicts.pick(m.stamina, ["pool_ms", "running", "latched_off", "pant_start", "pant_next", "breath_hold"])}
+	return {"miners": out}
+
+
+func load_state(_r: RunState, state: Dictionary) -> void:
+	var miners: Dictionary = Variants.dict(state.get("miners", {}))
+	for raw: Variant in miners.keys():
+		var d: Dictionary = miners[raw]
+		var m: Miner = add_miner(int(Variants.number(raw)), int(Variants.number(d["entity"])),
+			Vector2(Variants.number(d["x"]), Variants.number(d["y"])), int(Variants.number(d["facing"])))
+		StateDicts.put(m.stamina, Variants.dict(d["stamina"]))

@@ -31,6 +31,8 @@ var _last_stats_tick: int = 0
 ## FND-08: the server console reads stdin on its own thread (dev and QA, a terminal only).
 var _console_thread: Thread = null
 var _audit: RefCounted = null
+## NET-09: the save this server resumes (`--resume`), opened; empty for a new run.
+var _resume: Dictionary = {}
 
 
 func start(server_config: ServerConfig) -> void:
@@ -49,7 +51,23 @@ func start(server_config: ServerConfig) -> void:
 		Log.error("no fixed map named '%s' (data/maps/%s/manifest.json)" % [config.map_name, config.map_name])
 		get_tree().quit(ExitCode.BAD_ARGUMENTS)
 		return
-	run = RunState.create(_run_seed(), config.mode, config.offline)
+	if not config.resume_path.is_empty():
+		_resume = SaveResume.open_file(config.resume_path)
+		if not Variants.flag(_resume["ok"]):
+			Log.error("cannot resume %s: %s" % [config.resume_path, str(_resume["message"])])
+			get_tree().quit(ExitCode.VERSION_MISMATCH if str(_resume["error"]) == SaveResume.ERR_VERSIONS else ExitCode.BAD_ARGUMENTS)
+			return
+		var head: Dictionary = _resume["head"]
+		config.mode = int(Variants.number(head["mode"])) as ServerConfig.Mode
+		config.offline = Variants.flag(head.get("offline", false))
+		config.map_name = str(head.get("map_name", ""))
+		run = RunState.create(int(Variants.number(head["run_seed"])), config.mode, config.offline)
+	else:
+		run = RunState.create(_run_seed(), config.mode, config.offline)
+		if run != null:
+			run.header.run_uuid = _new_run_uuid()
+	if run != null:
+		run.header.map_name = config.map_name
 	if run == null or not run.startup_errors().is_empty():
 		Log.error("the run could not be created")
 		get_tree().quit(ExitCode.FATAL)
@@ -87,6 +105,9 @@ func _process(_delta: float) -> void:
 		_log_stats()
 	if loop.is_done():
 		Log.info("exit after %d ticks" % loop.ticks_run)
+		# NET-09: the run ends unfinished, as at any other server end: saved (or voided in public).
+		if run.saves != null:
+			run.saves.end_abnormally(run, "exit after %d ticks" % loop.ticks_run)
 		_log_stats()
 		_finish_records()
 		Log.close()
@@ -137,10 +158,20 @@ func _start_network() -> bool:
 			return false
 		Log.info("map %s: %d cells in %.1f ms" % [config.map_name, cells, (TickTimer.now_usec() - started) / 1000.0])
 	ServerSystems.install(run, net, mine)
+	if run.saves != null:
+		run.saves.save_dir = config.save_dir
+	var resuming: bool = not _resume.is_empty()
+	var placed: Dictionary = {}
 	if mine != null:
-		var placed: Dictionary = FixedMapLoader.populate(run, config.map_name, true, true)
+		placed = FixedMapLoader.populate(run, config.map_name, true, not resuming, not resuming)
+	if resuming:
+		var restored: Dictionary = SaveResume.apply(run, net, _resume)
+		Log.info("resumed run %s at tick %d (save %d), %d journaled falls and deaths applied" % [run.header.run_uuid,
+			run.tick, run.saves.seq if run.saves != null else 0, int(Variants.number(restored["journal_applied"]))])
+	if mine != null:
 		# QA-01's minimal M1 arrival: a welcomed player's miner on base camp's cage deck (MOD-04 replaces it).
 		arrival = M1Arrival.new(run, mine)
+		arrival.adopt(net.seats)
 		net.welcomed.connect(arrival.on_welcomed)
 		Log.info("map %s placed: %d coat heaps, %d creatures, %d items, %d hooks" % [config.map_name,
 			Variants.array(placed["heaps"]).size(), Variants.dict(placed["creatures"]).size(), Variants.array(placed["items"]).size(),
@@ -251,7 +282,8 @@ func _finish(code: int, why: String) -> void:
 		return
 	_finishing = true
 	Log.info("server ending: %s" % why)
-	Log.info("snapshot: NET-09 takes it here (not yet built)")
+	if run != null and run.saves != null:
+		run.saves.end_abnormally(run, why)
 	if host_link != null:
 		host_link.say_bye(why)
 		for _i: int in 10:  # 100 ms for the bye to reach the host before the link goes
@@ -350,6 +382,15 @@ func _finish_records() -> void:
 		return
 	file.store_string(JSON.stringify(stats, "\t"))
 	file.close()
+
+
+## NET-09: a fresh run's UUID (version 4, from the OS's cryptographic source); saves live under it.
+static func _new_run_uuid() -> String:
+	var b: PackedByteArray = Crypto.new().generate_random_bytes(16)
+	b[6] = (b[6] & 0x0f) | 0x40
+	b[8] = (b[8] & 0x3f) | 0x80
+	var h: String = b.hex_encode()
+	return "%s-%s-%s-%s-%s" % [h.substr(0, 8), h.substr(8, 4), h.substr(12, 4), h.substr(16, 4), h.substr(20, 12)]
 
 
 ## A fixed seed (dev and QA) or a fresh one. MOD-03 owns run creation; until then the server

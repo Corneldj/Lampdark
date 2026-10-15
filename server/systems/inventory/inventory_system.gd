@@ -506,3 +506,44 @@ func write_state(writer: SimStateWriter) -> void:
 			writer.put_i64(it.uid)
 			writer.put_i64(it.count)
 	writer.put_i64(actions.size())
+
+
+## NET-09: every miner's hands and belt, items with every state, and the uid counter. Items lying
+## in the mine are GEN-13's diff log's.
+func save_state() -> Dictionary:
+	var out: Dictionary = {}
+	for raw: Variant in hands.keys():
+		var h: HandsAndBelt = hands[raw]
+		var slots: Array = []
+		for it: Item in h.slots:
+			slots.append(StateDicts.item_to(it))
+		var notes: Array = []
+		for it: Item in h.notes:
+			notes.append(StateDicts.item_to(it))
+		out[raw] = {"lamp_hand": StateDicts.item_to(h.lamp_hand), "hooked": h.hooked, "load_kind": h.load_kind,
+			"free_hand": StateDicts.item_to(h.free_hand), "slots": slots, "selected": h.selected, "two_handed": h.two_handed,
+			"lamp_check": h.lamp_check, "chalk": h.chalk, "pocket_book": h.pocket_book, "notes": notes}
+	return {"hands": out, "next_uid": world._next_uid}
+
+
+func load_state(_r: RunState, state: Dictionary) -> void:
+	world._next_uid = maxi(world._next_uid, int(Variants.number(state.get("next_uid", 1))))
+	var saved: Dictionary = Variants.dict(state.get("hands", {}))
+	for raw: Variant in saved.keys():
+		var d: Dictionary = saved[raw]
+		var h: HandsAndBelt = hands_of(int(Variants.number(raw)), int(Variants.number(d["lamp_check"])))
+		h.lamp_hand = StateDicts.item_from(d["lamp_hand"])
+		h.hooked = Variants.flag(d["hooked"])
+		h.load_kind = int(Variants.number(d["load_kind"]))
+		h.free_hand = StateDicts.item_from(d["free_hand"])
+		var slots: Array = Variants.array(d["slots"])
+		for i: int in mini(slots.size(), h.slots.size()):
+			h.slots[i] = StateDicts.item_from(slots[i])
+		h.selected = int(Variants.number(d["selected"]))
+		h.two_handed = Variants.flag(d["two_handed"])
+		h.lamp_check = int(Variants.number(d["lamp_check"]))
+		h.chalk = Variants.flag(d["chalk"])
+		h.pocket_book = Variants.flag(d["pocket_book"])
+		h.notes.clear()
+		for n: Variant in Variants.array(d["notes"]):
+			h.notes.append(StateDicts.item_from(n))

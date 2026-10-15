@@ -11,7 +11,8 @@ class_name Protocol
 ## 9: MNR-09's ActionRecord.Kind.THROW.
 ## 10: MNR-10's chalk glyphs on tile records (frame version 5).
 ## 11: NET-11's Reject.SEAT_KEPT.
-const PROTOCOL_VERSION: int = 11
+## 12: NET-09's SAVE_DATA, JOURNAL and SAVE_ACK.
+const PROTOCOL_VERSION: int = 12
 
 enum Msg {
 	HELLO = 1,
@@ -39,6 +40,9 @@ enum Msg {
 	CALLOUT = 23,  ## SND-11: one callout as one listener hears it (CalloutRecord), control lane; illusions and echoes too
 	WATCH = 24,  ## RSC-04: a watched teammate's frames as sent to them, 45 s late (DarkMessages), to a fallen client
 	REPLAY = 25,  ## RSC-04: the victim's own frames before their fall (DarkMessages), once, to the victim
+	SAVE_DATA = 26,  ## NET-09: a snapshot's changed sections, sealed (SaveWire), bulk lane, to every member
+	JOURNAL = 27,  ## NET-09: one fall or death entry, sealed (SaveWire), control lane, to every member the tick it happens
+	SAVE_ACK = 28,  ## NET-09: a member stored a snapshot (its sequence number), client to server, control lane
 }
 
 enum Reject {

@@ -25,6 +25,8 @@ func test_three_minutes_of_the_record_soak() -> void:
 	gut.p("record: max %.2f MB (ring %.2f MB), windows %.2f MB, %s falls, %s thinned; record system p99 %s us" % [
 		float(Variants.number(st["total_max"])) / 1048576.0, float(Variants.number(st["ring_max"])) / 1048576.0,
 		float(Variants.number(st["windows_bytes"])) / 1048576.0, st["falls"], st["thinned"], Variants.dict(st["record_usec"]).get("p99")])
+	gut.p("saves: %s written, largest %.2f MB %s, capture max %s us" % [st["saves_written"],
+		float(Variants.number(st["save_bytes_max"])) / 1048576.0, str(st["save_sections_max"]), st["save_capture_usec_max"]])
 	var errors: Array[String] = soak.call(&"verify", report)
 	assert_eq(errors, [] as Array[String])
 	assert_eq(int(Variants.number(st["falls"])), 20)

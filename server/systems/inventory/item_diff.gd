@@ -70,6 +70,11 @@ func payload(run: RunState, it: Item, at: Vector2) -> Dictionary:
 	if run.lamps != null and run.lamps.lamps.has(it.uid):
 		var l: GauzeLamp = run.lamps.lamps[it.uid]
 		p["lamp_phase"] = l.phase
+	elif it.state.has("restore_phase"):
+		# Replayed, not yet adopted by the lamp system (NET-09 saves at once on a resume): as it was.
+		var state: Dictionary = p["state"]
+		p["lamp_phase"] = state["restore_phase"]
+		state.erase("restore_phase")
 	if not it.placement.is_empty():
 		p["placement"] = it.placement
 	return p

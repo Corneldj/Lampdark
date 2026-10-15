@@ -290,6 +290,11 @@ func _on_fell(entity: int, state_cause: String) -> void:
 	_to_emit.append(record)
 
 
+## NET-09: the body of `entity`, made if it has none (a journaled fall put back on a resume).
+func ensure_body(entity: int) -> BodyState:
+	return body_of(entity) if body_of(entity) != null else _new_body(entity)
+
+
 func _new_body(entity: int) -> BodyState:
 	var b: BodyState = BodyState.new()
 	b.entity = entity
@@ -323,3 +328,28 @@ func write_state(writer: SimStateWriter) -> void:
 		writer.put_bool(b.held_by_trap)
 		writer.put_bool(b.dead)
 	writer.put_i64(journal.size())
+
+
+## NET-09: the bodies (a carry in progress is not kept: a resume finds the load set down) and the
+## fall journal.
+func save_state() -> Dictionary:
+	var out: Dictionary = {}
+	for e: int in _sorted_bodies():
+		var b: BodyState = bodies[e]
+		out[e] = StateDicts.pick(b, ["posture", "on_floor", "on_table", "held_by_trap", "kept_in_lair", "dead", "fall_id"])
+	return {"bodies": out, "journal": journal.duplicate(true), "next_fall_id": _next_fall_id}
+
+
+func load_state(_r: RunState, state: Dictionary) -> void:
+	var saved: Dictionary = Variants.dict(state.get("bodies", {}))
+	for raw: Variant in saved.keys():
+		var b: BodyState = _new_body(int(Variants.number(raw)))
+		StateDicts.put(b, Variants.dict(saved[raw]))
+		b.carried_by = 0
+		b.dragged_by = 0
+		if not b.on_table:
+			b.on_floor = true
+	journal.clear()
+	for r: Variant in Variants.array(state.get("journal", [])):
+		journal.append(Variants.dict(r))
+	_next_fall_id = int(Variants.number(state.get("next_fall_id", 1)))

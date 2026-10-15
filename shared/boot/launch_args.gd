@@ -13,7 +13,7 @@ extends RefCounted
 enum Kind { FLAG, INT, PORT, ENUM, STRING, HOST_PORT, U64 }
 
 const USAGE: String = ("usage: lampblack [--server] [--mode friends|public|nightshift] [--transport enet|sdr|loopback]"
-	+ " [--loopback] [--port <n>] [--offline] [--parent-pid <pid>] [--control-port <n>] [--resume <path>]"
+	+ " [--loopback] [--port <n>] [--offline] [--parent-pid <pid>] [--control-port <n>] [--resume <path>] [--save-dir <path>]"
 	+ " [--connect <host:port>] [--no-steam] [--name <persona>] [--sdr-fake <lag_ms,loss_pct>] [--host-relay]"
 	+ " [--seed <u64>] [--map <name>] [--qa-token <t>] [--bot <brain>]"
 	+ " [--bot-seed <u64>] [--link <rtt_ms,loss_pct>] [--receive-log <path>] [--record-inputs <path>] [--stream-audit <path>]"
@@ -33,6 +33,7 @@ const SPEC: Dictionary = {
 	"--parent-pid": [Kind.INT, false, []],
 	"--control-port": [Kind.PORT, false, []],
 	"--resume": [Kind.STRING, false, []],
+	"--save-dir": [Kind.STRING, false, []],
 	"--connect": [Kind.HOST_PORT, true, []],
 	"--no-steam": [Kind.FLAG, true, []],
 	"--name": [Kind.STRING, true, []],
@@ -185,6 +186,8 @@ func _apply(name: String, kind: Kind, value: String, options: Array) -> void:
 			server.control_port = value.to_int()
 		"--resume":
 			server.resume_path = value
+		"--save-dir":
+			server.save_dir = value
 		"--connect":
 			client.connect_target = value
 		"--no-steam":

@@ -455,3 +455,28 @@ func write_state(writer: SimStateWriter) -> void:
 		m.overlays.write_state(writer)
 
 #endregion
+
+
+## NET-09: each miner's life state, outcome, overlays and holds (no grab: snapshots wait for none).
+func save_state() -> Dictionary:
+	var out: Dictionary = {}
+	for raw: Variant in _miners.keys():
+		var m: Miner = _miners[raw]
+		out[raw] = {"slot": m.slot, "life": m.life, "outcome": m.outcome, "holder": m.holder.duplicate(true), "dragged": m.dragged,
+			"fell_by_pin": m.fell_by_pin, "crawl_window": m.crawl_window,
+			"overlays": StateDicts.pick(m.overlays, ["hurt_until", "marks", "rock_touched_until"])}
+	return {"miners": out}
+
+
+func load_state(_r: RunState, state: Dictionary) -> void:
+	var miners: Dictionary = Variants.dict(state.get("miners", {}))
+	for raw: Variant in miners.keys():
+		var d: Dictionary = miners[raw]
+		var m: Miner = add_miner(int(Variants.number(raw)), int(Variants.number(d["slot"])))
+		m.life = int(Variants.number(d["life"]))
+		m.outcome = int(Variants.number(d["outcome"]))
+		m.holder = Variants.dict(d["holder"]).duplicate(true)
+		m.dragged = Variants.flag(d["dragged"])
+		m.fell_by_pin = Variants.flag(d["fell_by_pin"])
+		m.crawl_window = Variants.flag(d["crawl_window"])
+		StateDicts.put(m.overlays, Variants.dict(d["overlays"]))

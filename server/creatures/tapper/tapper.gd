@@ -310,3 +310,8 @@ static func start_tile(run: RunState, rings: Vector2 = Vector2(-1, -1), rich: Ca
 	options.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
 	var rng: LbRng = run.stream(HashDomain.CREATURES_TAPPER, PackedInt64Array([1]))
 	return options[rng.range(0, options.size() - 1)]
+
+
+## Retreating it goes on retreating; else it patrols (NET-09, Proposed).
+func resume_state(saved: StringName) -> StringName:
+	return &"retreat" if saved == &"retreat" else &"patrol"

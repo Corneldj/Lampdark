@@ -210,6 +210,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.drops = DropHandler.new()
 	run.drops.bind(run, net)
 	run.add_system(run.drops)
+	# NET-09: snapshots every 30 s, the journal, knock-off saves (never in public).
+	run.saves = Saves.new()
+	run.saves.bind(run, net)
+	run.add_system(run.saves)
 	run.record = RunRecord.new()
 	run.record.bind(run, net)
 	run.add_system(run.record)

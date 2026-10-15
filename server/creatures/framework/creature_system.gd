@@ -405,3 +405,56 @@ func _check_steps(run: RunState) -> void:
 			if OS.is_debug_build():
 				push_error("CreatureSystem: %s moved %.3f tiles in one tick (limit %.3f)" % [c.kind_name(), step, c.max_speed * dt])
 		_last[c.entity_id] = now
+
+
+## NET-09: every creature: its kind, its entity (the registry keeps it), the state it was in, its
+## retreat, its random stream and its kind's own (Creature.save_extra).
+func save_state() -> Dictionary:
+	var out: Array = []
+	for c: Creature in creatures:
+		out.append({"kind": c.kind, "entity": c.entity_id, "state": c.state.name if c.state != null else &"",
+			"retreat_until": c.retreat_until, "rng": c.rng.get_state() if c.rng != null else 0, "has_rng": c.rng != null, "extra": c.save_extra()})
+	return {"creatures": out}
+
+
+## Back on its own entity, calm (Creature.resume_state), its stream where it was.
+func load_state(run: RunState, state: Dictionary) -> void:
+	for raw: Variant in Variants.array(state.get("creatures", [])):
+		var d: Dictionary = raw
+		var c: Creature = make_kind(int(Variants.number(d["kind"])))
+		var entity: int = int(Variants.number(d["entity"]))
+		if c == null or not run.registry.has(entity):
+			continue
+		c.entity_id = entity
+		c.system = self
+		c.rng = run.stream(int(Variants.number(DOMAINS[c.kind])), PackedInt64Array([0]))
+		if Variants.flag(d.get("has_rng", false)):
+			c.rng.set_state(int(Variants.number(d["rng"])))
+		c.states.clear()
+		for s: CreatureState in c.define_states():
+			c.states[s.name] = s
+		c.state = c.states[c.state_order()[0]]
+		creatures.append(c)
+		gate.creatures.append(c)
+		_last[c.entity_id] = run.registry.get_entity(entity).position
+		guards.register(c.kind, c.guard_predicate())
+		c.on_spawned(run)
+		c.load_extra(run, Variants.dict(d.get("extra", {})))
+		c.retreat_until = int(Variants.number(d.get("retreat_until", -1)))
+		var want: StringName = c.resume_state(StringName(str(d["state"])))
+		if c.states.has(want) and want != c.state.name:
+			c.enter(run, want, "resumed")
+		log.add(run.tick, &"resumed_from_save", {"creature": c.kind_name(), "state": c.state.name})
+		spawned.emit(c)
+
+
+## A new creature of `kind` (Moth, Tapper or Stythe), or null.
+static func make_kind(kind: int) -> Creature:
+	match kind:
+		WorldIds.EntityKind.MOTH:
+			return Moth.new()
+		WorldIds.EntityKind.TAPPER:
+			return Tapper.new()
+		WorldIds.EntityKind.STYTHE:
+			return StytheCreature.new()
+	return null

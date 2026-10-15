@@ -243,3 +243,16 @@ func _log_light(run: RunState, why: MothSleep.Cause) -> void:
 	system.log.add(run.tick, &"moth_stir", {"cause": str(MothSleep.Cause.keys()[why]).to_lower(),
 		"light": run.light.grid.value(t) / 1000.0, "brightest": run.light.grid.brightest_source(t), "by_miner": shares,
 		"lamps": lamps})
+
+
+func save_extra() -> Dictionary:
+	return {"roost": roost}
+
+
+func load_extra(_run: RunState, extra: Dictionary) -> void:
+	roost = extra.get("roost", roost)
+
+
+## Asleep it stays asleep; awake it prowls (NET-09, Proposed).
+func resume_state(saved: StringName) -> StringName:
+	return &"asleep" if saved == &"asleep" or saved == &"stirring" or saved == &"settling" else &"prowl"

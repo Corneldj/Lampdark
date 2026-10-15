@@ -289,3 +289,12 @@ func write_state(writer: SimStateWriter) -> void:
 	counters.write_state(writer)
 	writer.put_i64(shots.size())
 	writer.put_i64(flashes.size())
+
+
+## NET-09: each creature's hits and retreats (the counters go into snapshots).
+func save_state() -> Dictionary:
+	return {"counters": counters.counters.duplicate(true)}
+
+
+func load_state(_r: RunState, state: Dictionary) -> void:
+	counters.counters = Variants.dict(state.get("counters", {})).duplicate(true)

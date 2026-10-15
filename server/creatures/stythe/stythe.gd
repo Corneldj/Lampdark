@@ -330,3 +330,21 @@ func _highest_marked(run: RunState) -> int:
 			best = m
 			best_pull = p
 	return best
+
+
+func save_extra() -> Dictionary:
+	return {"lair": lair, "kept": kept.duplicate(), "thin": thin}
+
+
+func load_extra(_run: RunState, extra: Dictionary) -> void:
+	lair = extra.get("lair", lair)
+	kept.assign(Variants.array(extra.get("kept", [])))
+	thin = Variants.flag(extra.get("thin", thin))
+	senses.on_tiles_changed()
+
+
+## Retreating it goes on home; keeping, it keeps; else it lurks (NET-09, Proposed).
+func resume_state(saved: StringName) -> StringName:
+	if saved == &"retreat":
+		return &"retreat"
+	return &"keep" if not kept.is_empty() else &"lurk"

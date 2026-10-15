@@ -256,3 +256,22 @@ func write_state(writer: SimStateWriter) -> void:
 		writer.put_i64(int(Variants.number(raw)))
 		writer.put_i64(int(Variants.number(lair_ticks[raw])))
 	writer.put_i64(arrivals.size())
+
+
+## NET-09: lair time per miner (the row is GEN-13's LAIR record), and a given layout.
+func save_state() -> Dictionary:
+	var out: Dictionary = {"lair_ticks": lair_ticks.duplicate()}
+	if _given:
+		out["tiles"] = tiles()
+		out["row"] = _row.duplicate()
+	return out
+
+
+func load_state(_r: RunState, state: Dictionary) -> void:
+	lair_ticks = Variants.dict(state.get("lair_ticks", {})).duplicate()
+	if state.has("tiles"):
+		var t: Array[Vector2i] = []
+		t.assign(Variants.array(state["tiles"]))
+		var r: Array[Vector2i] = []
+		r.assign(Variants.array(state["row"]))
+		set_layout(t, r)

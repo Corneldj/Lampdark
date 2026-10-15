@@ -239,3 +239,21 @@ static func _life(run: RunState, victim: int) -> int:
 	if run.miner_state == null or run.miner_state.miner(victim) == null:
 		return MinerTransitions.Life.UPRIGHT
 	return run.miner_state.life(victim)
+
+
+## NET-09: the traps holding miners (a grab never: snapshots wait for none).
+func save_state() -> Dictionary:
+	var out: Dictionary = {}
+	for raw: Variant in caught.keys():
+		var h: CaughtHold = caught[raw]
+		out[raw] = StateDicts.pick(h, ["trap_id", "kind", "victim", "began_tick"])
+	return {"caught": out, "next_id": _next_id}
+
+
+func load_state(_r: RunState, state: Dictionary) -> void:
+	var saved: Dictionary = Variants.dict(state.get("caught", {}))
+	for raw: Variant in saved.keys():
+		var h: CaughtHold = CaughtHold.new()
+		StateDicts.put(h, Variants.dict(saved[raw]))
+		caught[int(Variants.number(raw))] = h
+	_next_id = int(Variants.number(state.get("next_id", _next_id)))

@@ -165,3 +165,15 @@ func write_state(writer: SimStateWriter) -> void:
 	writer.put_bool(powered)
 	writer.put_i64(occupants.size())
 	writer.put_i64(medbay.kits)
+
+
+## NET-09: power, the medbay's kits and tables, the battery rack (gates are GEN-13's records).
+func save_state() -> Dictionary:
+	return {"powered": powered, "kits": medbay.kits, "tables": medbay.bodies.duplicate(), "rack": rack.slots.duplicate()}
+
+
+func load_state(_r: RunState, state: Dictionary) -> void:
+	powered = Variants.flag(state.get("powered", powered))
+	medbay.kits = int(Variants.number(state.get("kits", medbay.kits)))
+	medbay.bodies = Variants.dict(state.get("tables", {})).duplicate()
+	rack.slots = Variants.dict(state.get("rack", {})).duplicate()
