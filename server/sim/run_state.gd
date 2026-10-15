@@ -100,6 +100,8 @@ var dark: DarkSystem = null
 var candles: Candles = null
 var flares: Flares = null
 var stones: Stones = null
+## MNR-12: tools, parts and springing a known trap on purpose.
+var tools_parts: ToolsParts = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

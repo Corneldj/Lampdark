@@ -93,6 +93,9 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.stones = Stones.new()
 	run.stones.bind(run)
 	run.add_system(run.stones)
+	run.tools_parts = ToolsParts.new()
+	run.tools_parts.bind(run)
+	run.add_system(run.tools_parts)
 	# A retreat drops the grab (CRT-01); a grab's end stands its creature's hunt down.
 	run.creatures.grab_release = func(_c: Creature, miner: int) -> void:
 		var g: GrabHold = run.holds.grab_of(miner)
