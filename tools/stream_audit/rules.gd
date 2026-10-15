@@ -28,6 +28,7 @@ const MESSAGES: Dictionary = {
 	"KNOCKS": "knocks",
 	"RELAY_TAG": "client_only",  # STM-04: the host's relay to its own server, never downstream
 	"CLOSE_UP": "closeup",  # UI-02: the own close-up and the board's seat, to that client only
+	"CALLOUT": "callout",  # SND-11: a callout as this client hears it (illusions and echoes alike)
 }
 
 ## Each record a frame carries -> its rule (client_view's layout, FrameDecoder's fields).

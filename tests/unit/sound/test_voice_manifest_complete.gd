@@ -1,7 +1,7 @@
 extends GutTest
 ## SND-13 (GDD §14.2, Gameplay §6.7): the manifest lists eight voices x 16 callout lines x 3 bands,
 ## 10 digits x 2 forms, 6 miner sounds and the roll-call fragments, and every file exists for every
-## voice and form; no other file sits beside them. Callouts last voice.callout_max_duration_s or less.
+## voice and form; no other file sits beside them. A callout lasts voice.callout_max_duration_s or less.
 ## The five copyable lines are flagged for CRT-10. Every line has its subtitle, and no text holds a name.
 
 const FIXTURE_NAMES: String = "res://tests/fixtures/voices/names_sample.json"

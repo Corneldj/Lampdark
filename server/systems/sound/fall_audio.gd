@@ -194,6 +194,11 @@ func _slot_of(entity: int) -> int:
 	return -1
 
 
+## SND-13's voice index for a slot (SND-11's callouts speak in it too).
+func voice_for(slot: int) -> int:
+	return _voice(slot)
+
+
 func _voice(slot: int) -> int:
 	if voice_of.is_valid():
 		return int(Variants.number(voice_of.call(slot)))

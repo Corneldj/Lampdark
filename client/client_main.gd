@@ -61,6 +61,9 @@ var in_play: InPlayLayer = null
 var closeups: CloseupManager = null
 ## UI-03's captions and subtitles.
 var captions: CaptionLayer = null
+## SND-11's callouts: played as heard; the wheel's picks.
+var callout_player: CalloutPlayer = null
+var callout_wheel: CalloutWheel = null
 var _closeup_messages_seen: int = 0
 var _ui_violations_seen: Dictionary = {}
 var drawn: DrawnSet = DrawnSet.new()
@@ -207,6 +210,7 @@ func _process(delta: float) -> void:
 			voice_capture.tick(Time.get_ticks_usec())
 			voice_bands.ptt_held = router != null and router.push_to_talk_held
 			voice_playback.tick(connection, Transport.now_usec())
+			callout_player.tick(connection, events_player.listener)
 			if world_view != null:
 				var shown_band: int = InPlayLayer.breath_band(voice_bands.band, voice_bands.sending(),
 					mic_mode != null and mic_mode.voice_enabled(), router != null and router.aside_held)
@@ -293,6 +297,12 @@ func _start_input() -> void:
 	captions.system.arcs_only = audio_options.direction_only_arcs()
 	captions.wire(events_player, voice_playback, beds, deafness, knocks, func() -> Vector2: return events_player.listener)
 	add_child(captions)
+	# SND-11: callouts heard, and the wheel's picks settled before they go.
+	callout_player = CalloutPlayer.new()
+	callout_player.mixer = events_player.mixer
+	callout_player.on_caption = func(r: CalloutRecord, key: String, shares: PackedFloat32Array, direction: Variant, duration_s: float) -> void:
+		captions.system.on_callout(key, shares, r.band, CalloutPlayer.voice_id_of(r.voice), direction, duration_s, Time.get_ticks_msec() / 1000.0)
+	callout_wheel = CalloutWheel.new(bindings)
 	mic_mode.label_changed.connect(_send_mic_label)
 	Log.info("voice: capture ready, backend %s, mic mode %s" % [voice_capture.backend,
 		MicMode.Mode.keys()[voice_capture.effective_mode()]])
@@ -343,7 +353,7 @@ func _sample_input(shown_tick: int) -> InputRecord:
 	if steam != null and steam.overlay_active:
 		frame = InputRouter.neutral_frame(frame)
 	var record: InputRecord = router.sample(frame)
-	for action: Array in router.actions:
+	for action: Array in callout_wheel.filter(router.actions, Time.get_ticks_msec() / 1000.0):
 		connection.inputs.queue_action(int(Variants.number(action[0])) as ActionRecord.Kind, int(Variants.number(action[1])), shown_tick,
 			int(Variants.number(action[2])))
 	for ask: int in closeups.process_input(router):

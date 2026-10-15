@@ -94,6 +94,8 @@ var voice: VoiceSystem = null
 var voice_noise: VoiceNoise = null
 var heard: HeardTracker = null
 var voice_facts: VoiceFacts = null
+## SND-11's callouts.
+var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.
 var closeups: CloseupState = null
 ## NET-07's run record (server-only, outside the state hash).

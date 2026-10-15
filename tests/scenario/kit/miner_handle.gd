@@ -63,8 +63,8 @@ func say(band: int, ticks: int) -> InputScript:
 	return inputs.say(band, ticks)
 
 
-func callout(id: int, band: int) -> InputScript:
-	return inputs.callout(id, band)
+func callout(line: String, band: int) -> InputScript:
+	return inputs.callout(line, band)
 
 
 ## Emulated link on this client's connection, both directions (NET-12's filter when it lands).

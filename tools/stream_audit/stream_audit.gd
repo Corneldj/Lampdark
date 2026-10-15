@@ -328,6 +328,13 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 				_fail(slot, "DEAFENED", "deafened", "not exactly {duration_s, dip_db}")
 			elif run.deafen == null or not run.deafen.is_deafened(slot):
 				_fail(slot, "DEAFENED", "deafened", "to a client whose miner is not deafened")
+		"callout":
+			_lane(slot, lane, Lane.Id.CONTROL, type)
+			var r: CalloutRecord = CalloutRecord.decode(payload)
+			if r == null or r.encode() != payload:
+				_fail(slot, "CALLOUT", "callout", "not exactly {voice, line, band, apparent, gain, muffle, flags, mask}")
+			elif run.callouts == null or not run.callouts.sent.any(func(s: Array) -> bool: return int(Variants.number(s[0])) == slot and s[1] == payload):
+				_fail(slot, "CALLOUT", "callout", "a callout the server did not deliver to this client this tick")
 		"closeup":
 			_lane(slot, lane, Lane.Id.CONTROL, type)
 			var c: Dictionary = CloseupKind.decode(payload)

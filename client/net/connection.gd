@@ -46,6 +46,8 @@ var ambient_cues: Array[Dictionary] = []
 var deafened: Array[Dictionary] = []
 ## SND-15: KNOCKS messages not yet played (each is a fall's set; the message carries nothing).
 var knocks: int = 0
+## SND-11: callout records not yet played, in arrival order (CalloutPlayer drains them).
+var callouts: Array[CalloutRecord] = []
 ## UI-02: the own close-up and the board's seat as last received (CloseupKind.decode); {} before any.
 var closeup: Dictionary = {}
 var closeup_messages: int = 0
@@ -202,6 +204,10 @@ func _on_message(event: TransportEvent, now: int) -> void:
 		Protocol.Msg.KNOCKS:
 			if payload.is_empty():
 				knocks += 1
+		Protocol.Msg.CALLOUT:
+			var r: CalloutRecord = CalloutRecord.decode(payload)
+			if r != null:
+				callouts.append(r)
 		Protocol.Msg.CLOSE_UP:
 			var c: Dictionary = CloseupKind.decode(payload)
 			if not c.is_empty():

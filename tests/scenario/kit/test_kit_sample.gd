@@ -123,7 +123,8 @@ func test_actions_and_voice_from_the_second_miner() -> void:
 	for a: Applied in log:
 		callouts.append_array(a.actions)
 	assert_eq(callouts.size(), 1)
-	assert_eq([callouts[0].kind, callouts[0].arg, callouts[0].aim], [ActionRecord.Kind.CALLOUT, 7, 2])
+	var gate: Array = [ActionRecord.Kind.CALLOUT, Intents.wheel_arg_distance(CalloutLines.ring_distance(2)), Intents.facing_u16(120.0)]
+	assert_eq([callouts[0].kind, callouts[0].arg, callouts[0].aim], gate, "'Gate!' (slice 7) at talk")
 	assert_eq(bob.voice_frames_sent, 4, "four band-only voice frames, no microphone")
 
 

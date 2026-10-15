@@ -92,10 +92,14 @@ func say(band: int, ticks: int) -> Self:
 	return self
 
 
-## A callout: SND-13's line id; the band rides in the aim field until MNR-15 fixes the encoding.
-func callout(id: int, band: int) -> Self:
+## A callout: SND-13's line id (CalloutLines.WHEEL or JOB_PAGE) at a band (1 whisper, 2 talk, 3
+## shout), picked as the wheel does: the slice's centre angle and the middle of the band's ring.
+func callout(line: String, band: int) -> Self:
+	var job: bool = CalloutLines.JOB_PAGE.has(line)
+	var lines: Array[String] = CalloutLines.JOB_PAGE if job else CalloutLines.WHEEL
+	var angle: float = fposmod(lines.find(line) * 360.0 / lines.size() - 90.0, 360.0)
 	var list: Array = _actions.get(cursor, [])
-	list.append([ActionRecord.Kind.CALLOUT, id, band])
+	list.append([ActionRecord.Kind.CALLOUT, Intents.wheel_arg_distance(CalloutLines.ring_distance(band)), Intents.facing_u16(angle)])
 	_actions[cursor] = list
 	return self
 

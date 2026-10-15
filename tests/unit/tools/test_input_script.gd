@@ -28,9 +28,10 @@ func test_move_hold_and_face_compose() -> void:
 
 func test_actions_and_events_by_tick() -> void:
 	var s: InputScript = InputScript.new()
-	s.at(4).press(ActionRecord.Kind.TRIGGER, 0, 90.0).callout(11, 2).say(1, 3)
+	s.at(4).press(ActionRecord.Kind.TRIGGER, 0, 90.0).callout("help", 2).say(1, 3)
 	s.at(9).disconnect_at().wait(5).reconnect_at()
-	assert_eq(s.actions_at(4), [[ActionRecord.Kind.TRIGGER, 0, 16384], [ActionRecord.Kind.CALLOUT, 11, 2]])
+	var help: Array = [ActionRecord.Kind.CALLOUT, Intents.wheel_arg_distance(CalloutLines.ring_distance(2)), Intents.facing_u16(-60.0)]
+	assert_eq(s.actions_at(4), [[ActionRecord.Kind.TRIGGER, 0, 16384], help])
 	assert_eq(s.actions_at(5), [])
 	assert_eq(s.events_at(6), [["voice", 1]])
 	assert_eq(s.events_at(7), [])
