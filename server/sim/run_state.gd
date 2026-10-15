@@ -38,6 +38,8 @@ var inputs: InputService = null
 var mine: Mine = null
 ## GEN-13: what play changed in the mine, by cell.
 var diff_log: DiffLog = null
+## CRT-15: the Stythe's lair: its layout, row, trail and air.
+var stythe_lair: StytheLair = null
 var light: LightSystem = null
 var road_graph: RoadGraphService = null
 ## VIS-03's seen sets, the only door to NET-04's encoder.

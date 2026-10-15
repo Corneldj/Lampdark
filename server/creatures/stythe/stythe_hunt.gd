@@ -54,15 +54,16 @@ func tick(run: RunState, st: StytheCreature) -> void:
 func _consider(run: RunState, st: StytheCreature) -> void:
 	if st.is_retreating():
 		return
-	if st.state.name == &"lurk":
+	# Keeping (CRT-15), it collects too, inside its territory: the trails converge on the lair.
+	if st.state.name == &"lurk" or st.state.name == &"keep":
 		var body: int = collectable(run, st)
 		if body != 0:
 			begin_collect(run, st, body)
 			return
 	for m: int in StytheEligibility.ranked(run, st):
 		var row: String = StytheEligibility.row(run, st, m)
-		if st.state.name == &"keep" and row != "reach" and not st.senses.in_territory(run, st, run.registry.get_entity(m).tile()):
-			continue  # keeping a body, it hunts only in its territory
+		if st.keeps() and row != "reach" and not st.senses.in_territory(run, st, run.registry.get_entity(m).tile()):
+			continue  # keeping a body (in any state), it hunts only in its territory
 		if st.system.gate.request_commit(run, st, m, row != "reach"):
 			target = m
 			_enter(run, st, &"hunt", "eligible: %s" % row)
@@ -81,8 +82,12 @@ func _hunt(run: RunState, st: StytheCreature) -> void:
 		st.begin_circle(run, lit_at)
 		_note(run, st, &"circle", "target lit")
 		return
-	if StytheEligibility.row(run, st, target).is_empty():
+	var row: String = StytheEligibility.row(run, st, target)
+	if row.is_empty():
 		end_hunt(run, st, "target ineligible")
+		return
+	if st.keeps() and row != "reach" and not st.senses.in_territory(run, st, e.tile()):
+		end_hunt(run, st, "out of its territory while it keeps")  # CRT-15
 		return
 	st.chase(run, target)
 	if e.position.distance_to(st.position(run)) <= Tuning.f(&"stythe.reach_tiles") + 1e-9 and not st.pushed \
@@ -183,6 +188,11 @@ func collectable(run: RunState, st: StytheCreature) -> int:
 			continue
 		var e: SimEntity = run.registry.get_entity(m)
 		if not st.unlit(run, e.tile()) or not st.senses.in_hunting_range(run, st, e.tile()):
+			continue
+		# CRT-15: what it keeps already lies where it belongs; keeping, it stays in its territory.
+		if st.kept.has(m) or (st.home != null and st.home.is_lair(e.tile())):
+			continue
+		if st.keeps() and not st.senses.in_territory(run, st, e.tile()):
 			continue
 		var answer: Mine.PathAnswer = run.mine.path_distance(from, e.tile(), reach) if run.mine != null else null
 		if answer != null and answer.distance >= 0.0 and answer.distance <= reach + 1e-6:

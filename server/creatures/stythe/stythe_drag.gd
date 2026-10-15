@@ -45,16 +45,35 @@ func tick(run: RunState, st: StytheCreature) -> void:
 	if light.x != 2147483647:
 		st.hunt.begin_flee(run, st, light, "light on it")
 		return
-	if st.tile(run) == st.lair or st.senses.lair_distance(run, st, st.tile(run)) == 0.0:
+	if st.at_home(run, st.tile(run)):
+		# Home before the victim's 20 s are out (CRT-15, Proposed): it holds them in the lair,
+		# still breakable, until they fall; then it lays the body.
+		if _conscious(run):
+			st.move.stop()
+			_carry(run, st)
+			_scrape(run, st)
+			return
 		st.reached_lair(run)
 		return
 	st.move.head_for(run, st, st.lair)
 	st.move.tick(run, st, Tuning.f(&"stythe.drag_speed"))
 	_carry(run, st)
+	_scrape(run, st)
+
+
+func _scrape(run: RunState, st: StytheCreature) -> void:
 	if run.tick >= next_scrape:
 		next_scrape = run.tick + maxi(1, roundi(Tuning.f(&"stythe.scrape_interval_s") * Tuning.f(&"net.tick_hz")))
 		if run.noise != null:
 			run.noise.emit(NoiseTypes.Type.DRAG_SCRAPE, run.registry.get_entity(victim).tile(), {"source": st.entity_id})
+
+
+## The victim is still awake in RSC-03's grab (its 20 s not yet out).
+func _conscious(run: RunState) -> bool:
+	if run.holds == null or grab_id < 0 or not run.holds.grabs.has(grab_id):
+		return false
+	var g: GrabHold = run.holds.grabs[grab_id]
+	return g.state == GrabHold.State.ACTIVE
 
 
 ## The victim rides on the Stythe; each new tile is a trail tile with the drag's heading.

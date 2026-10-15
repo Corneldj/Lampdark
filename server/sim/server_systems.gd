@@ -69,6 +69,11 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 		# CRT-14: the Stythe's tell reaches SND-08's crackle and VIS-10's bite.
 		if c is StytheCreature:
 			var st: StytheCreature = c as StytheCreature
+			# CRT-15: its lair, and its blood trail smeared through VIS-10's trail (GEN-13 keeps it).
+			run.stythe_lair.attach(run, st)
+			if run.vision != null:
+				run.stythe_lair.trail.smear = run.vision.mark_trail
+				run.stythe_lair.trail.wipe = run.vision.erase_trail
 			if run.voice != null:
 				run.voice.conditions.stythe_tells = func() -> Array: return st.tell_points(run)
 			if run.vision != null:
@@ -77,6 +82,9 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 					for p: Variant in st.tell_points(r):
 						out.append({"position": p, "thin": st.thin})
 					return out)
+	run.stythe_lair = StytheLair.new()
+	run.stythe_lair.bind(run)
+	run.add_system(run.stythe_lair)
 	run.crew = CrewCensus.new()
 	run.crew.bind(run)
 	run.add_system(run.crew)

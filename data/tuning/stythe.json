@@ -187,6 +187,16 @@
 			"kind": "param",
 			"note": "ticket CRT-15"
 		},
+		"stythe.lair_radius_tiles": {
+			"value": 4,
+			"type": "int",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket CRT-15: the lair's tiles until GEN-10 places it: every floor tile within this path distance of the Stythe's lair tile, the row in row-major order"
+		},
 		"stythe.lurk_move_s": {
 			"value": [
 				60,

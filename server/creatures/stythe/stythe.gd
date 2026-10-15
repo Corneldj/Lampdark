@@ -24,8 +24,10 @@ var thin: bool = false
 var staged: Callable = func() -> bool: return false
 ## LFT-09's apex: () -> Variant, the point at the gates to lurk near while the engine runs, or null.
 var apex_point: Callable = func() -> Variant: return null
-## CRT-15: the bodies it keeps (entity ids). CRT-14 adds a victim brought home.
+## CRT-15: the bodies it keeps (entity ids): laid in its row and still lying on the lair's tiles.
 var kept: Array[int] = []
+## CRT-15: its lair (the layout, the row, the trail, the air); ServerSystems sets it at spawn.
+var home: StytheLair = null
 ## MNR-08: (run, source, seconds) -> bool, an electric lamp drained instead of snuffed.
 var electric_drain: Callable = func(_r: RunState, _source: int, _seconds: float) -> bool: return false
 var senses: StytheSenses = StytheSenses.new()
@@ -153,15 +155,31 @@ func on_retreat_ended(run: RunState, _toward_base: bool) -> void:
 	enter(run, &"lurk", "retreat over")
 
 
-## Home with a victim (CRT-15 lays the body in its row): it keeps them, and guards.
+## Home with a body (CRT-15): it lets go, lays the body straight in the next slot of its row, and
+## keeps them, guarding.
 func reached_lair(run: RunState) -> void:
-	if drag.victim != 0 and not kept.has(drag.victim):
-		kept.append(drag.victim)
+	var victim: int = drag.victim
+	var dragged: int = drag.tiles.size()
 	move.stop()
 	hunt.target = 0
-	if not drag.collected:
+	if victim != 0:
+		# The grab ends as a body's drag does (RSC-03): the victim lies where it is laid.
+		drag.drop(run, self, GrabHold.Outcome.TIMED_OUT)
+		if home != null:
+			home.lay(run, self, victim, dragged)
+		if not kept.has(victim):
+			kept.append(victim)
+		lurk_until = -1
+	elif not drag.collected:
 		system.gate.stand_down(run, self, "home")
 	enter(run, &"keep", "lair reached")
+
+
+## Whether `tile` is home: the lair's tiles (CRT-15), else the lair tile itself.
+func at_home(run: RunState, tile_now: Vector2i) -> bool:
+	if home != null:
+		return home.is_lair(tile_now)
+	return tile_now == lair or senses.lair_distance(run, self, tile_now) == 0.0
 
 
 func shift_timers(by: int) -> void:
@@ -197,12 +215,13 @@ func think(run: RunState) -> void:
 		move.tick(run, self, Tuning.f(&"stythe.circle_speed") if state.name == &"circle" else Tuning.f(&"stythe.speed"))
 
 
-## Through the dark toward a miner (CRT-14's Hunt): never past its territory in a staged run.
+## Through the dark toward a miner (CRT-14's Hunt): never past its territory in a staged run, or
+## while it keeps a body (CRT-15).
 func chase(run: RunState, miner: int) -> void:
 	var e: SimEntity = run.registry.get_entity(miner)
 	if e == null:
 		return
-	if Variants.flag(staged.call()) and not senses.in_territory(run, self, e.tile()):
+	if (Variants.flag(staged.call()) or keeps()) and not senses.in_territory(run, self, e.tile()):
 		return
 	move.head_for(run, self, e.tile())
 
@@ -234,7 +253,9 @@ func _lurk(run: RunState) -> void:
 				var n: Vector2i = near
 				move.head_for(run, self, n)
 			return
-	if lurk_until >= 0 and run.tick < lurk_until and lurk_spot.x != 2147483647:
+	# Keeping (CRT-15), a spot picked before, outside its territory, is given up.
+	var spot_ok: bool = lurk_spot.x != 2147483647 and (not keeps() or senses.in_territory(run, self, lurk_spot))
+	if lurk_until >= 0 and run.tick < lurk_until and spot_ok:
 		move.head_for(run, self, lurk_spot)
 		return
 	var span: Vector2 = Tuning.range_f(&"stythe.lurk_move_s")

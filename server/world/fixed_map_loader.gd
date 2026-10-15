@@ -100,6 +100,9 @@ static func populate(run: RunState, map_name: String, base_camp: bool = true, fr
 			continue
 		if run.creatures.place_now(run, c, tile) == OK:
 			Variants.dict(out["creatures"])[str(d["kind"])] = c.entity_id
+			# CRT-15: a Stythe's lair, until GEN-10 places it: {tile, tiles, row} (tiles as [x, y]).
+			if c is StytheCreature and d.has("lair"):
+				_lair(run, c as StytheCreature, Variants.dict(d["lair"]))
 	for raw: Variant in Variants.array(p.get("items", [])):
 		var d: Dictionary = raw
 		var at: Vector2 = Vector2(_tile(d["tile"])) + Vector2(0.5, 0.5)
@@ -117,6 +120,19 @@ static func populate(run: RunState, map_name: String, base_camp: bool = true, fr
 		if run.inventory.world.put(run, item, at) != 0:
 			Variants.array(out["items"]).append(kind_name)
 	return out
+
+
+static func _lair(run: RunState, st: StytheCreature, lair: Dictionary) -> void:
+	if lair.has("tile"):
+		st.lair = _tile(lair["tile"])
+	var tiles: Array[Vector2i] = []
+	for raw: Variant in Variants.array(lair.get("tiles", [])):
+		tiles.append(_tile(raw))
+	var row: Array[Vector2i] = []
+	for raw: Variant in Variants.array(lair.get("row", [])):
+		row.append(_tile(raw))
+	if not tiles.is_empty() and run.stythe_lair != null:
+		run.stythe_lair.set_layout(tiles, row)
 
 
 static func _tile(raw: Variant) -> Vector2i:
