@@ -1,5 +1,5 @@
 {
-	"hash": "7bd845ffac6472c8c14b6ea30cbccb3f55dd0738e120d398ecdc1f1cc4db0970",
+	"hash": "98246daf31e29acda010e89e9339ce0cda9043849dd033ef24be4f3903ebef2d",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -119,6 +119,20 @@
 			"value": 1.0,
 			"type": "float",
 			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"items.stone_throw_max": {
+			"value": 8.0,
+			"type": "float",
+			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"items.stone_throw_min": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "tiles",
 			"visibility": "client",
 			"kind": "param"
 		},

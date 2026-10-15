@@ -58,8 +58,13 @@ func note(run: RunState, op: StringName, item: Item, miner: int) -> void:
 
 
 func _log(run: RunState, op: StringName, item: Item, entity: int, tile: Vector2i, miner: int) -> void:
-	changes.append({"tick": run.tick, "op": op, "uid": item.uid, "kind": item.kind, "count": item.count,
-		"entity": entity, "tile": tile, "miner": miner})
+	var row: Dictionary = {"tick": run.tick, "op": op, "uid": item.uid, "kind": item.kind, "count": item.count,
+		"entity": entity, "tile": tile, "miner": miner}
+	# MNR-09: a candle's or flare's remaining time, so a replay advances it (GEN-13).
+	if item.state.has("burn_ticks"):
+		row["burn_ticks"] = int(Variants.number(item.state["burn_ticks"]))
+		row["lit"] = Variants.flag(item.state.get("lit", false))
+	changes.append(row)
 
 
 func write_state(writer: SimStateWriter) -> void:

@@ -83,6 +83,16 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.closeups = CloseupState.new()
 	run.closeups.bind(run, net)
 	run.add_system(run.closeups)
+	# MNR-09's candles, flares and stones.
+	run.candles = Candles.new()
+	run.candles.bind(run)
+	run.add_system(run.candles)
+	run.flares = Flares.new()
+	run.flares.bind(run)
+	run.add_system(run.flares)
+	run.stones = Stones.new()
+	run.stones.bind(run)
+	run.add_system(run.stones)
 	# A retreat drops the grab (CRT-01); a grab's end stands its creature's hunt down.
 	run.creatures.grab_release = func(_c: Creature, miner: int) -> void:
 		var g: GrabHold = run.holds.grab_of(miner)

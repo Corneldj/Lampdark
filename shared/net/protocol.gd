@@ -8,7 +8,8 @@ class_name Protocol
 ## 6: UI-02's CLOSE_UP message and ActionRecord.Kind.CLOSE_UP.
 ## 7: SND-11's CALLOUT record.
 ## 8: RSC-04's WATCH and REPLAY, and ActionRecord.Kind.WATCH.
-const PROTOCOL_VERSION: int = 8
+## 9: MNR-09's ActionRecord.Kind.THROW.
+const PROTOCOL_VERSION: int = 9
 
 enum Msg {
 	HELLO = 1,

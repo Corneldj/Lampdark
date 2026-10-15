@@ -105,7 +105,10 @@ func test_candle_and_passed_flame() -> void:
 	var ann: MinerHandle = parts[1]
 	var l: GauzeLamp = parts[2]
 	var flames: Array[String] = []
-	s.run.lamps.naked_flame.connect(func(_t: Vector2i, cause: String) -> void: flames.append(cause))
+	# The relights' own naked flames (MNR-09's burning candle signals "lit_candle" where it lies).
+	s.run.lamps.naked_flame.connect(func(_t: Vector2i, cause: String) -> void:
+		if cause != "lit_candle":
+			flames.append(cause))
 	var a: Vector2i = s.fixture.spot("a")
 	s.run.inventory.world.put(s.run, s.run.inventory.world.make(ItemKinds.Kind.CANDLE, 1, {"lit": true}), Vector2(a) + Vector2(1.5, 0.5))
 	var act: TimedAction = Relight.candle_action(s.run, ann.entity_id, ann.entity_id)

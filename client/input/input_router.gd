@@ -42,6 +42,9 @@ var pocket_book_presses: int = 0
 ## two-handed carry or a two-person job (the job page), a lamp or candle in the lamp hand, an
 ## interactable identified in reach (UI-01's prompt), the ring's options while it is open (MNR-05).
 var revolver_drawn: bool = false
+## MNR-09: each belt slot's item kind and the free hand's (a stone slot throws on Use's release).
+var slot_kinds: Array[int] = []
+var free_kind: int = ItemKinds.Kind.NONE
 var carrying: bool = false
 ## RSC-04: coming round in the Dark (the callout wheel offers 'Help!' and a moan, no rings).
 var coming_round: bool = false
@@ -94,6 +97,7 @@ func sample(frame: Dictionary) -> InputRecord:
 		_holds(down)
 		_lamp_and_slot(down)
 		_fire(down)
+		_throw(frame, down)
 	_remember(down)
 	return record
 
@@ -118,7 +122,11 @@ func know_inventory(inventory: Dictionary) -> void:
 	lamp_in_hand = int(Variants.number(Variants.array(inventory["lamp"])[0])) != ItemKinds.Kind.NONE \
 		and not Variants.flag(inventory.get("hooked", false))
 	carrying = Variants.flag(inventory.get("two_handed", false))
-	revolver_drawn = int(Variants.number(Variants.array(inventory["free"])[0])) == ItemKinds.Kind.REVOLVER
+	free_kind = int(Variants.number(Variants.array(inventory["free"])[0]))
+	revolver_drawn = free_kind == ItemKinds.Kind.REVOLVER
+	slot_kinds.clear()
+	for raw: Variant in Variants.array(inventory.get("slots", [])):
+		slot_kinds.append(int(Variants.number(Variants.array(raw)[0])))
 
 
 ## The interact ring, from ClientConnection.ring (RingMessages.decode): its options while open.
@@ -363,6 +371,34 @@ func _lamp_and_slot(down: Dictionary) -> void:
 func _fire(down: Dictionary) -> void:
 	if _pressed("fire", down) and revolver_drawn and (record.holds & InputRecord.HOLD_AIM) != 0:
 		actions.append([ActionRecord.Kind.TRIGGER, 0, record.facing])
+
+
+## MNR-09: Use held on the stone slot aims, its release throws along the facing (§4.8). The distance
+## is the cursor's from the own miner's screen point in tiles, or the right stick's deflection
+## (centred items.stone_throw_min, full items.stone_throw_max, linear: Proposed); the server clamps
+## it. Nothing is drawn: no landing mark, arc or reticle. None with the free hand full or both hands.
+func _throw(frame: Dictionary, down: Dictionary) -> void:
+	var slot: int = record.selected_slot()
+	if slot >= slot_kinds.size() or slot_kinds[slot] != ItemKinds.Kind.STONE or carrying or free_kind != ItemKinds.Kind.NONE:
+		return
+	if not (Variants.flag(_prev.get("use", false)) and not Variants.flag(down.get("use", false))):
+		return
+	actions.append([ActionRecord.Kind.THROW, clampi(roundi(throw_distance(frame) * 100.0), 0, 0xFFFF), record.facing])
+
+
+func throw_distance(frame: Dictionary) -> float:
+	var near: float = Tuning.f(&"items.stone_throw_min")
+	var far: float = Tuning.f(&"items.stone_throw_max")
+	if family == "kbm":
+		var cursor: Vector2 = frame.get("cursor", Vector2(INF, INF))
+		var own: Vector2 = frame.get("own_screen", Vector2.ZERO)
+		if not cursor.is_finite():
+			return near
+		return clampf(cursor.distance_to(own) / Tuning.f(&"camera.tile_px_at_1080p"), near, far)
+	var stick: Vector2 = frame.get("face_stick", Vector2.ZERO)
+	var dead: float = Tuning.f(&"movement.facing_dead_zone")
+	var t: float = clampf((stick.length() - dead) / maxf(1.0 - dead, 1e-6), 0.0, 1.0)
+	return near + (far - near) * t
 
 
 func _latch(action: String, is_down: bool) -> bool:

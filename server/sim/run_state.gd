@@ -96,6 +96,10 @@ var heard: HeardTracker = null
 var voice_facts: VoiceFacts = null
 ## RSC-04's Dark: windows, the dream channel, watching.
 var dark: DarkSystem = null
+## MNR-09: candles, flares and stones.
+var candles: Candles = null
+var flares: Flares = null
+var stones: Stones = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

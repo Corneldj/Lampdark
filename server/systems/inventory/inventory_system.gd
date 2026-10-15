@@ -387,6 +387,11 @@ func _remove(h: HandsAndBelt, where: StringName, slot: int) -> void:
 			h.slots[slot] = null
 
 
+## The tile a set-down from `entity` (on `slot`) lands on: the faced tile, or its own if that is rock.
+func faced_tile(run: RunState, entity: int, slot: int) -> Vector2i:
+	return _faced_tile(run, entity, slot)
+
+
 func _faced_tile(run: RunState, entity: int, slot: int) -> Vector2i:
 	var me: SimEntity = run.registry.get_entity(entity)
 	var u: PackedFloat64Array = LbDetMath.unit(float(run.movement.facing_of(slot)) / 65536.0)

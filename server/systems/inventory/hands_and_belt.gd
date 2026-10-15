@@ -35,10 +35,20 @@ static func create(entity: int, check_number: int) -> HandsAndBelt:
 
 
 ## Stores an item by the §4.3 rules: a lamp to an empty lamp hand, a can to an empty free hand,
-## a note into the Pocket Book; anything else onto a matching partial stack, then an empty slot.
-## A lamp with its hand full falls back to a slot. Returns the count that did not fit (0: all
+## a note into the Pocket Book; anything else onto a matching partial stack (same kind and same
+## state: a half-burnt candle keeps its own slot), then an empty slot. A lamp with its hand full
+## falls back to a slot. MNR-09: a lit candle goes to an empty lamp hand like a lamp; a burning
+## flare only to an empty free hand, never the belt. Returns the count that did not fit (0: all
 ## stored; the caller keeps any remainder as the same Item with the count reduced).
 func store(item: Item) -> int:
+	if burning_flare(item):
+		if free_hand != null:
+			return item.count
+		free_hand = item
+		return 0
+	if lit_candle(item) and lamp_hand == null:
+		lamp_hand = item
+		return 0
 	match ItemKinds.hand_class(item.kind):
 		ItemKinds.HandClass.BOOK:
 			notes.append(item)
@@ -54,7 +64,7 @@ func store(item: Item) -> int:
 				return 0
 	var cap: int = ItemKinds.stack_size(item.kind)
 	for s: Item in slots:
-		if s != null and s.kind == item.kind and s.count < cap:
+		if s != null and stacks_with(s, item) and s.count < cap:
 			var moved: int = mini(cap - s.count, item.count)
 			s.count += moved
 			item.count -= moved
@@ -70,6 +80,10 @@ func store(item: Item) -> int:
 
 ## Whether `item` would fit whole without a swap.
 func fits(item: Item) -> bool:
+	if burning_flare(item):
+		return free_hand == null
+	if lit_candle(item) and lamp_hand == null:
+		return true
 	match ItemKinds.hand_class(item.kind):
 		ItemKinds.HandClass.BOOK:
 			return true
@@ -83,9 +97,21 @@ func fits(item: Item) -> bool:
 	for s: Item in slots:
 		if s == null:
 			room += cap
-		elif s.kind == item.kind:
+		elif stacks_with(s, item):
 			room += cap - s.count
 	return room >= item.count
+
+
+static func stacks_with(a: Item, b: Item) -> bool:
+	return a.kind == b.kind and a.state == b.state
+
+
+static func lit_candle(item: Item) -> bool:
+	return item != null and item.kind == ItemKinds.Kind.CANDLE and Variants.flag(item.state.get("lit", false))
+
+
+static func burning_flare(item: Item) -> bool:
+	return item != null and item.kind == ItemKinds.Kind.FLARE and Variants.flag(item.state.get("lit", false))
 
 
 ## Takes a slot's whole contents out (null if empty).
