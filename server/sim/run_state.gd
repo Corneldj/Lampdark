@@ -60,6 +60,8 @@ var feel: FeelSystem = null
 var ring: RingSystem = null
 ## MNR-06's gauze lamps: state machines and their light (server-only).
 var lamps: LampSystem = null
+## MNR-08: electric hand lamps.
+var electric: ElectricLamps = null
 ## NET-06: the body history and rewinds, the defender rule, the 'Now!' judge. Creature
 ## perception, pacing and illusions never read rewind (check_module_deps.sh).
 var rewind: Rewind = null

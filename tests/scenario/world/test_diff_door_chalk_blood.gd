@@ -1,9 +1,8 @@
 extends "res://tests/scenario/kit/scenario_test.gd"
 ## GEN-13: an air door worked open is a barrier record in its cell the same tick; a smeared tile is
 ## blood in its cell's packed set the same tick, a wiped one gone; both come back when the cell is
-## committed again, from the log alone. Chalk's owner (MNR-10) is not built yet: a stand-in owner
-## shows a chalk record replays between items and bodies and that compaction drops what it calls
-## default.
+## committed again, from the log alone. Chalk (MNR-10) replays between items and fixtures, and a
+## fall's erased chalk leaves the log.
 
 const W = preload("res://tests/scenario/world/diff_world.gd")
 
@@ -56,29 +55,31 @@ func test_blood_is_kept_packed_and_wiped() -> void:
 	assert_eq(s.run.vision.trails.size(), 7, "a resume, with nothing in the vision's memory, gets them all")
 
 
-func test_chalk_replays_in_order_and_compacts() -> void:
+func test_chalk_replays_in_order_and_is_erased_with_its_record() -> void:
 	var s: Scenario = make({"seed": 1323, "fixture": W.road()})
 	W.miner(s, "ann", Vector2i(3, 1))
 	s.step(2)
 	var order: Array[String] = []
-	s.run.diff_log.register(DiffLog.Kind.CHALK, func(_r: RunState, _c: Vector2i, key: String, _p: Dictionary, _t: int) -> void:
-		order.append("chalk " + key), Callable(),
-		func(_c: Vector2i, _k: String, p: Dictionary) -> bool: return Variants.flag(p.get("under_fall", false)))
 	s.run.diff_log.register(DiffLog.Kind.FIXTURE, func(_r: RunState, _c: Vector2i, key: String, _p: Dictionary, _t: int) -> void:
 		order.append("fixture " + key))
 	s.run.diff_log.record(W.FAR, DiffLog.Kind.FIXTURE, "phone:1", {"fitted": true})
-	s.run.diff_log.record(W.FAR, DiffLog.Kind.CHALK, "50,1:n", {"glyph": 3})
-	s.run.diff_log.record(W.FAR, DiffLog.Kind.CHALK, "51,1:n", {"glyph": 1, "under_fall": true})
+	# MNR-10's chalk, the real owner.
+	var store: ChalkStore = s.run.chalk.store
+	store.put(s.run, Vector2i(50, 1), ChalkMarks.Surface.FLOOR, ChalkMarks.glyph(ChalkMarks.Kind.DIGIT_3), 1)
+	store.put(s.run, Vector2i(51, 1), ChalkMarks.Surface.NORTH, ChalkMarks.glyph(ChalkMarks.Kind.CROSS), 1)
 	W.put(s, ItemKinds.Kind.SPANNER, Vector2i(50, 1))
 	s.run.vision.mark_trail(Vector2i(52, 1), 0)
-	W.evict(s, W.FAR)
-	W.restore(s, W.FAR)
-	assert_eq(order, ["chalk 50,1:n", "chalk 51,1:n", "fixture phone:1"] as Array[String], "chalk before fixtures")
 	var kinds: Array[int] = []
 	for r: Dictionary in s.run.diff_log.records(W.FAR):
 		kinds.append(int(Variants.number(r["kind"])))
 	assert_eq(kinds, [DiffLog.Kind.ITEM, DiffLog.Kind.CHALK, DiffLog.Kind.CHALK, DiffLog.Kind.BLOOD, DiffLog.Kind.FIXTURE] as Array[int],
 		"replay order: items, chalk and blood, fixtures")
-	s.run.diff_log.compact(s.run)
-	assert_true(s.run.diff_log.payload_of(W.FAR, DiffLog.Kind.CHALK, "51,1:n").is_empty(), "chalk its owner calls default is dropped")
-	assert_false(s.run.diff_log.payload_of(W.FAR, DiffLog.Kind.CHALK, "50,1:n").is_empty())
+	W.evict(s, W.FAR)
+	store.marks.clear()
+	W.restore(s, W.FAR)
+	assert_eq(ChalkMarks.kind_of(store.glyph_at(Vector2i(50, 1), ChalkMarks.Surface.FLOOR)), ChalkMarks.Kind.DIGIT_3, "chalk back")
+	assert_eq(ChalkMarks.kind_of(store.glyph_at(Vector2i(51, 1), ChalkMarks.Surface.NORTH)), ChalkMarks.Kind.CROSS)
+	assert_eq(order, ["fixture phone:1"] as Array[String], "fixtures last")
+	store.erase_chalk(s.run, [Vector2i(51, 0)] as Array[Vector2i])
+	assert_true(s.run.diff_log.payload_of(W.FAR, DiffLog.Kind.CHALK, "51,1:n").is_empty(), "a fall's erased chalk leaves the log")
+	assert_false(s.run.diff_log.payload_of(W.FAR, DiffLog.Kind.CHALK, "50,1:f").is_empty())

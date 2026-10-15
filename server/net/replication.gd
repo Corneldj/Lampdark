@@ -165,6 +165,8 @@ func _send_inventory(run: RunState, session: Sessions.Session) -> void:
 	var check: Dictionary = {}
 	if c != null and (c.record.holds & InputRecord.HOLD_CHECK_LAMP) != 0 and run.lamps != null:
 		check = run.lamps.check_record(miner)
+		if check.is_empty() and run.electric != null:
+			check = run.electric.check_record(miner)
 	var bytes: PackedByteArray = run.inventory.own_bytes(miner, check)
 	if _inventory_sent.get(session.slot, PackedByteArray()) == bytes:
 		return

@@ -41,6 +41,8 @@ func system_name() -> String:
 func bind(run: RunState) -> void:
 	if run.lamps != null:
 		run.lamps.dark_now = func(uid: int) -> bool: return blink_dark(run, uid)
+	if run.electric != null:
+		run.electric.dark_now = func(uid: int) -> bool: return blink_dark(run, uid)
 
 
 func tick(run: RunState) -> void:
@@ -80,6 +82,7 @@ func make(run: RunState, miner: int, slot: int, kind: LampSignalKind.Kind) -> St
 	if not why.is_empty():
 		return why
 	var l: GauzeLamp = run.lamps.lamp_in_hand(miner)
+	var electric: Item = _electric_in_hand(run, miner)
 	_clear(run, miner)
 	var hz: float = Tuning.f(&"net.tick_hz")
 	var seconds: float = Tuning.f(&"lamp.signal_duration_s")
@@ -87,7 +90,8 @@ func make(run: RunState, miner: int, slot: int, kind: LampSignalKind.Kind) -> St
 		seconds = Tuning.f(&"lamp.help_duration_s")
 	elif kind == LampSignalKind.Kind.POINT:
 		seconds = Tuning.f(&"lamp.point_duration_s")
-	var a: Dictionary = {"kind": kind, "start": run.tick, "until": run.tick + roundi(seconds * hz), "uid": l.uid if l != null else 0,
+	var uid: int = l.uid if l != null else (electric.uid if electric != null else 0)
+	var a: Dictionary = {"kind": kind, "start": run.tick, "until": run.tick + roundi(seconds * hz), "uid": uid,
 		"point_tile": Vector2i(-1, -1), "spot": 0}
 	if kind == LampSignalKind.Kind.POINT:
 		var t: Vector2i = point_target(run, miner, slot)
@@ -109,7 +113,8 @@ func refusal(run: RunState, miner: int, slot: int) -> String:
 	if run.lamps == null or run.inventory == null:
 		return "no lamps"
 	var l: GauzeLamp = run.lamps.lamp_in_hand(miner)
-	if l == null or not l.burning() or l.shutter_closed:
+	# MNR-08: an electric lamp switched on signals too.
+	if (l == null or not l.burning() or l.shutter_closed) and not ElectricLamps.is_on(_electric_in_hand(run, miner)):
 		return "no open lamp in hand"
 	if run.miner_state != null and run.miner_state.miner(miner) != null and not Variants.flag(run.miner_state.capabilities(miner)["lamp"]):
 		return "cannot use the lamp"
@@ -119,6 +124,13 @@ func refusal(run: RunState, miner: int, slot: int) -> String:
 	if run.voice != null and int(Variants.number(run.voice.route_of.get(slot, VoiceRoutes.Route.NORMAL))) == VoiceRoutes.Route.ASIDE:
 		return "the Aside"
 	return ""
+
+
+static func _electric_in_hand(run: RunState, miner: int) -> Item:
+	if run.inventory == null or not run.inventory.hands.has(miner):
+		return null
+	var it: Item = run.inventory.hands_of(miner).lamp_hand
+	return it if it != null and it.kind == ItemKinds.Kind.ELECTRIC_LAMP else null
 
 
 ## POINT's tile: along the facing, up to lamp.point_max_tiles, the last open tile before rock.

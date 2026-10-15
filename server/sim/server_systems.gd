@@ -53,6 +53,9 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.lamps = LampSystem.new()
 	run.lamps.bind(run)
 	run.add_system(run.lamps)
+	run.electric = ElectricLamps.new()
+	run.electric.bind(run)
+	run.add_system(run.electric)
 	run.rewind = Rewind.new()
 	run.rewind.bind(run)
 	run.add_system(run.rewind)
@@ -69,6 +72,9 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 		# CRT-14: the Stythe's tell reaches SND-08's crackle and VIS-10's bite.
 		if c is StytheCreature:
 			var st: StytheCreature = c as StytheCreature
+			# MNR-08: its snuff drains an electric lamp's battery instead.
+			st.snuff.electric_sources = run.electric.lit_sources
+			st.electric_drain = run.electric.drain_source
 			# CRT-15: its lair, and its blood trail smeared through VIS-10's trail (GEN-13 keeps it).
 			run.stythe_lair.attach(run, st)
 			if run.vision != null:

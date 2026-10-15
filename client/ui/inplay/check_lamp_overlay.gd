@@ -10,7 +10,7 @@ extends Node2D
 const W: float = 1920.0
 const H: float = 1080.0
 
-## {oil48, notches} while held; {} otherwise.
+## {oil48, notches} (or an electric lamp's {battery5}) while held; {} otherwise.
 var check: Dictionary = {}
 var lamp_kind: int = 0
 var shut: bool = false
@@ -46,6 +46,10 @@ func _draw() -> void:
 	draw_rect(fount, ScreenElementRegistry.DIM, false, 3.0)
 	var font: Font = ThemeDB.fallback_font
 	var size: int = ScreenElementRegistry.min_font_px()
+	# MNR-08: an electric lamp shows its battery instead of oil and notches: a cell, no number.
+	if check.has("battery5"):
+		_battery(Rect2(cx + 110.0, top + 40.0, 40.0, height - 80.0), float(Variants.number(check["battery5"])) * 5.0 / Tuning.f(&"lamp.electric_battery"))
+		return
 	if shut:
 		draw_string(font, Vector2(cx + 110.0, glass.get_center().y), UiText.text("ui.lamp_lit" if lit else "ui.lamp_out"),
 			HORIZONTAL_ALIGNMENT_LEFT, -1, size, ScreenElementRegistry.INK)
@@ -71,6 +75,15 @@ func _draw() -> void:
 			draw_rect(r, ScreenElementRegistry.INK, true)
 		else:
 			draw_rect(r, ScreenElementRegistry.DIM, false, 2.0)
+
+
+## MNR-08: the battery as a cell filled from the bottom, its terminal on top; no number.
+func _battery(cell: Rect2, share: float) -> void:
+	draw_rect(cell, ScreenElementRegistry.DIM, false, 3.0)
+	draw_rect(Rect2(cell.get_center().x - 8.0, cell.position.y - 10.0, 16.0, 10.0), ScreenElementRegistry.DIM, true)
+	var k: float = clampf(share, 0.0, 1.0)
+	var inner: Rect2 = cell.grow(-6.0)
+	draw_rect(Rect2(inner.position.x, inner.end.y - inner.size.y * k, inner.size.x, inner.size.y * k), ScreenElementRegistry.INK, true)
 
 
 ## The flame side-on, a teardrop, never the world's amber.
