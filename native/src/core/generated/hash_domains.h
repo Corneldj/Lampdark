@@ -27,6 +27,8 @@ constexpr uint64_t NET_TOKEN = 17; // stream, NET-04
 constexpr uint64_t RESCUE_SELF_RESCUE = 18; // stream, RSC-03
 constexpr uint64_t VOICE_LOSS = 19; // stream, SND-08
 constexpr uint64_t STEAM_FAKE_ID = 20; // hash, STM-01
+constexpr uint64_t PROFILE_NAMES = 21; // stream, MOD-01
+constexpr uint64_t PROFILE_LAMP_NUMBERS = 22; // stream, MOD-01
 
 struct Entry {
 	const char *name;
@@ -54,6 +56,8 @@ constexpr Entry ALL[] = {
 	{"rescue.self_rescue", 18},
 	{"voice.loss", 19},
 	{"steam.fake_id", 20},
+	{"profile.names", 21},
+	{"profile.lamp_numbers", 22},
 };
 constexpr size_t COUNT = sizeof(ALL) / sizeof(ALL[0]);
 

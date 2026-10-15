@@ -1,0 +1,2005 @@
+{
+	"note": "MOD-01 (Gameplay \u00a713.2, A.10): about 400 period names a roster draws from, women's among them, so nobody types a name. PLACEHOLDER: generated from common names of a 1919 northern coalfield; the heritage consultant reads the final list against real disasters and memorial rolls before M5 (GDD \u00a72.6). Everyday English words are left out, so no recorded line ever says a name (SND-13's test).",
+	"names": [
+		{
+			"given": "Albert",
+			"surname": "Armstrong",
+			"woman": false
+		},
+		{
+			"given": "Edward",
+			"surname": "Gibson",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Pattison",
+			"woman": true
+		},
+		{
+			"given": "Thomas",
+			"surname": "Turnbull",
+			"woman": false
+		},
+		{
+			"given": "Alfred",
+			"surname": "Telford",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Charlton",
+			"woman": true
+		},
+		{
+			"given": "Leonard",
+			"surname": "Hutchinson",
+			"woman": false
+		},
+		{
+			"given": "Walter",
+			"surname": "Rowe",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Wardle",
+			"woman": true
+		},
+		{
+			"given": "Frederick",
+			"surname": "Brannigan",
+			"woman": false
+		},
+		{
+			"given": "Matthew",
+			"surname": "Elliott",
+			"woman": false
+		},
+		{
+			"given": "Wilfred",
+			"surname": "Milburn",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Tait",
+			"woman": true
+		},
+		{
+			"given": "George",
+			"surname": "Cowans",
+			"woman": false
+		},
+		{
+			"given": "Norman",
+			"surname": "Bainbridge",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Harrison",
+			"woman": true
+		},
+		{
+			"given": "Cecil",
+			"surname": "Richardson",
+			"woman": false
+		},
+		{
+			"given": "Gilbert",
+			"surname": "Walton",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Ord",
+			"woman": true
+		},
+		{
+			"given": "Ambrose",
+			"surname": "Collinson",
+			"woman": false
+		},
+		{
+			"given": "Charles",
+			"surname": "Johnson",
+			"woman": false
+		},
+		{
+			"given": "Harold",
+			"surname": "Simpson",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Maughan",
+			"woman": true
+		},
+		{
+			"given": "Septimus",
+			"surname": "Lumsden",
+			"woman": false
+		},
+		{
+			"given": "Clarence",
+			"surname": "Forster",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Parker",
+			"woman": true
+		},
+		{
+			"given": "Reginald",
+			"surname": "Thompson",
+			"woman": false
+		},
+		{
+			"given": "Lancelot",
+			"surname": "Purvis",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Blackett",
+			"woman": true
+		},
+		{
+			"given": "Horace",
+			"surname": "Hodgson",
+			"woman": false
+		},
+		{
+			"given": "Robert",
+			"surname": "Robson",
+			"woman": false
+		},
+		{
+			"given": "Ezra",
+			"surname": "Wilkinson",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Coulson",
+			"woman": true
+		},
+		{
+			"given": "Isaac",
+			"surname": "Dodd",
+			"woman": false
+		},
+		{
+			"given": "Samuel",
+			"surname": "Liddell",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Swinburne",
+			"woman": true
+		},
+		{
+			"given": "Edgar",
+			"surname": "Bewick",
+			"woman": false
+		},
+		{
+			"given": "James",
+			"surname": "Atkinson",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Graham",
+			"woman": true
+		},
+		{
+			"given": "Josiah",
+			"surname": "Potts",
+			"woman": false
+		},
+		{
+			"given": "Edmund",
+			"surname": "Wallace",
+			"woman": false
+		},
+		{
+			"given": "John",
+			"surname": "Pringle",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Clark",
+			"woman": true
+		},
+		{
+			"given": "Albert",
+			"surname": "Jackson",
+			"woman": false
+		},
+		{
+			"given": "Edward",
+			"surname": "Scott",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Hedley",
+			"woman": true
+		},
+		{
+			"given": "Thomas",
+			"surname": "Kirkley",
+			"woman": false
+		},
+		{
+			"given": "Alfred",
+			"surname": "Fenwick",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Nicholson",
+			"woman": true
+		},
+		{
+			"given": "Leonard",
+			"surname": "Taylor",
+			"woman": false
+		},
+		{
+			"given": "Walter",
+			"surname": "Errington",
+			"woman": false
+		},
+		{
+			"given": "Arthur",
+			"surname": "Barker",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Heslop",
+			"woman": true
+		},
+		{
+			"given": "Matthew",
+			"surname": "Ridley",
+			"woman": false
+		},
+		{
+			"given": "Wilfred",
+			"surname": "Watson",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Hepple",
+			"woman": true
+		},
+		{
+			"given": "George",
+			"surname": "Dixon",
+			"woman": false
+		},
+		{
+			"given": "Norman",
+			"surname": "Kirkup",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Stephenson",
+			"woman": true
+		},
+		{
+			"given": "Cecil",
+			"surname": "Laidler",
+			"woman": false
+		},
+		{
+			"given": "Gilbert",
+			"surname": "Atkinson",
+			"woman": false
+		},
+		{
+			"given": "Percy",
+			"surname": "Graham",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Potts",
+			"woman": true
+		},
+		{
+			"given": "Charles",
+			"surname": "Wallace",
+			"woman": false
+		},
+		{
+			"given": "Harold",
+			"surname": "Pringle",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Clark",
+			"woman": true
+		},
+		{
+			"given": "Septimus",
+			"surname": "Jackson",
+			"woman": false
+		},
+		{
+			"given": "Clarence",
+			"surname": "Scott",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Hedley",
+			"woman": true
+		},
+		{
+			"given": "Reginald",
+			"surname": "Kirkley",
+			"woman": false
+		},
+		{
+			"given": "Lancelot",
+			"surname": "Fenwick",
+			"woman": false
+		},
+		{
+			"given": "Cyril",
+			"surname": "Nicholson",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Taylor",
+			"woman": true
+		},
+		{
+			"given": "Robert",
+			"surname": "Errington",
+			"woman": false
+		},
+		{
+			"given": "Ezra",
+			"surname": "Barker",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Heslop",
+			"woman": true
+		},
+		{
+			"given": "Isaac",
+			"surname": "Ridley",
+			"woman": false
+		},
+		{
+			"given": "Samuel",
+			"surname": "Watson",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Hepple",
+			"woman": true
+		},
+		{
+			"given": "Edgar",
+			"surname": "Dixon",
+			"woman": false
+		},
+		{
+			"given": "James",
+			"surname": "Kirkup",
+			"woman": false
+		},
+		{
+			"given": "Sidney",
+			"surname": "Stephenson",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Laidler",
+			"woman": true
+		},
+		{
+			"given": "Edmund",
+			"surname": "Armstrong",
+			"woman": false
+		},
+		{
+			"given": "John",
+			"surname": "Gibson",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Pattison",
+			"woman": true
+		},
+		{
+			"given": "Albert",
+			"surname": "Turnbull",
+			"woman": false
+		},
+		{
+			"given": "Edward",
+			"surname": "Telford",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Charlton",
+			"woman": true
+		},
+		{
+			"given": "Thomas",
+			"surname": "Hutchinson",
+			"woman": false
+		},
+		{
+			"given": "Alfred",
+			"surname": "Rowe",
+			"woman": false
+		},
+		{
+			"given": "Ernest",
+			"surname": "Wardle",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Brannigan",
+			"woman": true
+		},
+		{
+			"given": "Walter",
+			"surname": "Elliott",
+			"woman": false
+		},
+		{
+			"given": "Arthur",
+			"surname": "Milburn",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Tait",
+			"woman": true
+		},
+		{
+			"given": "Matthew",
+			"surname": "Cowans",
+			"woman": false
+		},
+		{
+			"given": "Wilfred",
+			"surname": "Bainbridge",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Harrison",
+			"woman": true
+		},
+		{
+			"given": "George",
+			"surname": "Richardson",
+			"woman": false
+		},
+		{
+			"given": "Norman",
+			"surname": "Walton",
+			"woman": false
+		},
+		{
+			"given": "William",
+			"surname": "Ord",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Collinson",
+			"woman": true
+		},
+		{
+			"given": "Gilbert",
+			"surname": "Johnson",
+			"woman": false
+		},
+		{
+			"given": "Percy",
+			"surname": "Simpson",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Maughan",
+			"woman": true
+		},
+		{
+			"given": "Charles",
+			"surname": "Lumsden",
+			"woman": false
+		},
+		{
+			"given": "Harold",
+			"surname": "Forster",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Parker",
+			"woman": true
+		},
+		{
+			"given": "Septimus",
+			"surname": "Thompson",
+			"woman": false
+		},
+		{
+			"given": "Clarence",
+			"surname": "Purvis",
+			"woman": false
+		},
+		{
+			"given": "Herbert",
+			"surname": "Blackett",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Hodgson",
+			"woman": true
+		},
+		{
+			"given": "Lancelot",
+			"surname": "Robson",
+			"woman": false
+		},
+		{
+			"given": "Cyril",
+			"surname": "Wilkinson",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Coulson",
+			"woman": true
+		},
+		{
+			"given": "Robert",
+			"surname": "Dodd",
+			"woman": false
+		},
+		{
+			"given": "Ezra",
+			"surname": "Liddell",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Swinburne",
+			"woman": true
+		},
+		{
+			"given": "Isaac",
+			"surname": "Bewick",
+			"woman": false
+		},
+		{
+			"given": "Samuel",
+			"surname": "Bainbridge",
+			"woman": false
+		},
+		{
+			"given": "Jacob",
+			"surname": "Harrison",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Richardson",
+			"woman": true
+		},
+		{
+			"given": "James",
+			"surname": "Walton",
+			"woman": false
+		},
+		{
+			"given": "Sidney",
+			"surname": "Ord",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Collinson",
+			"woman": true
+		},
+		{
+			"given": "Edmund",
+			"surname": "Johnson",
+			"woman": false
+		},
+		{
+			"given": "John",
+			"surname": "Simpson",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Maughan",
+			"woman": true
+		},
+		{
+			"given": "Albert",
+			"surname": "Lumsden",
+			"woman": false
+		},
+		{
+			"given": "Edward",
+			"surname": "Forster",
+			"woman": false
+		},
+		{
+			"given": "Joseph",
+			"surname": "Parker",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Thompson",
+			"woman": true
+		},
+		{
+			"given": "Alfred",
+			"surname": "Purvis",
+			"woman": false
+		},
+		{
+			"given": "Ernest",
+			"surname": "Blackett",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Hodgson",
+			"woman": true
+		},
+		{
+			"given": "Walter",
+			"surname": "Robson",
+			"woman": false
+		},
+		{
+			"given": "Arthur",
+			"surname": "Wilkinson",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Coulson",
+			"woman": true
+		},
+		{
+			"given": "Matthew",
+			"surname": "Dodd",
+			"woman": false
+		},
+		{
+			"given": "Wilfred",
+			"surname": "Liddell",
+			"woman": false
+		},
+		{
+			"given": "Bertram",
+			"surname": "Swinburne",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Bewick",
+			"woman": true
+		},
+		{
+			"given": "Norman",
+			"surname": "Atkinson",
+			"woman": false
+		},
+		{
+			"given": "William",
+			"surname": "Graham",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Potts",
+			"woman": true
+		},
+		{
+			"given": "Gilbert",
+			"surname": "Wallace",
+			"woman": false
+		},
+		{
+			"given": "Percy",
+			"surname": "Pringle",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Clark",
+			"woman": true
+		},
+		{
+			"given": "Charles",
+			"surname": "Jackson",
+			"woman": false
+		},
+		{
+			"given": "Harold",
+			"surname": "Scott",
+			"woman": false
+		},
+		{
+			"given": "Ralph",
+			"surname": "Hedley",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Kirkley",
+			"woman": true
+		},
+		{
+			"given": "Clarence",
+			"surname": "Fenwick",
+			"woman": false
+		},
+		{
+			"given": "Herbert",
+			"surname": "Nicholson",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Taylor",
+			"woman": true
+		},
+		{
+			"given": "Lancelot",
+			"surname": "Errington",
+			"woman": false
+		},
+		{
+			"given": "Cyril",
+			"surname": "Barker",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Heslop",
+			"woman": true
+		},
+		{
+			"given": "Robert",
+			"surname": "Ridley",
+			"woman": false
+		},
+		{
+			"given": "Ezra",
+			"surname": "Watson",
+			"woman": false
+		},
+		{
+			"given": "Daniel",
+			"surname": "Hepple",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Dixon",
+			"woman": true
+		},
+		{
+			"given": "Samuel",
+			"surname": "Kirkup",
+			"woman": false
+		},
+		{
+			"given": "Jacob",
+			"surname": "Stephenson",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Laidler",
+			"woman": true
+		},
+		{
+			"given": "James",
+			"surname": "Armstrong",
+			"woman": false
+		},
+		{
+			"given": "Sidney",
+			"surname": "Gibson",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Pattison",
+			"woman": true
+		},
+		{
+			"given": "Edmund",
+			"surname": "Turnbull",
+			"woman": false
+		},
+		{
+			"given": "John",
+			"surname": "Telford",
+			"woman": false
+		},
+		{
+			"given": "Stanley",
+			"surname": "Charlton",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Hutchinson",
+			"woman": true
+		},
+		{
+			"given": "Edward",
+			"surname": "Rowe",
+			"woman": false
+		},
+		{
+			"given": "Joseph",
+			"surname": "Wardle",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Brannigan",
+			"woman": true
+		},
+		{
+			"given": "Alfred",
+			"surname": "Elliott",
+			"woman": false
+		},
+		{
+			"given": "Ernest",
+			"surname": "Milburn",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Tait",
+			"woman": true
+		},
+		{
+			"given": "Walter",
+			"surname": "Cowans",
+			"woman": false
+		},
+		{
+			"given": "Frederick",
+			"surname": "Heslop",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Ridley",
+			"woman": true
+		},
+		{
+			"given": "Bertram",
+			"surname": "Hepple",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Dixon",
+			"woman": true
+		},
+		{
+			"given": "William",
+			"surname": "Stephenson",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Laidler",
+			"woman": true
+		},
+		{
+			"given": "Gilbert",
+			"surname": "Armstrong",
+			"woman": false
+		},
+		{
+			"given": "Percy",
+			"surname": "Gibson",
+			"woman": false
+		},
+		{
+			"given": "Ambrose",
+			"surname": "Pattison",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Turnbull",
+			"woman": true
+		},
+		{
+			"given": "Harold",
+			"surname": "Telford",
+			"woman": false
+		},
+		{
+			"given": "Ralph",
+			"surname": "Charlton",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Hutchinson",
+			"woman": true
+		},
+		{
+			"given": "Clarence",
+			"surname": "Rowe",
+			"woman": false
+		},
+		{
+			"given": "Herbert",
+			"surname": "Wardle",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Brannigan",
+			"woman": true
+		},
+		{
+			"given": "Lancelot",
+			"surname": "Elliott",
+			"woman": false
+		},
+		{
+			"given": "Cyril",
+			"surname": "Milburn",
+			"woman": false
+		},
+		{
+			"given": "Horace",
+			"surname": "Tait",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Cowans",
+			"woman": true
+		},
+		{
+			"given": "Ezra",
+			"surname": "Bainbridge",
+			"woman": false
+		},
+		{
+			"given": "Daniel",
+			"surname": "Harrison",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Richardson",
+			"woman": true
+		},
+		{
+			"given": "Samuel",
+			"surname": "Walton",
+			"woman": false
+		},
+		{
+			"given": "Jacob",
+			"surname": "Ord",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Collinson",
+			"woman": true
+		},
+		{
+			"given": "James",
+			"surname": "Johnson",
+			"woman": false
+		},
+		{
+			"given": "Sidney",
+			"surname": "Simpson",
+			"woman": false
+		},
+		{
+			"given": "Josiah",
+			"surname": "Maughan",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Lumsden",
+			"woman": true
+		},
+		{
+			"given": "John",
+			"surname": "Forster",
+			"woman": false
+		},
+		{
+			"given": "Stanley",
+			"surname": "Parker",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Thompson",
+			"woman": true
+		},
+		{
+			"given": "Edward",
+			"surname": "Purvis",
+			"woman": false
+		},
+		{
+			"given": "Joseph",
+			"surname": "Blackett",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Hodgson",
+			"woman": true
+		},
+		{
+			"given": "Alfred",
+			"surname": "Robson",
+			"woman": false
+		},
+		{
+			"given": "Ernest",
+			"surname": "Wilkinson",
+			"woman": false
+		},
+		{
+			"given": "Leonard",
+			"surname": "Coulson",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Dodd",
+			"woman": true
+		},
+		{
+			"given": "Arthur",
+			"surname": "Liddell",
+			"woman": false
+		},
+		{
+			"given": "Frederick",
+			"surname": "Swinburne",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Bewick",
+			"woman": true
+		},
+		{
+			"given": "Wilfred",
+			"surname": "Atkinson",
+			"woman": false
+		},
+		{
+			"given": "Bertram",
+			"surname": "Graham",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Potts",
+			"woman": true
+		},
+		{
+			"given": "Norman",
+			"surname": "Wallace",
+			"woman": false
+		},
+		{
+			"given": "William",
+			"surname": "Pringle",
+			"woman": false
+		},
+		{
+			"given": "Cecil",
+			"surname": "Clark",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Jackson",
+			"woman": true
+		},
+		{
+			"given": "Percy",
+			"surname": "Scott",
+			"woman": false
+		},
+		{
+			"given": "Ambrose",
+			"surname": "Hedley",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Kirkley",
+			"woman": true
+		},
+		{
+			"given": "Harold",
+			"surname": "Fenwick",
+			"woman": false
+		},
+		{
+			"given": "Ralph",
+			"surname": "Nicholson",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Taylor",
+			"woman": true
+		},
+		{
+			"given": "Clarence",
+			"surname": "Errington",
+			"woman": false
+		},
+		{
+			"given": "Reginald",
+			"surname": "Hodgson",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Robson",
+			"woman": true
+		},
+		{
+			"given": "Horace",
+			"surname": "Coulson",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Dodd",
+			"woman": true
+		},
+		{
+			"given": "Daniel",
+			"surname": "Swinburne",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Bewick",
+			"woman": true
+		},
+		{
+			"given": "Samuel",
+			"surname": "Atkinson",
+			"woman": false
+		},
+		{
+			"given": "Jacob",
+			"surname": "Graham",
+			"woman": false
+		},
+		{
+			"given": "Edgar",
+			"surname": "Potts",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Wallace",
+			"woman": true
+		},
+		{
+			"given": "Sidney",
+			"surname": "Pringle",
+			"woman": false
+		},
+		{
+			"given": "Josiah",
+			"surname": "Clark",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Jackson",
+			"woman": true
+		},
+		{
+			"given": "John",
+			"surname": "Scott",
+			"woman": false
+		},
+		{
+			"given": "Stanley",
+			"surname": "Hedley",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Kirkley",
+			"woman": true
+		},
+		{
+			"given": "Edward",
+			"surname": "Fenwick",
+			"woman": false
+		},
+		{
+			"given": "Joseph",
+			"surname": "Nicholson",
+			"woman": false
+		},
+		{
+			"given": "Thomas",
+			"surname": "Taylor",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Errington",
+			"woman": true
+		},
+		{
+			"given": "Ernest",
+			"surname": "Barker",
+			"woman": false
+		},
+		{
+			"given": "Leonard",
+			"surname": "Heslop",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Ridley",
+			"woman": true
+		},
+		{
+			"given": "Arthur",
+			"surname": "Watson",
+			"woman": false
+		},
+		{
+			"given": "Frederick",
+			"surname": "Hepple",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Dixon",
+			"woman": true
+		},
+		{
+			"given": "Wilfred",
+			"surname": "Kirkup",
+			"woman": false
+		},
+		{
+			"given": "Bertram",
+			"surname": "Stephenson",
+			"woman": false
+		},
+		{
+			"given": "George",
+			"surname": "Laidler",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Armstrong",
+			"woman": true
+		},
+		{
+			"given": "William",
+			"surname": "Gibson",
+			"woman": false
+		},
+		{
+			"given": "Cecil",
+			"surname": "Pattison",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Turnbull",
+			"woman": true
+		},
+		{
+			"given": "Percy",
+			"surname": "Telford",
+			"woman": false
+		},
+		{
+			"given": "Ambrose",
+			"surname": "Charlton",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Hutchinson",
+			"woman": true
+		},
+		{
+			"given": "Harold",
+			"surname": "Rowe",
+			"woman": false
+		},
+		{
+			"given": "Ralph",
+			"surname": "Wardle",
+			"woman": false
+		},
+		{
+			"given": "Septimus",
+			"surname": "Brannigan",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Elliott",
+			"woman": true
+		},
+		{
+			"given": "Herbert",
+			"surname": "Milburn",
+			"woman": false
+		},
+		{
+			"given": "Reginald",
+			"surname": "Tait",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Cowans",
+			"woman": true
+		},
+		{
+			"given": "Cyril",
+			"surname": "Bainbridge",
+			"woman": false
+		},
+		{
+			"given": "Horace",
+			"surname": "Harrison",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Richardson",
+			"woman": true
+		},
+		{
+			"given": "Ezra",
+			"surname": "Walton",
+			"woman": false
+		},
+		{
+			"given": "Daniel",
+			"surname": "Ord",
+			"woman": false
+		},
+		{
+			"given": "Isaac",
+			"surname": "Collinson",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Johnson",
+			"woman": true
+		},
+		{
+			"given": "Jacob",
+			"surname": "Simpson",
+			"woman": false
+		},
+		{
+			"given": "Edgar",
+			"surname": "Maughan",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Lumsden",
+			"woman": true
+		},
+		{
+			"given": "Sidney",
+			"surname": "Forster",
+			"woman": false
+		},
+		{
+			"given": "Josiah",
+			"surname": "Parker",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Thompson",
+			"woman": true
+		},
+		{
+			"given": "John",
+			"surname": "Purvis",
+			"woman": false
+		},
+		{
+			"given": "Albert",
+			"surname": "Hutchinson",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Rowe",
+			"woman": true
+		},
+		{
+			"given": "Thomas",
+			"surname": "Brannigan",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Elliott",
+			"woman": true
+		},
+		{
+			"given": "Leonard",
+			"surname": "Tait",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Cowans",
+			"woman": true
+		},
+		{
+			"given": "Arthur",
+			"surname": "Bainbridge",
+			"woman": false
+		},
+		{
+			"given": "Frederick",
+			"surname": "Harrison",
+			"woman": false
+		},
+		{
+			"given": "Matthew",
+			"surname": "Richardson",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Walton",
+			"woman": true
+		},
+		{
+			"given": "Bertram",
+			"surname": "Ord",
+			"woman": false
+		},
+		{
+			"given": "George",
+			"surname": "Collinson",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Johnson",
+			"woman": true
+		},
+		{
+			"given": "William",
+			"surname": "Simpson",
+			"woman": false
+		},
+		{
+			"given": "Cecil",
+			"surname": "Maughan",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Lumsden",
+			"woman": true
+		},
+		{
+			"given": "Percy",
+			"surname": "Forster",
+			"woman": false
+		},
+		{
+			"given": "Ambrose",
+			"surname": "Parker",
+			"woman": false
+		},
+		{
+			"given": "Charles",
+			"surname": "Thompson",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Purvis",
+			"woman": true
+		},
+		{
+			"given": "Ralph",
+			"surname": "Blackett",
+			"woman": false
+		},
+		{
+			"given": "Septimus",
+			"surname": "Hodgson",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Robson",
+			"woman": true
+		},
+		{
+			"given": "Herbert",
+			"surname": "Wilkinson",
+			"woman": false
+		},
+		{
+			"given": "Reginald",
+			"surname": "Coulson",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Dodd",
+			"woman": true
+		},
+		{
+			"given": "Cyril",
+			"surname": "Liddell",
+			"woman": false
+		},
+		{
+			"given": "Horace",
+			"surname": "Swinburne",
+			"woman": false
+		},
+		{
+			"given": "Robert",
+			"surname": "Bewick",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Atkinson",
+			"woman": true
+		},
+		{
+			"given": "Daniel",
+			"surname": "Graham",
+			"woman": false
+		},
+		{
+			"given": "Isaac",
+			"surname": "Potts",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Wallace",
+			"woman": true
+		},
+		{
+			"given": "Jacob",
+			"surname": "Pringle",
+			"woman": false
+		},
+		{
+			"given": "Edgar",
+			"surname": "Clark",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Jackson",
+			"woman": true
+		},
+		{
+			"given": "Sidney",
+			"surname": "Scott",
+			"woman": false
+		},
+		{
+			"given": "Josiah",
+			"surname": "Hedley",
+			"woman": false
+		},
+		{
+			"given": "Edmund",
+			"surname": "Kirkley",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Fenwick",
+			"woman": true
+		},
+		{
+			"given": "Stanley",
+			"surname": "Nicholson",
+			"woman": false
+		},
+		{
+			"given": "Albert",
+			"surname": "Taylor",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Errington",
+			"woman": true
+		},
+		{
+			"given": "Joseph",
+			"surname": "Barker",
+			"woman": false
+		},
+		{
+			"given": "Thomas",
+			"surname": "Heslop",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Ridley",
+			"woman": true
+		},
+		{
+			"given": "Ernest",
+			"surname": "Watson",
+			"woman": false
+		},
+		{
+			"given": "Leonard",
+			"surname": "Hepple",
+			"woman": false
+		},
+		{
+			"given": "Walter",
+			"surname": "Dixon",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Kirkup",
+			"woman": true
+		},
+		{
+			"given": "Frederick",
+			"surname": "Stephenson",
+			"woman": false
+		},
+		{
+			"given": "Matthew",
+			"surname": "Laidler",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Armstrong",
+			"woman": true
+		},
+		{
+			"given": "Bertram",
+			"surname": "Gibson",
+			"woman": false
+		},
+		{
+			"given": "George",
+			"surname": "Pattison",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Turnbull",
+			"woman": true
+		},
+		{
+			"given": "William",
+			"surname": "Telford",
+			"woman": false
+		},
+		{
+			"given": "Gilbert",
+			"surname": "Jackson",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Scott",
+			"woman": true
+		},
+		{
+			"given": "Charles",
+			"surname": "Kirkley",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Fenwick",
+			"woman": true
+		},
+		{
+			"given": "Septimus",
+			"surname": "Taylor",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Errington",
+			"woman": true
+		},
+		{
+			"given": "Herbert",
+			"surname": "Barker",
+			"woman": false
+		},
+		{
+			"given": "Reginald",
+			"surname": "Heslop",
+			"woman": false
+		},
+		{
+			"given": "Lancelot",
+			"surname": "Ridley",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Watson",
+			"woman": true
+		},
+		{
+			"given": "Horace",
+			"surname": "Hepple",
+			"woman": false
+		},
+		{
+			"given": "Robert",
+			"surname": "Dixon",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Kirkup",
+			"woman": true
+		},
+		{
+			"given": "Daniel",
+			"surname": "Stephenson",
+			"woman": false
+		},
+		{
+			"given": "Isaac",
+			"surname": "Laidler",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Armstrong",
+			"woman": true
+		},
+		{
+			"given": "Jacob",
+			"surname": "Gibson",
+			"woman": false
+		},
+		{
+			"given": "Edgar",
+			"surname": "Pattison",
+			"woman": false
+		},
+		{
+			"given": "James",
+			"surname": "Turnbull",
+			"woman": false
+		},
+		{
+			"given": "Beatrice",
+			"surname": "Telford",
+			"woman": true
+		},
+		{
+			"given": "Josiah",
+			"surname": "Charlton",
+			"woman": false
+		},
+		{
+			"given": "Edmund",
+			"surname": "Hutchinson",
+			"woman": false
+		},
+		{
+			"given": "Phyllis",
+			"surname": "Rowe",
+			"woman": true
+		},
+		{
+			"given": "Stanley",
+			"surname": "Wardle",
+			"woman": false
+		},
+		{
+			"given": "Albert",
+			"surname": "Brannigan",
+			"woman": false
+		},
+		{
+			"given": "Harriet",
+			"surname": "Elliott",
+			"woman": true
+		},
+		{
+			"given": "Joseph",
+			"surname": "Milburn",
+			"woman": false
+		},
+		{
+			"given": "Thomas",
+			"surname": "Tait",
+			"woman": false
+		},
+		{
+			"given": "Alfred",
+			"surname": "Cowans",
+			"woman": false
+		},
+		{
+			"given": "Gladys",
+			"surname": "Bainbridge",
+			"woman": true
+		},
+		{
+			"given": "Leonard",
+			"surname": "Harrison",
+			"woman": false
+		},
+		{
+			"given": "Walter",
+			"surname": "Richardson",
+			"woman": false
+		},
+		{
+			"given": "Clara",
+			"surname": "Walton",
+			"woman": true
+		},
+		{
+			"given": "Frederick",
+			"surname": "Ord",
+			"woman": false
+		},
+		{
+			"given": "Matthew",
+			"surname": "Collinson",
+			"woman": false
+		},
+		{
+			"given": "Sarah",
+			"surname": "Johnson",
+			"woman": true
+		},
+		{
+			"given": "Bertram",
+			"surname": "Simpson",
+			"woman": false
+		},
+		{
+			"given": "George",
+			"surname": "Maughan",
+			"woman": false
+		},
+		{
+			"given": "Norman",
+			"surname": "Lumsden",
+			"woman": false
+		},
+		{
+			"given": "Olive",
+			"surname": "Forster",
+			"woman": true
+		},
+		{
+			"given": "Cecil",
+			"surname": "Parker",
+			"woman": false
+		},
+		{
+			"given": "Gilbert",
+			"surname": "Thompson",
+			"woman": false
+		},
+		{
+			"given": "Hannah",
+			"surname": "Purvis",
+			"woman": true
+		},
+		{
+			"given": "Ambrose",
+			"surname": "Blackett",
+			"woman": false
+		},
+		{
+			"given": "Charles",
+			"surname": "Hodgson",
+			"woman": false
+		},
+		{
+			"given": "Doris",
+			"surname": "Robson",
+			"woman": true
+		},
+		{
+			"given": "Ralph",
+			"surname": "Wilkinson",
+			"woman": false
+		},
+		{
+			"given": "Septimus",
+			"surname": "Coulson",
+			"woman": false
+		},
+		{
+			"given": "Clarence",
+			"surname": "Dodd",
+			"woman": false
+		}
+	]
+}

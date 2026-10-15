@@ -22,6 +22,8 @@ const NET_TOKEN: int = 17  # stream, NET-04
 const RESCUE_SELF_RESCUE: int = 18  # stream, RSC-03
 const VOICE_LOSS: int = 19  # stream, SND-08
 const STEAM_FAKE_ID: int = 20  # hash, STM-01
+const PROFILE_NAMES: int = 21  # stream, MOD-01
+const PROFILE_LAMP_NUMBERS: int = 22  # stream, MOD-01
 
 const ALL: Dictionary = {
 	"gen.socket.open": 1,
@@ -44,4 +46,6 @@ const ALL: Dictionary = {
 	"rescue.self_rescue": 18,
 	"voice.loss": 19,
 	"steam.fake_id": 20,
+	"profile.names": 21,
+	"profile.lamp_numbers": 22,
 }

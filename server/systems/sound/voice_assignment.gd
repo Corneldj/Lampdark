@@ -12,10 +12,7 @@ const VOICES: int = 8
 
 ## The default voice for a name: FNV-1a over its UTF-8 bytes, mod 8 (stable across platforms).
 static func default_for(miner_name: String) -> int:
-	var h: int = 0x811C9DC5
-	for b: int in miner_name.to_utf8_buffer():
-		h = ((h ^ b) * 0x01000193) & 0xFFFFFFFF
-	return h % VOICES
+	return VoiceChoice.default_for(miner_name)
 
 
 ## `roster`: [{miner: id, voice: 0-7 or -1, name}] in join order; `hands`: how many Hired Hands.

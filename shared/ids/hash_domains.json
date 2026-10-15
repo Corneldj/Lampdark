@@ -198,6 +198,24 @@
 			"keys": [
 				"the --name persona's UTF-8 bytes, one per key"
 			]
+		},
+		{
+			"name": "profile.names",
+			"id": 21,
+			"owner": "MOD-01",
+			"kind": "stream",
+			"keys": [
+				"what the draw is for: 0 the first roster, else the replaced miner's id"
+			]
+		},
+		{
+			"name": "profile.lamp_numbers",
+			"id": 22,
+			"owner": "MOD-01",
+			"kind": "stream",
+			"keys": [
+				"what the draw is for: 0 the first roster, else the replaced miner's id"
+			]
 		}
 	]
 }

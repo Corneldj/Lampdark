@@ -1,5 +1,5 @@
 {
-	"hash": "969168797c2f532067ede6fdacb2cc700bdbbd59a709e13c2ba28e8ce7d5df7d",
+	"hash": "3650055aae05a7f2357e7bdfa459144cb5c6595f2f809f32898781bf5330986d",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -434,6 +434,41 @@
 			"value": 5,
 			"type": "int",
 			"unit": "players",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"modes.lamp_number_max": {
+			"value": 999,
+			"type": "int",
+			"unit": "count",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"modes.lamp_number_min": {
+			"value": 100,
+			"type": "int",
+			"unit": "count",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"modes.new_brigade_runs": {
+			"value": 5,
+			"type": "int",
+			"unit": "runs",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"modes.replacement_offers": {
+			"value": 3,
+			"type": "int",
+			"unit": "names",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"modes.roster_size": {
+			"value": 3,
+			"type": "int",
+			"unit": "miners",
 			"visibility": "client",
 			"kind": "param"
 		},

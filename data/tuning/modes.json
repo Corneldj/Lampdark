@@ -167,7 +167,7 @@
 			"unit": "count",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket MOD-01"
 		},
@@ -177,7 +177,7 @@
 			"unit": "count",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket MOD-01"
 		},
@@ -187,7 +187,7 @@
 			"unit": "runs",
 			"source": "Gameplay §10.10, A.10",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket MOD-01"
 		},
@@ -286,11 +286,11 @@
 		},
 		"modes.replacement_offers": {
 			"value": 3,
-			"type": "float",
+			"type": "int",
 			"unit": "names",
 			"source": "Gameplay §13.2",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket MOD-01"
 		},
@@ -310,7 +310,7 @@
 			"unit": "miners",
 			"source": "Gameplay §13.2, A.10",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket MOD-01"
 		},

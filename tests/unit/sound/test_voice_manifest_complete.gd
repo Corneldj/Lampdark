@@ -5,7 +5,8 @@ extends GutTest
 ## The five copyable lines are flagged for CRT-10. Every line has its subtitle, and no text holds a name.
 
 const FIXTURE_NAMES: String = "res://tests/fixtures/voices/names_sample.json"
-const REAL_NAMES: String = "res://data/text/names.json"
+## MOD-01's period names: each given name and surname is checked.
+const REAL_NAMES: String = "res://data/text/names/period_names.json"
 
 
 func before_all() -> void:
@@ -97,7 +98,12 @@ static func _names() -> PackedStringArray:
 		var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 		var list: Array = Variants.array(Variants.dict(d).get("names", [])) if d is Dictionary else Variants.array(d)
 		for n: Variant in list:
-			out.append(str(n))
+			if n is Dictionary:
+				var d2: Dictionary = n
+				out.append(str(d2.get("given", "")))
+				out.append(str(d2.get("surname", "")))
+			else:
+				out.append(str(n))
 	return out
 
 
