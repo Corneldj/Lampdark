@@ -21,7 +21,7 @@ func _wheel() -> WheelWidget:
 func test_slices() -> void:
 	assert_eq(WheelWidget.slices_for("callout").size(), 12)
 	assert_eq(WheelWidget.slices_for("callout", true), ["callout.now", "callout.right", "callout.stop", "callout.left"] as Array[String])
-	assert_eq(WheelWidget.slices_for("signal").size(), 4)
+	assert_eq(WheelWidget.slices_for("signal").size(), 5, "SND-12's five lamp signals")
 	var chalk: Array[String] = WheelWidget.slices_for("chalk")
 	assert_eq(chalk.slice(0, 3), ["wheel.chalk.arrow", "wheel.chalk.cross", "wheel.chalk.bang"] as Array[String])
 	assert_eq(chalk.size(), 13, "the arrow, X, '!' and the digits 0-9")

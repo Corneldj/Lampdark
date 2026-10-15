@@ -12,7 +12,8 @@ const SLICES: Dictionary = {
 	"job_page": ["callout.now", "callout.right", "callout.stop", "callout.left"],
 	## RSC-04's coming-round window: 'Help!' and a moan (CalloutLines.COMING_ROUND).
 	"coming_round": ["callout.help", "voice.moan"],
-	"signal": ["wheel.signal.one", "wheel.signal.two", "wheel.signal.three", "wheel.signal.circle"],
+	## SND-12's lamp signals in LampSignalKind.WHEEL's order.
+	"signal": ["wheel.signal.stop", "wheel.signal.come", "wheel.signal.ok", "wheel.signal.help", "wheel.signal.point"],
 	"chalk": ["wheel.chalk.arrow", "wheel.chalk.cross", "wheel.chalk.bang", "wheel.chalk.0", "wheel.chalk.1", "wheel.chalk.2",
 		"wheel.chalk.3", "wheel.chalk.4", "wheel.chalk.5", "wheel.chalk.6", "wheel.chalk.7", "wheel.chalk.8", "wheel.chalk.9"],
 }

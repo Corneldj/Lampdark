@@ -649,6 +649,8 @@ func _check_audio(slot: int, ev: Dictionary) -> void:
 		return  # the listener was not observing then (no frame expectation): nothing to measure from
 	var budget: float = event.level_np - Tuning.f(&"noise.player_threshold")
 	var cost: float = ref.reach_cost(event.origins, listener, budget, event.mode == RoadGraphService.MODE_VOICE, Tuning.f(&"noise.closed_portal_cost"))
+	if cost < 0.0 and event.type == NoiseTypes.Type.ROCK_TAP and _tap_through_rock(event, listener, at):
+		return  # SND-12: a rock tap through the rock to a teammate the air did not reach
 	if cost < 0.0:
 		var road: String = "-"
 		for raw: Variant in event.deliveries:
@@ -791,6 +793,23 @@ func _check_voice(slot: int, payload: PackedByteArray) -> void:
 			return
 	_fail(slot, record, "voice", "from %s to %s at band %d: no road within %.0f tiles (doors and gates shut) and no rock line" % [places[0][0],
 		places[0][1], band, range_t])
+
+
+## SND-12: a rock tap reaches a listener through the rock when the straight line from the tapper's
+## tile (when it tapped) crosses no brick or door and is within voice.rock_tap_range_tiles, and it
+## is heard at a wall face beside the listener.
+func _tap_through_rock(event: NoiseSystem.Event, listener: Vector2i, at: Vector2) -> bool:
+	var from: Vector2i = Vector2i(-99999, -99999)
+	var tiles: Dictionary = Variants.dict(_tiles_at.get(event.tick, {}))
+	for raw: Variant in tiles.keys():
+		if run.vision.watched_entity(int(Variants.number(raw))) == event.source_entity:
+			from = tiles[raw]
+	if from.x == -99999:
+		return false
+	var line: Dictionary = ref.straight_line(from, listener)
+	return not Variants.flag(line["brick"]) and not Variants.flag(line["door"]) \
+			and float(Variants.number(line["distance"])) <= Tuning.f(&"voice.rock_tap_range_tiles") + 1e-6 \
+			and at.distance_to(Vector2(listener) + Vector2(0.5, 0.5)) <= 1.6
 
 
 func _voice_reaches(from: Vector2i, to: Vector2i, range_t: float) -> bool:

@@ -97,6 +97,13 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.tools_parts = ToolsParts.new()
 	run.tools_parts.bind(run)
 	run.add_system(run.tools_parts)
+	# SND-12's lamp signals and rock taps.
+	run.lamp_signals = LampSignals.new()
+	run.lamp_signals.bind(run)
+	run.add_system(run.lamp_signals)
+	run.rock_taps = RockTaps.new()
+	run.add_system(run.rock_taps)
+	run.add_system(RockTapLines.new())
 	# A retreat drops the grab (CRT-01); a grab's end stands its creature's hunt down.
 	run.creatures.grab_release = func(_c: Creature, miner: int) -> void:
 		var g: GrabHold = run.holds.grab_of(miner)

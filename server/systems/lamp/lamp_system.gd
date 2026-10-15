@@ -28,6 +28,8 @@ var _last_bits: Dictionary = {}
 var in_blackdamp: Callable = func(_tile: Vector2i) -> bool: return false
 ## MNR-07's relights: {tick, uid, method, by, lit}.
 var relights: Array[Dictionary] = []
+## SND-12: (uid) -> bool, the lamp is dark this tick in a HELP signal's blink (radius 0, still burning).
+var dark_now: Callable = func(_uid: int) -> bool: return false
 ## uid -> Item, for lamps the Moth carries (in no inventory meanwhile).
 var _carried_off: Dictionary = {}
 var _run: RunState = null
@@ -603,7 +605,7 @@ func _register(run: RunState) -> void:
 		var pos: Vector2 = holder_entity.position if holder_entity != null else l.at
 		var owner: int = l.holder if l.held() else 0
 		var flags: int = LbLightGrid.FLAG_FLAME | (LbLightGrid.FLAG_CARRIED if l.held() else LbLightGrid.FLAG_UNHELD)
-		var r: float = l.radius_now(run.tick)
+		var r: float = 0.0 if Variants.flag(dark_now.call(l.uid)) else l.radius_now(run.tick)
 		if l.source != 0 and l.source_owner != owner:
 			_remove_source(run, l)
 		if l.source == 0:

@@ -243,7 +243,8 @@ func _own_block(run: RunState, slot: int) -> Dictionary:
 		"speed_q": clampi(roundi(m.modifiers.factor() * 100.0), 0, 255), "flags": flags,
 		"stamina_q": clampi(m.stamina.pool_ms / 50, 0, 255),
 		"lamp_radius": run.light.grid.owned_radius(m.entity_id) if run.light != null else 0.0,
-		"flame": run.flame_states.own_flags(m.entity_id) if run.flame_states != null else 0,
+		"flame": (run.flame_states.own_flags(m.entity_id) if run.flame_states != null else 0)
+			| (LampSignalKind.to_flame(run.lamp_signals.kind_of(m.entity_id)) if run.lamp_signals != null else 0),
 		"dust": run.tells.dust_for(slot) if run.tells != null else false}
 
 
@@ -252,7 +253,12 @@ func _own_block(run: RunState, slot: int) -> Dictionary:
 func _push_flames(run: RunState) -> void:
 	if run.flame_states == null:
 		return
-	var now: Dictionary = run.flame_states.entity_bits
+	var now: Dictionary = run.flame_states.entity_bits.duplicate()
+	# SND-12: a lamp signal under way rides in its maker's flame byte (bits 5-7, identity only).
+	if run.lamp_signals != null:
+		for raw: Variant in run.lamp_signals.active.keys():
+			var m: int = int(Variants.number(raw))
+			now[m] = int(Variants.number(now.get(m, 0))) | LampSignalKind.to_flame(run.lamp_signals.kind_of(m))
 	for raw: Variant in _flame_set.keys():
 		if not now.has(raw):
 			native.set_entity_flame(int(Variants.number(raw)), 0)

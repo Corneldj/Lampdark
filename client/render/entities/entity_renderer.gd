@@ -69,4 +69,7 @@ static func _held_flame(ci: CanvasItem, e: Dictionary, at: Vector2, px: float, t
 	var kind: int = held & 0x3F
 	if (held & ItemKinds.LAMP_LIT_BIT) == 0 or not (ItemKinds.is_lamp(kind) or kind == ItemKinds.Kind.CANDLE):
 		return
-	FlameSprite.draw(ci, at, px, kind, int(Variants.number(e.get("flame", 0))), t)
+	# SND-12: bits 5-7 are a lamp signal under way; the rest are the flame's states (VIS-08).
+	var bits: int = int(Variants.number(e.get("flame", 0)))
+	var moved: Vector2 = at + LampSignalAnim.offset(LampSignalKind.of_flame(bits), t, px)
+	FlameSprite.draw(ci, moved, px, kind, bits & FlameFlags.ALL, t)

@@ -100,6 +100,9 @@ var dark: DarkSystem = null
 var candles: Candles = null
 var flares: Flares = null
 var stones: Stones = null
+## SND-12: lamp signals and rock taps.
+var lamp_signals: LampSignals = null
+var rock_taps: RockTaps = null
 ## MNR-12: tools, parts and springing a known trap on purpose.
 var tools_parts: ToolsParts = null
 ## SND-11's callouts.
