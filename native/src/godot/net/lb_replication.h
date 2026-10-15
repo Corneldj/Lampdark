@@ -56,6 +56,9 @@ public:
 	::godot::Dictionary last_stats(int64_t slot) const;
 	int64_t token_of(int64_t slot, int64_t entity) const;
 	::godot::Array last_numbered(int64_t slot) const;
+	// NET-07: the view frame `tick` leaves the client holding, in ReceivedView.to_dict()'s shape,
+	// while that frame is in the history ({} after). The client's decoder gives the same view.
+	::godot::Dictionary sent_view(int64_t slot, int64_t tick) const;
 
 private:
 	::godot::Ref<LbVision> vision_;

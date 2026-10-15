@@ -91,3 +91,24 @@ TEST_CASE("velocity in tiles a second, for the Widow") {
 	CHECK(grid.velocity(id).first == doctest::Approx(3.0));
 	CHECK(grid.velocity(id).second == doctest::Approx(0.0));
 }
+
+TEST_CASE("NET-07: light_bytes is the rectangle's light, row by row, on the frames' byte scale") {
+	MineMap mine;
+	LightGrid grid(mine);
+	load_open(mine, &grid);
+	grid.add_source(lamp(5.5, 5.5, 4.0));
+	grid.update();
+	const std::vector<uint8_t> bytes = grid.light_bytes(3, 4, 5, 3);
+	REQUIRE(bytes.size() == 15);
+	for (int64_t y = 0; y < 3; y++) {
+		for (int64_t x = 0; x < 5; x++) {
+			CHECK(bytes[static_cast<size_t>(y * 5 + x)] == quantise_u8(grid.value({3 + x, 4 + y})));
+		}
+	}
+	CHECK(quantise_u8(0) == 0);
+	CHECK(quantise_u8(1000) == 255);
+	CHECK(quantise_u8(500) == 128);
+	CHECK(quantise_u8(-5) == 0);
+	CHECK(quantise_u8(2000) == 255);
+	CHECK(grid.light_bytes(0, 0, 0, 4).empty());
+}

@@ -125,6 +125,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 		run.air_doors = AirDoorSystem.new()
 		run.air_doors.bind(run)
 		run.add_system(run.air_doors)
+	# NET-07: last, so every signal it listens to exists.
+	run.record = RunRecord.new()
+	run.record.bind(run, net)
+	run.add_system(run.record)
 	# FND-08: dev and QA servers only; server/debug/ is not in a release pack.
 	if net.flavour != BuildInfo.Flavour.RELEASE and ResourceLoader.exists(DEBUG_INSTALL):
 		var installer: GDScript = load(DEBUG_INSTALL)

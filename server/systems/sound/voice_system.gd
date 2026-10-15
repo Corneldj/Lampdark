@@ -19,6 +19,8 @@ extends SimSystem
 signal band_heard(slot: int, band: int)
 ## SND-09: an utterance closed (`ended`) or split at voice.utterance_split_s: the frames the speaker
 ## sent in it, the frames forwarded to each listener ({slot: count}) and its loudest band.
+## NET-07: each frame's band, its speaker and the listeners it was forwarded to (never the frame).
+signal frame_routed(slot: int, band: int, listeners: PackedInt32Array)
 signal utterance_closed(slot: int, frames: int, delivered: Dictionary, band: int, ended: bool)
 
 var forwarder: LbVoiceForwarder = LbVoiceForwarder.new()
@@ -132,6 +134,7 @@ func on_voice(slot: int, payload: PackedByteArray) -> bool:
 		_refresh(slot, st)  # deafness, the Fan, a Stythe since the last tick: this frame already obeys it
 	var out: Array = forwarder.forward(slot, payload)
 	dropped += forwarder.route_count(slot) - out.size()
+	var routed_to: PackedInt32Array = PackedInt32Array()
 	for raw: Variant in out:
 		var item: Array = raw
 		var peer: int = _peer_of(int(Variants.number(item[0])))
@@ -143,7 +146,9 @@ func on_voice(slot: int, payload: PackedByteArray) -> bool:
 			var delivered: Dictionary = st["delivered"]
 			var listener: int = int(Variants.number(item[0]))
 			delivered[listener] = int(Variants.number(delivered.get(listener, 0))) + 1
+			routed_to.append(listener)
 	if not ending:
+		frame_routed.emit(slot, band, routed_to)
 		st["frames"] = int(Variants.number(st["frames"])) + 1
 		st["loudest"] = maxi(int(Variants.number(st["loudest"])), band)
 		if int(Variants.number(st["frames"])) >= roundi(Tuning.f(&"voice.utterance_split_s") / VoicePackets.FRAME_S):

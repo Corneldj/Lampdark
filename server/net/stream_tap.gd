@@ -5,9 +5,12 @@ extends RefCounted
 
 ## records: LbFrameCodec.decode_records(bytes): the records the frame carries.
 signal published(slot: int, tick: int, bytes: PackedByteArray, records: Dictionary)
+## The frame's bytes only, undecoded (NET-07's run record keeps them as sent).
+signal sent(slot: int, tick: int, bytes: PackedByteArray)
 
 
 func publish(slot: int, tick: int, bytes: PackedByteArray) -> void:
+	sent.emit(slot, tick, bytes)
 	if published.get_connections().is_empty():
 		return
 	published.emit(slot, tick, bytes, LbFrameCodec.decode_records(bytes))

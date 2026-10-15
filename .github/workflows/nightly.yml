@@ -1,4 +1,4 @@
-# FND-04's nightly pipeline, 02:00 UTC: four slots. A slot whose tool does not exist yet reports
+# FND-04's nightly pipeline, 02:00 UTC: five slots. A slot whose tool does not exist yet reports
 # "not implemented yet" and passes; once filled, a failure fails the nightly, opens or updates
 # one tracking issue per slot, and posts to the team webhook when LB_NIGHTLY_WEBHOOK is set.
 name: nightly
@@ -108,9 +108,34 @@ jobs:
           if-no-files-found: ignore
           retention-days: 30
 
+  record:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - run: tools/build/ci_setup_linux.sh tests
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - run: chmod +x native/bin/* || true
+      - name: Run record budget, three hours of five bots and 20 falls (NET-07)
+        run: tools/build/ci_nightly_slot.sh record
+      - name: Keep the soak report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nightly-record
+          path: build/soaks/record_budget_nightly/report.json
+          if-no-files-found: ignore
+          retention-days: 30
+
   notify:
     if: failure()
-    needs: [native, soak, stream_audit, seed_harness, probes]
+    needs: [native, soak, stream_audit, seed_harness, probes, record]
     runs-on: ubuntu-24.04
     steps:
       - name: Open or update one issue per failing slot
@@ -121,7 +146,7 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           WEBHOOK: ${{ secrets.LB_NIGHTLY_WEBHOOK }}
         run: |
-          for slot in native soak stream_audit seed_harness probes; do
+          for slot in native soak stream_audit seed_harness probes record; do
             result="$(jq -r --arg s "$slot" '.[$s].result' <<<"$RESULTS")"
             [ "$result" = "failure" ] || continue
             title="Nightly: $slot failing"

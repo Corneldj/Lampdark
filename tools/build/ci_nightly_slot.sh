@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # FND-04's nightly slots. Runs a slot's entry script once its tool exists; until then the slot
 # reports "not implemented yet" and passes. A real failure fails the slot.
-# Usage: tools/build/ci_nightly_slot.sh soak|stream_audit|seed_harness|probes
+# Usage: tools/build/ci_nightly_slot.sh soak|stream_audit|seed_harness|probes|record
 set -uo pipefail
 GAME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$GAME_DIR"
@@ -10,7 +10,8 @@ case "${1:-}" in
 	stream_audit) entry=(tools/stream_audit/run.sh nightly); owner=NET-08 ;;
 	seed_harness) entry=(tools/seed_harness/run.sh --seeds "${LB_SEEDS:-10000}"); owner=GEN-14 ;;
 	probes) entry=(tools/bots/run_probes.sh); owner=NET-12 ;;
-	*) echo "usage: ci_nightly_slot.sh soak|stream_audit|seed_harness|probes" >&2; exit 2 ;;
+	record) entry=(tools/bots/run_soak.sh record_budget_nightly --accelerated --out build/soaks/record_budget_nightly); owner=NET-07 ;;
+	*) echo "usage: ci_nightly_slot.sh soak|stream_audit|seed_harness|probes|record" >&2; exit 2 ;;
 esac
 if [ ! -x "${entry[0]}" ]; then
 	echo "nightly slot $1: not implemented yet (${entry[0]}, $owner)"

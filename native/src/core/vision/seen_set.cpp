@@ -13,11 +13,6 @@ using world::floor_div;
 
 namespace {
 
-uint8_t quantise(int64_t thousandths) {
-	const int64_t v = (thousandths * 255 + 500) / 1000;
-	return static_cast<uint8_t>(v < 0 ? 0 : (v > 255 ? 255 : v));
-}
-
 // The tile a point lies in: floor, so -2.0 is tile -2 (NET-08's audit found -3).
 Coord tile_of(double x, double y) {
 	return Coord{static_cast<int64_t>(std::floor(x)), static_cast<int64_t>(std::floor(y))};
@@ -259,7 +254,7 @@ PerceptionFrame Vision::compute_frame(uint32_t id, const std::vector<sim::Mirror
 		if (cx >= rect[0] && cx <= rect[2] && cy >= rect[1] && cy <= rect[3]) {
 			FrameTile ft;
 			ft.tile = t;
-			ft.light = quantise(light);
+			ft.light = lb::core::light::quantise_u8(light);
 			ft.colour = static_cast<uint8_t>(tl.colour);
 			auto d = decals_.find(t);
 			if (d != decals_.end()) {

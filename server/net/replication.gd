@@ -7,6 +7,10 @@ extends SimSystem
 ## append_illusion_event() before this stage, and numbering happens only here, in a canonical
 ## order. Every frame goes to the stream tap. Server-only.
 
+## NET-03's acknowledgement as it arrived, with the client's receive delay (2 ms units), for
+## NET-07's run record.
+signal acked(slot: int, now: int, ack16: int, bits: int, recv_delay: int)
+
 var net: ServerNet
 var native: LbReplication = LbReplication.new()
 var tap: StreamTap = StreamTap.new()
@@ -71,9 +75,10 @@ func system_name() -> String:
 
 
 ## NET-03's acknowledgement from an input packet (InputService calls it at stage 2).
-func on_ack(slot: int, now: int, ack16: int, bits: int) -> void:
+func on_ack(slot: int, now: int, ack16: int, bits: int, recv_delay: int = 0) -> void:
 	_ensure(slot)
 	native.on_ack(slot, now, ack16, bits)
+	acked.emit(slot, now, ack16, bits, recv_delay)
 
 
 ## The M1 debug switch: every frame against an empty view (a full resync), ignoring acks.

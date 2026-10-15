@@ -36,6 +36,7 @@ void LbReplication::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("last_stats", "slot"), &LbReplication::last_stats);
 	ClassDB::bind_method(D_METHOD("token_of", "slot", "entity"), &LbReplication::token_of);
 	ClassDB::bind_method(D_METHOD("last_numbered", "slot"), &LbReplication::last_numbered);
+	ClassDB::bind_method(D_METHOD("sent_view", "slot", "tick"), &LbReplication::sent_view);
 }
 
 void LbReplication::attach(const Ref<LbVision> &vision, const Ref<LbMine> &mine) {
@@ -355,6 +356,70 @@ Dictionary LbFrameCodec::decode_records(const PackedByteArray &bytes) {
 	own["lamp_radius"] = d.view.own.lamp_radius_q / 16.0;
 	own["flame"] = static_cast<int64_t>(d.view.own.flame);
 	out["own"] = own;
+	return out;
+}
+
+Dictionary LbReplication::sent_view(int64_t slot, int64_t tick) const {
+	Dictionary out;
+	auto c = clients_.find(slot);
+	const net::ViewState *found = c == clients_.end() ? nullptr : c->second->sent_view(static_cast<uint32_t>(tick));
+	if (found == nullptr) {
+		return out;
+	}
+	const net::ViewState &v = *found;
+	Dictionary tiles;
+	for (const auto &[t, tv] : v.tiles) {
+		PackedByteArray b;
+		b.resize(3);
+		b[0] = tv.light;
+		b[1] = tv.colour;
+		b[2] = tv.decals;
+		tiles[Vector2i(static_cast<int32_t>(t.x), static_cast<int32_t>(t.y))] = b;
+	}
+	Dictionary geometry;
+	for (const auto &[t, g] : v.geometry) {
+		PackedByteArray b;
+		b.resize(2);
+		b[0] = g.material;
+		b[1] = g.state;
+		geometry[Vector2i(static_cast<int32_t>(t.x), static_cast<int32_t>(t.y))] = b;
+	}
+	Dictionary entities;
+	for (const auto &[token, e] : v.entities) {
+		Dictionary d;
+		d["level"] = static_cast<int64_t>(e.level);
+		d["size_or_kind"] = static_cast<int64_t>(e.size_or_kind);
+		d["position"] = Vector2(static_cast<real_t>(e.x64 / 64.0), static_cast<real_t>(e.y64 / 64.0));
+		if (e.level == 2) {
+			d["facing"] = static_cast<int64_t>(e.facing);
+			d["cues"] = static_cast<int64_t>(e.cues);
+			d["in_hand"] = static_cast<int64_t>(e.in_hand);
+			d["flame"] = static_cast<int64_t>(e.flame);
+		}
+		entities[static_cast<int64_t>(token)] = d;
+	}
+	PackedByteArray glow;
+	glow.resize(static_cast<int64_t>(net::GLOW_BUCKETS));
+	for (size_t b = 0; b < net::GLOW_BUCKETS; b++) {
+		glow[static_cast<int64_t>(b)] = v.glow_colour[b];
+	}
+	Dictionary own;
+	own["position"] = Vector2(static_cast<real_t>(v.own.x256 / 256.0), static_cast<real_t>(v.own.y256 / 256.0));
+	own["facing"] = static_cast<int64_t>(v.own.facing);
+	own["gait"] = static_cast<int64_t>(v.own.gait);
+	own["speed_q"] = static_cast<int64_t>(v.own.speed_q);
+	own["flags"] = static_cast<int64_t>(v.own.flags);
+	own["stamina_q"] = static_cast<int64_t>(v.own.stamina_q);
+	own["lamp_radius"] = v.own.lamp_radius_q / 16.0;
+	own["flame"] = static_cast<int64_t>(v.own.flame);
+	out["tiles"] = tiles;
+	out["geometry"] = geometry;
+	out["entities"] = entities;
+	out["glow_mask"] = static_cast<int64_t>(v.glow_mask);
+	out["glow_colour"] = glow;
+	out["own"] = own;
+	out["blinded"] = v.blinded;
+	out["dust"] = v.dust;
 	return out;
 }
 

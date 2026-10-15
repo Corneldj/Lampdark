@@ -13,7 +13,7 @@ enum Msg {
 	REJECT = 3,
 	PING = 4,
 	PONG = 5,
-	FRAME = 6,  ## NET-04: one client's frame (core/net/client_view; client/net/frame_decoder.gd)
+	FRAME = 6,  ## NET-04: one client's frame (core/net/client_view; shared/net/frame_decoder.gd)
 	INPUT = 7,  ## NET-03: the client's input packet, every tick, on the inputs lane
 	VOICE = 8,  ## SND-07 defines the contents; until then a band byte and a dummy payload (FND-09's bots)
 	INVENTORY = 9,  ## MNR-04: the own miner's hands and belt (InventoryWire), control lane, owner only

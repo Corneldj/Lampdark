@@ -83,7 +83,7 @@ func tick(run: RunState) -> void:
 			continue
 		var peer: int = peers[slot]
 		if run.replication != null:
-			run.replication.on_ack(slot, run.tick, packet.ack_frame, packet.ack_bits)
+			run.replication.on_ack(slot, run.tick, packet.ack_frame, packet.ack_bits, packet.recv_delay)
 		var plausible_ms: float = net.transport.stats(peer).rtt_ms + interp_ms + grace_ms
 		# The newest frame this client can have seen is the one sent at the end of the last tick.
 		buffer_for(slot).receive(packet, run.tick, run.tick - 1, ceili(plausible_ms / tick_ms))

@@ -46,7 +46,13 @@ if grep -nE '^var [a-z_]+: (Array\[PackedByteArray\]|PackedByteArray)' server/sy
 	echo "FAIL the voice system keeps packets" >&2
 	status=1
 fi
+# NET-07 (GDD §15.6): the run record keeps each voice frame's band, speaker and listeners, never the
+# frame: no record script reads a voice payload, the voice lane or the forwarder.
+if grep -nE '\b(on_voice|payload|Lane\.Id\.VOICE|Msg\.VOICE|LbVoiceForwarder|VoicePackets)\b' server/net/run_record.gd server/net/record_*.gd; then
+	echo "FAIL the run record reaches voice frames" >&2
+	status=1
+fi
 grep -q '^#define MA_NO_ENCODING' native/thirdparty/miniaudio/lb_miniaudio.h || { echo "FAIL miniaudio is built with its encoder" >&2; status=1; }
 grep -q '("WEBRTC_APM_DEBUG_DUMP", "0")' native/SConstruct || { echo "FAIL WebRTC's debug dumps are not compiled out" >&2; status=1; }
-[ "$status" -eq 0 ] && echo "ok   the capture path cannot write, print, log or send microphone audio; the server never decodes or keeps voice"
+[ "$status" -eq 0 ] && echo "ok   the capture path cannot write, print, log or send microphone audio; the server never decodes or keeps voice, and the run record keeps bands only"
 exit "$status"

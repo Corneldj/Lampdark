@@ -57,6 +57,8 @@ void LbLightGrid::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("source_info", "id"), &LbLightGrid::source_info);
 	ClassDB::bind_method(D_METHOD("tiles_at_or_above", "threshold", "rect"), &LbLightGrid::tiles_at_or_above);
 	ClassDB::bind_method(D_METHOD("flame_sources", "rect"), &LbLightGrid::flame_sources);
+	ClassDB::bind_method(D_METHOD("light_bytes", "rect"), &LbLightGrid::light_bytes);
+	ClassDB::bind_method(D_METHOD("sources_packed"), &LbLightGrid::sources_packed);
 	ClassDB::bind_method(D_METHOD("digest"), &LbLightGrid::digest);
 	ClassDB::bind_method(D_METHOD("last_update_usec"), &LbLightGrid::last_update_usec);
 	ClassDB::bind_method(D_METHOD("source_count"), &LbLightGrid::source_count);
@@ -310,6 +312,50 @@ PackedInt64Array LbLightGrid::flame_sources(Rect2 rect) const {
 	for (uint32_t id : grid_->flame_sources(rect.position.x, rect.position.y, rect.position.x + rect.size.x, rect.position.y + rect.size.y)) {
 		out.push_back(id);
 	}
+	return out;
+}
+
+PackedByteArray LbLightGrid::light_bytes(Rect2i rect) const {
+	PackedByteArray out;
+	REQUIRE_GRID(out);
+	const std::vector<uint8_t> bytes = grid_->light_bytes(rect.position.x, rect.position.y, rect.size.x, rect.size.y);
+	out.resize(static_cast<int64_t>(bytes.size()));
+	for (size_t i = 0; i < bytes.size(); i++) {
+		out[static_cast<int64_t>(i)] = bytes[i];
+	}
+	return out;
+}
+
+Dictionary LbLightGrid::sources_packed() const {
+	Dictionary out;
+	REQUIRE_GRID(out);
+	PackedInt64Array ids, owners;
+	PackedInt32Array flags, colours;
+	PackedStringArray kinds;
+	PackedFloat64Array xy, radius, peak;
+	for (uint32_t id : grid_->source_ids()) {
+		const std::optional<light::SourceDesc> d = grid_->source(id);
+		if (!d) {
+			continue;
+		}
+		ids.push_back(id);
+		kinds.push_back(String::utf8(d->kind.c_str()));
+		owners.push_back(d->owner);
+		flags.push_back(static_cast<int32_t>(d->flags));
+		colours.push_back(static_cast<int32_t>(d->colour));
+		xy.push_back(d->x);
+		xy.push_back(d->y);
+		radius.push_back(d->radius * grid_->radius_mult(id));
+		peak.push_back(d->peak);
+	}
+	out["ids"] = ids;
+	out["kinds"] = kinds;
+	out["owners"] = owners;
+	out["flags"] = flags;
+	out["colours"] = colours;
+	out["xy"] = xy;
+	out["radius"] = radius;
+	out["peak"] = peak;
 	return out;
 }
 

@@ -4,6 +4,13 @@ extends RefCounted
 ## systems in their stages, sessions, the change feed and tick timings. Nothing here is
 ## ever sent to a client; the header holds the run seed (Gameplay §5.10).
 
+## NET-07's gate (RSC-06 drives it): the true view is served only during Lamp Check, and the run
+## record is discarded when it ends.
+enum Phase { PLAYING, LAMP_CHECK, ENDED }
+
+signal phase_changed(phase: Phase)
+
+
 class Header:
 	extends RefCounted
 	var run_seed: int = 0
@@ -16,6 +23,7 @@ class Header:
 
 
 var header: Header = Header.new()
+var phase: Phase = Phase.PLAYING
 ## Completed ticks. The tick being run is `tick` while systems run, then it advances.
 var tick: int = 0
 var feed: ChangeFeed = ChangeFeed.new()
@@ -86,6 +94,8 @@ var voice: VoiceSystem = null
 var voice_noise: VoiceNoise = null
 var heard: HeardTracker = null
 var voice_facts: VoiceFacts = null
+## NET-07's run record (server-only, outside the state hash).
+var record: RunRecord = null
 ## SND-15's fall scream, cut and knocks.
 var fall_audio: FallAudio = null
 ## DIR-04's depth helpers are static (Depth): which ring counts, D, the relax lengths, Level names.
@@ -107,6 +117,14 @@ static func create(run_seed: int, mode: ServerConfig.Mode, offline: bool) -> Run
 	if Tuning.current.has_key(&"net.tick_timing_window"):
 		run.timer = TickTimer.new(Tuning.i(&"net.tick_timing_window"))
 	return run
+
+
+## RSC-06 moves the run into Lamp Check and out of it (NET-07 reads it).
+func set_phase(to: Phase) -> void:
+	if to == phase:
+		return
+	phase = to
+	phase_changed.emit(to)
 
 
 ## Registers a system; a missing or clashing (stage, order) is a start-up error.

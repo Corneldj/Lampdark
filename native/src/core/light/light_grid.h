@@ -55,6 +55,12 @@ struct LightEvent {
 	double x, y;
 };
 
+// Thousandths of light to the frames' byte (VIS-03's tiles, NET-07's record): 0-255, rounded.
+inline uint8_t quantise_u8(int64_t thousandths) {
+	const int64_t v = (thousandths * 255 + 500) / 1000;
+	return static_cast<uint8_t>(v < 0 ? 0 : (v > 255 ? 255 : v));
+}
+
 struct TileLight {
 	int64_t value = 0;
 	ColourClass colour = ColourClass::NONE;
@@ -112,6 +118,8 @@ public:
 	TileLight tile_light(Coord tile) const;
 	std::vector<Coord> tiles_at_or_above(int64_t threshold, int64_t x0, int64_t y0, int64_t x1, int64_t y1) const;
 	std::vector<uint32_t> flame_sources(double x0, double y0, double x1, double y1) const;
+	// NET-07: every tile of a w x h rectangle from (x0, y0), row by row, as quantise_u8 bytes.
+	std::vector<uint8_t> light_bytes(int64_t x0, int64_t y0, int64_t w, int64_t h) const;
 	std::vector<LightEvent> take_events();
 
 	uint64_t digest() const;

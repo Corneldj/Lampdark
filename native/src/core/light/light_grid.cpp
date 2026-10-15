@@ -423,6 +423,20 @@ std::vector<Coord> LightGrid::tiles_at_or_above(int64_t threshold, int64_t x0, i
 	return out;
 }
 
+std::vector<uint8_t> LightGrid::light_bytes(int64_t x0, int64_t y0, int64_t w, int64_t h) const {
+	std::vector<uint8_t> out;
+	if (w <= 0 || h <= 0) {
+		return out;
+	}
+	out.reserve(static_cast<size_t>(w * h));
+	for (int64_t y = y0; y < y0 + h; y++) {
+		for (int64_t x = x0; x < x0 + w; x++) {
+			out.push_back(quantise_u8(value({x, y})));
+		}
+	}
+	return out;
+}
+
 std::vector<uint32_t> LightGrid::flame_sources(double x0, double y0, double x1, double y1) const {
 	std::vector<uint32_t> out;
 	for (const auto &entry : sources_) {

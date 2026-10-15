@@ -1,9 +1,10 @@
 class_name FrameDecoder
 extends RefCounted
-## NET-04's client decoder: each frame applies its records to the baseline it names (a frame
-## the client decoded earlier), giving the view the client now holds. Mirrors the native
-## encoder's layout (core/net/client_view.cpp) byte for byte; a malformed frame, or one whose
-## baseline the client no longer has, decodes to nothing and is not acknowledged.
+## NET-04's frame decoder: the client's, and NET-07's mirror of it on the server. Each frame
+## applies its records to the baseline it names (a frame the client decoded earlier), giving the
+## view the client now holds. Mirrors the native encoder's layout (core/net/client_view.cpp) byte
+## for byte; a malformed frame, or one whose baseline the client no longer has, decodes to nothing
+## and is not acknowledged.
 
 const VERSION: int = 4
 const FLAG_FULL: int = 1

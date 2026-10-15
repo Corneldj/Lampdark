@@ -55,6 +55,11 @@ public:
 	::godot::Dictionary brightest_source(::godot::Vector2i tile) const;
 	::godot::Array tiles_at_or_above(int64_t threshold, ::godot::Rect2i rect) const;
 	::godot::PackedInt64Array flame_sources(::godot::Rect2 rect) const;
+	// NET-07: the rectangle's light, row by row, one byte a tile (the frames' 0-255 scale).
+	::godot::PackedByteArray light_bytes(::godot::Rect2i rect) const;
+	// NET-07: every source, in ascending id: {ids, kinds, owners, flags, colours, xy, radius (after
+	// modifiers), peak}, as parallel packed arrays.
+	::godot::Dictionary sources_packed() const;
 	int64_t digest() const;
 	int64_t last_update_usec() const;
 	int64_t source_count() const;

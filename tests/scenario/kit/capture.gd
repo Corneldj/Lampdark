@@ -17,9 +17,16 @@ var received_events: Array[Dictionary] = []
 var _numbers: Dictionary = {}
 ## Called with each decoded frame (NET-05's reconciler in the kit).
 var on_decoded: Callable = Callable()
+## Long soaks only (NET-07's 3-hour record soak): keep this many ticks of messages, views and
+## events, and count bytes as they pass. 0 keeps everything.
+var keep_ticks: int = 0
+var _trimmed_to: int = 0
+var _lane_bytes: Dictionary = {}
 
 
 func filter_receive(events: Array[TransportEvent]) -> Array[TransportEvent]:
+	if keep_ticks > 0:
+		_trim()
 	for event: TransportEvent in events:
 		if event.kind != TransportEvent.Kind.MESSAGE:
 			continue
@@ -28,6 +35,8 @@ func filter_receive(events: Array[TransportEvent]) -> Array[TransportEvent]:
 		var record: Dictionary = {"tick": tick, "usec": Transport.now_usec(), "lane": event.lane, "type": type,
 			"bytes": event.data.duplicate()}
 		messages.append(record)
+		if keep_ticks > 0:
+			_lane_bytes[event.lane] = int(Variants.number(_lane_bytes.get(event.lane, 0))) + event.data.size()
 		if not _by_tick.has(tick):
 			_by_tick[tick] = [] as Array[Dictionary]
 		var at: Array[Dictionary] = _by_tick[tick]
@@ -77,6 +86,10 @@ func bytes_sent(at_tick: int) -> int:
 
 func bytes_by_lane() -> Dictionary:
 	var out: Dictionary = {}
+	if keep_ticks > 0:
+		for lane: Variant in _lane_bytes.keys():
+			out[Lane.lane_name(int(Variants.number(lane)))] = _lane_bytes[lane]
+		return out
 	for m: Dictionary in messages:
 		var bytes: PackedByteArray = m["bytes"]
 		var lane: String = Lane.lane_name(int(Variants.number(m["lane"])))
@@ -165,3 +178,18 @@ func carry_over(old_messages: Array[Dictionary], old_index: Dictionary) -> void:
 	messages = old_messages
 	_by_tick = old_index
 
+
+## Drops what arrived more than keep_ticks ago, a few seconds at a time.
+func _trim() -> void:
+	var cut: int = tick - keep_ticks
+	if cut - _trimmed_to < 200:
+		return
+	var i: int = 0
+	while i < messages.size() and int(Variants.number(messages[i]["tick"])) < cut:
+		i += 1
+	messages = messages.slice(i)
+	for t: int in range(_trimmed_to, cut):
+		_by_tick.erase(t)
+		views.erase(t)
+	received_events = received_events.filter(func(e: Dictionary) -> bool: return int(Variants.number(e["arrived"])) >= cut)
+	_trimmed_to = cut

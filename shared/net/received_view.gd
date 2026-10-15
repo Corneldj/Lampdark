@@ -41,6 +41,33 @@ func duplicate_view() -> ReceivedView:
 	return v
 
 
+## Plain values (NET-07's run record keeps decoded views as keyframes).
+func to_dict() -> Dictionary:
+	return {"tiles": tiles.duplicate(), "geometry": geometry.duplicate(), "entities": entities.duplicate(true), "glow_mask": glow_mask,
+		"glow_colour": glow_colour.duplicate(), "own": own.duplicate(), "blinded": blinded, "dust": dust}
+
+
+static func from_dict(d: Dictionary) -> ReceivedView:
+	var v: ReceivedView = ReceivedView.new()
+	v.tiles = Variants.dict(d.get("tiles", {})).duplicate()
+	v.geometry = Variants.dict(d.get("geometry", {})).duplicate()
+	v.entities = Variants.dict(d.get("entities", {})).duplicate(true)
+	v.glow_mask = int(Variants.number(d.get("glow_mask", 0)))
+	var colour: Variant = d.get("glow_colour", PackedByteArray())
+	if colour is PackedByteArray:
+		var bytes: PackedByteArray = colour
+		v.glow_colour = bytes.duplicate()
+	v.own = Variants.dict(d.get("own", v.own)).duplicate()
+	v.blinded = Variants.flag(d.get("blinded", false))
+	v.dust = Variants.flag(d.get("dust", false))
+	return v
+
+
+## Equal content (NET-07 compares a rebuilt view with the client's own).
+func same_as(other: ReceivedView) -> bool:
+	return other != null and to_dict() == other.to_dict()
+
+
 func own_tile() -> Vector2i:
 	var p: Vector2 = own["position"]
 	return Vector2i(floori(p.x), floori(p.y))

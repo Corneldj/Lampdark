@@ -33,6 +33,11 @@ static func run(profile: Dictionary, servers: int, bots: int, ticks: int, out_di
 				var parts: PackedStringArray = str(profile["link"]).split(",")
 				bot.link(parts[0].to_int(), parts[1].to_float())
 			n += 1
+		if profile.has("capture_keep_s"):  # long soaks: the captures keep only their last seconds
+			var keep: int = roundi(float(Variants.number(profile["capture_keep_s"])) * 1000000.0 / Scenario.TICK_USEC)
+			scenario.server_capture.keep_ticks = keep
+			for h: MinerHandle in scenario.miners:
+				h.capture.keep_ticks = keep
 		if soak != null and soak.has_method(&"prepare"):
 			soak.call(&"prepare", scenario)
 		scenario.step(ticks)

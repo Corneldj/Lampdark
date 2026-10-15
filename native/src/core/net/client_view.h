@@ -203,6 +203,12 @@ public:
 
 	// The newest acknowledged frame tick, if any.
 	std::optional<uint32_t> baseline() const { return newest_acked_; }
+	// The view a frame still in the history leaves the client holding once decoded (NET-07's
+	// keyframes), or null.
+	const ViewState *sent_view(uint32_t tick) const {
+		auto it = history_.find(tick);
+		return it == history_.end() ? nullptr : &it->second;
+	}
 	size_t pending_events() const { return events_.size(); }
 	// The token an entity holds for this client now, or 0.
 	uint16_t token_of(uint32_t entity) const;
