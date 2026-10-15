@@ -200,6 +200,15 @@
 			]
 		},
 		{
+			"name": "rescue.coming_round",
+			"id": 23,
+			"owner": "RSC-04",
+			"kind": "stream",
+			"keys": [
+				"the fallen miner's entity id"
+			]
+		},
+		{
 			"name": "profile.names",
 			"id": 21,
 			"owner": "MOD-01",

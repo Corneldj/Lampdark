@@ -1,5 +1,5 @@
 {
-	"hash": "3650055aae05a7f2357e7bdfa459144cb5c6595f2f809f32898781bf5330986d",
+	"hash": "7bd845ffac6472c8c14b6ea30cbccb3f55dd0738e120d398ecdc1f1cc4db0970",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -916,6 +916,13 @@
 			"value": 1.0,
 			"type": "float",
 			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"rescue.unconscious_lowpass_hz": {
+			"value": 800,
+			"type": "int",
+			"unit": "Hz",
 			"visibility": "client",
 			"kind": "param"
 		},

@@ -43,6 +43,8 @@ var pocket_book_presses: int = 0
 ## interactable identified in reach (UI-01's prompt), the ring's options while it is open (MNR-05).
 var revolver_drawn: bool = false
 var carrying: bool = false
+## RSC-04: coming round in the Dark (the callout wheel offers 'Help!' and a moan, no rings).
+var coming_round: bool = false
 var lamp_in_hand: bool = false
 var target_in_reach: bool = false
 var ring_options: Array[String] = []

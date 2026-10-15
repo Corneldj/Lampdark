@@ -61,8 +61,17 @@ func tick(run: RunState) -> void:
 				continue
 			var pick: Dictionary = Intents.decode_wheel_arg(a.arg)
 			var band: int = CalloutLines.band_of(pick)
-			var page: bool = job_page(run, run.movement.miner(slot).entity_id)
-			var line: String = CalloutLines.line_at(float(a.aim) / 65536.0 * 360.0, page)
+			var entity: int = run.movement.miner(slot).entity_id
+			var angle: float = float(a.aim) / 65536.0 * 360.0
+			if run.dark != null and run.dark.in_window(entity):
+				# RSC-04: coming round, the wheel offers 'Help!' and a moan, each at its own band.
+				var said: String = CalloutLines.COMING_ROUND[CalloutLines.slice(angle, CalloutLines.COMING_ROUND.size())]
+				if speak(run, slot, said, CalloutLines.coming_round_band(said), false, true) > 0 and said == "help":
+					var f: DarkSystem.Fallen = run.dark.fallen[entity]
+					f.window_help = true
+				continue
+			var page: bool = job_page(run, entity)
+			var line: String = CalloutLines.line_at(angle, page)
 			speak(run, slot, line, band, (c.record.holds & InputRecord.HOLD_BREATH) != 0)
 	_sound_on(run)
 
@@ -83,7 +92,7 @@ func speak(run: RunState, slot: int, line: String, band: int, holding_breath: bo
 		return 0
 	var entity: int = run.movement.miner(slot).entity_id
 	var voice_id: String = _voice_of(run, slot)
-	var form: String = CalloutLines.FORMS[band]
+	var form: String = CalloutLines.form_of(line, band)
 	var frames: int = maxi(1, VoiceManifest.frames_of(voice_id, line, form))
 	var hz: float = Tuning.f(&"net.tick_hz")
 	var duration_ticks: int = maxi(1, ceili(frames * VoicePackets.FRAME_S * hz))
@@ -96,7 +105,9 @@ func speak(run: RunState, slot: int, line: String, band: int, holding_breath: bo
 	spoken.append(entry)
 	_until[slot] = run.tick + duration_ticks
 	var kept: Dictionary = {}
-	for route: Dictionary in run.voice.compute(slot, band, {}):
+	# RSC-04's coming-round 'Help!' goes at talk band and range, whatever the window's whisper route.
+	var help_override: int = VoiceRoutes.Route.NORMAL if forced and line == "help" else -1
+	for route: Dictionary in run.voice.compute(slot, band, {}, {}, help_override):
 		var listener: int = int(Variants.number(route["listener"]))
 		var loss: float = float(Variants.number(route["loss"]))
 		var r: CalloutRecord = CalloutRecord.new()
@@ -124,7 +135,7 @@ func speak(run: RunState, slot: int, line: String, band: int, holding_breath: bo
 	send(slot, own)
 	if run.heard != null and run.heard.callout_counts(slot, kept, band):
 		run.heard.mark_heard(slot, &"callout")
-	var route_kind: int = int(Variants.number(run.voice.route_of.get(slot, VoiceRoutes.Route.NORMAL)))
+	var route_kind: int = help_override if help_override >= 0 else int(Variants.number(run.voice.route_of.get(slot, VoiceRoutes.Route.NORMAL)))
 	var np: float = VoiceNoise.level_np(route_kind as VoiceRoutes.Route, band)
 	if np > 0.0:
 		_sounding.append([slot, entity, np, run.tick, run.tick + duration_ticks])
@@ -186,13 +197,15 @@ func _refusal(run: RunState, slot: int, line: String, band: int, holding_breath:
 	if band < CalloutLines.WHISPER or band > CalloutLines.SHOUT:
 		return "band"
 	var life: int = run.miner_state.life(m.entity_id) if run.miner_state != null else MinerTransitions.Life.UPRIGHT
-	if life == MinerTransitions.Life.DEAD or (life == MinerTransitions.Life.UNCONSCIOUS and not (forced and line == "help")):
+	if life == MinerTransitions.Life.DEAD or (life == MinerTransitions.Life.UNCONSCIOUS and not (forced and CalloutLines.COMING_ROUND.has(line))):
 		return "state"
 	if int(Variants.number(run.voice.route_of.get(slot, VoiceRoutes.Route.NORMAL))) == VoiceRoutes.Route.ASIDE:
 		return "aside"
 	if holding_breath:
 		return "breath"
 	var page: bool = job_page(run, m.entity_id)
+	if line == "moan" and not forced:
+		return "page"
 	if not forced and ((page and not CalloutLines.JOB_PAGE.has(line)) or (not page and not CalloutLines.WHEEL.has(line))):
 		return "page"
 	if int(Variants.number(_until.get(slot, -1))) > run.tick:

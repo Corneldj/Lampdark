@@ -10,6 +10,8 @@ const SLICES: Dictionary = {
 	"callout": ["callout.here", "callout.help", "callout.is_that_you", "callout.count_off", "callout.douse",
 		"callout.light_up", "callout.quiet", "callout.gate", "callout.oil", "callout.moth", "callout.tapping", "callout.stythe"],
 	"job_page": ["callout.now", "callout.right", "callout.stop", "callout.left"],
+	## RSC-04's coming-round window: 'Help!' and a moan (CalloutLines.COMING_ROUND).
+	"coming_round": ["callout.help", "voice.moan"],
 	"signal": ["wheel.signal.one", "wheel.signal.two", "wheel.signal.three", "wheel.signal.circle"],
 	"chalk": ["wheel.chalk.arrow", "wheel.chalk.cross", "wheel.chalk.bang", "wheel.chalk.0", "wheel.chalk.1", "wheel.chalk.2",
 		"wheel.chalk.3", "wheel.chalk.4", "wheel.chalk.5", "wheel.chalk.6", "wheel.chalk.7", "wheel.chalk.8", "wheel.chalk.9"],
@@ -29,11 +31,15 @@ func _init() -> void:
 
 ## The slices for a wheel: "callout" (or its job page), "signal", "chalk", or "combined" (the pad's
 ## one wheel of lamp signals and chalk).
-static func slices_for(kind: String, job_page: bool = false) -> Array[String]:
+static func slices_for(kind: String, job_page: bool = false, coming_round: bool = false) -> Array[String]:
 	var out: Array[String] = []
 	var lists: Array = [kind] if kind != "combined" else ["signal", "chalk"]
 	for list: Variant in lists:
-		var name: String = "job_page" if str(list) == "callout" and job_page else str(list)
+		var name: String = str(list)
+		if name == "callout" and coming_round:
+			name = "coming_round"
+		elif name == "callout" and job_page:
+			name = "job_page"
 		for k: Variant in Variants.array(SLICES.get(name, [])):
 			out.append(str(k))
 	return out

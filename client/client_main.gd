@@ -61,6 +61,8 @@ var in_play: InPlayLayer = null
 var closeups: CloseupManager = null
 ## UI-03's captions and subtitles.
 var captions: CaptionLayer = null
+## RSC-04's Dark: the black, the replay of the fall, watching.
+var dark: DarkView = DarkView.new()
 ## SND-11's callouts: played as heard; the wheel's picks.
 var callout_player: CalloutPlayer = null
 var callout_wheel: CalloutWheel = null
@@ -358,6 +360,9 @@ func _sample_input(shown_tick: int) -> InputRecord:
 			int(Variants.number(action[2])))
 	for ask: int in closeups.process_input(router):
 		connection.inputs.queue_action(ActionRecord.Kind.CLOSE_UP, ask, shown_tick, 0)
+	router.coming_round = DarkView.in_window(connection.view)
+	for ask: int in dark.asks(router, connection.view):
+		connection.inputs.queue_action(ActionRecord.Kind.WATCH, ask, shown_tick, 0)
 	return record
 
 
@@ -367,22 +372,37 @@ func _sample_input(shown_tick: int) -> InputRecord:
 func _follow_camera(delta: float) -> void:
 	if camera == null or connection.view == null or connection.view.own.is_empty():
 		return
-	var own: Vector2 = connection.view.own["position"]
+	# RSC-04: in the Dark, the replay of the fall or a watched teammate's stream is drawn instead.
+	dark.tick(connection, delta)
+	var shown: ReceivedView = dark.override_view(connection.view)
+	var drawing_other: bool = shown != null and not shown.own.is_empty()
+	if not drawing_other:
+		shown = connection.view
+	world_view.set_view_mode(dark.mode(connection.view))
+	DarkMix.apply(DarkView.life_of(connection.view) == DarkView.LIFE_UNCONSCIOUS and not drawing_other)
+	if camera.state != LampCamera.State.CLOSE_UP:
+		# VIS-01: coming round, the camera centres on the body with no lead.
+		camera.state = LampCamera.State.COMING_ROUND if DarkView.in_window(connection.view) else LampCamera.State.MINE
+	var own: Vector2 = shown.own["position"]
 	var squint: bool = (router.record.holds & (InputRecord.HOLD_SQUINT | InputRecord.HOLD_AIM)) != 0
 	var rate: float = Tuning.f(&"movement.turn_rate_deg_s") if Tuning.current.has_key(&"movement.turn_rate_deg_s") else 0.0
-	_shown_facing = MinerMotion.turn_toward(_shown_facing, router.record.facing, MinerMotion.turn_step(rate, delta))
+	if drawing_other:
+		_shown_facing = int(Variants.number(shown.own.get("facing", 0)))
+		squint = false
+	else:
+		_shown_facing = MinerMotion.turn_toward(_shown_facing, router.record.facing, MinerMotion.turn_step(rate, delta))
 	camera.follow(own, _shown_facing, squint, delta)
 	source.own_screen = get_viewport().get_visible_rect().size / 2.0
 	# VIS-05: the drawn set and the darkness composite, from the live facing and the own lamp
 	# (NET-05's predicted pool replaces the server's radius once the client predicts).
-	var radius: float = float(Variants.number(connection.view.own.get("lamp_radius", 0.0)))
+	var radius: float = float(Variants.number(shown.own.get("lamp_radius", 0.0)))
 	var predicted: Dictionary = {"position": own, "facing": _shown_facing,
 		"lamp": {"position": own, "radius": radius} if radius > 0.0 else {}}
-	drawn.build(connection.view, predicted, connection.last_input_ack, _facing_seq)
+	drawn.build(shown, predicted, connection.last_input_ack, _facing_seq)
 	# VIS-06: the own lamp blended over the server's light (the same lamp both sides until NET-05's
 	# predicted pool is wired here; then a wick step shows at once).
 	var server_lamp: Dictionary = {"position": own, "radius": radius}
-	var lights: Dictionary = OwnLampBlend.lights(drawn, connection.view, server_lamp, Variants.dict(predicted["lamp"]))
+	var lights: Dictionary = OwnLampBlend.lights(drawn, shown, server_lamp, Variants.dict(predicted["lamp"]))
 	var own_light: float = float(Variants.number(lights.get(Vector2i(floori(own.x), floori(own.y)), 0.0)))
 	if connection.closeup_messages != _closeup_messages_seen:
 		_closeup_messages_seen = connection.closeup_messages
@@ -394,7 +414,7 @@ func _follow_camera(delta: float) -> void:
 		return
 	if not world_view.visible:
 		world_view.set_shown(true)
-	world_view.show_frame(drawn, connection.view, camera.view_rect(own).position, own, _shown_facing, own_light,
+	world_view.show_frame(drawn, shown, camera.view_rect(own).position, own, _shown_facing, own_light,
 		lights, Time.get_ticks_msec() / 1000.0)
 	_show_in_play(own)
 	_probe(predicted)
@@ -438,7 +458,16 @@ func _play_audio() -> void:
 	if events_player == null or connection.view == null:
 		return
 	var own: Vector2 = connection.view.own["position"]
+	# RSC-04: watching, the ears sit on the watched miner and their game sound plays (never voice).
+	var watched: ReceivedView = dark.watch_view if dark.watching else null
+	if watched != null and not watched.own.is_empty():
+		own = watched.own["position"]
 	listener.follow(own, _shown_facing)
+	while not dark.watch_events.is_empty():
+		var wev: Dictionary = dark.watch_events.pop_front()
+		var wrecord: AudioRecord = AudioRecord.from_event(wev)
+		if not VisualEvents.is_visual(wrecord.type):
+			events_player.play(wrecord, int(Variants.number(wev.get("number", 0))))
 	while _events_played < connection.events.size():
 		var ev: Dictionary = connection.events[_events_played]
 		var record: AudioRecord = AudioRecord.from_event(ev)

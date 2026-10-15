@@ -136,6 +136,31 @@ static func true_view(record: RunRecord, window: RecordWindow) -> Array[Dictiona
 	return out
 
 
+## RSC-04's watch relay: the received frames of `target` in (after, until], as sent, oldest first:
+## [[tick, bytes]]. With `after` < 0 it starts at the block holding `until`, and `views` carries that
+## block's keyframe (decoded views by frame tick) so a fresh decoder can follow.
+static func frames_for_relay(record: RunRecord, target: int, after: int, until: int) -> Dictionary:
+	var out: Dictionary = {"views": {}, "frames": []}
+	if record.discarded:
+		return out
+	var from: int = after
+	if after < 0:
+		var b: RecordBlock = _block_at(record, until)
+		if b == null:
+			return out
+		out["views"] = Variants.dict(b.stream_keyframe(target).get("views", {}))
+		from = b.start - 1
+	var frames: Array = out["frames"]
+	for b: RecordBlock in record.blocks_between(from + 1, until):
+		for raw: Variant in Variants.array(b.stream_ticks(target).get("f", [])):
+			var f: Array = raw
+			var t: int = f[0]
+			var received: int = f[2]
+			if t > from and t <= until and received == 1:
+				frames.append([t, f[1]])
+	return out
+
+
 ## CRT-10's lie log entries between two ticks for one slot (all slots for -1), from the ring.
 static func lies(record: RunRecord, from_tick: int, to_tick: int, slot: int = -1) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []

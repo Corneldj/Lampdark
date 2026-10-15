@@ -115,6 +115,25 @@ TEST_CASE("QA-01: the forwarder's counts are audio frames only; an END goes thro
 	CHECK(counts.at(4).sent == 5);
 }
 
+TEST_CASE("RSC-04: a route's band cap: a shout forced to a whisper says whisper in its header") {
+	VoiceForwarder f;
+	VoiceRoute capped;
+	capped.listener = 1;
+	capped.flags = w::MUFFLED;
+	capped.band_cap = 1;
+	VoiceRoute open;
+	open.listener = 2;
+	f.set_routes(0, {capped, open});
+	const std::vector<uint8_t> shout = up(1, 3, 0, {4, 5});
+	const auto out = f.forward(0, shout.data(), shout.size());
+	REQUIRE(out.size() == 2);
+	CHECK((out[0].second[4] & w::BAND_MASK) == 1);
+	CHECK((out[0].second[4] & w::MUFFLED) != 0);
+	CHECK((out[1].second[4] & w::BAND_MASK) == 3); // an uncapped route keeps the speaker's band
+	const std::vector<uint8_t> whisper = up(2, 1, 0, {4, 5});
+	CHECK((f.forward(0, whisper.data(), whisper.size()).at(0).second[4] & w::BAND_MASK) == 1);
+}
+
 TEST_CASE("SND-07: bands 5-7 and malformed packets are refused") {
 	VoiceForwarder f;
 	VoiceRoute r;

@@ -125,6 +125,9 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.callouts = CalloutSystem.new()
 	run.callouts.bind(run, net)
 	run.add_system(run.callouts)
+	run.dark = DarkSystem.new()
+	run.dark.bind(run, net)
+	run.add_system(run.dark)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:

@@ -22,6 +22,7 @@ struct VoiceRoute {
 	uint8_t flags = 0; // wire::MUFFLED | TELEPHONE | DRY
 	uint8_t treat = 0; // wire::CRACKLE | muffle level << wire::MUFFLE_SHIFT
 	double loss = 0.0; // SND-08: this listener's combined drop share
+	uint8_t band_cap = 0; // 0: the speaker's band; else the header says at most this (a forced whisper)
 	int32_t x16 = 0; // apparent position, 1/16 tiles
 	int32_t y16 = 0;
 };

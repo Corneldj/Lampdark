@@ -216,7 +216,7 @@
 			"unit": "Hz",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket RSC-04"
 		},

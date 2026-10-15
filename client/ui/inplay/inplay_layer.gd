@@ -65,8 +65,10 @@ func update(frame: Dictionary) -> void:
 	var short_side: float = float(Variants.number(frame.get("short_side", 1080.0)))
 	var open_wheel: bool = router != null and router.context == InputContexts.Context.WHEEL
 	var kind: String = _wheel_kind(router) if open_wheel else ""
-	wheel.show_wheel(open_wheel and not black, anchor, WheelWidget.slices_for(kind, router.wheel.job_page if router != null else false),
-		kind == "callout" and not router.wheel.job_page, router.wheel.vec if router != null else Vector2.ZERO, short_side)
+	var coming_round: bool = router != null and router.coming_round
+	wheel.show_wheel(open_wheel and not black, anchor, WheelWidget.slices_for(kind, router.wheel.job_page if router != null else false,
+		coming_round), kind == "callout" and not router.wheel.job_page and not coming_round,
+		router.wheel.vec if router != null else Vector2.ZERO, short_side)
 	var ring_keys: Array[String] = []
 	if router != null:
 		for option: String in router.ring_options:

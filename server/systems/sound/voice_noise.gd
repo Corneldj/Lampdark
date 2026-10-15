@@ -41,7 +41,8 @@ static func level_np(route: VoiceRoutes.Route, band: int) -> float:
 func _on_band(slot: int, band: int) -> void:
 	var route: VoiceRoutes.Route = int(Variants.number(_run.voice.route_of.get(slot, VoiceRoutes.Route.NORMAL))) as VoiceRoutes.Route
 	var np: float = level_np(route, band)
-	if np <= 0.0 or _in_channel(slot) or _run.movement == null or _run.noise == null:
+	# RSC-04: the dream channel makes no noise, but a coming-round window's whisper does.
+	if np <= 0.0 or (_in_channel(slot) and route != VoiceRoutes.Route.COMING_ROUND) or _run.movement == null or _run.noise == null:
 		return
 	var m: MovementSystem.Miner = _run.movement.miner(slot)
 	if m == null or not _run.registry.has(m.entity_id):

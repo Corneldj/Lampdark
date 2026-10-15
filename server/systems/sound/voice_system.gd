@@ -257,9 +257,12 @@ func _signature(slot: int, st: Dictionary) -> String:
 
 
 ## The routes for `slot` speaking at `band` now: [{listener, stream, gain_db, flags, crackle, muffle,
-## loss, x, y}]. `rates` (optional) receives each listener's rates for the QA log.
-func compute(slot: int, band: int, streams: Dictionary, rates: Dictionary = {}) -> Array:
+## loss, x, y}]. `rates` (optional) receives each listener's rates for the QA log. `route_override`
+## (SND-11's coming-round 'Help!', which goes at talk band): a route other than the slot's own.
+func compute(slot: int, band: int, streams: Dictionary, rates: Dictionary = {}, route_override: int = -1) -> Array:
 	var out: Array = []
+	var own_route: int = route_override if route_override >= 0 else int(Variants.number(route_of.get(slot, VoiceRoutes.Route.NORMAL)))
+	var window: bool = int(Variants.number(route_of.get(slot, VoiceRoutes.Route.NORMAL))) == VoiceRoutes.Route.COMING_ROUND
 	for name: Variant in channels.keys():
 		var members: Dictionary = channels[name]
 		if members.has(slot):
@@ -267,10 +270,11 @@ func compute(slot: int, band: int, streams: Dictionary, rates: Dictionary = {}) 
 				var other: int = int(Variants.number(raw))
 				if other != slot:
 					out.append(_route(streams, other, 0.0, VoicePackets.DRY, Vector2.ZERO))
-			return out  # a channel replaces proximity
+			if not window:
+				return out  # a channel replaces proximity (RSC-04: but for a coming-round window)
 	var speaker: Dictionary = _miner(slot)
 	if not speaker.is_empty():
-		var kind: int = int(Variants.number(route_of.get(slot, VoiceRoutes.Route.NORMAL)))
+		var kind: int = own_route
 		var rb: Array = VoiceRoutes.route_band(kind as VoiceRoutes.Route, band)
 		if Variants.flag(rb[2]) and _run.road_graph != null:
 			var from_tile: Vector2i = speaker["tile"]
@@ -294,7 +298,9 @@ func compute(slot: int, band: int, streams: Dictionary, rates: Dictionary = {}) 
 					continue  # the Fan's surge: nothing beyond half range
 				var to_pos: Vector2 = to["position"]
 				var crackle: bool = speaker_stythe or conditions.near_stythe(to_pos)
-				var muffled: bool = Variants.flag(r["muffled"]) or Variants.flag(rb[1])
+				# RSC-04: an unconscious listener hears living voices round their body, muffled and low.
+				var out_cold: bool = _run.miner_state != null and _run.miner_state.life(int(Variants.number(to["entity"]))) == MinerTransitions.Life.UNCONSCIOUS
+				var muffled: bool = Variants.flag(r["muffled"]) or Variants.flag(rb[1]) or out_cold
 				var lr: Dictionary = {"via": r["via"], "distance": d, "range": rng, "distance_loss": 0.0, "stythe_loss": 0.0,
 					"running_loss": 0.0, "loss": 0.0}
 				if not lossless:
@@ -306,11 +312,13 @@ func compute(slot: int, band: int, streams: Dictionary, rates: Dictionary = {}) 
 					lr["loss"] = LbVoiceLoss.combine(PackedFloat64Array([dl, sl, running]))
 				rates[other] = lr
 				var at: Vector2 = r["position"]
-				var route: Dictionary = _route(streams, other, float(Variants.number(r["gain_db"])),
-					VoicePackets.MUFFLED if muffled else 0, at)
+				var gain: float = float(Variants.number(r["gain_db"])) + (Tuning.f(&"rescue.unconscious_gain_db") if out_cold else 0.0)
+				var route: Dictionary = _route(streams, other, gain, VoicePackets.MUFFLED if muffled else 0, at)
 				route["crackle"] = crackle
 				route["muffle"] = 1.0 if muffled else LbVoiceLoss.distance_muffle(d, rng, clean)
 				route["loss"] = lr["loss"]
+				if Variants.flag(rb[1]):
+					route["band_cap"] = rb[0]  # a forced whisper says so in its header too (RSC-04's window, a drag)
 				out.append(route)
 	if int(Variants.number(route_of.get(slot, VoiceRoutes.Route.NORMAL))) == VoiceRoutes.Route.CUT:
 		return out  # SND-15's cut: gone for the living, phone lines too

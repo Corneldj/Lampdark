@@ -94,6 +94,8 @@ var voice: VoiceSystem = null
 var voice_noise: VoiceNoise = null
 var heard: HeardTracker = null
 var voice_facts: VoiceFacts = null
+## RSC-04's Dark: windows, the dream channel, watching.
+var dark: DarkSystem = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

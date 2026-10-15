@@ -46,6 +46,9 @@ var ambient_cues: Array[Dictionary] = []
 var deafened: Array[Dictionary] = []
 ## SND-15: KNOCKS messages not yet played (each is a fall's set; the message carries nothing).
 var knocks: int = 0
+## RSC-04: WATCH and REPLAY messages not yet taken (DarkView drains them), decoded.
+var watch_in: Array[Dictionary] = []
+var replay_in: Array[Dictionary] = []
 ## SND-11: callout records not yet played, in arrival order (CalloutPlayer drains them).
 var callouts: Array[CalloutRecord] = []
 ## UI-02: the own close-up and the board's seat as last received (CloseupKind.decode); {} before any.
@@ -204,6 +207,10 @@ func _on_message(event: TransportEvent, now: int) -> void:
 		Protocol.Msg.KNOCKS:
 			if payload.is_empty():
 				knocks += 1
+		Protocol.Msg.WATCH, Protocol.Msg.REPLAY:
+			var d: Dictionary = DarkMessages.decode(payload)
+			if not d.is_empty():
+				(watch_in if type == Protocol.Msg.WATCH else replay_in).append(d)
 		Protocol.Msg.CALLOUT:
 			var r: CalloutRecord = CalloutRecord.decode(payload)
 			if r != null:

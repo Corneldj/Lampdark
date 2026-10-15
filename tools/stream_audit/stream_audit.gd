@@ -225,8 +225,11 @@ func _expect(r: RunState) -> void:
 		var self_id: int = r.vision.watched_entity(slot)
 		var me: SimEntity = r.registry.get_entity(self_id)
 		var life: int = r.miner_state.life(self_id) if r.miner_state != null else MinerTransitions.Life.UPRIGHT
+		# RSC-04: the fallen see nothing, but their own cone within rescue.window_sight_tiles coming round.
+		var coming_round: bool = life == MinerTransitions.Life.UNCONSCIOUS and r.dark != null and r.dark.in_window(self_id)
 		var observer: Dictionary = {"self": self_id, "position": me.position, "facing": _facing_of(r, slot),
-			"blinded": life == MinerTransitions.Life.UNCONSCIOUS or life == MinerTransitions.Life.DEAD,
+			"blinded": (life == MinerTransitions.Life.UNCONSCIOUS or life == MinerTransitions.Life.DEAD) and not coming_round,
+			"clamp": Tuning.f(&"rescue.window_sight_tiles") if coming_round else 0.0,
 			"turn_band": _turn_band(float(Variants.number(r.vision.rtt_ms.call(slot)))), "bite": bite_tiles.call(slot)}
 		_expected[slot] = ref.evaluate(observer, ents)
 		tiles[slot] = me.tile()
@@ -328,6 +331,9 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 				_fail(slot, "DEAFENED", "deafened", "not exactly {duration_s, dip_db}")
 			elif run.deafen == null or not run.deafen.is_deafened(slot):
 				_fail(slot, "DEAFENED", "deafened", "to a client whose miner is not deafened")
+		"watch", "replay":
+			_lane(slot, lane, Lane.Id.CONTROL, type)
+			_check_dark(slot, type, payload)
 		"callout":
 			_lane(slot, lane, Lane.Id.CONTROL, type)
 			var r: CalloutRecord = CalloutRecord.decode(payload)
@@ -357,6 +363,28 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 				_fail(slot, str(Protocol.Msg.find_key(type)), "debug", "a debug record off the debug lane")
 	if lane == Lane.Id.DEBUG and rule != "debug":
 		_fail(slot, str(Protocol.Msg.find_key(type)), "registry", "a game record on the debug lane")
+
+
+## RSC-04: WATCH and REPLAY go only to a fallen or dead client. A watch carries frames at least
+## rescue.watch_delay_s old; a replay only the client's own frames from before its fall.
+func _check_dark(slot: int, type: int, payload: PackedByteArray) -> void:
+	var name: String = str(Protocol.Msg.find_key(type))
+	var rule: String = name.to_lower()
+	var d: Dictionary = DarkMessages.decode(payload)
+	var f: DarkSystem.Fallen = run.dark.of_slot(slot) if run.dark != null else null
+	if d.is_empty():
+		_fail(slot, name, rule, "malformed")
+		return
+	if f == null:
+		_fail(slot, name, rule, "to a client whose miner is not in the Dark")
+		return
+	var newest: int = run.tick - 1 - roundi(Tuning.f(&"rescue.watch_delay_s") * Tuning.f(&"net.tick_hz"))
+	for raw: Variant in Variants.array(d["frames"]):
+		var t: int = Variants.array(raw)[0]
+		if type == Protocol.Msg.WATCH and t > newest:
+			_fail(slot, name, rule, "frame %d is not %.0f s old" % [t, Tuning.f(&"rescue.watch_delay_s")])
+		if type == Protocol.Msg.REPLAY and t > f.fell_tick:
+			_fail(slot, name, rule, "frame %d is after the fall (%d)" % [t, f.fell_tick])
 
 
 func _lane(slot: int, lane: int, want: int, type: int) -> void:
@@ -565,6 +593,11 @@ func _check_audio(slot: int, ev: Dictionary) -> void:
 	var record: String = "event %d type %d" % [number, ev["type"]]
 	if _is_illusion_to(slot, ev):
 		return
+	# RSC-04's unconscious stream: game sound reaches the fallen only round their body, muffled.
+	var reader: int = run.vision.watched_entity(slot) if run.vision != null else 0
+	if run.miner_state != null and run.miner_state.life(reader) == MinerTransitions.Life.UNCONSCIOUS \
+			and (int(Variants.number(ev.get("flags", 0))) & AudioRecord.MUFFLED) == 0:
+		_fail(slot, record, "audio", "to an unconscious client, not muffled")
 	var at: Vector2 = ev["apparent"]
 	var match_rec: Dictionary = {}
 	for raw: Variant in Variants.array(_delivered.get(slot, [])):

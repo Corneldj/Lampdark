@@ -7,7 +7,8 @@ class_name Protocol
 ## 3: SND-10's MIC_LABEL, the crew-list label flag, client to server.
 ## 6: UI-02's CLOSE_UP message and ActionRecord.Kind.CLOSE_UP.
 ## 7: SND-11's CALLOUT record.
-const PROTOCOL_VERSION: int = 7
+## 8: RSC-04's WATCH and REPLAY, and ActionRecord.Kind.WATCH.
+const PROTOCOL_VERSION: int = 8
 
 enum Msg {
 	HELLO = 1,
@@ -33,6 +34,8 @@ enum Msg {
 	RELAY_TAG = 21,  ## STM-04's Path B: before Hello, from the host's relay over loopback: "<host token>:<friend's SteamID>"
 	CLOSE_UP = 22,  ## UI-02: the own miner's close-up and the board's seat (CloseupKind), control lane, owner only
 	CALLOUT = 23,  ## SND-11: one callout as one listener hears it (CalloutRecord), control lane; illusions and echoes too
+	WATCH = 24,  ## RSC-04: a watched teammate's frames as sent to them, 45 s late (DarkMessages), to a fallen client
+	REPLAY = 25,  ## RSC-04: the victim's own frames before their fall (DarkMessages), once, to the victim
 }
 
 enum Reject {

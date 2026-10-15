@@ -91,7 +91,8 @@ std::vector<std::pair<uint32_t, std::vector<uint8_t>>> VoiceForwarder::forward(u
 		b.reserve(wire::DOWN_HEADER + opus_size);
 		put16(b, r.stream);
 		put16(b, h.seq);
-		b.push_back(static_cast<uint8_t>(h.band | h.flags | (r.flags & (wire::MUFFLED | wire::TELEPHONE | wire::DRY))));
+		const int band = r.band_cap > 0 && h.band > r.band_cap ? r.band_cap : h.band;
+		b.push_back(static_cast<uint8_t>(band | h.flags | (r.flags & (wire::MUFFLED | wire::TELEPHONE | wire::DRY))));
 		b.push_back(static_cast<uint8_t>(r.gain_db));
 		b.push_back(r.treat);
 		put32(b, r.x16);

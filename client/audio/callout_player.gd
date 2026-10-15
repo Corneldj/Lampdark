@@ -29,7 +29,7 @@ func play(r: CalloutRecord, listener: Vector2) -> void:
 		return
 	var flat: bool = (r.flags & (CalloutRecord.FLAG_DRY | CalloutRecord.FLAG_TELEPHONE)) != 0
 	if mixer != null:
-		var pcm: PackedFloat32Array = decode(VoiceBank.callout(voice_id, line, CalloutLines.FORMS[r.band]), r.mask)
+		var pcm: PackedFloat32Array = decode(VoiceBank.callout(voice_id, line, CalloutLines.form_of(line, r.band)), r.mask)
 		if not pcm.is_empty():
 			var bus: String = "Muffled" if (r.flags & CalloutRecord.FLAG_MUFFLED) != 0 else "Callouts"
 			mixer.add(pcm, 48000.0, r.apparent, float(r.gain_db), bus, false, not flat)

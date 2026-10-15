@@ -53,6 +53,7 @@ void LbVoiceForwarder::set_routes(int64_t speaker, const Array &routes, int64_t 
 		const int muffle = static_cast<int>(std::lround(std::clamp(static_cast<double>(r.get("muffle", 0.0)), 0.0, 1.0) * cv::wire::MUFFLE_MAX));
 		v.treat = static_cast<uint8_t>((static_cast<bool>(r.get("crackle", false)) ? cv::wire::CRACKLE : 0) | (muffle << cv::wire::MUFFLE_SHIFT));
 		v.loss = std::clamp(static_cast<double>(r.get("loss", 0.0)), 0.0, 1.0);
+		v.band_cap = static_cast<uint8_t>(std::clamp<int64_t>(static_cast<int64_t>(r.get("band_cap", 0)), 0, cv::wire::MAX_BAND));
 		v.x16 = static_cast<int32_t>(std::lround(static_cast<double>(r.get("x", 0.0)) * cv::wire::POS_SCALE));
 		v.y16 = static_cast<int32_t>(std::lround(static_cast<double>(r.get("y", 0.0)) * cv::wire::POS_SCALE));
 		rs.push_back(v);

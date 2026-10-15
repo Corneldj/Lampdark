@@ -8,6 +8,8 @@ extends RefCounted
 const WHEEL: Array[String] = ["here", "help", "is_that_you", "count_off", "douse", "light_up", "quiet", "gate", "oil", "moth",
 	"tapping", "stythe"]
 const JOB_PAGE: Array[String] = ["now", "right", "stop", "left"]
+## RSC-04's coming-round window: 'Help!' at talk, and a moan at whisper (SND-13's recorded moan).
+const COMING_ROUND: Array[String] = ["help", "moan"]
 ## Band -> SND-13's form; 0 is no band (cancelled), and a callout is never screamed.
 const FORMS: Array[String] = ["", "whisper", "talk", "shout"]
 const WHISPER: int = 1
@@ -28,8 +30,18 @@ static func line_at(angle_deg: float, job_page: bool) -> String:
 	return lines[slice(angle_deg, lines.size())]
 
 
+## SND-13's form for a line at a band (the moan has one take).
+static func form_of(line: String, band: int) -> String:
+	return "take_1" if line == "moan" else FORMS[band]
+
+
+## The band a coming-round line always goes at.
+static func coming_round_band(line: String) -> int:
+	return WHISPER if line == "moan" else TALK
+
+
 static func text_key(line: String) -> String:
-	return "callout." + line
+	return "voice.moan" if line == "moan" else "callout." + line
 
 
 ## A pick's band: by ring from {distance} (voice.wheel_ring_bounds: centre cancels, then whisper,
