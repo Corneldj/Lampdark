@@ -12,9 +12,11 @@ GAME = Path(__file__).resolve().parents[2]
 COMMON_EXCLUDE = ["tests/*", "tools/*", "addons/gut/*", "addons/lampblack_templates/*", ".gutconfig.json"]
 # Cell data, templates and the material table are server-only (GEN-01, Gameplay §5.10).
 CLIENT_EXCLUDE = ["server/*", "data/maps/*", "data/templates/*", "data/world/*"] + COMMON_EXCLUDE
-# data/text: client-only text (SND-10's notice). Servers load template packs, never their sources
-# or the readable export (GEN-04).
-SERVER_EXCLUDE = ["client/*", "data/text/*", "data/templates/src/*", "data/templates/export/*"] + COMMON_EXCLUDE
+# data/text: client-only text (SND-10's notice). GodotSteam: servers load GodotSteam Server beside
+# the export instead (STM-01, STM-04). Servers load template packs, never their sources or the
+# readable export (GEN-04).
+SERVER_EXCLUDE = ["client/*", "data/text/*", "data/templates/src/*", "data/templates/export/*"] + COMMON_EXCLUDE[:3] \
+    + ["addons/godotsteam/*"] + COMMON_EXCLUDE[3:]
 RELEASE_EXCLUDE = ["*/debug/*"]
 
 
