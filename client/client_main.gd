@@ -416,6 +416,8 @@ func _follow_camera(delta: float) -> void:
 		return
 	if not world_view.visible:
 		world_view.set_shown(true)
+	world_view.own_hands = {} if drawing_other else connection.inventory
+	world_view.own_flame = 0 if drawing_other else int(Variants.number(shown.own.get("flame", 0)))
 	world_view.show_frame(drawn, shown, camera.view_rect(own).position, own, _shown_facing, own_light,
 		lights, Time.get_ticks_msec() / 1000.0)
 	_show_in_play(own)

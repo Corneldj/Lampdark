@@ -77,7 +77,8 @@ func update(frame: Dictionary) -> void:
 		feel.arc.visible = false
 	var inventory: Dictionary = Variants.dict(frame.get("inventory", {}))
 	var held: bool = router != null and (router.record.holds & InputRecord.HOLD_CHECK_LAMP) != 0
-	check_lamp.update(held and not black, inventory, int(Variants.number(view.own.get("flame", 0))) if view != null else 0)
+	check_lamp.update(held and not black, inventory, int(Variants.number(view.own.get("flame", 0))) if view != null else 0,
+		store, router.family if router != null else "kbm")
 	var anchor: Vector2 = frame.get("wheel_anchor", own_px)
 	var short_side: float = float(Variants.number(frame.get("short_side", 1080.0)))
 	var open_wheel: bool = router != null and router.context == InputContexts.Context.WHEEL
