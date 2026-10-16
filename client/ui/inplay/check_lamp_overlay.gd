@@ -28,8 +28,9 @@ func _init() -> void:
 	visible = false
 
 
-## `held`: Check Lamp held this frame; `inventory`: ClientConnection.inventory; `flame`: the own
-## block's flame byte (FlameFlags).
+## `held`: Check Lamp held this frame; `inventory`: ClientConnection.inventory; `flame`: nonzero when
+## the own flame shows (the caller passes the own light's radius above 0: the own block's flame byte
+## carries only the flame's states, so it was 0 for a plain lit lamp).
 func update(held: bool, inventory: Dictionary, flame: int, store: BindingsStore = null, family: String = "kbm") -> void:
 	var lamp: Array = Variants.array(inventory.get("lamp", [0, 0]))
 	lamp_kind = int(Variants.number(lamp[0])) if not lamp.is_empty() else 0

@@ -111,6 +111,16 @@
 			"kind": "param",
 			"note": "ticket MNR-03"
 		},
+		"movement.lamp_resync_s": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (first playtest, 2026-10-16)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "How long after the last shutter or wick press the client takes the lamp's real state back (a press refused while pinned, a douse or a snuff); above a round trip and a step"
+		},
 		"movement.input_tap_max": {
 			"value": 0.2,
 			"type": "float",

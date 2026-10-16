@@ -26,8 +26,12 @@ var illusions_sent: Array[Dictionary] = []
 var _peers: Dictionary = {}
 ## slot -> the own-inventory bytes last sent on that peer (MNR-04); a new peer gets them afresh.
 var _inventory_sent: Dictionary = {}
+## slot -> the own status bytes last sent on that peer (StatusWire); a new peer gets them afresh.
+var _status_sent: Dictionary = {}
 ## VIS-08: the flame bits last set per entity (so a cleared state is cleared on the wire too).
 var _flame_set: Dictionary = {}
+## VIS-06: the lying things' held bits last set, by entity (so a lifted one is cleared).
+var _lying_set: Dictionary = {}
 var _run: RunState = null
 
 
@@ -113,6 +117,7 @@ func tick(run: RunState) -> void:
 		native.remove_client(slot)
 		_peers.erase(slot)
 		_inventory_sent.erase(slot)
+		_status_sent.erase(slot)
 	if run.movement != null:
 		for raw: Variant in _watched_slots(run):
 			var m: MovementSystem.Miner = run.movement.miner(int(Variants.number(raw)))
@@ -132,6 +137,7 @@ func tick(run: RunState) -> void:
 		if int(Variants.number(_peers.get(session.slot, session.peer))) != session.peer:
 			native.reset_client(session.slot)
 			_inventory_sent.erase(session.slot)
+			_status_sent.erase(session.slot)
 		_peers[session.slot] = session.peer
 		_send_inventory(run, session)
 		_send_feel(run, session)
@@ -139,6 +145,7 @@ func tick(run: RunState) -> void:
 		_send_deafened(run, session)
 		_send_knocks(run, session)
 		_send_ring(run, session)
+		_send_status(run, session)
 		var observer: int = session.slot if run.vision != null and run.vision.watched_entity(session.slot) != 0 else -1
 		var bytes: PackedByteArray = native.build(session.slot, observer, run.tick, _own_block(run, session.slot),
 			run.inputs.action_ack(session.slot) if run.inputs != null else 0xFFFF,
@@ -172,6 +179,17 @@ func _send_inventory(run: RunState, session: Sessions.Session) -> void:
 		return
 	_inventory_sent[session.slot] = bytes
 	net.transport.send(session.peer, Lane.Id.CONTROL, Protocol.frame(Protocol.Msg.INVENTORY, bytes))
+
+
+## The own miner's status (OwnStatus, StatusWire), to its owner only, whenever it changes.
+func _send_status(run: RunState, session: Sessions.Session) -> void:
+	if run.movement == null or run.movement.miner(session.slot) == null:
+		return
+	var bytes: PackedByteArray = StatusWire.encode(OwnStatus.of(run, run.movement.miner(session.slot).entity_id))
+	if _status_sent.get(session.slot, PackedByteArray()) == bytes:
+		return
+	_status_sent[session.slot] = bytes
+	net.transport.send(session.peer, Lane.Id.CONTROL, Protocol.frame(Protocol.Msg.STATUS, bytes))
 
 
 ## MNR-05: the interact ring's options (and a body's belt), to the actor's client only.
@@ -269,21 +287,29 @@ func _push_flames(run: RunState) -> void:
 	_flame_set = now.duplicate()
 
 
-## VIS-06: a lamp lying or hanging shows its kind and whether its flame shows on its own identity
-## record (the same low byte a miner's lamp hand uses).
+## VIS-06: a thing lying or hanging shows its kind on its own identity record (the same low byte a
+## miner's hand uses), so the player can tell a spanner from a fuse once it is lit to identity
+## (0.30) and the glyph can name it; a lamp also shows whether its flame shows. Records of items no
+## longer lying are cleared. (Lamps only until the first playtest found "Pick up" told nothing.)
 func _push_lying_lamps(run: RunState) -> void:
-	if run.lamps == null or run.inventory == null:
+	if run.inventory == null:
 		return
-	var by_uid: Dictionary = {}
+	var now: Dictionary = {}
 	for raw: Variant in run.inventory.world.items.keys():
 		var it: Item = run.inventory.world.items[raw]
-		by_uid[it.uid] = int(Variants.number(raw))
-	for uid: int in run.lamps.sorted_uids():
-		var l: GauzeLamp = run.lamps.lamps[uid]
-		if not by_uid.has(uid) or l.held():
-			continue
-		var bits: int = l.item.kind | (ItemKinds.LAMP_LIT_BIT if l.burning() and not l.shutter_closed else 0)
-		native.set_entity_held(int(Variants.number(by_uid[uid])), bits)
+		var bits: int = it.kind
+		if run.lamps != null and run.lamps.lamps.has(it.uid):
+			var l: GauzeLamp = run.lamps.lamps[it.uid]
+			if l.held():
+				continue
+			bits |= ItemKinds.LAMP_LIT_BIT if l.burning() and not l.shutter_closed else 0
+		now[int(Variants.number(raw))] = bits
+	for raw: Variant in _lying_set.keys():
+		if not now.has(raw):
+			native.set_entity_held(int(Variants.number(raw)), 0)
+	for raw: Variant in now.keys():
+		native.set_entity_held(int(Variants.number(raw)), int(Variants.number(now[raw])))
+	_lying_set = now
 
 
 ## MNR-13: a body over a carrier's shoulder is never sent as its own token.

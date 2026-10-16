@@ -32,9 +32,82 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 			ci.draw_rect(Rect2(at_px - Vector2(0.18, 0.12) * px, Vector2(0.36, 0.24) * px), DARK)
 			ci.draw_line(at_px, at_px + Vector2(0.14, -0.36) * px, BODY, 0.09 * px)
 			ci.draw_circle(at_px + Vector2(0.14, -0.36) * px, 0.08 * px, Palette.CHALK_WHITE.darkened(0.3))
+		SeenKind.Kind.ITEM:
+			# Its kind rides in the held field (replication's lying things): a grey-box shape per kind.
+			draw_item(ci, int(Variants.number(e.get("in_hand", 0))) & 0x3F, at_px, px)
+			_held_flame(ci, e, at_px, px, t)
 		_:
 			ci.draw_rect(Rect2(at_px - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 			_held_flame(ci, e, at_px, px, t)
+
+
+## A grey-box shape for each item kind (art replaces them), so a spanner reads apart from a fuse.
+## Unknown kinds keep the plain square.
+static func draw_item(ci: CanvasItem, kind: int, at: Vector2, px: float) -> void:
+	var w: float = maxf(1.5, 0.06 * px)
+	var light: Color = Palette.CHALK_WHITE.darkened(0.25)
+	match kind:
+		ItemKinds.Kind.GAUZE_LAMP, ItemKinds.Kind.ELECTRIC_LAMP:
+			var body: Rect2 = Rect2(at - Vector2(0.12, 0.16) * px, Vector2(0.24, 0.32) * px)
+			ci.draw_rect(body, DARK, true)
+			ci.draw_rect(body.grow(-0.04 * px), BODY if kind == ItemKinds.Kind.GAUZE_LAMP else light, true)
+			ci.draw_arc(at - Vector2(0.0, 0.16) * px, 0.08 * px, PI, TAU, 8, DARK, w)
+		ItemKinds.Kind.CANDLE:
+			ci.draw_rect(Rect2(at - Vector2(0.05, 0.16) * px, Vector2(0.1, 0.32) * px), light, true)
+		ItemKinds.Kind.FLARE:
+			ci.draw_line(at - Vector2(0.18, 0.0) * px, at + Vector2(0.18, 0.0) * px, BODY, 0.09 * px)
+			ci.draw_circle(at + Vector2(0.2, 0.0) * px, 0.06 * px, light)
+		ItemKinds.Kind.STONE:
+			ci.draw_circle(at, 0.11 * px, BODY)
+		ItemKinds.Kind.OIL_FLASK:
+			ci.draw_rect(Rect2(at - Vector2(0.1, 0.08) * px, Vector2(0.2, 0.22) * px), BODY, true)
+			ci.draw_rect(Rect2(at - Vector2(0.04, 0.18) * px, Vector2(0.08, 0.1) * px), DARK, true)
+		ItemKinds.Kind.PARAFFIN_CAN:
+			ci.draw_rect(Rect2(at - Vector2(0.18, 0.16) * px, Vector2(0.36, 0.32) * px), BODY, true)
+			ci.draw_line(at + Vector2(0.1, -0.16) * px, at + Vector2(0.2, -0.26) * px, DARK, w)
+		ItemKinds.Kind.HEALING_KIT:
+			ci.draw_rect(Rect2(at - Vector2(0.16, 0.12) * px, Vector2(0.32, 0.24) * px), light, true)
+			ci.draw_line(at - Vector2(0.08, 0.0) * px, at + Vector2(0.08, 0.0) * px, DARK, w * 1.4)
+			ci.draw_line(at - Vector2(0.0, 0.08) * px, at + Vector2(0.0, 0.08) * px, DARK, w * 1.4)
+		ItemKinds.Kind.SPANNER:
+			ci.draw_line(at - Vector2(0.16, 0.0) * px, at + Vector2(0.12, 0.0) * px, BODY, w * 1.4)
+			ci.draw_arc(at + Vector2(0.16, 0.0) * px, 0.06 * px, -PI * 0.7, PI * 0.7, 8, BODY, w * 1.4)
+		ItemKinds.Kind.HAMMER:
+			ci.draw_line(at + Vector2(0.0, 0.18) * px, at - Vector2(0.0, 0.1) * px, BODY, w * 1.4)
+			ci.draw_rect(Rect2(at - Vector2(0.14, 0.18) * px, Vector2(0.28, 0.1) * px), DARK, true)
+		ItemKinds.Kind.CROWBAR:
+			ci.draw_line(at - Vector2(0.22, 0.0) * px, at + Vector2(0.18, 0.0) * px, BODY, w * 1.4)
+			ci.draw_arc(at + Vector2(0.18, -0.05) * px, 0.05 * px, -PI * 0.5, PI * 0.5, 6, BODY, w * 1.4)
+		ItemKinds.Kind.WIRE_CUTTERS:
+			ci.draw_line(at - Vector2(0.14, 0.14) * px, at + Vector2(0.14, 0.14) * px, BODY, w * 1.4)
+			ci.draw_line(at - Vector2(0.14, -0.14) * px, at + Vector2(0.14, -0.14) * px, BODY, w * 1.4)
+		ItemKinds.Kind.FUSE:
+			ci.draw_rect(Rect2(at - Vector2(0.12, 0.05) * px, Vector2(0.24, 0.1) * px), light, true)
+			ci.draw_rect(Rect2(at - Vector2(0.12, 0.05) * px, Vector2(0.04, 0.1) * px), DARK, true)
+			ci.draw_rect(Rect2(at + Vector2(0.08, -0.05) * px, Vector2(0.04, 0.1) * px), DARK, true)
+		ItemKinds.Kind.ROPE_CLAMP:
+			ci.draw_arc(at, 0.1 * px, 0.0, TAU, 12, BODY, w * 1.4)
+		ItemKinds.Kind.MAGNETO:
+			ci.draw_rect(Rect2(at - Vector2(0.18, 0.14) * px, Vector2(0.36, 0.28) * px), DARK, true)
+			ci.draw_circle(at, 0.09 * px, BODY)
+		ItemKinds.Kind.DRIVE_BELT:
+			ci.draw_arc(at, 0.16 * px, 0.0, TAU, 16, DARK, w * 1.8)
+		ItemKinds.Kind.BRAKE_SHOE:
+			ci.draw_arc(at + Vector2(0.0, 0.1) * px, 0.18 * px, PI * 1.15, PI * 1.85, 10, BODY, w * 2.2)
+		ItemKinds.Kind.REVOLVER:
+			ci.draw_line(at - Vector2(0.14, 0.0) * px, at + Vector2(0.14, 0.0) * px, DARK, w * 1.6)
+			ci.draw_line(at - Vector2(0.1, 0.0) * px, at - Vector2(0.14, -0.14) * px, DARK, w * 1.6)
+		ItemKinds.Kind.ROUNDS:
+			ci.draw_rect(Rect2(at - Vector2(0.1, 0.07) * px, Vector2(0.2, 0.14) * px), BODY, true)
+			for i: int in 3:
+				ci.draw_circle(at + Vector2(-0.05 + i * 0.05, 0.0) * px, 0.018 * px, light)
+		ItemKinds.Kind.CANARY:
+			ci.draw_rect(Rect2(at - Vector2(0.14, 0.16) * px, Vector2(0.28, 0.32) * px), DARK, false, w)
+			ci.draw_circle(at, 0.06 * px, light)
+		ItemKinds.Kind.NOTE:
+			ci.draw_rect(Rect2(at - Vector2(0.1, 0.13) * px, Vector2(0.2, 0.26) * px), light, true)
+		_:
+			ci.draw_rect(Rect2(at - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 
 
 static func _miner(ci: CanvasItem, e: Dictionary, at: Vector2, px: float, facing: Vector2, t: float) -> void:

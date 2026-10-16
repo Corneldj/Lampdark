@@ -6,6 +6,8 @@ extends Node2D
 
 var key_label: String = ""
 var verb_key: String = ""
+## What the verb acts on, when the client knows it: an item's name key ("item.spanner"), else "".
+var object_key: String = ""
 ## A timed action's verb reads "Hold <key>" and fills a ring while interact is held: 0..1, or -1
 ## for a verb that is not held.
 var hold_fraction: float = -1.0
@@ -36,8 +38,19 @@ static func pick(view: ReceivedView, reach: float) -> Dictionary:
 		if verb.is_empty() or d > reach + 1e-6 or d >= best_d:
 			continue
 		best_d = d
-		best = {"token": int(Variants.number(raw)), "verb_key": verb, "position": at}
+		best = {"token": int(Variants.number(raw)), "verb_key": verb, "position": at, "object_key": object_key_of(e)}
 	return best
+
+
+## An identity record's name key when it is an item whose kind rides in its held field ("" else).
+static func object_key_of(e: Dictionary) -> String:
+	if int(Variants.number(e.get("size_or_kind", 0))) != SeenKind.Kind.ITEM:
+		return ""
+	var kind: int = int(Variants.number(e.get("in_hand", 0))) & 0x3F
+	if kind == ItemKinds.Kind.NONE:
+		return ""
+	var key: String = ItemKinds.text_key(kind)
+	return key if not UiText.text(key).is_empty() else ""
 
 
 ## How long interact is held for a verb's timed action (s), or 0 when the verb is a tap (the ring).
@@ -56,7 +69,7 @@ static func hold_seconds(verb: String) -> float:
 
 
 ## `held_s`: how long interact has been held on this target (0 when not held).
-func show_on(target_px: Variant, key: String, verb: String, held_s: float = 0.0) -> void:
+func show_on(target_px: Variant, key: String, verb: String, held_s: float = 0.0, object: String = "") -> void:
 	visible = target_px != null and not verb.is_empty()
 	if visible:
 		var at: Vector2 = target_px
@@ -64,6 +77,7 @@ func show_on(target_px: Variant, key: String, verb: String, held_s: float = 0.0)
 	var hold: float = hold_seconds(verb) if visible else 0.0
 	key_label = "%s %s" % [UiText.text("glyph.hold"), key] if hold > 0.0 else key
 	verb_key = verb
+	object_key = object if visible else ""
 	hold_fraction = clampf(held_s / hold, 0.0, 1.0) if hold > 0.0 else -1.0
 	queue_redraw()
 
@@ -74,12 +88,18 @@ func _draw() -> void:
 	var verb: String = UiText.text(verb_key)
 	var key_w: float = maxf(36.0, font.get_string_size(key_label, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x + 16.0)
 	var verb_w: float = font.get_string_size(verb, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
-	var left: float = -(key_w + 10.0 + verb_w) * 0.5
+	var object_w: float = 0.0
+	if not object_key.is_empty():
+		object_w = 8.0 + font.get_string_size(UiText.text(object_key), HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+	var left: float = -(key_w + 10.0 + verb_w + object_w) * 0.5
 	var box: Rect2 = Rect2(left, -size, key_w, size + 12.0)
 	draw_rect(box, ScreenElementRegistry.PANEL, true)
 	draw_rect(box, ScreenElementRegistry.INK, false, 2.0)
 	draw_string(font, Vector2(left + 8.0, 4.0), key_label, HORIZONTAL_ALIGNMENT_LEFT, -1, size, ScreenElementRegistry.INK)
 	draw_string(font, Vector2(left + key_w + 10.0, 4.0), verb, HORIZONTAL_ALIGNMENT_LEFT, -1, size, ScreenElementRegistry.INK)
+	if not object_key.is_empty():
+		draw_string(font, Vector2(left + key_w + 18.0 + verb_w, 4.0), UiText.text(object_key), HORIZONTAL_ALIGNMENT_LEFT, -1, size,
+			ScreenElementRegistry.INK)
 	if hold_fraction > 0.0:
 		# The hold's ring, filling clockwise from the top beside the key.
 		var centre: Vector2 = Vector2(left - 18.0, -size * 0.5 + 6.0)

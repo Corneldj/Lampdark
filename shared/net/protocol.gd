@@ -12,7 +12,8 @@ class_name Protocol
 ## 10: MNR-10's chalk glyphs on tile records (frame version 5).
 ## 11: NET-11's Reject.SEAT_KEPT.
 ## 12: NET-09's SAVE_DATA, JOURNAL and SAVE_ACK.
-const PROTOCOL_VERSION: int = 12
+## 13: STATUS, the own miner's status (the first playtest's standard status and key hints).
+const PROTOCOL_VERSION: int = 13
 
 enum Msg {
 	HELLO = 1,
@@ -43,6 +44,7 @@ enum Msg {
 	SAVE_DATA = 26,  ## NET-09: a snapshot's changed sections, sealed (SaveWire), bulk lane, to every member
 	JOURNAL = 27,  ## NET-09: one fall or death entry, sealed (SaveWire), control lane, to every member the tick it happens
 	SAVE_ACK = 28,  ## NET-09: a member stored a snapshot (its sequence number), client to server, control lane
+	STATUS = 29,  ## the own miner's status (StatusWire): its body cues, the self-rescue offer, the self-revive, control lane, to its owner
 }
 
 enum Reject {

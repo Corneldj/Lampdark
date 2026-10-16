@@ -417,6 +417,7 @@ func _follow_camera(delta: float) -> void:
 	if not world_view.visible:
 		world_view.set_shown(true)
 	world_view.own_hands = {} if drawing_other else connection.inventory
+	world_view.own_lit = not drawing_other and radius > 0.0
 	world_view.own_flame = 0 if drawing_other else int(Variants.number(shown.own.get("flame", 0)))
 	world_view.show_frame(drawn, shown, camera.view_rect(own).position, own, _shown_facing, own_light,
 		lights, Time.get_ticks_msec() / 1000.0)
@@ -430,6 +431,7 @@ func _show_in_play(own: Vector2) -> void:
 	in_play.update({"view": connection.view, "view_origin": camera.view_rect(own).position,
 		"black": world_view.mode == WorldView.Mode.BLACK, "inventory": connection.inventory, "feel": connection.feel,
 		"router": router, "store": bindings, "wheel_anchor": source.wheel_anchor() if router.family == "kbm" else screen / 2.0,
+		"status": connection.status, "server_tick": connection.last_frame_tick,
 		"short_side": minf(screen.x, screen.y), "now_s": Time.get_ticks_msec() / 1000.0})
 	if config.build.is_release():
 		return

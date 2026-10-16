@@ -6,7 +6,7 @@ extends GutTest
 const Rules = preload("res://tools/stream_audit/rules.gd")
 const StreamAudit = preload("res://tools/stream_audit/stream_audit.gd")
 const KNOWN: Array[String] = ["client_only", "handshake", "frame", "voice", "inventory", "feel", "ring", "ambient", "deafened",
-	"debug", "knocks", "closeup", "callout", "watch", "replay", "tile", "geometry", "entity", "glow", "audio", "visual", "dust", "save"]
+	"debug", "knocks", "closeup", "callout", "watch", "replay", "tile", "geometry", "entity", "glow", "audio", "visual", "dust", "save", "status"]
 
 
 func test_every_message_has_a_rule() -> void:

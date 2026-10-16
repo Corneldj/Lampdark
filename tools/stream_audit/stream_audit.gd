@@ -278,6 +278,17 @@ func _on_delivered(slot: int, r: AudioRecord) -> void:
 	_delivered[slot] = list
 
 
+## The own status: exactly what OwnStatus says of the receiving slot's own miner, nobody else's.
+func _check_status(slot: int, payload: PackedByteArray) -> void:
+	var d: Dictionary = StatusWire.decode(payload)
+	if d.is_empty() or StatusWire.encode(d) != payload:
+		_fail(slot, "STATUS", "status", "malformed")
+		return
+	var m: MovementSystem.Miner = run.movement.miner(slot) if run.movement != null else null
+	if m == null or StatusWire.encode(OwnStatus.of(run, m.entity_id)) != payload:
+		_fail(slot, "STATUS", "status", "not exactly the receiving miner's own status")
+
+
 ## NET-09: saves reach members as opaque sealed bytes. Never in a public run; a snapshot's data on
 ## bulk with a plain header of versions and chain fields only, a journal entry on control.
 const SAVE_HEADER_KEYS: Array[String] = ["build", "bundle", "generator", "kind", "mode", "parent_hash", "run_uuid", "seq", "templates"]
@@ -364,6 +375,9 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 			_check_dark(slot, type, payload)
 		"save":
 			_check_save(slot, lane, type, payload)
+		"status":
+			_lane(slot, lane, Lane.Id.CONTROL, type)
+			_check_status(slot, payload)
 		"callout":
 			_lane(slot, lane, Lane.Id.CONTROL, type)
 			var r: CalloutRecord = CalloutRecord.decode(payload)

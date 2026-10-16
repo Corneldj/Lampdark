@@ -34,6 +34,7 @@ const MESSAGES: Dictionary = {
 	"SAVE_DATA": "save",  # NET-09: sealed sections and a plain header of versions, never in public
 	"JOURNAL": "save",  # NET-09: one sealed journal entry, never in public
 	"SAVE_ACK": "client_only",  # NET-09: a member's acknowledgement
+	"STATUS": "status",  # the own miner's status, to its owner only: exactly its own cues and offers
 }
 
 ## Each record a frame carries -> its rule (client_view's layout, FrameDecoder's fields).

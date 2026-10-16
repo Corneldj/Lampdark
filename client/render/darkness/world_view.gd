@@ -42,9 +42,11 @@ var egg_glow: EggGlowView = null
 var dust: DustHaze = null
 var puffs: WallPuffs = null
 var _over: _OverLayer = null
-## VIS-06: what the own miner holds (ClientConnection.inventory) and its flame byte: drawn on it,
-## as identity sprites show what other miners hold. Empty while watching another miner.
+## VIS-06: what the own miner holds (ClientConnection.inventory), whether its flame shows (the own
+## light's radius above 0) and the flame's states (FlameFlags): drawn on it, as identity sprites show
+## what other miners hold. Empty while watching another miner.
 var own_hands: Dictionary = {}
+var own_lit: bool = false
 var own_flame: int = 0
 ## SND-06: the own voice's breath-cloud, over the dark like the own miner.
 var breath: BreathCloud = null
@@ -177,7 +179,7 @@ func show_frame(drawn: DrawnSet, view: ReceivedView, view_origin: Vector2, miner
 				off[t] = int(Variants.number(Variants.dict(shown.tiles[raw]).get("colour", 1)))
 		marks = EdgeGlow.layout(rect, miner, facing, view.glow_mask, view.glow_colour, off)
 	_over.set_frame(not black, (miner - view_origin) * tile_px, f, exposure, tile_px, marks, view_origin)
-	_over.set_hands(own_hands, own_flame, now_s)
+	_over.set_hands(own_hands, own_lit, own_flame, now_s)
 	breath.set_frame(not black, (miner - view_origin) * tile_px, f, tile_px, now_s)
 
 
@@ -266,11 +268,13 @@ class _OverLayer:
 	var _marks: Array[Dictionary] = []
 	var _origin: Vector2 = Vector2.ZERO
 	var _hands: Dictionary = {}
+	var _lit: bool = false
 	var _flame: int = 0
 	var _t: float = 0.0
 
-	func set_hands(hands: Dictionary, flame: int, t: float) -> void:
+	func set_hands(hands: Dictionary, lit: bool, flame: int, t: float) -> void:
 		_hands = hands
+		_lit = lit
 		_flame = flame
 		_t = t
 		queue_redraw()
@@ -326,9 +330,9 @@ class _OverLayer:
 			draw_rect(body, edge, true)
 			draw_rect(body.grow(-s * 0.12), c.darkened(0.25), true)
 			draw_arc(at - Vector2(0.0, s * 0.5), s * 0.25, PI, TAU, 8, edge, maxf(1.5, s * 0.08))
-			if _flame != 0 and lamp_kind != ItemKinds.Kind.ELECTRIC_LAMP:
+			if _lit and lamp_kind != ItemKinds.Kind.ELECTRIC_LAMP:
 				FlameSprite.draw(self, at, _px, lamp_kind, _flame & FlameFlags.ALL, _t)
-			elif _flame != 0:
+			elif _lit:
 				draw_circle(at, s * 0.25, Palette.CHALK_WHITE)
 		var free: Array = Variants.array(_hands.get("free", [0, 0]))
 		if not free.is_empty() and int(Variants.number(free[0])) != 0:

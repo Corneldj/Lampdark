@@ -15,6 +15,11 @@ var check_lamp: CheckLampOverlay = CheckLampOverlay.new()
 var wheel: WheelWidget = WheelWidget.new()
 var ring: WheelWidget = WheelWidget.new()
 var aside: AsideTag = AsideTag.new()
+## The first playtest's standard elements (Gameplay §14.3, Proposed).
+var hotbar: Hotbar = Hotbar.new()
+var pickup: PickupNotice = PickupNotice.new()
+var status: StatusBanner = StatusBanner.new()
+var hints: KeyHints = KeyHints.new()
 ## UI-06's streamer mode: the Aside tag shows only with it on.
 var streamer_mode: bool = false
 ## The last check's violations (debug and test builds).
@@ -30,7 +35,7 @@ var _was_holding: bool = false
 func _init() -> void:
 	layer = LAYER
 	name = "InPlay"
-	for element: Node in [check_lamp, glyph, feel.arc, feel, wheel, ring, aside]:
+	for element: Node in [check_lamp, glyph, feel.arc, feel, wheel, ring, aside, hotbar, pickup, status, hints]:
 		add_child(element)
 
 
@@ -69,7 +74,8 @@ func update(frame: Dictionary) -> void:
 		_hold_since = -1.0
 		_hold_token = -1
 	_was_holding = holding
-	glyph.show_on(at, key, str(target.get("verb_key", "")), now_s - _hold_since if _hold_since >= 0.0 else 0.0)
+	glyph.show_on(at, key, str(target.get("verb_key", "")), now_s - _hold_since if _hold_since >= 0.0 else 0.0,
+		str(target.get("object_key", "")))
 	var felt: FeelClient = frame.get("feel", null)
 	feel.update(felt, own_px, tile_px, now_s)
 	if black:
@@ -77,8 +83,20 @@ func update(frame: Dictionary) -> void:
 		feel.arc.visible = false
 	var inventory: Dictionary = Variants.dict(frame.get("inventory", {}))
 	var held: bool = router != null and (router.record.holds & InputRecord.HOLD_CHECK_LAMP) != 0
-	check_lamp.update(held and not black, inventory, int(Variants.number(view.own.get("flame", 0))) if view != null else 0,
-		store, router.family if router != null else "kbm")
+	var lamp_shows: int = 1 if view != null and float(Variants.number(view.own.get("lamp_radius", 0.0))) > 0.0 else 0
+	check_lamp.update(held and not black, inventory, lamp_shows, store, router.family if router != null else "kbm")
+	# The standard elements: the hotbar and the pick-up notice in play; the status line and the key
+	# hints also in the Dark (that is when they matter most).
+	var family: String = router.family if router != null else "kbm"
+	var in_close_up: bool = router != null and router.context == InputContexts.Context.CLOSE_UP
+	var life: int = DarkView.life_of(view) if view != null else StatusWire.LIFE_UPRIGHT
+	var in_window: bool = view != null and DarkView.in_window(view)
+	var own_status: Dictionary = Variants.dict(frame.get("status", {}))
+	var play_shown: bool = not black and not in_close_up and life < StatusWire.LIFE_UNCONSCIOUS
+	hotbar.update(play_shown and not check_lamp.visible, inventory, lamp_shows != 0, store, family, now_s)
+	pickup.update(play_shown and not check_lamp.visible, inventory, store, family, now_s)
+	status.update(not in_close_up, life, in_window, own_status, int(Variants.number(frame.get("server_tick", 0))), now_s)
+	hints.update(not in_close_up and not check_lamp.visible, life, in_window, inventory, lamp_shows != 0, own_status, router, store, now_s)
 	var anchor: Vector2 = frame.get("wheel_anchor", own_px)
 	var short_side: float = float(Variants.number(frame.get("short_side", 1080.0)))
 	var open_wheel: bool = router != null and router.context == InputContexts.Context.WHEEL

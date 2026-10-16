@@ -10,7 +10,8 @@ const PAD: Dictionary = {
 	JOY_BUTTON_DPAD_LEFT: "Left", JOY_BUTTON_DPAD_RIGHT: "Right", JOY_BUTTON_PADDLE1: "P1", JOY_BUTTON_PADDLE2: "P2",
 	JOY_BUTTON_PADDLE3: "P3", JOY_BUTTON_PADDLE4: "P4",
 }
-const MOUSE: Dictionary = {MOUSE_BUTTON_LEFT: "LMB", MOUSE_BUTTON_RIGHT: "RMB", MOUSE_BUTTON_MIDDLE: "MMB"}
+const MOUSE: Dictionary = {MOUSE_BUTTON_LEFT: "LMB", MOUSE_BUTTON_RIGHT: "RMB", MOUSE_BUTTON_MIDDLE: "MMB",
+	MOUSE_BUTTON_WHEEL_UP: "Wheel up", MOUSE_BUTTON_WHEEL_DOWN: "Wheel down"}
 
 
 static func label(store: BindingsStore, action: String, family: String) -> String:

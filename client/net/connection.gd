@@ -72,6 +72,8 @@ var message_observer: Callable = Callable()
 var qa_token: String = ""
 ## NET-09: this member's copy of the run's saves (stored, never opened).
 var saves: SaveStore = SaveStore.new()
+## The own miner's status (StatusWire.decode): cues, the self-rescue offer, the self-revive.
+var status: Dictionary = {}
 var debug_inbox: Array[Dictionary] = []
 var debug_violations: int = 0
 ## Messages received before Welcome other than Reject (must stay 0).
@@ -194,6 +196,10 @@ func _on_message(event: TransportEvent, now: int) -> void:
 				send(Lane.Id.CONTROL, SaveWire.ack(seq), Protocol.Msg.SAVE_ACK)
 		Protocol.Msg.JOURNAL:
 			saves.on_journal(payload, now)
+		Protocol.Msg.STATUS:
+			var st: Dictionary = StatusWire.decode(payload)
+			if not st.is_empty():
+				status = st
 		Protocol.Msg.REJECT:
 			# NET-11: removed mid-run (MOD-11's kick or ejection): back to the Pithead.
 			reject_reason = Protocol.read_u8(payload)

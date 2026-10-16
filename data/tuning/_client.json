@@ -1,5 +1,5 @@
 {
-	"hash": "e8847f42150d997f6eeed1bd00323723031dad7bab3fefca3251826f5d0f3ff3",
+	"hash": "f89438e3e556a7aa74cf2f8a2a42a537f843e83a480ce74d6950dab084d9bbc6",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -29,6 +29,20 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"camera.hotbar_name_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.lamp_hint_s": {
+			"value": 8.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"camera.lead_settle_s": {
 			"value": 0.25,
 			"type": "float",
@@ -43,6 +57,13 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"camera.pickup_notice_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"camera.shake_max_tiles": {
 			"value": 0.25,
 			"type": "float",
@@ -54,6 +75,13 @@
 			"value": 8.0,
 			"type": "float",
 			"unit": "tiles",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"camera.status_flash_s": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "s",
 			"visibility": "client",
 			"kind": "param"
 		},
@@ -544,6 +572,13 @@
 		},
 		"movement.input_tap_max": {
 			"value": 0.2,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"movement.lamp_resync_s": {
+			"value": 1.0,
 			"type": "float",
 			"unit": "s",
 			"visibility": "client",

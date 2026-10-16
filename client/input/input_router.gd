@@ -65,6 +65,13 @@ var _pressed_at: Dictionary = {}
 var _latches: Dictionary = {}
 var _set_down_latched: bool = false
 var _last_callout_release: float = -INF
+## The lamp in hand as the server last reported it (InventoryWire), and when a shutter or wick key
+## was last pressed: a wanted state the server never took is taken back from it.
+var _server_lamp_known: bool = false
+var _server_shut: bool = false
+var _server_wick: int = LampRules.WICK_NORMAL
+var _lamp_pressed_at: float = -INF
+var _now: float = 0.0
 
 
 func _init(bindings: BindingsStore = null, device_family: String = "kbm") -> void:
@@ -78,6 +85,7 @@ func sample(frame: Dictionary) -> InputRecord:
 	actions.clear()
 	close_up_events.clear()
 	var now: float = Variants.number(frame.get("now_s", 0.0))
+	_now = now
 	var down: Dictionary = Variants.dict(frame.get("down", {})).duplicate()
 	var pick_vec: Vector2 = frame.get("wheel_vec", Vector2.ZERO)
 	push_to_talk_held = Variants.flag(down.get("push_to_talk", false))
@@ -98,6 +106,7 @@ func sample(frame: Dictionary) -> InputRecord:
 	if context == InputContexts.Context.MINE:
 		_holds(down)
 		_lamp_and_slot(down)
+		_reconcile_lamp(now)
 		_fire(down)
 		_throw(frame, down)
 	_remember(down)
@@ -123,6 +132,9 @@ func know_inventory(inventory: Dictionary) -> void:
 		return
 	lamp_in_hand = int(Variants.number(Variants.array(inventory["lamp"])[0])) != ItemKinds.Kind.NONE \
 		and not Variants.flag(inventory.get("hooked", false))
+	_server_lamp_known = lamp_in_hand
+	_server_shut = Variants.flag(inventory.get("lamp_shut", false))
+	_server_wick = int(Variants.number(inventory.get("lamp_wick", LampRules.WICK_NORMAL)))
 	carrying = Variants.flag(inventory.get("two_handed", false))
 	free_kind = int(Variants.number(Variants.array(inventory["free"])[0]))
 	revolver_drawn = free_kind == ItemKinds.Kind.REVOLVER
@@ -175,6 +187,19 @@ func sync_lamp(shut: bool, wick: int) -> void:
 	var slot: int = record.selected_slot()
 	record.desired = (1 if shut else 0) | (clampi(wick, 0, 2) << 1)
 	record.set_selected_slot(slot)
+
+
+## A press the server refused (a pinned miner has no hands, MNR-03) or a change it made itself (a
+## douse, a snuff) leaves the wanted state apart from the lamp's. Once movement.lamp_resync_s has
+## passed since the last lamp press, the lamp's real state is taken back, so the next press acts on
+## it (found in the first playtest: after a pin, Q did nothing the first time).
+func _reconcile_lamp(now: float) -> void:
+	if not _server_lamp_known:
+		return
+	var have: int = (1 if _server_shut else 0) | (clampi(_server_wick, 0, 2) << 1)
+	if (record.desired & InputRecord.DESIRED_LAMP_MASK) == have or now - _lamp_pressed_at < Tuning.f(&"movement.lamp_resync_s"):
+		return
+	sync_lamp(_server_shut, _server_wick)
 
 
 ## A shared pad button: the tap fires on a release inside movement.input_tap_max, the hold as above.
@@ -357,10 +382,13 @@ func _lamp_and_slot(down: Dictionary) -> void:
 	var wick: int = (record.desired >> 1) & 3
 	if _pressed("shutter", down):
 		closed ^= 1
+		_lamp_pressed_at = _now
 	if _pressed("wick_up", down):
 		wick = mini(wick + 1, 2)
+		_lamp_pressed_at = _now
 	if _pressed("wick_down", down):
 		wick = maxi(wick - 1, 0)
+		_lamp_pressed_at = _now
 	var slot: int = record.selected_slot()
 	for i: int in 4:
 		if _pressed("slot_%d" % (i + 1), down):

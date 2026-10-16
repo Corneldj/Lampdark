@@ -1,6 +1,46 @@
 {
 	"domain": "camera",
 	"keys": {
+		"camera.hotbar_name_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (first playtest, 2026-10-16)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "How long the selected item's name shows above the hotbar after the selection changes"
+		},
+		"camera.pickup_notice_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (first playtest, 2026-10-16)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "How long the pick-up notice shows"
+		},
+		"camera.status_flash_s": {
+			"value": 2.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (first playtest, 2026-10-16)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "How long 'You broke free' or 'You came round' shows"
+		},
+		"camera.lamp_hint_s": {
+			"value": 8.0,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (first playtest, 2026-10-16)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "How long the shutter and wick hints show after the lamp is first lit"
+		},
 		"camera.check_lamp_panel_height": {
 			"value": 0.33,
 			"type": "float",
