@@ -123,6 +123,10 @@ var revolver: Revolver = null
 var drops: DropHandler = null
 ## NET-09: snapshots, knock-off saves and the journal.
 var saves: Saves = null
+## RSC-09: the solo self-revive, the alone watch and the substitutions' switchboard.
+var self_revive: SelfRevive = null
+var alone_watch: AloneWatch = null
+var lone: LoneSwitchboard = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

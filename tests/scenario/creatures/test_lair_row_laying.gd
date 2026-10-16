@@ -47,7 +47,10 @@ func test_a_drag_home_lays_the_body_in_the_row() -> void:
 
 
 func test_a_collected_body_goes_in_the_next_slot() -> void:
-	var s: Scenario = make({"seed": 1502, "fixture": H.road(), "overrides": H.W.ON})
+	# Ann falls alone here: RSC-09's self-revive would bring her round in the lair; this is the row.
+	var overrides: Dictionary = H.W.ON.duplicate()
+	overrides["rescue.self_revives_per_run"] = 0
+	var s: Scenario = make({"seed": 1502, "fixture": H.road(), "overrides": overrides})
 	var h: H = H.new()
 	h.build(s, 40, 37, 95)
 	assert_true(h.until_state(&"keep", 1900))

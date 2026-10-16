@@ -1,6 +1,7 @@
 extends "res://tests/scenario/kit/scenario_test.gd"
 ## RSC-01: no timer runs on the fallen. A body left for 60 minutes of run time is still
-## unconscious, and nothing has scheduled its end.
+## unconscious, and nothing has scheduled its end. In a crew: alone, RSC-09's one self-revive is the
+## exception (Gameplay §11.11), so a teammate stands by.
 
 const W = preload("res://tests/unit/mnr/belt_world.gd")
 
@@ -12,6 +13,8 @@ func before_all() -> void:
 func test_sixty_minutes() -> void:
 	var s: Scenario = make({"seed": 1, "fixture": W.room()})
 	var ann: MinerHandle = s.add_miner("ann", s.fixture.spot("a"))
+	var bob: MinerHandle = s.add_miner("bob", s.fixture.spot("b"))
+	bob.brain = null
 	s.step(1)
 	s.run.falls.fall_unconscious(s.run, ann.entity_id, FallCause.Cause.BLACKDAMP)
 	var changes: Array[int] = []

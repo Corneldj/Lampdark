@@ -12,6 +12,41 @@ const DEBUG_INSTALL: String = "res://server/debug/debug_install.gd"
 ## Registers the network stages, the input pipeline and, with a mine, the world systems.
 ## `secret` seeds per-client tokens and event ordering (NET-04): never the run seed. 0 draws one
 ## from the OS; the scenario kit passes one derived from its own seed so its runs replay.
+## RSC-09: the self-revive, the alone watch, the switchboard of substitutions and the lone human's
+## heard rule (a conscious Hand within rescue.lone_heard_hand_tiles hears them).
+static func _install_lone_rules(run: RunState) -> void:
+	run.self_revive = SelfRevive.new()
+	run.self_revive.bind(run)
+	run.add_system(run.self_revive)
+	run.alone_watch = AloneWatch.new()
+	run.add_system(run.alone_watch)
+	run.lone = LoneSwitchboard.new()
+	run.lone.register("self_rescue", func(r: RunState, m: int) -> bool: return AloneRules.is_alone(r, m))
+	run.lone.register("self_revive", func(r: RunState, m: int) -> bool:
+		return AloneRules.is_alone(r, m) and r.self_revive.self_revive_available(m))
+	run.lone.register("heard_by_companion", func(r: RunState, m: int) -> bool: return AloneRules.is_alone(r, m))
+	if run.heard != null:
+		run.heard.register_heard_predicate("lone_human", func(speaker: int, _kind: StringName, _band: int) -> bool:
+			return lone_heard_by_hand(run, speaker))
+
+
+## RSC-09 (Gameplay §6.4): a lone human talking or calling out is heard by a conscious Hand within
+## rescue.lone_heard_hand_tiles of them (MOD-08's Hands; NET-11's stand-in Hands until then).
+static func lone_heard_by_hand(run: RunState, speaker_slot: int) -> bool:
+	if run.movement == null or run.movement.miner(speaker_slot) == null or run.crew == null:
+		return false
+	var speaker: int = run.movement.miner(speaker_slot).entity_id
+	if not AloneRules.is_alone(run, speaker):
+		return false
+	var at: Vector2 = run.registry.get_entity(speaker).position
+	var reach: float = Tuning.f(&"rescue.lone_heard_hand_tiles")
+	for e: int in run.crew.miners(run):
+		if e != speaker and Variants.flag(run.crew.is_hand_driven.call(e)) and CrewCensus.is_conscious(run, e) \
+				and run.registry.get_entity(e).position.distance_to(at) <= reach + 1e-9:
+			return true
+	return false
+
+
 static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: int = 0) -> void:
 	run.add_system(net)
 	# GEN-13: first, so every owner registers its handlers as it binds; bound near the end.
@@ -182,6 +217,8 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.dark = DarkSystem.new()
 	run.dark.bind(run, net)
 	run.add_system(run.dark)
+	# RSC-09: the solo and lone-human rules.
+	_install_lone_rules(run)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:

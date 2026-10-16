@@ -18,5 +18,14 @@ static func of(run: RunState, miner: int) -> Dictionary:
 				flags |= StatusWire.SELF_RESCUE_OFFERED
 			elif g.rescue_spent and g.state == GrabHold.State.ACTIVE:
 				flags |= StatusWire.SELF_RESCUE_FAILED
+	# RSC-09: the self-revive's count, for the status line's ring.
+	if run.self_revive != null:
+		var r: Dictionary = run.self_revive.status_of(run, miner)
+		if Variants.flag(r.get("counting", false)):
+			flags |= StatusWire.REVIVE_COUNTING
+		elif Variants.flag(r.get("waiting", false)):
+			flags |= StatusWire.REVIVE_WAITING
+		out["revive_due_tick"] = int(Variants.number(r.get("due_tick", 0)))
+		out["revive_ticks"] = int(Variants.number(r.get("ticks", 0)))
 	out["flags"] = flags
 	return out
