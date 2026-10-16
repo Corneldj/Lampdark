@@ -54,7 +54,8 @@ func test_the_layer_shows_key_and_verb_at_the_thing() -> void:
 		var tile_px: float = Tuning.f(&"camera.tile_px_at_1080p")
 		assert_true(l.glyph.visible)
 		assert_eq(l.glyph.verb_key, "verb.pick_up")
-		assert_eq(l.glyph.key_label, GlyphText.label(r.store, "interact", family), "the bound key for %s" % family)
+		assert_eq(l.glyph.key_label, "%s %s" % [UiText.text("glyph.hold"), GlyphText.label(r.store, "interact", family)],
+			"Hold and the bound key for %s (picking up is held)" % family)
 		assert_ne(l.glyph.key_label, "")
 		assert_almost_eq(l.glyph.position.x, 11.0 * tile_px, 0.01, "at the thing, not the miner")
 		assert_true(r.target_in_reach, "pad A interacts rather than sets down")

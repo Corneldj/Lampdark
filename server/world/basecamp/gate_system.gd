@@ -60,6 +60,20 @@ func install(run: RunState, specs: Array[Dictionary], fresh: bool) -> void:
 	if fresh:
 		for g: Gate in gates:
 			_apply(run, g, false)
+	_place_levers(run)
+
+
+## Each lever is an entity a miner can see (LEVER, a small thing at 0.30 of light), so the lever
+## is found by looking, as an item is. Its state never travels: the gate shows as geometry. A
+## resume's registry brings its own back (the saved ones replace these).
+func _place_levers(run: RunState) -> void:
+	if run.registry == null:
+		return
+	for g: Gate in gates:
+		for key: String in ["inside", "outside"]:
+			if g.levers.has(key):
+				var tile: Vector2i = g.levers[key]
+				run.registry.create(WorldIds.EntityKind.LEVER, Vector2(tile) + Vector2(0.5, 0.5))
 
 
 func gate(side: String) -> Gate:

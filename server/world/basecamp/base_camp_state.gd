@@ -56,8 +56,8 @@ static func attach(run: RunState, run_seed: int, blind_side: int, fresh: bool) -
 	return state
 
 
-## The run-start check (debug and CI builds): inside base camp lie only miners, the first lamp
-## and Bess (Night Shift). Returns what else it finds.
+## The run-start check (debug and CI builds): inside base camp lie only miners, the first lamp,
+## Bess (Night Shift) and the gates' levers. Returns what else it finds.
 func run_start_check(run: RunState) -> Array[String]:
 	var errors: Array[String] = []
 	for id: int in run.registry.ids():
@@ -65,7 +65,7 @@ func run_start_check(run: RunState) -> Array[String]:
 		if not inside_tiles.has(Vector2i(floori(e.position.x), floori(e.position.y))):
 			continue
 		var allowed: bool = e.kind == WorldIds.EntityKind.MINER or e.kind == WorldIds.EntityKind.BESS \
-			or (first_lamp != null and id == first_lamp.entity)
+			or e.kind == WorldIds.EntityKind.LEVER or (first_lamp != null and id == first_lamp.entity)
 		if not allowed:
 			errors.append("%s %d lies inside base camp at %s" % [WorldIds.EntityKind.find_key(e.kind), id, e.position])
 	return errors

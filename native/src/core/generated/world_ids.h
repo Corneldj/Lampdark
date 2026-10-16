@@ -55,6 +55,7 @@ enum class EntityKind : uint16_t {
 	COAT_HEAP = 12,
 	COLLAPSE_POINT = 13,
 	TAPPER_ARM = 14,
+	LEVER = 15,
 };
 
 } // namespace lb::core::world

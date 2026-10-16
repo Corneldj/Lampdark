@@ -18,7 +18,7 @@ func test_check() -> void:
 		s.add_miner("ann", deck.position)
 		s.run.registry.create(WorldIds.EntityKind.BESS, Vector2(deck.position) + Vector2(1.5, 1.5))
 		s.step(1)
-		assert_eq(camp.run_start_check(s.run), [] as Array[String], "rotation %d: only miners, the lamp and Bess" % side)
+		assert_eq(camp.run_start_check(s.run), [] as Array[String], "rotation %d: only miners, the lamp, Bess and the levers" % side)
 		s.run.registry.create(WorldIds.EntityKind.ITEM, Vector2(deck.position) + Vector2(2.5, 2.5))
 		assert_eq(camp.run_start_check(s.run).size(), 1, "an item placed inside is caught")
 

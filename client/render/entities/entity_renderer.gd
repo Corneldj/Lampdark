@@ -3,7 +3,7 @@ extends RefCounted
 ## VIS-06: identity sprites (grey-box placeholders until art), drawn only for identity records
 ## (level 2): miners with their cap badge (colour and engraved pattern), facing and what is in their
 ## hands; the faceless Stythe; the moth (asleep, a heap's shape); the tapper's arm; Bess; items,
-## traps, phones and fixtures; coat heaps. A token (level 1) is TokenRenderer's and never shows any
+## traps, phones and fixtures; coat heaps; a gate's lever. A token (level 1) is TokenRenderer's and never shows any
 ## of this.
 
 const BODY: Color = Color(0.46, 0.42, 0.38)
@@ -27,6 +27,11 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 			ci.draw_line(at_px, at_px + facing * 0.6 * px, DARK, 0.12 * px)
 		SeenKind.Kind.BESS:
 			ci.draw_rect(Rect2(at_px - Vector2(0.6, 0.3) * px, Vector2(1.2, 0.6) * px), BODY)
+		SeenKind.Kind.LEVER:
+			# A lever box on the wall and its handle, raised: a grey-box sign of something to work.
+			ci.draw_rect(Rect2(at_px - Vector2(0.18, 0.12) * px, Vector2(0.36, 0.24) * px), DARK)
+			ci.draw_line(at_px, at_px + Vector2(0.14, -0.36) * px, BODY, 0.09 * px)
+			ci.draw_circle(at_px + Vector2(0.14, -0.36) * px, 0.08 * px, Palette.CHALK_WHITE.darkened(0.3))
 		_:
 			ci.draw_rect(Rect2(at_px - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 			_held_flame(ci, e, at_px, px, t)

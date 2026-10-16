@@ -129,6 +129,12 @@
 			"id": 14,
 			"owner": "CRT-09",
 			"note": "The Tapper's arm out of a wall face, only in WindUp, Pin and ReStrike: the only part of it ever seen or hit"
+		},
+		{
+			"name": "LEVER",
+			"id": 15,
+			"owner": "LFT-02",
+			"note": "A gate's lever, either side of each base camp gate: seen like a small thing (0.30), so a miner can find it"
 		}
 	]
 }

@@ -21,6 +21,10 @@ var streamer_mode: bool = false
 var violations: Array[String] = []
 ## The glyph's target this frame: {token, verb_key, position} or {}.
 var target: Dictionary = {}
+## The hold cue: when interact was pressed on the target shown, and that target's token.
+var _hold_since: float = -1.0
+var _hold_token: int = -1
+var _was_holding: bool = false
 
 
 func _init() -> void:
@@ -52,7 +56,20 @@ func update(frame: Dictionary) -> void:
 	if not target.is_empty():
 		var p: Vector2 = target["position"]
 		at = (p - origin) * tile_px
-	glyph.show_on(at, key, str(target.get("verb_key", "")))
+	# The hold cue: interact pressed afresh on this target (as the server needs) and held on it.
+	var holding: bool = router != null and (router.record.holds & InputRecord.HOLD_INTERACT) != 0
+	var token: int = int(Variants.number(target.get("token", -1)))
+	if not holding:
+		_hold_since = -1.0
+		_hold_token = -1
+	elif not _was_holding and not target.is_empty():
+		_hold_since = now_s
+		_hold_token = token
+	elif token != _hold_token:
+		_hold_since = -1.0
+		_hold_token = -1
+	_was_holding = holding
+	glyph.show_on(at, key, str(target.get("verb_key", "")), now_s - _hold_since if _hold_since >= 0.0 else 0.0)
 	var felt: FeelClient = frame.get("feel", null)
 	feel.update(felt, own_px, tile_px, now_s)
 	if black:

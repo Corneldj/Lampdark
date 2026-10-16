@@ -48,4 +48,5 @@ enum EntityKind {
 	COAT_HEAP = 12,
 	COLLAPSE_POINT = 13,
 	TAPPER_ARM = 14,
+	LEVER = 15,
 }

@@ -1,5 +1,5 @@
 {
-	"hash": "3d2f07e397ecf875f8c247daf9ee56e22098f00f991be2928d14b551045b2221",
+	"hash": "e8847f42150d997f6eeed1bd00323723031dad7bab3fefca3251826f5d0f3ff3",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -116,6 +116,13 @@
 			"kind": "param"
 		},
 		"items.hand_over_time": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"items.pick_up_time": {
 			"value": 1.0,
 			"type": "float",
 			"unit": "s",

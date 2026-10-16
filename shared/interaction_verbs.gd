@@ -14,4 +14,6 @@ static func for_seen(kind: int, cues: int = 0) -> String:
 			return "verb.lift" if (cues & (MinerCues.LYING_BREATHING | MinerCues.LYING_STILL)) != 0 else "verb.ring"
 		SeenKind.Kind.PHONE:
 			return "verb.crank"
+		SeenKind.Kind.LEVER:
+			return "verb.lever"
 	return ""
