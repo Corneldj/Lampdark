@@ -96,10 +96,11 @@ const CELLS: Dictionary = {
 		],
 	},
 	# East: the gate arm runs east to meet the loop road; beyond the arches a 1-wide passage, 2 tiles
-	# of rock below the arm, ends in a dead end; a side passage through the air door leads to the 8x6
-	# hoard.
+	# of rock below the arm, ends in a dead end; the air door just below the arm leads to the 8x6
+	# hoard. The arm is on rows 9-11, the main-road axis base camp's gates sit on (GEN-05).
 	Vector2i(1, 0): {
 		"rows": [
+			"################.=.#",
 			"################.=.#",
 			"################.=.#",
 			"################.=.#",
@@ -111,10 +112,9 @@ const CELLS: Dictionary = {
 			"...................#",
 			"================.=.#",
 			"...................#",
-			"#####.###########.##",
 			"#####D###########.##",
+			"#........########.##",
 			"#........##.......##",
-			"#........###########",
 			"#........###########",
 			"#........###########",
 			"#........###########",
@@ -124,16 +124,16 @@ const CELLS: Dictionary = {
 		"chambers": [[1, 13, 8, 6, ["coat_heaps", "hoard"]]],
 		"coal": [[1, 2, 13, 4], [11, 15, 8, 3]],
 		"anchors": [
-			["landmark", 6, 10, 1, 1, [], "chalked_date"],
-			["rubble_heap", 14, 8, 1, 1, [], ""],
-			["timber_hook", 3, 8, 1, 1, ["road"], ""], ["timber_hook", 9, 10, 1, 1, ["road"], ""],
-			["timber_hook", 15, 10, 1, 1, ["road"], ""], ["timber_hook", 16, 2, 1, 1, ["road"], ""],
-			["timber_hook", 12, 13, 1, 1, ["road"], ""], ["timber_hook", 17, 12, 1, 1, ["road"], ""],
+			["landmark", 6, 11, 1, 1, [], "chalked_date"],
+			["rubble_heap", 14, 9, 1, 1, [], ""],
+			["timber_hook", 3, 9, 1, 1, ["road"], ""], ["timber_hook", 9, 11, 1, 1, ["road"], ""],
+			["timber_hook", 15, 11, 1, 1, ["road"], ""], ["timber_hook", 16, 2, 1, 1, ["road"], ""],
+			["timber_hook", 12, 14, 1, 1, ["road"], ""], ["timber_hook", 17, 13, 1, 1, ["road"], ""],
 			["timber_hook", 8, 13, 1, 1, ["chamber"], ""], ["timber_hook", 8, 18, 1, 1, ["chamber"], ""],
 			["timber_hook", 1, 13, 1, 1, ["rib"], ""], ["timber_hook", 1, 14, 1, 1, ["rib"], ""],
 			["timber_hook", 1, 16, 1, 1, ["rib"], ""], ["timber_hook", 1, 17, 1, 1, ["rib"], ""],
-			["rich_rock", 0, 0, 16, 7, [], ""],
-			["wall_fixture", 13, 13, 1, 1, ["to:13,10"], "m1.voice_thin"],
+			["rich_rock", 0, 0, 16, 8, [], ""],
+			["wall_fixture", 13, 14, 1, 1, ["to:13,11"], "m1.voice_thin"],
 		],
 	},
 	# South: the gate arm, 10 tiles 3 wide under the arches, ends in a stall; a 2-wide road west, a
@@ -187,7 +187,7 @@ const PLACEMENTS: Dictionary = {
 	],
 	"coat_heaps": [[2, -19], [3, -19], [5, -19], [6, -19], [21, 13], [21, 14], [21, 16], [21, 17]],
 	"items": [
-		{"kind": "FUSE", "tile": [31, 13], "note": "the east dead end"},
+		{"kind": "FUSE", "tile": [31, 14], "note": "the east dead end"},
 		{"kind": "MAGNETO", "tile": [23, -8], "note": "the 5x5 chamber"},
 		{"kind": "ROPE_CLAMP", "tile": [16, 31], "note": "the deepest chamber"},
 		{"kind": "GAUZE_LAMP", "tile": [4, -10], "oil": 0.5, "notches": 1, "note": "the north spur's dead end"},

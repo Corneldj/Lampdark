@@ -45,7 +45,7 @@ static func standard_depth() -> int:
 ## The throat's footprint tiles at its full width, with `standard` for a depth of 0.
 func throat(standard: int) -> Array[Vector2i]:
 	var out: Array[Vector2i] = []
-	var first: int = offset - (max_width - 1) / 2
+	var first: int = offset - max_width / 2  # GEN-05's opening rule: 2 wide covers offset - 1 and offset
 	var base: Vector2i = cell * WorldIds.CELL_TILES
 	var last: int = WorldIds.CELL_TILES - 1
 	for d: int in (depth if depth > 0 else standard):

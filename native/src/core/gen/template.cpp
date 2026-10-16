@@ -349,6 +349,17 @@ void rule_stubs(const Template &t, const Grid &g, const ValidateParams &p, Out &
 			}
 		}
 	}
+	// The outer edge is rock but for the stubs' throats, so the sockets alone decide what joins.
+	const std::set<size_t> throats = throat_set(t, g);
+	for (int32_t y = 0; y < g.h; y++) {
+		for (int32_t x = 0; x < g.w; x++) {
+			const bool edge = x == 0 || y == 0 || x == g.w - 1 || y == g.h - 1;
+			if (edge && g.walk[g.at(x, y)] && throats.count(g.at(x, y)) == 0) {
+				out.add("stubs", x, y, "floor on the outer edge outside every stub's throat");
+				return;
+			}
+		}
+	}
 	const size_t n = t.stubs.size();
 	if (n > 16) {
 		out.add("stubs", -1, -1, std::to_string(n) + " stubs: more than 16 to check every subset");
@@ -754,7 +765,7 @@ void rule_fallback(const Template &t, const ValidateParams &p, Out &out) {
 std::vector<Coord> throat(const Template &t, const Stub &s, int32_t width) {
 	std::vector<Coord> out;
 	const int32_t w = std::max(1, std::min(width, s.max_width));
-	const int32_t first = s.offset - (w - 1) / 2;
+	const int32_t first = s.offset - w / 2; // GEN-05's opening rule: 2 wide covers o - 1 and o
 	const int32_t ox = s.cell.x * CELL_TILES;
 	const int32_t oy = s.cell.y * CELL_TILES;
 	(void)t;

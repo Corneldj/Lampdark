@@ -16,7 +16,7 @@
 	],
 	"rib": [
 		{"cell":[0,0],"index":50,"milli":200},
-		{"cell":[0,0],"index":64,"milli":150},
-		{"cell":[0,0],"index":107,"milli":100}
+		{"cell":[0,0],"index":63,"milli":150},
+		{"cell":[0,0],"index":106,"milli":100}
 	]
 }

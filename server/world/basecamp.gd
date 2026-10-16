@@ -35,9 +35,90 @@ static func canonical() -> Dictionary:
 
 
 ## The cell file for this seed (or for an explicit blind side, M1's map override), in GEN-01's
-## format: the canonical layout turned clockwise once per step from north to the blind side.
+## format: the canonical layout turned clockwise once per step from north to the blind side, each
+## gate then on its main-road axis (recentre_gates).
 static func cell_dict(run_seed: int, side: int = -1) -> Dictionary:
-	return rotate(canonical(), blind_side(run_seed) if side < 0 else side)
+	return recentre_gates(rotate(canonical(), blind_side(run_seed) if side < 0 else side))
+
+
+## Every gate on tiles 9-11 of its edge, the main-road axis (GEN-05's socket at offset 10, GEN-07's
+## roads). A quarter turn mirrors two sides' tile order (19 - i), so a gate on 9-11 can land on
+## 8-10; that gate's strip (the tiles from the edge in to the gate, 7-11 along it), its zones,
+## barrier and portal tiles and its levers move one tile along the edge.
+static func recentre_gates(file: Dictionary) -> Dictionary:
+	var out: Dictionary = file.duplicate(true)
+	for raw: Variant in Variants.array(out.get("barriers", [])):
+		var b: Dictionary = Variants.dict(raw)
+		var tiles: Array[Vector2i] = []
+		for i: Variant in Variants.array(b["tiles"]):
+			tiles.append(Vector2i(int(Variants.number(i)) % N, int(Variants.number(i)) / N))
+		var s: int = _side_of(tiles)
+		var lo: int = N
+		var hi: int = -1
+		var depth: int = 0
+		for t: Vector2i in tiles:
+			var ad: Vector2i = _along_depth(t, s)
+			lo = mini(lo, ad.x)
+			hi = maxi(hi, ad.x)
+			depth = maxi(depth, ad.y)
+		if lo != 8 or hi != 10:
+			continue
+		var rows: Array = Variants.array(out["tiles"])
+		var zones: Array = Variants.array(out["zones"])
+		for d: int in depth + 1:
+			for a: int in [12, 11, 10, 9, 8]:
+				var from: Vector2i = _tile_at(a - 1, d, s)
+				var to: Vector2i = _tile_at(a, d, s)
+				var row: String = rows[to.y]
+				row[to.x] = str(rows[from.y])[from.x]
+				rows[to.y] = row
+				var zone_to: Array = Variants.array(zones[to.y])
+				var zone_from: Array = Variants.array(zones[from.y])
+				zone_to[to.x] = zone_from[from.x]
+		var moved: Callable = func(index: Variant) -> int:
+			var t: Vector2i = Vector2i(int(Variants.number(index)) % N, int(Variants.number(index)) / N)
+			var ad: Vector2i = _along_depth(t, s)
+			if ad.y <= depth and ad.x >= 7 and ad.x <= 11:
+				t = _tile_at(ad.x + 1, ad.y, s)
+			return t.y * N + t.x
+		b["tiles"] = Variants.array(b["tiles"]).map(moved)
+		var graph: Dictionary = Variants.dict(out.get("road_graph", {}))
+		for p: Variant in Variants.array(graph.get("portals", [])):
+			var portal: Dictionary = Variants.dict(p)
+			if int(Variants.number(portal.get("barrier", 0))) == int(Variants.number(b["id"])):
+				portal["tiles"] = Variants.array(portal["tiles"]).map(moved)
+		for a: Variant in Variants.array(out.get("anchors", [])):
+			var anchor: Dictionary = Variants.dict(a)
+			if Variants.array(anchor.get("tags", [])).has("gate:" + SIDES[s]):
+				var at: Vector2i = Vector2i(int(Variants.number(anchor["x"])), int(Variants.number(anchor["y"])))
+				var ad: Vector2i = _along_depth(at, s)
+				var to: Vector2i = _tile_at(ad.x + 1, ad.y, s)
+				anchor["x"] = to.x
+				anchor["y"] = to.y
+	return out
+
+
+## A tile's place relative to side `s`: x along the edge (west to east, north to south), y in from it.
+static func _along_depth(t: Vector2i, s: int) -> Vector2i:
+	match s:
+		0:
+			return Vector2i(t.x, t.y)
+		1:
+			return Vector2i(t.y, N - 1 - t.x)
+		2:
+			return Vector2i(t.x, N - 1 - t.y)
+	return Vector2i(t.y, t.x)
+
+
+static func _tile_at(along: int, depth: int, s: int) -> Vector2i:
+	match s:
+		0:
+			return Vector2i(along, depth)
+		1:
+			return Vector2i(N - 1 - depth, along)
+		2:
+			return Vector2i(along, N - 1 - depth)
+	return Vector2i(depth, along)
 
 
 static func cell_data(run_seed: int, side: int = -1) -> LbCellData:
@@ -148,6 +229,25 @@ static func forced_sockets(run_seed: int, side: int = -1) -> Dictionary:
 	var out: Dictionary = {}
 	for s: int in 4:
 		out[SIDES[s]] = "shut" if s == blind else "open"
+	return out
+
+
+## GEN-05's forced sockets for cell (0, 0), as sockets: {side: {open, offset, width}}. Each gate's
+## opening is read from the rotated layout's edge tiles (o - floor(w / 2) is the first, GEN-05's
+## opening rule); the blind side is shut.
+static func gate_sockets(run_seed: int, side: int = -1) -> Dictionary:
+	var rows: Array = Variants.array(cell_dict(run_seed, side)["tiles"])
+	var out: Dictionary = {}
+	for s: int in 4:
+		var along: Array[int] = []
+		for i: int in N:
+			var at: Vector2i = _tile_at(i, 0, s)
+			if FLOOR_CHARS.contains(str(rows[at.y])[at.x]):
+				along.append(i)
+		if along.is_empty():
+			out[SIDES[s]] = {"open": false, "offset": 0, "width": 0}
+		else:
+			out[SIDES[s]] = {"open": true, "offset": along[0] + along.size() / 2, "width": along.size()}
 	return out
 
 

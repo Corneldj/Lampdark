@@ -100,7 +100,8 @@ std::optional<TemplateKind> kind_from(const std::string &name);
 std::vector<Problem> validate(const Template &t, const ValidateParams &p);
 std::string describe(const Template &t, const Problem &problem); // "template <id>: <rule>: cell (x, y) tile (x, y): ..."
 
-// The throat tiles of a stub at `width` (centred on its offset), as footprint-global tiles.
+// The throat tiles of a stub at `width`, as footprint-global tiles: along its edge from
+// offset - floor(width / 2) (GEN-05's opening rule), `depth` tiles in.
 std::vector<lb::core::world::Coord> throat(const Template &t, const Stub &s, int32_t width);
 
 // GEN-04's zone cutter, the grey box's rule (GEN-03) generalised, so templates carry pre-cut zones:
