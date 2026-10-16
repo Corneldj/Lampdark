@@ -943,6 +943,149 @@ Template transpose(const Template &t) {
 	return out;
 }
 
+namespace {
+
+// Orientation `o` of a footprint `w` x `h` tiles: transposed first if o & 4, then turned o & 3
+// quarter turns clockwise.
+struct Turn {
+	int32_t o = 0;
+	int64_t w = CELL_TILES;
+	int64_t h = CELL_TILES;
+
+	Coord map(int64_t x, int64_t y) const {
+		int64_t gw = w;
+		int64_t gh = h;
+		if ((o & 4) != 0) {
+			std::swap(x, y);
+			std::swap(gw, gh);
+		}
+		for (int32_t q = 0; q < (o & 3); q++) {
+			const int64_t nx = gh - 1 - y;
+			y = x;
+			x = nx;
+			std::swap(gw, gh);
+		}
+		return Coord{x, y};
+	}
+	// A footprint-local tile index of cell `c` to its new cell and index.
+	std::pair<Coord, uint16_t> map_index(Coord c, uint16_t index) const {
+		const Coord g = map(c.x * CELL_TILES + index % CELL_TILES, c.y * CELL_TILES + index / CELL_TILES);
+		return {Coord{g.x / CELL_TILES, g.y / CELL_TILES},
+				static_cast<uint16_t>(Cell::index_of(g.x % CELL_TILES, g.y % CELL_TILES))};
+	}
+};
+
+} // namespace
+
+Edge oriented_edge(Edge side, int32_t o) {
+	static const Edge TRANSPOSED[4] = {Edge::WEST, Edge::SOUTH, Edge::EAST, Edge::NORTH}; // N->W, E->S, S->E, W->N
+	Edge e = side;
+	if ((o & 4) != 0) {
+		e = TRANSPOSED[static_cast<size_t>(e)];
+	}
+	for (int32_t q = 0; q < (o & 3); q++) {
+		e = static_cast<Edge>((static_cast<uint8_t>(e) + 1) % 4); // clockwise: N->E->S->W
+	}
+	return e;
+}
+
+Coord oriented_tile(int64_t x, int64_t y, int32_t fw, int32_t fh, int32_t o) {
+	return Turn{o & 7, static_cast<int64_t>(fw) * CELL_TILES, static_cast<int64_t>(fh) * CELL_TILES}.map(x, y);
+}
+
+Template orient(const Template &t, int32_t o) {
+	o &= 7;
+	const Turn turn{o, static_cast<int64_t>(t.footprint_w) * CELL_TILES, static_cast<int64_t>(t.footprint_h) * CELL_TILES};
+	const bool swaps = ((o & 4) != 0) != ((o & 1) != 0);
+	Template out = t;
+	out.id = t.id + "@" + std::to_string(o);
+	out.footprint_w = swaps ? t.footprint_h : t.footprint_w;
+	out.footprint_h = swaps ? t.footprint_w : t.footprint_h;
+	out.cells.clear();
+	std::map<Coord, size_t> at;
+	for (int64_t y = 0; y < out.footprint_h; y++) {
+		for (int64_t x = 0; x < out.footprint_w; x++) {
+			Cell c;
+			c.coord = Coord{x, y};
+			at[c.coord] = out.cells.size();
+			out.cells.push_back(std::move(c));
+		}
+	}
+	for (const Cell &c : t.cells) {
+		for (uint16_t i = 0; i < CELL_AREA; i++) {
+			const auto [nc, ni] = turn.map_index(c.coord, i);
+			out.cells[at[nc]].tiles[ni] = c.tiles[i];
+		}
+		for (const Anchor &a : c.anchors) {
+			const Coord p = turn.map(c.coord.x * CELL_TILES + a.x, c.coord.y * CELL_TILES + a.y);
+			const Coord q = turn.map(c.coord.x * CELL_TILES + a.x + a.w - 1, c.coord.y * CELL_TILES + a.y + a.h - 1);
+			const Coord lo{std::min(p.x, q.x), std::min(p.y, q.y)};
+			Anchor n = a;
+			n.x = static_cast<int32_t>(lo.x % CELL_TILES);
+			n.y = static_cast<int32_t>(lo.y % CELL_TILES);
+			n.w = static_cast<int32_t>(std::max(p.x, q.x) - lo.x + 1);
+			n.h = static_cast<int32_t>(std::max(p.y, q.y) - lo.y + 1);
+			out.cells[at[Coord{lo.x / CELL_TILES, lo.y / CELL_TILES}]].anchors.push_back(std::move(n));
+		}
+		for (const auto &col : c.collapses) {
+			lb::core::world::Collapse n = col;
+			Coord into = c.coord;
+			for (auto &w : n.standing) {
+				std::tie(into, w.index) = turn.map_index(c.coord, w.index);
+			}
+			for (auto &w : n.fallen) {
+				std::tie(into, w.index) = turn.map_index(c.coord, w.index);
+			}
+			n.zones.clear();
+			n.fallen_road_graph.clear();
+			n.standing_road_graph.clear();
+			out.cells[at[into]].collapses.push_back(std::move(n));
+		}
+	}
+	const uint8_t room = static_cast<uint8_t>(t.kind == TemplateKind::POI ? ZoneKind::POI : ZoneKind::CHAMBER);
+	for (Cell &c : out.cells) {
+		cut_zones(c, room, t.kind == TemplateKind::BASE_CAMP);
+		cut_collapses(c, room, t.kind == TemplateKind::BASE_CAMP);
+	}
+	for (Stub &s : out.stubs) {
+		// The throat's mouth at its widest, on its edge: where its tiles land fixes the new offset.
+		const int32_t first = s.offset - s.max_width / 2;
+		Coord a;
+		Coord b;
+		const int64_t ox = s.cell.x * CELL_TILES;
+		const int64_t oy = s.cell.y * CELL_TILES;
+		switch (s.edge) {
+			case Edge::NORTH:
+				a = {ox + first, oy};
+				b = {ox + first + s.max_width - 1, oy};
+				break;
+			case Edge::SOUTH:
+				a = {ox + first, oy + CELL_TILES - 1};
+				b = {ox + first + s.max_width - 1, oy + CELL_TILES - 1};
+				break;
+			case Edge::WEST:
+				a = {ox, oy + first};
+				b = {ox, oy + first + s.max_width - 1};
+				break;
+			default:
+				a = {ox + CELL_TILES - 1, oy + first};
+				b = {ox + CELL_TILES - 1, oy + first + s.max_width - 1};
+				break;
+		}
+		const Coord na = turn.map(a.x, a.y);
+		const Coord nb = turn.map(b.x, b.y);
+		s.edge = oriented_edge(s.edge, o);
+		s.cell = Coord{std::min(na.x, nb.x) / CELL_TILES, std::min(na.y, nb.y) / CELL_TILES};
+		const bool along_x = s.edge == Edge::NORTH || s.edge == Edge::SOUTH;
+		const int64_t lo = along_x ? std::min(na.x, nb.x) : std::min(na.y, nb.y);
+		s.offset = static_cast<int32_t>(lo % CELL_TILES) + s.max_width / 2;
+	}
+	for (RibOffset &r : out.rib) {
+		std::tie(r.cell, r.index) = turn.map_index(r.cell, r.index);
+	}
+	return out;
+}
+
 std::vector<Coord> throat(const Template &t, const Stub &s, int32_t width) {
 	std::vector<Coord> out;
 	const int32_t w = std::max(1, std::min(width, s.max_width));

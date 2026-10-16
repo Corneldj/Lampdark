@@ -7,6 +7,7 @@
 #include "core/gen/gen_pool.h"
 #include "core/gen/main_roads.h"
 #include "core/gen/plan.h"
+#include "core/gen/poi.h"
 
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/array.hpp>
@@ -37,14 +38,21 @@ public:
 	::godot::String set_version() const;
 	// params: open_probability, offsets, widths, reroll_limit, and either biomes (GEN-06's table:
 	// {rings: [[[biome, weight], ...], ...], widths: {biome: [min, max]}, ring_bounds: [...]}) or
-	// biome (one biome for every cell, for tests); and main_roads (GEN-07: {spacing, width, offset,
-	// run_min, run_max, max_ring, old_fall_probability}) to lay main roads over the biomes.
+	// biome (one biome for every cell, for tests); main_roads (GEN-07: {spacing, width, offset,
+	// run_min, run_max, max_ring, old_fall_probability}) to lay main roads over the biomes; and poi
+	// (GEN-09: {per_region_min, per_region_max, two_probability, lamp_cabin_regions_per,
+	// first_aid_regions_per, fit_tries, canary_max_per_run, min_ring, ring_min: {kind: ring}, ring_max: {kind: ring},
+	// weights: [{kind: weight} per ring from 0], lair_biome, contents: {kind: {name: number}},
+	// fuel_cans_min, fuel_cans_max, found_oil: [lo, hi], found_notches: [lo, hi], remains_chances:
+	// {lamp, flare, kit, tool, note}, remains_items_max, dry_stores_factor}) to place points of
+	// interest (with the plan's own once plan() has run).
 	void configure(int64_t seed, const ::godot::Dictionary &params);
 	// A socket forced up front (base camp's): socket {open, offset, width}. side: north, east, south, west.
 	bool force_socket(::godot::Vector2i cell, const ::godot::String &side, const ::godot::Dictionary &socket);
 	// {open, offset, width, forced}
 	::godot::Dictionary socket(::godot::Vector2i cell, const ::godot::String &side) const;
-	// The cell's biome (GEN-06), "" for base camp; server-only, never sent.
+	// The cell's biome (GEN-06; a templated point of interest's, GEN-09), "" for base camp;
+	// server-only, never sent.
 	::godot::String biome_of(::godot::Vector2i cell) const;
 	// GEN-07: {main_road, crossing, shape, old_fall, transpose, dress} of a cell.
 	::godot::Dictionary road_of(::godot::Vector2i cell) const;
@@ -74,6 +82,20 @@ public:
 	// GEN-10's and HAZ-01's sections of the header.
 	void set_home(const ::godot::String &name, const ::godot::PackedByteArray &bytes);
 	::godot::PackedByteArray home(const ::godot::String &name) const;
+
+	// GEN-09 (configure with poi first; none otherwise). A point of interest as {region, index,
+	// kind, planned (the plan's site index, -1 if drawn), template (its template's id, "" for a
+	// planned site no template fits), orientation, origin, size, door, door_side, cells, biome,
+	// slots: [Rect2i world tiles, its contents lines' slots in order]}.
+	// The point of interest a cell lies in, or {}.
+	::godot::Dictionary poi_at(::godot::Vector2i cell) const;
+	// A region's layout: {region, wanted, pois: [...]}.
+	::godot::Dictionary poi_region(::godot::Vector2i region) const;
+	// What a point of interest holds, its lines in order: [{line (-1: the phone's wall fixture),
+	// thing, oil_milli, notches, with}]; [] for none.
+	::godot::Array poi_contents(::godot::Vector2i region, int64_t index) const;
+	// The header's "canary" home (GEN-10 names the canary region): its bytes for set_home.
+	static ::godot::PackedByteArray canary_home(::godot::Vector2i region);
 
 	// GEN-11's worker pool: `threads` workers derive wanted cells (0: synchronous, in take()),
 	// below normal priority if `background` (a server on a player's machine). Set the deriver up
@@ -119,6 +141,16 @@ private:
 	std::unique_ptr<lb::core::gen::MainRoadCells> road_cells_;
 	std::unique_ptr<lb::core::gen::MainRoadSockets> road_sockets_;
 	std::unique_ptr<lb::core::gen::SpineSockets> spine_sockets_;
+	bool has_poi_ = false;
+	lb::core::gen::PoiParams poi_params_;
+	lb::core::gen::PoiContentsParams contents_params_;
+	std::unique_ptr<lb::core::gen::PointsOfInterest> pois_;
+	// The template set's point-of-interest shapes, made again only for a new set or socket offsets.
+	std::shared_ptr<const lb::core::gen::PoiShapes> poi_shapes_;
+	std::shared_ptr<lb::core::gen::TemplateSet> poi_shapes_set_;
+	std::vector<int32_t> poi_shapes_offsets_;
+	std::unique_ptr<lb::core::gen::PoiCells> poi_cells_;
+	std::unique_ptr<lb::core::gen::PoiSockets> poi_sockets_;
 	std::unique_ptr<lb::core::gen::Deriver> deriver_;
 	std::unique_ptr<lb::core::gen::GenPool> pool_;
 	int64_t pool_threads_ = -1; // -1: no pool

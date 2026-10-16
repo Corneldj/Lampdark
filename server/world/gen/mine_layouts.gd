@@ -42,10 +42,54 @@ static func configure(layouts: LbLayouts, run_seed: int) -> void:
 			"max_ring": Tuning.i(&"mine.main_road_max_ring"),
 			"old_fall_probability": Tuning.f(&"mine.old_fall_probability"),
 		},
+		"poi": poi_params(),
 	})
 	var gates: Dictionary = Basecamp.gate_sockets(run_seed)
 	for side: String in Basecamp.SIDES:
 		layouts.force_socket(Vector2i.ZERO, side, Variants.dict(gates[side]))
+
+
+## GEN-09's numbers from tuning: a region's count and the two kinds' rates, footprint tries, each
+## kind's rings, the drawn kinds' weights by ring (none in ring 0), the contents tables, found lamps,
+## the remains' rolls and Dry Stores.
+static func poi_params() -> Dictionary:
+	if Tuning.i(&"mine.poi_region_cells") != WorldIds.REGION_CELLS:
+		push_error("MineLayouts: mine.poi_region_cells must be FND-07's region size, %d" % WorldIds.REGION_CELLS)
+	var weights: Array = [{}]
+	var ring: int = 1
+	while Tuning.current.has_key(StringName("mine.poi_kind_weights_ring%d" % ring)):
+		weights.append(Tuning.table(StringName("mine.poi_kind_weights_ring%d" % ring)))
+		ring += 1
+	var rings_min: Dictionary = Tuning.table(&"mine.poi_ring_min")
+	var contents: Dictionary = {}
+	for kind: Variant in rings_min.keys():
+		var key: StringName = StringName("mine.poi_contents_%s" % kind)
+		if Tuning.current.has_key(key):
+			contents[str(kind)] = Tuning.table(key)
+	var oil: Vector2 = Tuning.range_f(&"lamp.found_oil_range")
+	var notches: Vector2 = Tuning.range_f(&"lamp.found_notches_range")
+	return {
+		"per_region_min": Tuning.i(&"mine.poi_per_region_min"),
+		"per_region_max": Tuning.i(&"mine.poi_per_region_max"),
+		"two_probability": Tuning.f(&"mine.poi_two_per_region_probability"),
+		"lamp_cabin_regions_per": Tuning.f(&"mine.lamp_cabin_regions_per"),
+		"first_aid_regions_per": Tuning.f(&"mine.first_aid_regions_per"),
+		"fit_tries": Tuning.i(&"mine.poi_fit_tries"),
+		"canary_max_per_run": Tuning.i(&"mine.canary_max_per_run"),
+		"min_ring": Tuning.i(&"mine.poi_min_ring"),
+		"ring_min": rings_min,
+		"ring_max": Tuning.table(&"mine.poi_ring_max"),
+		"weights": weights,
+		"lair_biome": "old_workings",
+		"contents": contents,
+		"fuel_cans_min": Tuning.i(&"mine.fuel_store_cans_min"),
+		"fuel_cans_max": Tuning.i(&"mine.fuel_store_cans_max"),
+		"found_oil": [oil.x, oil.y],
+		"found_notches": [notches.x, notches.y],
+		"remains_chances": Tuning.table(&"mine.remains_item_chances"),
+		"remains_items_max": Tuning.i(&"mine.remains_items_max"),
+		"dry_stores_factor": Tuning.f(&"hazards.dry_stores_factor"),
+	}
 
 
 ## GEN-06's table from tuning: each ring's weights in their mapping order, each biome's socket

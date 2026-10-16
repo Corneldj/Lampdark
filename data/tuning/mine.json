@@ -1959,6 +1959,238 @@
 			"visibility": "client",
 			"kind": "param",
 			"note": "zoom per wheel notch or D-pad press; ticket LFT-14"
+		},
+		"mine.poi_kind_weights_ring1": {
+			"value": {
+				"fitters_shop": 1,
+				"stores": 1,
+				"fuel_store": 1,
+				"electricians_cabin": 1,
+				"haulage_engine_house": 1,
+				"refuge": 1,
+				"stables": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ring 1's drawn kinds, equal (after the lamp cabin's and first-aid station's own rates; the plan's own kinds never drawn); ticket GEN-09"
+		},
+		"mine.poi_kind_weights_ring2": {
+			"value": {
+				"fitters_shop": 1,
+				"stores": 1,
+				"fuel_store": 1,
+				"electricians_cabin": 1,
+				"haulage_engine_house": 1,
+				"deep_workshop": 1,
+				"powder_magazine": 1,
+				"refuge": 1,
+				"stables": 1,
+				"capped_shaft": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ring 2's drawn kinds, equal (after the lamp cabin's and first-aid station's own rates; the plan's own kinds never drawn); ticket GEN-09"
+		},
+		"mine.poi_kind_weights_ring3": {
+			"value": {
+				"stores": 1,
+				"deep_workshop": 1,
+				"powder_magazine": 1,
+				"refuge": 1,
+				"capped_shaft": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ring 3's drawn kinds, equal (after the lamp cabin's and first-aid station's own rates; the plan's own kinds never drawn); ticket GEN-09"
+		},
+		"mine.poi_kind_weights_ring4": {
+			"value": {
+				"capped_shaft": 1
+			},
+			"type": "table",
+			"unit": "weight",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ring 4's drawn kinds, equal (after the lamp cabin's and first-aid station's own rates; the plan's own kinds never drawn); ticket GEN-09"
+		},
+		"mine.poi_fit_tries": {
+			"value": 20,
+			"type": "int",
+			"unit": "tries",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "a drawn point of interest's footprint tries before its region holds fewer; ticket GEN-09"
+		},
+		"mine.poi_contents_fitters_shop": {
+			"value": {
+				"tools_min": 1,
+				"tools_max": 2,
+				"pit_phones": 1
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "a toolbox of 1-2 tools hashed among the four, a pit phone; its parts only as planned; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_stores": {
+			"value": {
+				"fuses_min": 1,
+				"fuses_max": 3,
+				"candles_min": 1,
+				"candles_max": 3,
+				"paraffin_cans": 1,
+				"tool_probability": 0.3
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4; Proposed (fuses, candles, the tool's odds)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "its parts only as planned; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_substation": {
+			"value": {
+				"spare_fuses": 1,
+				"pit_phones": 1
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "its fuse board, trip lever and main switch are its template's fixtures (LFT-05); ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_haulage_engine_house": {
+			"value": {
+				"hammers": 1,
+				"tubs": 1
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "the tub on its rails; the drive belt only as planned; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_deep_workshop": {
+			"value": {
+				"spanners": 1
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "the drum gear only as planned; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_first_aid_station": {
+			"value": {
+				"healing_kits_min": 1,
+				"healing_kits_max": 2,
+				"stretchers": 1,
+				"flares_min": 1,
+				"flares_max": 2,
+				"pit_phones": 1
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "the canary in the canary region's first (GEN-10 names the region); ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_refuge": {
+			"value": {
+				"remains_min": 2,
+				"remains_max": 4
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "each with what it carried (mine.remains_item_chances); ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_stables": {
+			"value": {
+				"lore": 1
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "empty stalls (its template) and a lore beat; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_capped_shaft": {
+			"value": {
+				"lore": 1
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "lore; never a way out; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_hoard": {
+			"value": {
+				"gauze_lamps_min": 2,
+				"gauze_lamps_max": 4
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4, §8.1",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "coats hung from the roof and its run-start lamps (none under One Lamp); ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.poi_contents_lair": {
+			"value": {
+				"remains_min": 2,
+				"remains_max": 4,
+				"gauze_lamps_min": 3,
+				"gauze_lamps_max": 6,
+				"tools_min": 1,
+				"tools_max": 2,
+				"healing_kits_min": 1,
+				"healing_kits_max": 2
+			},
+			"type": "table",
+			"unit": "items",
+			"source": "Gameplay §12.4; Proposed (remains, lamps, tools)",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "the men laid out, lamps snuffed in rows, brass checks, tools, healing kits; ticket GEN-09 (mine.poi_contents_<kind>)"
 		}
 	}
 }

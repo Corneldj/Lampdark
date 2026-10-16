@@ -271,6 +271,30 @@
 				"index",
 				"attempt"
 			]
+		},
+		{
+			"name": "gen.poi_region",
+			"id": 29,
+			"owner": "GEN-09",
+			"kind": "hash",
+			"keys": [
+				"region_x",
+				"region_y",
+				"slot",
+				"attempt"
+			]
+		},
+		{
+			"name": "gen.poi_contents",
+			"id": 30,
+			"owner": "GEN-09",
+			"kind": "hash",
+			"keys": [
+				"region_x",
+				"region_y",
+				"index",
+				"line"
+			]
 		}
 	]
 }

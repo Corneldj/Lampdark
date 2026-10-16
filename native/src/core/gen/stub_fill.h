@@ -8,7 +8,9 @@
 
 namespace lb::core::gen {
 
-// The template's cell (a one-cell template) at `coord`, its stubs fitted to `sockets`.
-lb::core::world::Cell fill_stubs(const Template &t, const CellSockets &sockets, lb::core::world::Coord coord);
+// The template's cell at `local` in its footprint (a one-cell template's only one), placed at
+// `coord`, with that cell's stubs fitted to `sockets` (GEN-09: one cell of a point of interest).
+lb::core::world::Cell fill_stubs(const Template &t, const CellSockets &sockets, lb::core::world::Coord coord,
+		lb::core::world::Coord local = {0, 0});
 
 } // namespace lb::core::gen

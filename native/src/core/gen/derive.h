@@ -29,6 +29,10 @@ struct CellClass {
 	bool old_fall = false;
 	bool transpose = false;
 	std::string dress;
+	// GEN-09, a point of interest's cell: its template in the orientation placed, and which of the
+	// footprint's cells this is. Owned by the points of interest, alive as long as the deriver.
+	const Template *poi_template = nullptr;
+	lb::core::world::Coord poi_cell;
 };
 
 class CellClassifier {

@@ -112,6 +112,18 @@ std::string describe(const Template &t, const Problem &problem); // "template <i
 // offsets, so an east-west main road serves north-south lines. Zones and portals are cut again.
 Template transpose(const Template &t);
 
+// GEN-09: a template in orientation `o` (0-3 quarter turns clockwise, plus 4 to transpose first:
+// the eight symmetries of its footprint), over its whole footprint. Tiles, anchors, collapses, rib
+// art and stubs move with it, the footprint's sides swap on an odd turn, zones and portals are cut
+// again, and its id gains "@o". A stub keeps its throat's tiles, so on an edge the turn reverses
+// its offset becomes 20 - o at an even width but 19 - o at an odd one, which is no socket offset:
+// callers keep only the orientations whose stubs all land on socket offsets.
+Template orient(const Template &t, int32_t o);
+// The edge an orientation turns `side` to.
+Edge oriented_edge(Edge side, int32_t o);
+// Where an orientation takes the footprint-global tile (x, y) of a footprint fw x fh cells.
+lb::core::world::Coord oriented_tile(int64_t x, int64_t y, int32_t fw, int32_t fh, int32_t o);
+
 // The throat tiles of a stub at `width`, as footprint-global tiles: along its edge from
 // offset - floor(width / 2) (GEN-05's opening rule), `depth` tiles in.
 std::vector<lb::core::world::Coord> throat(const Template &t, const Stub &s, int32_t width);

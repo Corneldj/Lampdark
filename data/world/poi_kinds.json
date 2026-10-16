@@ -1,0 +1,21 @@
+{
+	"note": "GEN-09: each point-of-interest kind's contents lines, in order (a template of the kind needs a poi_slot anchor for each, the first slot holding the first line), and whether it has a pit phone (a wall_fixture of kind phone). GEN-04's validator reads contents_lines, phone and lair_kind; the lines are for authors. A planned part takes the next free line.",
+	"lair_kind": "lair",
+	"kinds": {
+		"lamp_cabin": {"contents_lines": 3, "phone": true, "lines": ["gauze lamps", "oil flasks", "a paraffin can"]},
+		"fitters_shop": {"contents_lines": 3, "phone": true, "lines": ["the toolbox", "a planned part", "a planned part"]},
+		"stores": {"contents_lines": 6, "phone": false, "lines": ["fuses", "candles", "a paraffin can", "sometimes a tool", "a planned part", "a planned part"]},
+		"fuel_store": {"contents_lines": 1, "phone": false, "lines": ["paraffin cans"]},
+		"electricians_cabin": {"contents_lines": 2, "phone": false, "lines": ["fuses", "the wire cutters"]},
+		"substation": {"contents_lines": 1, "phone": true, "lines": ["the spare fuse"]},
+		"haulage_engine_house": {"contents_lines": 3, "phone": false, "lines": ["the hammer", "a tub, on rails", "a planned part"]},
+		"deep_workshop": {"contents_lines": 2, "phone": false, "lines": ["a spanner", "a planned part"]},
+		"first_aid_station": {"contents_lines": 4, "phone": true, "lines": ["healing kits", "a stretcher", "flares", "the canary (one a run)"]},
+		"powder_magazine": {"contents_lines": 1, "phone": false, "lines": ["flares"]},
+		"refuge": {"contents_lines": 1, "phone": false, "lines": ["the men in-bye's remains"]},
+		"stables": {"contents_lines": 1, "phone": false, "lines": ["a lore beat"]},
+		"capped_shaft": {"contents_lines": 1, "phone": false, "lines": ["a lore beat"]},
+		"hoard": {"contents_lines": 2, "phone": false, "lines": ["coats from the roof", "gauze lamps"]},
+		"lair": {"contents_lines": 5, "phone": false, "lines": ["the men laid out", "lamps snuffed in rows", "brass checks", "tools", "healing kits"]}
+	}
+}

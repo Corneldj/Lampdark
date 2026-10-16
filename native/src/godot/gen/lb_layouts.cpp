@@ -5,6 +5,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/packed_string_array.hpp>
+#include <godot_cpp/variant/rect2i.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include <cmath>
@@ -159,6 +160,75 @@ gen::PlanParams plan_params(const Dictionary &t, const std::vector<int64_t> &rin
 	return p;
 }
 
+// GEN-09's numbers from the poi dictionary mine_layouts.gd builds; anything missing keeps its default.
+void poi_params(const Dictionary &d, const std::vector<int64_t> &ring_bounds, gen::PoiParams &p, gen::PoiContentsParams &c) {
+	p.ring_bounds = ring_bounds;
+	p.per_region_min = static_cast<int32_t>(whole(d, "per_region_min", p.per_region_min));
+	p.per_region_max = static_cast<int32_t>(whole(d, "per_region_max", p.per_region_max));
+	p.two_ppm = ppm(d, "two_probability", p.two_ppm);
+	for (const auto &[key, out] : {std::pair<const char *, uint32_t *>{"lamp_cabin_regions_per", &p.lamp_cabin_ppm},
+				 std::pair<const char *, uint32_t *>{"first_aid_regions_per", &p.first_aid_ppm}}) {
+		if (d.has(key) && static_cast<double>(d[key]) > 0.0) {
+			*out = static_cast<uint32_t>(std::llround(1000000.0 / static_cast<double>(d[key])));
+		}
+	}
+	p.fit_tries = static_cast<int32_t>(whole(d, "fit_tries", p.fit_tries));
+	p.canary_max = static_cast<int32_t>(whole(d, "canary_max_per_run", p.canary_max));
+	p.min_ring = whole(d, "min_ring", p.min_ring);
+	if (d.has("lair_biome")) {
+		p.lair_biome = to_std(String(d["lair_biome"]));
+	}
+	const Dictionary rmin = d.get("ring_min", Dictionary());
+	const Dictionary rmax = d.get("ring_max", Dictionary());
+	const Dictionary contents = d.get("contents", Dictionary());
+	for (size_t k = 0; k < static_cast<size_t>(gen::PoiKind::COUNT); k++) {
+		const String name = String::utf8(gen::poi_kind_name(static_cast<gen::PoiKind>(k)));
+		if (rmin.has(name) && rmax.has(name)) {
+			p.rings[k] = {static_cast<int64_t>(rmin[name]), static_cast<int64_t>(rmax[name])};
+		}
+		if (contents.has(name)) {
+			const Dictionary table = contents[name];
+			const Array keys = table.keys();
+			for (int64_t i = 0; i < keys.size(); i++) {
+				c.tables[k][to_std(String(keys[i]))] = static_cast<double>(table[keys[i]]);
+			}
+		}
+	}
+	const Array weights = d.get("weights", Array());
+	if (weights.size() > 0) {
+		p.weights.assign(static_cast<size_t>(weights.size()), {});
+		for (int64_t r = 0; r < weights.size(); r++) {
+			const Dictionary row = weights[r];
+			for (size_t k = 0; k < static_cast<size_t>(gen::PoiKind::COUNT); k++) {
+				const String name = String::utf8(gen::poi_kind_name(static_cast<gen::PoiKind>(k)));
+				p.weights[static_cast<size_t>(r)][k] = row.has(name) ? static_cast<double>(row[name]) : 0.0;
+			}
+		}
+	}
+	c.fuel_cans_min = whole(d, "fuel_cans_min", c.fuel_cans_min);
+	c.fuel_cans_max = whole(d, "fuel_cans_max", c.fuel_cans_max);
+	const Array oil = d.get("found_oil", Array());
+	if (oil.size() == 2) {
+		c.found_oil_min = static_cast<double>(oil[0]);
+		c.found_oil_max = static_cast<double>(oil[1]);
+	}
+	const Array notches = d.get("found_notches", Array());
+	if (notches.size() == 2) {
+		c.found_notches_min = static_cast<int64_t>(std::llround(static_cast<double>(notches[0])));
+		c.found_notches_max = static_cast<int64_t>(std::llround(static_cast<double>(notches[1])));
+	}
+	const Dictionary chances = d.get("remains_chances", Dictionary());
+	for (auto &[name, chance] : c.remains_chances) {
+		if (chances.has(String::utf8(name.c_str()))) {
+			chance = static_cast<double>(chances[String::utf8(name.c_str())]);
+		}
+	}
+	c.remains_items_max = whole(d, "remains_items_max", c.remains_items_max);
+	if (d.has("dry_stores_factor")) {
+		c.dry_stores_factor = static_cast<double>(d["dry_stores_factor"]);
+	}
+}
+
 Vector2i v2(const lb::core::world::Coord &c) {
 	return Vector2i(static_cast<int32_t>(c.x), static_cast<int32_t>(c.y));
 }
@@ -169,6 +239,28 @@ Array cells_array(const std::vector<lb::core::world::Coord> &cells) {
 		out.append(v2(c));
 	}
 	return out;
+}
+
+Dictionary poi_dict(const gen::Poi &p) {
+	Dictionary d;
+	d["region"] = v2(p.id.region);
+	d["index"] = p.id.index;
+	d["kind"] = String::utf8(gen::poi_kind_name(p.kind));
+	d["planned"] = p.planned;
+	d["template"] = p.shape != nullptr ? String::utf8(p.shape->base->id.c_str()) : String();
+	d["orientation"] = p.shape != nullptr ? p.shape->orientation : 0;
+	d["origin"] = v2(p.origin);
+	d["size"] = Vector2i(p.w, p.h);
+	d["door"] = v2(p.door);
+	d["door_side"] = String(SIDES[static_cast<size_t>(p.door_side)]);
+	d["cells"] = cells_array(p.cells());
+	d["biome"] = String::utf8(p.biome.c_str());
+	Array slots;
+	for (const gen::TileRect &r : p.slots()) {
+		slots.append(Rect2i(static_cast<int32_t>(r.x), static_cast<int32_t>(r.y), r.w, r.h));
+	}
+	d["slots"] = slots;
+	return d;
 }
 
 PackedByteArray packed(const std::vector<uint8_t> &bytes) {
@@ -202,6 +294,10 @@ void LbLayouts::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_spine_cell", "cell"), &LbLayouts::is_spine_cell);
 	ClassDB::bind_method(D_METHOD("set_home", "name", "bytes"), &LbLayouts::set_home);
 	ClassDB::bind_method(D_METHOD("home", "name"), &LbLayouts::home);
+	ClassDB::bind_method(D_METHOD("poi_at", "cell"), &LbLayouts::poi_at);
+	ClassDB::bind_method(D_METHOD("poi_region", "region"), &LbLayouts::poi_region);
+	ClassDB::bind_method(D_METHOD("poi_contents", "region", "index"), &LbLayouts::poi_contents);
+	ClassDB::bind_static_method("LbLayouts", D_METHOD("canary_home", "region"), &LbLayouts::canary_home);
 	ClassDB::bind_method(D_METHOD("set_caching", "on"), &LbLayouts::set_caching);
 	ClassDB::bind_method(D_METHOD("clear_caches"), &LbLayouts::clear_caches);
 	ClassDB::bind_method(D_METHOD("set_verify", "on"), &LbLayouts::set_verify);
@@ -234,8 +330,12 @@ void LbLayouts::rebuild() {
 	in.header = &header_;
 	in.templates = set_.get();
 	in.cells = cells_.get();
+	deriver_.reset();
 	spine_sockets_.reset();
+	poi_sockets_.reset();
 	road_sockets_.reset();
+	poi_cells_.reset();
+	pois_.reset();
 	road_cells_.reset();
 	roads_.reset();
 	if (has_roads_) {
@@ -249,9 +349,43 @@ void LbLayouts::rebuild() {
 		}
 		roads_ = std::make_unique<gen::MainRoads>(header_.seed, road_params_, ring_bounds_, arch_cells);
 		road_cells_ = std::make_unique<gen::MainRoadCells>(*roads_, *cells_);
-		road_sockets_ = std::make_unique<gen::MainRoadSockets>(*roads_, *road_cells_, header_.sockets);
 		in.cells = road_cells_.get();
-		in.providers = {road_sockets_.get()};
+	}
+	// GEN-09: points of interest over the roads and biomes, their sockets first among the rules.
+	std::function<bool(lb::core::world::Coord)> is_main_road;
+	if (roads_) {
+		const gen::MainRoads *roads = roads_.get();
+		is_main_road = [roads](lb::core::world::Coord c) { return roads->is_main_road_cell(c); };
+	}
+	if (has_poi_) {
+		gen::PoiWorld world;
+		world.is_main_road_cell = is_main_road;
+		if (roads_) {
+			const gen::MainRoads *roads = roads_.get();
+			world.is_old_fall = [roads](lb::core::world::Coord c) { return roads->old_fall(c); };
+		}
+		poi_params_.ring_bounds = ring_bounds_;
+		if (!poi_shapes_ || poi_shapes_set_ != set_ || poi_shapes_offsets_ != header_.sockets.offsets) {
+			poi_shapes_ = std::make_shared<const gen::PoiShapes>(*set_, header_.sockets.offsets);
+			poi_shapes_set_ = set_;
+			poi_shapes_offsets_ = header_.sockets.offsets;
+		}
+		pois_ = std::make_unique<gen::PointsOfInterest>(header_, poi_shapes_, poi_params_, world);
+		pois_->set_caching(caching_);
+		std::function<std::vector<int32_t>(const std::string &)> widths;
+		if (const auto *biomes = dynamic_cast<const gen::BiomeCells *>(cells_.get())) {
+			const gen::BiomeTable table = biomes->table();
+			const gen::SocketParams params = header_.sockets;
+			widths = [table, params](const std::string &biome) { return gen::biome_widths(table, biome, params); };
+		}
+		poi_cells_ = std::make_unique<gen::PoiCells>(*in.cells, *pois_, widths);
+		in.cells = poi_cells_.get();
+		poi_sockets_ = std::make_unique<gen::PoiSockets>(*pois_, *in.cells, header_.sockets, header_.seed, is_main_road);
+		in.providers.push_back(poi_sockets_.get());
+	}
+	if (roads_) {
+		road_sockets_ = std::make_unique<gen::MainRoadSockets>(*roads_, *in.cells, header_.sockets);
+		in.providers.push_back(road_sockets_.get());
 	}
 	// GEN-08: spine edges forced open after main roads; spine cells take no old fall.
 	if (!header_.plan.spines.empty()) {
@@ -304,6 +438,12 @@ void LbLayouts::configure(int64_t seed, const Dictionary &params) {
 		cells_ = std::make_unique<gen::BiomeCells>(header_.seed, table, header_.sockets);
 	} else {
 		cells_ = std::make_unique<gen::UniformCells>(to_std(String(params.get("biome", ""))), header_.sockets.widths);
+	}
+	has_poi_ = params.has("poi");
+	if (has_poi_) {
+		poi_params_ = gen::PoiParams();
+		contents_params_ = gen::PoiContentsParams();
+		poi_params(params["poi"], ring_bounds_, poi_params_, contents_params_);
 	}
 	has_roads_ = params.has("main_roads");
 	if (has_roads_) {
@@ -478,7 +618,65 @@ Dictionary LbLayouts::socket(Vector2i cell, const String &side) const {
 }
 
 String LbLayouts::biome_of(Vector2i cell) const {
+	// GEN-06's biome, or a templated point of interest's (GEN-09).
+	if (pois_) {
+		const gen::PoiRef ref = pois_->at({cell.x, cell.y});
+		if (ref && ref->shape != nullptr && !ref->biome.empty()) {
+			return String::utf8(ref->biome.c_str());
+		}
+	}
 	return String::utf8(cells_->classify({cell.x, cell.y}).biome.c_str());
+}
+
+Dictionary LbLayouts::poi_at(Vector2i cell) const {
+	if (!pois_) {
+		return Dictionary();
+	}
+	const gen::PoiRef ref = pois_->at({cell.x, cell.y});
+	return ref ? poi_dict(*ref) : Dictionary();
+}
+
+Dictionary LbLayouts::poi_region(Vector2i region) const {
+	Dictionary d;
+	d["region"] = region;
+	Array pois;
+	if (pois_) {
+		const std::shared_ptr<const gen::RegionLayout> layout = pois_->region({region.x, region.y});
+		d["wanted"] = layout->wanted;
+		for (const gen::Poi &p : layout->pois) {
+			pois.append(poi_dict(p));
+		}
+	} else {
+		d["wanted"] = 0;
+	}
+	d["pois"] = pois;
+	return d;
+}
+
+Array LbLayouts::poi_contents(Vector2i region, int64_t index) const {
+	Array out;
+	if (!pois_) {
+		return out;
+	}
+	const gen::PoiId id{{region.x, region.y}, static_cast<int32_t>(index)};
+	const gen::PoiRef ref = pois_->find(id);
+	if (!ref) {
+		return out;
+	}
+	for (const gen::Content &c : gen::poi_contents(header_, contents_params_, *ref, pois_->is_canary(id))) {
+		Dictionary d;
+		d["line"] = c.line;
+		d["thing"] = String::utf8(c.thing.c_str());
+		d["oil_milli"] = c.oil_milli;
+		d["notches"] = c.notches;
+		d["with"] = c.with;
+		out.append(d);
+	}
+	return out;
+}
+
+PackedByteArray LbLayouts::canary_home(Vector2i region) {
+	return packed(gen::canary_home({region.x, region.y}));
 }
 
 Dictionary LbLayouts::road_of(Vector2i cell) const {
@@ -699,6 +897,9 @@ Array LbLayouts::evictions(const Array &loaded, const Array &holders, const Arra
 void LbLayouts::set_caching(bool on) {
 	caching_ = on;
 	deriver_->set_caching(on);
+	if (pois_) {
+		pois_->set_caching(on);
+	}
 }
 
 void LbLayouts::clear_caches() {

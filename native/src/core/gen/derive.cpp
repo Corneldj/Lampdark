@@ -57,6 +57,13 @@ std::optional<Layout> layout_from(const DeriveInputs &in, Coord cell, int32_t re
 		out.digest = layout_digest(out);
 		return out;
 	}
+	if (cls.kind == TemplateKind::POI && cls.poi_template != nullptr) {
+		// GEN-09: a point of interest's cell is its placed template's, whatever the reroll.
+		out.template_id = cls.poi_template->id;
+		out.cell = fill_stubs(*cls.poi_template, sockets, cell, cls.poi_cell);
+		out.digest = layout_digest(out);
+		return out;
+	}
 	const Choice choice = choose_template(*in.templates, cls, sockets, in.header->seed, cell, reroll, in.header->reroll_limit);
 	if (choice.chosen == nullptr) {
 		return std::nullopt;
