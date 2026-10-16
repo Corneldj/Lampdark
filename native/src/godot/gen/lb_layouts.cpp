@@ -35,6 +35,44 @@ Dictionary socket_dict(const gen::Socket &s) {
 	return d;
 }
 
+std::string to_std(const String &s) {
+	const CharString utf8 = s.utf8();
+	return std::string(utf8.get_data(), static_cast<size_t>(utf8.length()));
+}
+
+// GEN-06's table from {rings: [[[biome, weight], ...], ...], widths: {biome: [min, max]}, ring_bounds}.
+gen::BiomeTable biome_table(const Dictionary &d) {
+	gen::BiomeTable t;
+	const Array rings = d.get("rings", Array());
+	for (int64_t r = 0; r < rings.size(); r++) {
+		const Array pairs = rings[r];
+		std::vector<std::pair<std::string, double>> ring;
+		for (int64_t i = 0; i < pairs.size(); i++) {
+			const Array pair = pairs[i];
+			if (pair.size() == 2) {
+				ring.emplace_back(to_std(String(pair[0])), static_cast<double>(pair[1]));
+			}
+		}
+		t.rings.push_back(ring);
+	}
+	const Dictionary widths = d.get("widths", Dictionary());
+	const Array names = widths.keys();
+	for (int64_t i = 0; i < names.size(); i++) {
+		const Array range = widths[names[i]];
+		if (range.size() == 2) {
+			t.widths[to_std(String(names[i]))] = {static_cast<int32_t>(static_cast<int64_t>(range[0])), static_cast<int32_t>(static_cast<int64_t>(range[1]))};
+		}
+	}
+	const Array bounds = d.get("ring_bounds", Array());
+	if (bounds.size() > 0) {
+		t.ring_bounds.clear();
+		for (int64_t i = 0; i < bounds.size(); i++) {
+			t.ring_bounds.push_back(static_cast<int64_t>(bounds[i]));
+		}
+	}
+	return t;
+}
+
 std::vector<int32_t> ints(const Variant &v, std::vector<int32_t> fallback) {
 	if (v.get_type() != Variant::ARRAY && v.get_type() != Variant::PACKED_INT32_ARRAY && v.get_type() != Variant::PACKED_INT64_ARRAY) {
 		return fallback;
@@ -55,6 +93,7 @@ void LbLayouts::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("configure", "seed", "params"), &LbLayouts::configure);
 	ClassDB::bind_method(D_METHOD("force_socket", "cell", "side", "socket"), &LbLayouts::force_socket);
 	ClassDB::bind_method(D_METHOD("socket", "cell", "side"), &LbLayouts::socket);
+	ClassDB::bind_method(D_METHOD("biome_of", "cell"), &LbLayouts::biome_of);
 	ClassDB::bind_method(D_METHOD("derive", "cell", "reroll"), &LbLayouts::derive);
 	ClassDB::bind_method(D_METHOD("set_caching", "on"), &LbLayouts::set_caching);
 	ClassDB::bind_method(D_METHOD("clear_caches"), &LbLayouts::clear_caches);
@@ -102,8 +141,11 @@ void LbLayouts::configure(int64_t seed, const Dictionary &params) {
 	if (params.has("reroll_limit")) {
 		header_.reroll_limit = static_cast<int32_t>(static_cast<int64_t>(params["reroll_limit"]));
 	}
-	const CharString biome = String(params.get("biome", "")).utf8();
-	cells_ = std::make_unique<gen::UniformCells>(std::string(biome.get_data(), static_cast<size_t>(biome.length())), header_.sockets.widths);
+	if (params.has("biomes")) {
+		cells_ = std::make_unique<gen::BiomeCells>(header_.seed, biome_table(params["biomes"]), header_.sockets);
+	} else {
+		cells_ = std::make_unique<gen::UniformCells>(to_std(String(params.get("biome", ""))), header_.sockets.widths);
+	}
 	rebuild();
 }
 
@@ -123,6 +165,10 @@ Dictionary LbLayouts::socket(Vector2i cell, const String &side) const {
 	const std::optional<gen::Edge> e = side_from(side);
 	ERR_FAIL_COND_V_MSG(!e, Dictionary(), "LbLayouts.socket: unknown side");
 	return socket_dict(deriver_->socket(gen::edge_of({cell.x, cell.y}, *e)));
+}
+
+String LbLayouts::biome_of(Vector2i cell) const {
+	return String::utf8(cells_->classify({cell.x, cell.y}).biome.c_str());
 }
 
 Dictionary LbLayouts::derive(Vector2i cell, int64_t reroll) const {

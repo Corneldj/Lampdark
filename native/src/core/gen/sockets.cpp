@@ -68,8 +68,13 @@ std::vector<int32_t> shared_widths(const std::vector<int32_t> &a, const std::vec
 	std::vector<int32_t> out;
 	std::set_intersection(x.begin(), x.end(), y.begin(), y.end(), std::back_inserter(out));
 	out.erase(std::unique(out.begin(), out.end()), out.end());
-	if (out.empty() && !p.widths.empty()) {
-		out.push_back(*std::min_element(p.widths.begin(), p.widths.end()));
+	if (out.empty()) {
+		// GEN-06 (Proposed): the narrower biome's widest width; the wider biome's stubs narrow to it.
+		if (!x.empty() && !y.empty()) {
+			out.push_back(std::min(x.back(), y.back()));
+		} else if (!p.widths.empty()) {
+			out.push_back(*std::min_element(p.widths.begin(), p.widths.end()));
+		}
 	}
 	return out;
 }

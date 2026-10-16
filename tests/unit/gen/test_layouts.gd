@@ -9,39 +9,12 @@ func before_all() -> void:
 	assert_true(Tuning.load_server())
 
 
-## A plain grid cell: 3-wide roads on every stub line, a stub at all 12 positions (the native
-## tests' fallback fixture).
-static func grid_spec(id: String, kind: String, weight: float) -> Dictionary:
-	var rows: Array = []
-	for y: int in 20:
-		var road: bool = (y >= 4 and y <= 6) or (y >= 9 and y <= 11) or (y >= 14 and y <= 16)
-		rows.append("...................." if road else "####...##...##...###")
-	var anchors: Array = [["landmark", 2, 5, 1, 1, [], "chalk"], ["rubble_heap", 8, 5, 1, 1, [], ""]]
-	var stubs: Array = []
-	for a: int in [5, 10, 15]:
-		for b: int in [5, 10, 15]:
-			anchors.append(["timber_hook", a, b, 1, 1, [], ""])
-		anchors.append(["timber_hook", 1, a, 1, 1, [], ""])
-		anchors.append(["timber_hook", 18, a, 1, 1, [], ""])
-		anchors.append(["timber_hook", a, 1, 1, 1, [], ""])
-		anchors.append(["timber_hook", a, 18, 1, 1, [], ""])
-		for edge: String in ["north", "east", "south", "west"]:
-			stubs.append({"cell": [0, 0], "edge": edge, "offset": a, "max_width": 3, "depth": 0, "door": false})
-	return {"id": id, "kind": kind, "biome": "seam", "footprint": [1, 1], "weight": weight, "rows": rows, "anchors": anchors, "stubs": stubs}
+const Specs = preload("res://tests/unit/gen/template_specs.gd")
 
 
 static func fixture_pack() -> PackedByteArray:
-	var tuning: TuningSet = TuningSet.new()
-	tuning.load_directory(TuningSet.DATA_DIR)
-	var rules: Dictionary = TemplateBuild.rules(tuning)
-	var templates: Array = []
-	for spec: Dictionary in [grid_spec("seam_grid_a", "biome_cell", 1.0), grid_spec("seam_grid_b", "biome_cell", 2.0),
-			grid_spec("seam_plain", "fallback", 1.0)]:
-		var src: TemplateSource = TemplateScaffold.from_spec(spec)
-		var built: Dictionary = TemplateBuild.build(src, rules)
-		src.free()
-		templates.append(built["template"])
-	return LbTemplates.encode_pack("fixture", templates)
+	return Specs.pack([Specs.grid_spec("seam_grid_a", "biome_cell", "seam", 1.0), Specs.grid_spec("seam_grid_b", "biome_cell", "seam", 2.0),
+		Specs.grid_spec("seam_plain", "fallback", "seam", 1.0)])
 
 
 func _layouts(run_seed: int) -> LbLayouts:

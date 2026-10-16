@@ -324,14 +324,16 @@ void rule_tapper_reach(const Grid &g, const MineMap &mine, const ValidateParams 
 void rule_stubs(const Template &t, const Grid &g, const ValidateParams &p, Out &out) {
 	std::set<std::tuple<int32_t, int32_t, int32_t, int32_t>> seen;
 	for (const Stub &s : t.stubs) {
-		const int32_t ex = s.cell.x * CELL_TILES;
-		const int32_t ey = s.cell.y * CELL_TILES;
+		// Problems name the stub's mouth: its first tile on the edge.
+		const std::vector<Coord> mouth = throat(t, s, 1);
+		const int32_t ex = mouth.empty() ? static_cast<int32_t>(s.cell.x * CELL_TILES) : static_cast<int32_t>(mouth[0].x);
+		const int32_t ey = mouth.empty() ? static_cast<int32_t>(s.cell.y * CELL_TILES) : static_cast<int32_t>(mouth[0].y);
 		if (s.offset != 5 && s.offset != 10 && s.offset != 15) {
 			out.add("stubs", ex, ey, "stub offset " + std::to_string(s.offset) + " is not 5, 10 or 15");
 			continue;
 		}
 		if (s.max_width < 1 || s.max_width > std::min(3, p.biome_stub_width_max)) {
-			out.add("stubs", ex, ey, "stub width " + std::to_string(s.max_width) + " outside 1 to the biome's maximum");
+			out.add("stubs", ex, ey, "stub width " + std::to_string(s.max_width) + " wider than the biome allows (" + std::to_string(std::min(3, p.biome_stub_width_max)) + ")");
 			continue;
 		}
 		if (s.depth < 1 || s.depth > CELL_TILES / 2) {

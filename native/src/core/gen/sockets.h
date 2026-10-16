@@ -73,8 +73,8 @@ private:
 // the open probability never reshuffles offsets or widths. `widths` are those both cells allow.
 Socket hashed_socket(uint64_t seed, const EdgeKey &edge, const SocketParams &p, const std::vector<int32_t> &widths);
 
-// The widths both cells allow, ascending; the narrowest configured width when they share none
-// (GEN-06 decides that case once biomes differ in width).
+// The widths both cells allow, ascending. Where they share none (the Black Seam meeting the Old
+// Men's Workings), the narrower one's widest (GEN-06, Proposed): the wider side's stubs narrow to it.
 std::vector<int32_t> shared_widths(const std::vector<int32_t> &a, const std::vector<int32_t> &b, const SocketParams &p);
 
 } // namespace lb::core::gen

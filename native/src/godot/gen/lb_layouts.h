@@ -4,7 +4,7 @@
 // after that socket() and derive() are pure and thread-safe, for GEN-11's workers. Server-only:
 // no socket, layout or seed reaches a client (NET-08).
 
-#include "core/gen/derive.h"
+#include "core/gen/biomes.h"
 
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
@@ -28,12 +28,16 @@ public:
 	// GEN-04's pack. False for bytes that are not a whole pack.
 	bool load_pack(const ::godot::PackedByteArray &bytes);
 	::godot::String set_version() const;
-	// params: open_probability, offsets, widths, reroll_limit, biome (every cell's until GEN-06).
+	// params: open_probability, offsets, widths, reroll_limit, and either biomes (GEN-06's table:
+	// {rings: [[[biome, weight], ...], ...], widths: {biome: [min, max]}, ring_bounds: [...]}) or
+	// biome (one biome for every cell, for tests).
 	void configure(int64_t seed, const ::godot::Dictionary &params);
 	// A socket forced up front (base camp's): socket {open, offset, width}. side: north, east, south, west.
 	bool force_socket(::godot::Vector2i cell, const ::godot::String &side, const ::godot::Dictionary &socket);
 	// {open, offset, width, forced}
 	::godot::Dictionary socket(::godot::Vector2i cell, const ::godot::String &side) const;
+	// The cell's biome (GEN-06), "" for base camp; server-only, never sent.
+	::godot::String biome_of(::godot::Vector2i cell) const;
 	// {ok, base_camp, fallback, template, sockets: {side: {...}}, cell: LbCellData (none for base camp), digest}
 	::godot::Dictionary derive(::godot::Vector2i cell, int64_t reroll) const;
 	void set_caching(bool on);
@@ -44,7 +48,7 @@ public:
 private:
 	std::shared_ptr<lb::core::gen::TemplateSet> set_;
 	lb::core::gen::RunHeader header_;
-	std::unique_ptr<lb::core::gen::UniformCells> cells_;
+	std::unique_ptr<lb::core::gen::CellClassifier> cells_;
 	std::unique_ptr<lb::core::gen::Deriver> deriver_;
 	bool caching_ = true;
 	bool verify_ = false;

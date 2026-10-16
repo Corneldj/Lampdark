@@ -138,6 +138,18 @@ static func serialize(data: LbCellData) -> String:
 	return "\n".join(lines) + "\n"
 
 
+## A cell's tiles as CellFile's characters, one string per row.
+static func rows_of(data: LbCellData) -> PackedStringArray:
+	var rows: PackedStringArray = PackedStringArray()
+	for y: int in WorldIds.CELL_TILES:
+		var row: String = ""
+		for x: int in WorldIds.CELL_TILES:
+			var tile: Dictionary = data.get_tile(Vector2i(x, y))
+			row += _char_for(int(Variants.number(tile["material"])), int(Variants.number(tile["state"])))
+		rows.append(row)
+	return rows
+
+
 static func save(data: LbCellData, path: String) -> Error:
 	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
 	var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)

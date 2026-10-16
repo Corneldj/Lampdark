@@ -129,6 +129,7 @@ static func rules(tuning: TuningSet, extra: Dictionary = {}) -> Dictionary:
 		"gas_dead_end_min": roundi(tuning.f(&"hazards.blackdamp_road_min_tiles")),
 		"gas_dead_end_max": roundi(tuning.f(&"hazards.blackdamp_road_max_tiles")),
 		"collapse_length_max": roundi(tuning.f(&"mine.collapse_length_max_tiles")),
+		"biome_widths_max": tuning.table(&"mine.biome_socket_widths_max"),
 	}
 	if FileAccess.file_exists(POI_KINDS):
 		var table: Dictionary = Variants.dict(JSON.parse_string(FileAccess.get_file_as_string(POI_KINDS)))
@@ -147,10 +148,15 @@ static func rules(tuning: TuningSet, extra: Dictionary = {}) -> Dictionary:
 	return params
 
 
-## Every problem as text naming the template, the rule and the tile.
+## Every problem as text naming the template, the rule and the tile. The stub width limit is the
+## template's biome's (GEN-06's table in params["biome_widths_max"]).
 static func validate(template: Dictionary, params: Dictionary) -> Array[String]:
+	var own: Dictionary = params.duplicate()
+	var limits: Dictionary = Variants.dict(params.get("biome_widths_max", {}))
+	if limits.has(str(template.get("biome", ""))):
+		own["biome_stub_width_max"] = int(Variants.number(limits[str(template["biome"])]))
 	var out: Array[String] = []
-	for raw: Variant in LbTemplates.validate(template, params):
+	for raw: Variant in LbTemplates.validate(template, own):
 		out.append(str(Variants.dict(raw)["text"]))
 	return out
 

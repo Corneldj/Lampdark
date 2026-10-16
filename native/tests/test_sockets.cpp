@@ -113,7 +113,9 @@ TEST_CASE("GEN-05 widths are ones both cells allow") {
 	SocketParams p;
 	CHECK(shared_widths({1, 2, 3}, {2, 3}, p) == std::vector<int32_t>{2, 3});
 	CHECK(shared_widths({3, 1}, {1}, p) == std::vector<int32_t>{1});
-	CHECK(shared_widths({3}, {1}, p) == std::vector<int32_t>{1}); // none shared: GEN-06 decides; the narrowest until then
+	CHECK(shared_widths({3}, {1}, p) == std::vector<int32_t>{1});
+	CHECK(shared_widths({2, 3}, {1}, p) == std::vector<int32_t>{1}); // none shared: the narrower side's widest (GEN-06)
+	CHECK(shared_widths({1, 2}, {3}, p) == std::vector<int32_t>{2});
 	Picker pick(14);
 	for (int i = 0; i < 10000; i++) {
 		const Socket s = hashed_socket(pick.seed(), EdgeKey{pick.coord(), pick.coord(), Axis::SOUTH}, p, {2, 3});

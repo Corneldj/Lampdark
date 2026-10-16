@@ -3,6 +3,7 @@
 // eight seeds, written to stdout as little-endian bytes. tools/build/determinism_digest.sh hashes
 // the stream with SHA-256; CI compares the digest between Windows and Linux (FND-04).
 
+#include "core/gen/biomes.h"
 #include "core/gen/derive.h"
 #include "core/generated/hash_domains.h"
 #include "core/rng/rng.h"
@@ -101,6 +102,26 @@ int main() {
 				for (int64_t x = -7; x <= 7; x++) {
 					const std::optional<Layout> layout = derive_layout(in, {x, y}, static_cast<int32_t>((x + y) & 1));
 					emit(layout ? layout->digest : 0);
+				}
+			}
+		}
+	}
+	// GEN-06: biomes by block and ring over a wide square, for eight seeds.
+	{
+		using namespace lb::core::gen;
+		BiomeTable table;
+		table.rings = {{{"pit_bottom", 1.0}}, {{"seam", 0.8}, {"old_workings", 0.2}}, {{"seam", 0.5}, {"old_workings", 0.5}},
+				{{"old_workings", 0.6}, {"black_seam", 0.4}}, {{"old_mens", 1.0}}};
+		for (uint64_t s = 0; s < 8; s++) {
+			const uint64_t seed = mix64(RUN_SEED ^ (s + 99));
+			for (int64_t y = -50; y <= 50; y += 3) {
+				for (int64_t x = -50; x <= 50; x += 3) {
+					const std::string b = biome_of(seed, {x, y}, table);
+					uint64_t h = 1469598103934665603ULL;
+					for (char ch : b) {
+						h = (h ^ static_cast<unsigned char>(ch)) * 1099511628211ULL;
+					}
+					emit(h);
 				}
 			}
 		}
