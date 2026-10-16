@@ -46,6 +46,8 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 			ci.draw_rect(Rect2(at_px - Vector2(0.18, 0.12) * px, Vector2(0.36, 0.24) * px), DARK)
 			ci.draw_line(at_px, at_px + Vector2(0.14, -0.36) * px, BODY, 0.09 * px)
 			ci.draw_circle(at_px + Vector2(0.14, -0.36) * px, 0.08 * px, Palette.CHALK_WHITE.darkened(0.3))
+		SeenKind.Kind.FIXTURE:
+			draw_fixture(ci, int(Variants.number(e.get("in_hand", 0))), at_px, px)
 		SeenKind.Kind.ITEM:
 			# Its kind rides in the held field (replication's lying things): a grey-box shape per kind.
 			var held: int = int(Variants.number(e.get("in_hand", 0)))
@@ -57,6 +59,28 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 		_:
 			ci.draw_rect(Rect2(at_px - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 			_held_flame(ci, e, at_px, px, t)
+
+
+## A fixture by the kind in its held field: LFT-06's paraffin tank, its sight glass marked once a can
+## of capacity with the paraffin's line (a glass to read up close, never a meter).
+static func draw_fixture(ci: CanvasItem, held: int, at: Vector2, px: float) -> void:
+	match FixtureKinds.kind_of(held):
+		FixtureKinds.Kind.TANK_GLASS:
+			var glass: Dictionary = FixtureKinds.read_tank_glass(held)
+			var cans: int = maxi(1, int(Variants.number(glass["cans"])))
+			var fills: int = int(Variants.number(glass["fills"]))
+			ci.draw_rect(Rect2(at - Vector2(0.4, 0.35) * px, Vector2(0.8, 0.7) * px), DARK)
+			var tube: Rect2 = Rect2(at + Vector2(0.18, -0.3) * px, Vector2(0.12, 0.6) * px)
+			ci.draw_rect(tube, Palette.CHALK_WHITE.darkened(0.6))
+			var share: float = clampf(float(fills) / float(cans * 4), 0.0, 1.0)
+			ci.draw_rect(Rect2(tube.position + Vector2(0.0, tube.size.y * (1.0 - share)), Vector2(tube.size.x, tube.size.y * share)),
+				Color(0.62, 0.52, 0.28))
+			for k: int in range(1, cans + 1):
+				var y: float = tube.end.y - tube.size.y * k / cans
+				ci.draw_line(Vector2(tube.position.x - 0.03 * px, y), Vector2(tube.position.x, y), Palette.CHALK_WHITE.darkened(0.3),
+					maxf(1.0, 0.02 * px))
+		_:
+			ci.draw_rect(Rect2(at - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 
 
 ## MNR-14's loads at their heading: a 2-tile stretcher (two poles and its canvas), the drum gear

@@ -240,6 +240,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.repair = RepairListState.new()
 	run.repair.bind(run, net)
 	run.add_system(run.repair)
+	# LFT-06: the paraffin tank at base camp's filler.
+	run.fuel = FuelTank.new()
+	run.fuel.bind(run)
+	run.add_system(run.fuel)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:

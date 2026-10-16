@@ -135,6 +135,7 @@ func tick(run: RunState) -> void:
 	_push_flames(run)
 	_push_lying_lamps(run)
 	_push_arms(run)
+	_push_fixtures(run)
 	illusions_sent.clear()
 	for session: Sessions.Session in net.sessions.welcomed():
 		_ensure(session.slot)
@@ -329,6 +330,12 @@ func _push_arms(run: RunState) -> void:
 		var t: Tapper = c as Tapper
 		if t != null and t.hunt.arm != 0:
 			native.set_entity_facing(t.hunt.arm, t.hunt.arm_facing)
+
+
+## LFT-06: the paraffin tank's sight glass, as its identity record shows it (FixtureKinds).
+func _push_fixtures(run: RunState) -> void:
+	if run.fuel != null and run.fuel.glass != 0 and run.registry.has(run.fuel.glass):
+		native.set_entity_held(run.fuel.glass, run.fuel.glass_bits(run))
 
 
 ## MNR-13: a body over a carrier's shoulder is never sent as its own token.

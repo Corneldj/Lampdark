@@ -143,6 +143,8 @@ var lone: LoneSwitchboard = null
 var two_miner: TwoMinerJobs = null
 ## LFT-03: the run's repair list and which jobs are done.
 var repair: RepairListState = null
+## LFT-06: the winder's paraffin tank.
+var fuel: FuelTank = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.
