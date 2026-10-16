@@ -78,10 +78,12 @@ struct Cell {
 	std::vector<Collapse> collapses;
 	std::vector<uint8_t> road_graph; // SND-01's zones and portals, opaque here
 
-	// Derived on commit and after tile changes, in thousandths of a tile.
-	std::array<uint32_t, CELL_AREA> strike_milli{}; // floor: to the nearest usable rock face
-	std::array<uint32_t, CELL_AREA> depth_milli{};  // solid: to the nearest open floor
-	std::array<uint8_t, CELL_AREA> thickness{};     // rock: side of the largest all-rock square holding it
+	// Derived from the cell and its loaded neighbours, in thousandths of a tile: a cache MineMap
+	// marks stale when the cell or a neighbour changes and rebuilds at the next query (GEN-11).
+	mutable std::array<uint32_t, CELL_AREA> strike_milli{}; // floor: to the nearest usable rock face
+	mutable std::array<uint32_t, CELL_AREA> depth_milli{}; // solid: to the nearest open floor
+	mutable std::array<uint8_t, CELL_AREA> thickness{}; // rock: side of the largest all-rock square holding it
+	mutable bool fields_stale = true;
 
 	static int64_t index_of(int64_t lx, int64_t ly) { return ly * CELL_TILES + lx; }
 };

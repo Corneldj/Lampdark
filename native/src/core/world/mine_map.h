@@ -2,7 +2,9 @@
 // The loaded mine (GEN-01): committed cells, the material table, the distance fields, barrier
 // and collapse changes, and path queries. Tick thread only: GEN-11's workers build Cells
 // off-thread and hand them over; commit() and unload() run between systems on the tick
-// thread, so no query ever sees a half-committed cell.
+// thread, so no query ever sees a half-committed cell. A cell's distance fields are rebuilt
+// at the first field query after it or a neighbour changed (GEN-11: a commit or unload stays
+// cheap, and cells nobody asks about cost nothing), so even a const query may write that cache.
 
 #include "core/world/cell.h"
 
@@ -79,8 +81,10 @@ private:
 	std::vector<TileChange> changes_;
 
 	Cell *cell_mut(Coord coord);
-	void rebuild_fields_around(Coord cell);
-	void rebuild_fields(Cell &cell);
+	void stale_fields_around(Coord cell);
+	// The cell's fields, rebuilt first if stale; null for an unloaded cell.
+	const Cell *fields_of(Coord cell) const;
+	void rebuild_fields(const Cell &cell) const;
 	// A dense copy of walkability around a query: 0 blocked, 1 walkable, 2 unloaded.
 	struct Window {
 		int64_t x0 = 0, y0 = 0, w = 0;

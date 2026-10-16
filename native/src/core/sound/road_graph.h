@@ -90,6 +90,10 @@ public:
 	// A canonical digest of every table (zones, portals, fields), for reload checks.
 	uint64_t tables_digest() const;
 	size_t cache_entries() const { return cache_.size(); }
+	// Zone and portal slots held, live or free (GEN-11: an unloaded cell's slots are reused, so
+	// they stay bounded by what is loaded at once however often cells come and go).
+	size_t zone_slots() const { return zones_.size(); }
+	size_t portal_slots() const { return portals_.size(); }
 
 private:
 	struct Zone {
@@ -134,6 +138,8 @@ private:
 	const lb::core::world::MineMap &mine_;
 	std::vector<Zone> zones_;
 	std::vector<Portal> portals_;
+	std::vector<uint32_t> free_zones_; // dead slots, reused by the next stitch
+	std::vector<uint32_t> free_portals_;
 	std::map<std::pair<Coord, uint16_t>, uint32_t> zone_by_key_;
 	std::map<Coord, uint32_t> portal_by_tile_;
 	std::map<Coord, CellBlock> blocks_;
@@ -144,6 +150,9 @@ private:
 	uint64_t epoch_ = 0;
 
 	void bump();
+	// A slot for a new zone or portal: a dead one if any, else a new one at the end.
+	uint32_t zone_slot();
+	uint32_t portal_slot();
 	std::optional<uint32_t> zone_of(Coord tile) const;
 	std::optional<uint32_t> portal_of(Coord tile) const;
 	void build_field(uint32_t zone, uint32_t portal);

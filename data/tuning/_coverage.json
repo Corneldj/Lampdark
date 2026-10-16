@@ -1444,9 +1444,16 @@
 		},
 		"A.11/Generation": [
 			"mine.generation_radius_cells",
+			"mine.generation_prefetch_radius_cells",
 			"mine.generation_budget_ms_server",
 			"mine.generation_budget_ms_deck",
-			"mine.eviction_radius_cells"
+			"mine.eviction_radius_cells",
+			"mine.max_live_cells",
+			"mine.commit_budget_ms_per_tick",
+			"mine.commit_latency_p99_ms",
+			"mine.generation_workers_fleet",
+			"mine.generation_workers_host",
+			"mine.generation_workers_deck"
 		],
 		"A.11/Validator": [
 			"mine.validator_max_rerolls"

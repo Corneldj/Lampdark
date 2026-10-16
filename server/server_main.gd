@@ -15,6 +15,8 @@ var rendezvous: LobbyRendezvous = null
 var host_link: HostLink = null
 ## QA-01: a welcomed player's miner, on servers with a map.
 var arrival: M1Arrival = null
+## GEN-11: a generated mine's lazy generation (--generate).
+var generation: Generation = null
 var steam_server: SteamServerApi = null
 var sdr: SdrTransport = null
 var _game_port: int = 0
@@ -158,7 +160,29 @@ func _start_network() -> bool:
 			get_tree().quit(ExitCode.FATAL)
 			return false
 		Log.info("map %s: %d cells in %.1f ms" % [config.map_name, cells, (TickTimer.now_usec() - started) / 1000.0])
+	var layouts: LbLayouts = null
+	if config.generated and config.map_name.is_empty():
+		mine = Mine.new()
+		layouts = MineLayouts.for_run(run.header.run_seed, "", config.template_pack)
+		if layouts == null:
+			Log.error("the generated mine has no template pack")
+			get_tree().quit(ExitCode.FATAL)
+			return false
 	ServerSystems.install(run, net, mine)
+	if layouts != null:
+		var started_gen: int = TickTimer.now_usec()
+		# A fleet server, or one on a player's machine (hosted: a private host or Night Shift;
+		# Steam sets SteamDeck=1 on a Deck), whose workers yield to the game's frame.
+		var workers: int = Tuning.i(&"mine.generation_workers_fleet")
+		if OS.get_environment("SteamDeck") == "1":
+			workers = Tuning.i(&"mine.generation_workers_deck")
+		elif hosted:
+			workers = Tuning.i(&"mine.generation_workers_host")
+		generation = Generation.new(mine, layouts, run.header.run_seed, false, workers, hosted)
+		run.add_system(generation)
+		generation.start()
+		Log.info("generated mine: set %s, %d cells round base camp in %.1f ms, %d workers" % [layouts.set_version(),
+			mine.native.loaded_cells().size(), (TickTimer.now_usec() - started_gen) / 1000.0, workers])
 	if run.saves != null:
 		run.saves.save_dir = config.save_dir
 	var resuming: bool = not _resume.is_empty()
@@ -380,6 +404,8 @@ func _finish_records() -> void:
 		"input_log": config.record_inputs_path,
 		"final_state_hash": final_hash,
 	}
+	if generation != null:
+		stats["generation"] = generation.stats()
 	var file: FileAccess = FileAccess.open(config.stats_path, FileAccess.WRITE)
 	if file == null:
 		Log.error("could not write stats to %s" % config.stats_path)

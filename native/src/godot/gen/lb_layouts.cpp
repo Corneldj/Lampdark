@@ -100,6 +100,18 @@ void LbLayouts::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("clear_caches"), &LbLayouts::clear_caches);
 	ClassDB::bind_method(D_METHOD("set_verify", "on"), &LbLayouts::set_verify);
 	ClassDB::bind_method(D_METHOD("verify_failures"), &LbLayouts::verify_failures);
+	ClassDB::bind_method(D_METHOD("start_pool", "threads", "background"), &LbLayouts::start_pool, DEFVAL(false));
+	ClassDB::bind_method(D_METHOD("stop_pool"), &LbLayouts::stop_pool);
+	ClassDB::bind_method(D_METHOD("want", "cell", "priority"), &LbLayouts::want);
+	ClassDB::bind_method(D_METHOD("unwant", "cell"), &LbLayouts::unwant);
+	ClassDB::bind_method(D_METHOD("take", "max"), &LbLayouts::take);
+	ClassDB::bind_method(D_METHOD("pool_stats"), &LbLayouts::pool_stats);
+	ClassDB::bind_method(D_METHOD("set_window", "radius", "prefetch_radius"), &LbLayouts::set_window);
+	ClassDB::bind_method(D_METHOD("update_window", "holders", "mine"), &LbLayouts::update_window);
+	ClassDB::bind_method(D_METHOD("evictions_now", "mine", "pinned", "evict", "max_live"), &LbLayouts::evictions_now);
+	ClassDB::bind_static_method("LbLayouts", D_METHOD("required_cells", "holders", "radius"), &LbLayouts::required_cells);
+	ClassDB::bind_static_method("LbLayouts", D_METHOD("evictions", "loaded", "holders", "pinned", "generate", "evict", "max_live"),
+			&LbLayouts::evictions);
 }
 
 LbLayouts::LbLayouts() : set_(std::make_shared<gen::TemplateSet>()) {
@@ -111,6 +123,7 @@ LbLayouts::LbLayouts() : set_(std::make_shared<gen::TemplateSet>()) {
 }
 
 void LbLayouts::rebuild() {
+	pool_.reset(); // its jobs belong to the old deriver
 	gen::DeriveInputs in;
 	in.header = &header_;
 	in.templates = set_.get();
@@ -136,6 +149,15 @@ void LbLayouts::rebuild() {
 	deriver_ = std::make_unique<gen::Deriver>(in);
 	deriver_->set_caching(caching_);
 	deriver_->set_verify(verify_);
+	if (pool_threads_ >= 0) {
+		pool_ = std::make_unique<gen::GenPool>(*deriver_, static_cast<int32_t>(pool_threads_), pool_background_);
+	}
+	reset_window();
+}
+
+void LbLayouts::reset_window() {
+	window_ = std::make_unique<gen::Window>(window_radius_, window_prefetch_);
+	asked_.clear();
 }
 
 bool LbLayouts::load_pack(const PackedByteArray &bytes) {
@@ -223,13 +245,10 @@ Dictionary LbLayouts::road_of(Vector2i cell) const {
 	return out;
 }
 
-Dictionary LbLayouts::derive(Vector2i cell, int64_t reroll) const {
+namespace {
+
+Dictionary layout_dict(const std::optional<gen::Layout> &layout) {
 	Dictionary out;
-	const uint64_t failures = deriver_->verify_failures();
-	const std::optional<gen::Layout> layout = deriver_->derive({cell.x, cell.y}, static_cast<int32_t>(reroll));
-	if (deriver_->verify_failures() != failures) {
-		UtilityFunctions::push_error("LbLayouts: cell ", cell, " derived differently with its caches bypassed: an impure input");
-	}
 	out["ok"] = layout.has_value();
 	if (!layout) {
 		return out;
@@ -245,6 +264,185 @@ Dictionary LbLayouts::derive(Vector2i cell, int64_t reroll) const {
 	out["cell"] = layout->base_camp ? Variant() : Variant(LbCellData::wrap(layout->cell));
 	out["digest"] = static_cast<int64_t>(layout->digest);
 	return out;
+}
+
+std::vector<lb::core::world::Coord> coords(const Array &a) {
+	std::vector<lb::core::world::Coord> out;
+	for (int64_t i = 0; i < a.size(); i++) {
+		const Vector2i v = a[i];
+		out.push_back({v.x, v.y});
+	}
+	return out;
+}
+
+Array vectors(const std::vector<lb::core::world::Coord> &cs) {
+	Array out;
+	for (const auto &c : cs) {
+		out.push_back(Vector2i(static_cast<int32_t>(c.x), static_cast<int32_t>(c.y)));
+	}
+	return out;
+}
+
+} // namespace
+
+Dictionary LbLayouts::derive(Vector2i cell, int64_t reroll) const {
+	const uint64_t failures = deriver_->verify_failures();
+	const std::optional<gen::Layout> layout = deriver_->derive({cell.x, cell.y}, static_cast<int32_t>(reroll));
+	if (deriver_->verify_failures() != failures) {
+		UtilityFunctions::push_error("LbLayouts: cell ", cell, " derived differently with its caches bypassed: an impure input");
+	}
+	return layout_dict(layout);
+}
+
+void LbLayouts::start_pool(int64_t threads, bool background) {
+	pool_threads_ = std::max<int64_t>(0, threads);
+	pool_background_ = background;
+	pool_.reset();
+	pool_ = std::make_unique<gen::GenPool>(*deriver_, static_cast<int32_t>(pool_threads_), pool_background_);
+	reset_window();
+}
+
+void LbLayouts::stop_pool() {
+	pool_.reset();
+	pool_threads_ = -1;
+	reset_window();
+}
+
+void LbLayouts::set_window(int64_t radius, int64_t prefetch_radius) {
+	window_radius_ = static_cast<int32_t>(std::max<int64_t>(0, radius));
+	window_prefetch_ = static_cast<int32_t>(std::max<int64_t>(window_radius_, prefetch_radius));
+	if (pool_) {
+		for (const lb::core::world::Coord &c : asked_) {
+			pool_->unwant(c);
+		}
+	}
+	reset_window();
+}
+
+Dictionary LbLayouts::update_window(const TypedArray<Vector2i> &holders, const Ref<LbMine> &mine) {
+	Dictionary out;
+	out["moved"] = false;
+	ERR_FAIL_NULL_V_MSG(pool_, out, "LbLayouts.update_window: start_pool first");
+	ERR_FAIL_COND_V_MSG(mine.is_null(), out, "LbLayouts.update_window: no mine");
+	std::vector<lb::core::world::Coord> cells;
+	cells.reserve(static_cast<size_t>(holders.size()));
+	for (int64_t i = 0; i < holders.size(); i++) {
+		const Vector2i h = holders[i];
+		cells.push_back({h.x, h.y});
+	}
+	gen::Window::Change change = window_->update(std::move(cells));
+	if (!change.moved) {
+		return out;
+	}
+	const lb::core::world::MineMap &map = mine->map();
+	const std::vector<lb::core::world::Coord> &at = window_->holders();
+	for (const lb::core::world::Coord &c : change.departed) {
+		pool_->unwant(c);
+		asked_.erase(c);
+	}
+	// The nearest first: what is still asked for moves up or down with the holders.
+	for (const lb::core::world::Coord &c : asked_) {
+		pool_->want(c, gen::nearest_holder(c, at));
+	}
+	for (const lb::core::world::Coord &c : change.arrived) {
+		if (!map.is_loaded(c)) {
+			pool_->want(c, gen::nearest_holder(c, at));
+			asked_.insert(c);
+		}
+	}
+	TypedArray<Vector2i> entered;
+	int64_t entered_loaded = 0;
+	for (const lb::core::world::Coord &c : change.entered) {
+		if (map.is_loaded(c)) {
+			entered_loaded++;
+		} else {
+			entered.push_back(Vector2i(static_cast<int32_t>(c.x), static_cast<int32_t>(c.y)));
+		}
+	}
+	TypedArray<Vector2i> left;
+	for (const lb::core::world::Coord &c : change.left) {
+		left.push_back(Vector2i(static_cast<int32_t>(c.x), static_cast<int32_t>(c.y)));
+	}
+	out["moved"] = true;
+	out["entered"] = entered;
+	out["entered_loaded"] = entered_loaded;
+	out["left"] = left;
+	return out;
+}
+
+TypedArray<Vector2i> LbLayouts::evictions_now(const Ref<LbMine> &mine, const TypedArray<Vector2i> &pinned, int64_t evict,
+		int64_t max_live) const {
+	TypedArray<Vector2i> out;
+	ERR_FAIL_COND_V_MSG(mine.is_null(), out, "LbLayouts.evictions_now: no mine");
+	gen::WindowParams p;
+	// Over the cap, only cells beyond the prefetch ring go: one inside it would only be asked for again.
+	p.generate = window_->prefetch_radius();
+	p.evict = static_cast<int32_t>(evict);
+	p.max_live = static_cast<size_t>(std::max<int64_t>(0, max_live));
+	std::set<lb::core::world::Coord> pins;
+	for (int64_t i = 0; i < pinned.size(); i++) {
+		const Vector2i p_cell = pinned[i];
+		pins.insert({p_cell.x, p_cell.y});
+	}
+	for (const lb::core::world::Coord &c : gen::evictions(mine->map().loaded_cells(), window_->holders(), pins, p)) {
+		out.push_back(Vector2i(static_cast<int32_t>(c.x), static_cast<int32_t>(c.y)));
+	}
+	return out;
+}
+
+void LbLayouts::want(Vector2i cell, int64_t priority) {
+	ERR_FAIL_NULL_MSG(pool_, "LbLayouts.want: start_pool first");
+	pool_->want({cell.x, cell.y}, priority);
+}
+
+void LbLayouts::unwant(Vector2i cell) {
+	if (pool_) {
+		pool_->unwant({cell.x, cell.y});
+	}
+}
+
+Array LbLayouts::take(int64_t max) {
+	Array out;
+	ERR_FAIL_NULL_V_MSG(pool_, out, "LbLayouts.take: start_pool first");
+	const uint64_t failures = deriver_->verify_failures();
+	for (gen::GenPool::Result &r : pool_->take(static_cast<size_t>(std::max<int64_t>(0, max)))) {
+		asked_.erase(r.cell);
+		Dictionary d = layout_dict(r.layout);
+		d["at"] = Vector2i(static_cast<int32_t>(r.cell.x), static_cast<int32_t>(r.cell.y));
+		d["ms"] = r.ms;
+		out.push_back(d);
+	}
+	if (deriver_->verify_failures() != failures) {
+		UtilityFunctions::push_error("LbLayouts: a cell derived differently with its caches bypassed: an impure input");
+	}
+	return out;
+}
+
+Dictionary LbLayouts::pool_stats() const {
+	Dictionary d;
+	d["threads"] = pool_ ? pool_->threads() : -1;
+	d["queued"] = pool_ ? static_cast<int64_t>(pool_->queued()) : 0;
+	d["running"] = pool_ ? static_cast<int64_t>(pool_->running()) : 0;
+	d["finished"] = pool_ ? static_cast<int64_t>(pool_->finished()) : 0;
+	d["derived"] = pool_ ? static_cast<int64_t>(pool_->derived()) : 0;
+	d["p50_ms"] = pool_ ? pool_->percentile_ms(0.5) : 0.0;
+	d["p99_ms"] = pool_ ? pool_->percentile_ms(0.99) : 0.0;
+	return d;
+}
+
+Array LbLayouts::required_cells(const Array &holders, int64_t radius) {
+	const std::set<lb::core::world::Coord> cells = gen::required_cells(coords(holders), static_cast<int32_t>(radius));
+	return vectors(std::vector<lb::core::world::Coord>(cells.begin(), cells.end()));
+}
+
+Array LbLayouts::evictions(const Array &loaded, const Array &holders, const Array &pinned, int64_t generate, int64_t evict,
+		int64_t max_live) {
+	gen::WindowParams p;
+	p.generate = static_cast<int32_t>(generate);
+	p.evict = static_cast<int32_t>(evict);
+	p.max_live = static_cast<size_t>(std::max<int64_t>(0, max_live));
+	const std::vector<lb::core::world::Coord> pins = coords(pinned);
+	return vectors(gen::evictions(coords(loaded), coords(holders), std::set<lb::core::world::Coord>(pins.begin(), pins.end()), p));
 }
 
 void LbLayouts::set_caching(bool on) {

@@ -237,6 +237,25 @@ TEST_CASE("a cell unloaded and reloaded matches a fresh build") {
 	CHECK(heard(graph, {0, 5}, 40.0, {30, 5})->path_tiles == doctest::Approx(30.0));
 }
 
+TEST_CASE("GEN-11 a cell dropped and loaded again and again holds no more slots, and hears the same") {
+	MineMap mine;
+	RoadGraph graph(mine);
+	straight_road(mine, graph);
+	const size_t zone_slots = graph.zone_slots();
+	const size_t portal_slots = graph.portal_slots();
+	const uint64_t digest = graph.tables_digest();
+	for (int i = 0; i < 50; i++) {
+		REQUIRE(graph.unload({1, 0}));
+		REQUIRE(graph.stitch({1, 0}, zones({1})));
+		REQUIRE(graph.unload({2, 0}));
+		REQUIRE(graph.stitch({2, 0}, zones({1})));
+	}
+	CHECK(graph.zone_slots() == zone_slots); // the dropped cells' slots were reused
+	CHECK(graph.portal_slots() == portal_slots);
+	CHECK(graph.tables_digest() == digest);
+	CHECK(heard(graph, {0, 5}, 40.0, {30, 5})->path_tiles == doctest::Approx(30.0));
+}
+
 TEST_CASE("the block format round-trips and the validator finds problems") {
 	CellBlock block = zones({1, 2});
 	block.portals.push_back(portal(4, PortalKind::AIR_DOOR, 1, 2, {{9, 5}}, 3));

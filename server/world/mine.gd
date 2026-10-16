@@ -25,6 +25,8 @@ var _pending_unloads: Array[Vector2i] = []
 ## GEN-11 asks again once the creature has moved on.
 var keep_loaded: Callable = Callable()
 var refused_unloads: int = 0
+## GEN-11: how long the last apply_pending took, in microseconds; the commit budget counts it.
+var last_apply_usec: int = 0
 
 
 func _init() -> void:
@@ -56,13 +58,21 @@ func apply_pending() -> void:
 	_pending_commits = []
 	_pending_unloads = []
 	_mutex.unlock()
+	var started: int = Time.get_ticks_usec() # determinism: allow (a cost metric for the commit budget, never state)
 	for cell: Vector2i in unloads:
-		if keep_loaded.is_valid() and Variants.flag(keep_loaded.call(cell)):
-			refused_unloads += 1
-			continue
-		native.unload(cell)
+		unload_now(cell)
 	for data: LbCellData in commits:
 		native.commit(data)
+	last_apply_usec = Time.get_ticks_usec() - started # determinism: allow (as above)
+
+
+## Tick thread only, between systems (GEN-11's paced evictions): unloads a cell at once unless
+## keep_loaded refuses it (counted). True if it went.
+func unload_now(cell: Vector2i) -> bool:
+	if keep_loaded.is_valid() and Variants.flag(keep_loaded.call(cell)):
+		refused_unloads += 1
+		return false
+	return native.unload(cell)
 
 
 func pending_count() -> int:

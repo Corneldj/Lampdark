@@ -85,6 +85,8 @@ var server_transport: InProcessTransport
 var server_capture: Capture
 var mine: Mine = null
 var fixture: FixtureMap = null
+## GEN-11: a generated mine's lazy generation (cfg "generated"), synchronous so tests repeat.
+var generation: Generation = null
 var miners: Array[MinerHandle] = []
 var recorder: InputLog
 var state: StateView
@@ -101,7 +103,10 @@ var _closed: bool = false
 ## Builds a scenario. Config keys (all optional): seed (int), fixture (FixtureMap or map name),
 ## mode (ServerConfig.Mode), tuning_profile (String), overrides ({key: value}), slots (int),
 ## creatures ({kind: bool}; CRT tickets), director (bool; off in M1), systems (extra SimSystems,
-## for test stand-ins of systems that do not exist yet).
+## for test stand-ins of systems that do not exist yet), generated ({pack: PackedByteArray, workers:
+## int, centres: [Vector2i]}: a mine generated from that template pack round the seed, GEN-11,
+## instead of a fixture, with run start's windows round base camp and each of the centres' cells
+## (homes, creature starts); synchronous unless workers is above 0).
 static func create(cfg: Dictionary = {}) -> Self:
 	var s: Self = Self.new()
 	s._build(cfg)
@@ -144,7 +149,25 @@ func _build(cfg: Dictionary) -> void:
 		mine = Mine.new()
 		if fixture.load_into(mine) <= 0:
 			push_error("Scenario: the fixture loaded no cells")
+	var generated: Dictionary = Variants.dict(cfg.get("generated", {}))
+	var layouts: LbLayouts = null
+	if not generated.is_empty():
+		mine = Mine.new()
+		layouts = LbLayouts.new()
+		var pack: PackedByteArray = generated.get("pack", PackedByteArray())
+		if not layouts.load_pack(pack):
+			push_error("Scenario: the generated mine's pack does not load")
+		MineLayouts.configure(layouts, run.header.run_seed)
 	ServerSystems.install(run, net, mine, LbHash.sub_seed(_seed, HashDomain.NET_TOKEN, PackedInt64Array([-1]), 0) | 1)
+	if layouts != null:
+		var workers: int = int(Variants.number(generated.get("workers", 0)))
+		generation = Generation.new(mine, layouts, run.header.run_seed, workers <= 0, workers)
+		run.add_system(generation)
+		var centres: Array[Vector2i] = []
+		for raw: Variant in Variants.array(generated.get("centres", [])):
+			var c: Vector2i = raw
+			centres.append(c)
+		generation.start(centres)
 	# NET-09: a scenario writes no save unless it asks ("saves": true), each into its own folder.
 	run.header.run_uuid = "%016x" % LbHash.sub_seed(_seed, HashDomain.NET_TOKEN, PackedInt64Array([-9]), 0)
 	run.saves.enabled = Variants.flag(cfg.get("saves", false)) and mode != ServerConfig.Mode.PUBLIC

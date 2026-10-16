@@ -32,6 +32,26 @@ void RoadGraph::bump() {
 	cache_.clear();
 }
 
+uint32_t RoadGraph::zone_slot() {
+	if (free_zones_.empty()) {
+		zones_.emplace_back();
+		return static_cast<uint32_t>(zones_.size() - 1);
+	}
+	const uint32_t slot = free_zones_.back();
+	free_zones_.pop_back();
+	return slot;
+}
+
+uint32_t RoadGraph::portal_slot() {
+	if (free_portals_.empty()) {
+		portals_.emplace_back();
+		return static_cast<uint32_t>(portals_.size() - 1);
+	}
+	const uint32_t slot = free_portals_.back();
+	free_portals_.pop_back();
+	return slot;
+}
+
 std::optional<uint32_t> RoadGraph::zone_of(Coord tile) const {
 	std::optional<lb::core::world::Tile> t = mine_.tile_at(tile);
 	if (!t || t->zone == 0) {
@@ -83,8 +103,8 @@ bool RoadGraph::stitch(Coord cell, const CellBlock &block) {
 				z.tiles.push_back(g);
 			}
 		}
-		const uint32_t index = static_cast<uint32_t>(zones_.size());
-		zones_.push_back(std::move(z));
+		const uint32_t index = zone_slot();
+		zones_[index] = std::move(z);
 		zone_by_key_[{cell, decl.id}] = index;
 		cell_zones_[cell].push_back(index);
 	}
@@ -122,13 +142,13 @@ bool RoadGraph::stitch(Coord cell, const CellBlock &block) {
 				}
 			}
 		}
-		const uint32_t index = static_cast<uint32_t>(portals_.size());
+		const uint32_t index = portal_slot();
 		for (const Coord &t : p.tiles) {
 			portal_by_tile_[t] = index;
 		}
 		zones_[p.zone[0]].portals.push_back(index);
 		zones_[p.zone[1]].portals.push_back(index);
-		portals_.push_back(std::move(p));
+		portals_[index] = std::move(p);
 		cell_portals_[cell].push_back(index);
 	}
 	for (const Coord &d : ORTHO) {
@@ -178,10 +198,10 @@ void RoadGraph::link_edges(Coord a, Coord b) {
 		p.cross_air = 1.0;
 		p.open = true;
 		p.centre = ta;
-		const uint32_t index = static_cast<uint32_t>(portals_.size());
+		const uint32_t index = portal_slot();
 		zones_[p.zone[0]].portals.push_back(index);
 		zones_[p.zone[1]].portals.push_back(index);
-		portals_.push_back(std::move(p));
+		portals_[index] = std::move(p);
 		cell_portals_[a].push_back(index);
 		cell_portals_[b].push_back(index);
 		// The neighbour's zone gains a portal: its field now, its portal-to-portal costs below.
@@ -285,14 +305,13 @@ bool RoadGraph::unload(Coord cell) {
 			zone.portals.erase(std::remove(zone.portals.begin(), zone.portals.end(), p), zone.portals.end());
 			zone.field.erase(p);
 		}
-		if (portal.kind == PortalKind::EDGE) {
-			const Coord other = portal.cell == cell ? Coord{} : portal.cell;
-			(void)other;
-		}
+		portal = Portal{}; // dead: its storage goes, its slot is reused (GEN-11's evictions)
+		free_portals_.push_back(p);
 	}
 	for (uint32_t z : cell_zones_[cell]) {
-		zones_[z].live = false;
 		zone_by_key_.erase({cell, zones_[z].id});
+		zones_[z] = Zone{};
+		free_zones_.push_back(z);
 	}
 	// Neighbours lose their edge links to this cell.
 	for (const Coord &d : ORTHO) {

@@ -41,6 +41,7 @@ func _begin() -> void:
 	var tuning: Node = root.get_node_or_null(^"/root/Tuning")
 	if tuning != null:
 		tuning.call(&"load_server")
+	accelerated = accelerated or Variants.flag(soak.profile.get("accelerated", false)) # GEN-11's in-process soaks
 	DirAccess.make_dir_recursive_absolute(out_dir)
 	print("soak %s: %d server(s) x %d bot(s), %.1f min, seed %d%s -> %s" % [soak_name, _servers(), _bots(),
 		_minutes(), int(Variants.number(soak.profile["seed"])), " (accelerated)" if accelerated else "", out_dir])

@@ -34,6 +34,8 @@ const MAP_TABLE: String = "map_table"
 const POCKET_BOOKS: String = "pocket_books"
 ## An item's record once it has left the cell (taken into a belt, or moved to another cell).
 const TAKEN: String = "taken"
+## How many replays `replays` keeps.
+const REPLAYS_KEPT: int = 4096
 
 
 ## One owner's handlers for a kind (or for the keys of a kind with its prefix).
@@ -86,7 +88,8 @@ var items: ItemDiff = ItemDiff.new()
 var handlers: Dictionary = {}
 ## Records met at replay with no handler: {tick, cell, kind, key}.
 var unhandled: Array[Dictionary] = []
-## Replays: {tick, cell, records, usec}.
+## Replays: {tick, cell, records, usec}, the last REPLAYS_KEPT (GEN-11: cells come and go all
+## run, so the list may not grow with them).
 var replays: Array[Dictionary] = []
 ## Compactions: {tick, dropped, bytes}.
 var compactions: Array[Dictionary] = []
@@ -236,6 +239,8 @@ func replay(run: RunState, cell: Vector2i) -> void:
 	_replaying = false
 	var took: int = Time.get_ticks_usec() - started  # determinism: allow (as above)
 	replays.append({"tick": run.tick, "cell": cell, "records": rows.size(), "usec": took})
+	if replays.size() > REPLAYS_KEPT:
+		replays.pop_front()
 
 
 func replaying() -> bool:

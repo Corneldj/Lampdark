@@ -11,6 +11,7 @@
 #include <godot_cpp/variant/packed_byte_array.hpp>
 #include <godot_cpp/variant/packed_int32_array.hpp>
 #include <godot_cpp/variant/packed_string_array.hpp>
+#include <godot_cpp/variant/typed_array.hpp>
 #include <godot_cpp/variant/rect2i.hpp>
 #include <godot_cpp/variant/vector2.hpp>
 #include <godot_cpp/variant/vector2i.hpp>
@@ -78,6 +79,9 @@ public:
 	bool unload(::godot::Vector2i cell);
 	bool is_loaded(::godot::Vector2i cell) const;
 	::godot::Array loaded_cells() const;
+	int64_t loaded_count() const;
+	// GEN-11: the cells within `radius` (Chebyshev) of any centre cell that are not loaded, sorted.
+	::godot::TypedArray<::godot::Vector2i> missing_cells(const ::godot::TypedArray<::godot::Vector2i> &centres, int64_t radius) const;
 
 	int64_t material_at(::godot::Vector2i tile) const;
 	int64_t state_at(::godot::Vector2i tile) const;

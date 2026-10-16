@@ -29,8 +29,12 @@ var record_inputs_path: String = ""
 ## NET-08: audit every record sent and write the report here as JSON at exit (dev and QA only).
 var stream_audit_path: String = ""
 ## GEN-03: a fixed map from data/maps/<name>/ (m1_greybox: the M1 kill test's grey box), loaded with
-## no generator code. Empty: no mine (until world generation lands).
+## no generator code. Empty: no fixed map (a generated mine with `generated`, else none).
 var map_name: String = ""
+## GEN-11: a generated mine, derived lazily round its holders from the run's template pack.
+var generated: bool = false
+## Dev and QA: a template pack file to generate from instead of data/templates' current set.
+var template_pack: String = ""
 ## FND-09: write tick costs, input counters and the final state hash here as JSON at exit.
 var stats_path: String = ""
 ## A tuning profile from data/tuning/profiles/ (dev and QA only). Empty means the base data.

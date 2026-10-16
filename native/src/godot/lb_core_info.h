@@ -23,6 +23,10 @@ public:
 	// Whether any process with this ID is running (STM-04: a private host's server watches its
 	// parent, which Godot's OS.is_process_running cannot: it knows only its own children).
 	static bool process_alive(int64_t pid);
+	// Bytes the process's allocator has handed out and not taken back (glibc's mallinfo2: arena
+	// and mapped chunks), engine and extension alike; -1 where unknown. GEN-11's soak weighs live
+	// cells with it: unlike the resident set, it falls when memory is freed.
+	static int64_t heap_in_use();
 };
 
 } // namespace lb::godot

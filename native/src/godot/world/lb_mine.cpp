@@ -295,6 +295,8 @@ void LbMine::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("unload", "cell"), &LbMine::unload);
 	ClassDB::bind_method(D_METHOD("is_loaded", "cell"), &LbMine::is_loaded);
 	ClassDB::bind_method(D_METHOD("loaded_cells"), &LbMine::loaded_cells);
+	ClassDB::bind_method(D_METHOD("loaded_count"), &LbMine::loaded_count);
+	ClassDB::bind_method(D_METHOD("missing_cells", "centres", "radius"), &LbMine::missing_cells);
 	ClassDB::bind_method(D_METHOD("material_at", "tile"), &LbMine::material_at);
 	ClassDB::bind_method(D_METHOD("state_at", "tile"), &LbMine::state_at);
 	ClassDB::bind_method(D_METHOD("zone_at", "tile"), &LbMine::zone_at);
@@ -371,6 +373,27 @@ Array LbMine::loaded_cells() const {
 	Array out;
 	for (const world::Coord &c : map_.loaded_cells()) {
 		out.push_back(vec(c));
+	}
+	return out;
+}
+
+int64_t LbMine::loaded_count() const { return static_cast<int64_t>(map_.loaded_count()); }
+
+TypedArray<Vector2i> LbMine::missing_cells(const TypedArray<Vector2i> &centres, int64_t radius) const {
+	std::set<world::Coord> missing;
+	for (int64_t i = 0; i < centres.size(); i++) {
+		const Vector2i c = centres[i];
+		for (int64_t y = c.y - radius; y <= c.y + radius; y++) {
+			for (int64_t x = c.x - radius; x <= c.x + radius; x++) {
+				if (!map_.is_loaded({x, y})) {
+					missing.insert({x, y});
+				}
+			}
+		}
+	}
+	TypedArray<Vector2i> out;
+	for (const world::Coord &m : missing) {
+		out.push_back(vec(m));
 	}
 	return out;
 }

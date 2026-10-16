@@ -12,6 +12,9 @@
 #include <csignal>
 #include <sys/types.h>
 #endif
+#if defined(__GLIBC__)
+#include <malloc.h>
+#endif
 
 using namespace godot;
 
@@ -24,6 +27,7 @@ void LbCoreInfo::_bind_methods() {
 	ClassDB::bind_static_method("LbCoreInfo", D_METHOD("add_i64", "a", "b"), &LbCoreInfo::add_i64);
 	ClassDB::bind_static_method("LbCoreInfo", D_METHOD("request_timer_resolution_1ms"), &LbCoreInfo::request_timer_resolution_1ms);
 	ClassDB::bind_static_method("LbCoreInfo", D_METHOD("process_alive", "pid"), &LbCoreInfo::process_alive);
+	ClassDB::bind_static_method("LbCoreInfo", D_METHOD("heap_in_use"), &LbCoreInfo::heap_in_use);
 }
 
 String LbCoreInfo::version() {
@@ -65,6 +69,15 @@ bool LbCoreInfo::process_alive(int64_t pid) {
 	return alive;
 #else
 	return kill(static_cast<pid_t>(pid), 0) == 0 || errno == EPERM;
+#endif
+}
+
+int64_t LbCoreInfo::heap_in_use() {
+#if defined(__GLIBC__)
+	const struct mallinfo2 m = mallinfo2();
+	return static_cast<int64_t>(m.uordblks + m.hblkhd);
+#else
+	return -1;
 #endif
 }
 

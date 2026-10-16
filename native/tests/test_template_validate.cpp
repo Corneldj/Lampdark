@@ -175,6 +175,9 @@ TEST_CASE("GEN-04 stubs: offsets 5, 10, 15; width within the maximum; floor thro
 	Spec rock;
 	rock.stubs.push_back(stub(Edge::NORTH, 5, 1));
 	CHECK(has(run(rock), "stubs", "throat tile is not floor"));
+	Spec stranded; // an air door right behind the north stub's throat
+	set(stranded, 10, 2, 'D');
+	CHECK(has(run(stranded), "stubs", "a door or gate beside a stub's throat"));
 	Spec stray; // floor reaching the south edge with no stub there
 	set(stray, 10, 19, '.');
 	CHECK(has(run(stray), "stubs", "floor on the outer edge outside every stub's throat"));

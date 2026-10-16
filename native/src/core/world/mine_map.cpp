@@ -66,14 +66,14 @@ void MineMap::commit(std::unique_ptr<Cell> cell) {
 		}
 	}
 	cells_[coord] = std::move(cell);
-	rebuild_fields_around(coord);
+	stale_fields_around(coord);
 }
 
 bool MineMap::unload(Coord coord) {
 	if (cells_.erase(coord) == 0) {
 		return false;
 	}
-	rebuild_fields_around(coord);
+	stale_fields_around(coord);
 	return true;
 }
 
@@ -128,7 +128,7 @@ bool MineMap::tapper_face_usable(Coord tile) const {
 }
 
 uint32_t MineMap::strike_milli(Coord tile) const {
-	const Cell *c = cell(cell_of(tile));
+	const Cell *c = fields_of(cell_of(tile));
 	if (c == nullptr) {
 		return FIELD_FAR;
 	}
@@ -137,7 +137,7 @@ uint32_t MineMap::strike_milli(Coord tile) const {
 }
 
 uint32_t MineMap::depth_milli(Coord tile) const {
-	const Cell *c = cell(cell_of(tile));
+	const Cell *c = fields_of(cell_of(tile));
 	if (c == nullptr) {
 		return FIELD_FAR;
 	}
@@ -146,7 +146,7 @@ uint32_t MineMap::depth_milli(Coord tile) const {
 }
 
 uint8_t MineMap::thickness(Coord tile) const {
-	const Cell *c = cell(cell_of(tile));
+	const Cell *c = fields_of(cell_of(tile));
 	if (c == nullptr) {
 		return 0;
 	}
@@ -154,48 +154,82 @@ uint8_t MineMap::thickness(Coord tile) const {
 	return c->thickness[Cell::index_of(l.x, l.y)];
 }
 
-void MineMap::rebuild_fields_around(Coord coord) {
+void MineMap::stale_fields_around(Coord coord) {
 	for (int64_t dy = -1; dy <= 1; dy++) {
 		for (int64_t dx = -1; dx <= 1; dx++) {
-			if (Cell *c = cell_mut({coord.x + dx, coord.y + dy})) {
-				rebuild_fields(*c);
+			if (const Cell *c = cell({coord.x + dx, coord.y + dy})) {
+				c->fields_stale = true;
 			}
 		}
 	}
 }
 
-void MineMap::rebuild_fields(Cell &cell) {
+const Cell *MineMap::fields_of(Coord coord) const {
+	const Cell *c = cell(coord);
+	if (c != nullptr && c->fields_stale) {
+		rebuild_fields(*c);
+		c->fields_stale = false;
+	}
+	return c;
+}
+
+void MineMap::rebuild_fields(const Cell &cell) const {
 	const Coord base{cell.coord.x * CELL_TILES, cell.coord.y * CELL_TILES};
 	const int64_t reach = FIELD_REACH;
 	// A window of the cell plus `reach` tiles of every neighbour, as effective materials.
 	const int64_t w = CELL_TILES + 2 * (reach + THICKNESS_CAP);
 	const int64_t off = reach + THICKNESS_CAP;
-	std::vector<TileMaterial> mat(static_cast<size_t>(w * w));
-	std::vector<uint8_t> loaded(static_cast<size_t>(w * w));
+	std::vector<TileMaterial> mat(static_cast<size_t>(w * w), TileMaterial::ROCK);
+	std::vector<uint8_t> loaded(static_cast<size_t>(w * w), 0);
+	// The window reaches less than a cell into each neighbour: read the 3x3 cells' tiles directly
+	// (GEN-11: one map lookup per cell, not two per tile, keeps a commit inside its budget).
+	const Cell *near[3][3];
+	for (int64_t dy = -1; dy <= 1; dy++) {
+		for (int64_t dx = -1; dx <= 1; dx++) {
+			near[dy + 1][dx + 1] = dx == 0 && dy == 0 ? &cell : this->cell({cell.coord.x + dx, cell.coord.y + dy});
+		}
+	}
 	for (int64_t y = 0; y < w; y++) {
+		const int64_t ly = y - off;
+		const int64_t cy = floor_div(ly, CELL_TILES);
+		const int64_t ty = floor_mod(ly, CELL_TILES);
 		for (int64_t x = 0; x < w; x++) {
-			const Coord g{base.x + x - off, base.y + y - off};
+			const int64_t lx = x - off;
+			const Cell *c = near[cy + 1][floor_div(lx, CELL_TILES) + 1];
+			if (c == nullptr) {
+				continue;
+			}
+			const Tile &t = c->tiles[static_cast<size_t>(Cell::index_of(floor_mod(lx, CELL_TILES), ty))];
 			const size_t i = static_cast<size_t>(y * w + x);
-			loaded[i] = tile_at(g).has_value() ? 1 : 0;
-			mat[i] = effective_material(g);
+			loaded[i] = 1;
+			mat[i] = MaterialTable::effective(static_cast<TileMaterial>(t.material), t.state);
+		}
+	}
+	// Per window tile, once: open floor, and a usable strike face (a loaded face beside open floor).
+	std::vector<uint8_t> open_at(static_cast<size_t>(w * w), 0);
+	for (size_t i = 0; i < open_at.size(); i++) {
+		open_at[i] = loaded[i] != 0 && !materials.get(mat[i]).solid ? 1 : 0;
+	}
+	std::vector<uint8_t> face_at(static_cast<size_t>(w * w), 0);
+	for (int64_t y = 1; y + 1 < w; y++) {
+		for (int64_t x = 1; x + 1 < w; x++) {
+			const size_t i = static_cast<size_t>(y * w + x);
+			face_at[i] = loaded[i] != 0 && materials.get(mat[i]).tapper_face && (open_at[i + 1] || open_at[i - 1] || open_at[i + static_cast<size_t>(w)] || open_at[i - static_cast<size_t>(w)])
+					? 1
+					: 0;
 		}
 	}
 	auto at = [&](int64_t x, int64_t y) -> TileMaterial { return mat[static_cast<size_t>((y + off) * w + (x + off))]; };
-	auto open = [&](int64_t x, int64_t y) -> bool {
-		const size_t i = static_cast<size_t>((y + off) * w + (x + off));
-		return loaded[i] != 0 && !materials.get(mat[i]).solid;
-	};
-	auto usable_face = [&](int64_t x, int64_t y) -> bool {
-		const TileMaterial m = at(x, y);
-		if (!materials.get(m).tapper_face) {
-			return false;
+	auto open = [&](int64_t x, int64_t y) -> bool { return open_at[static_cast<size_t>((y + off) * w + (x + off))] != 0; };
+	auto usable_face = [&](int64_t x, int64_t y) -> bool { return face_at[static_cast<size_t>((y + off) * w + (x + off))] != 0; };
+	// The distance depends only on the offset: one table for the window's (2 reach + 1)^2 offsets.
+	const int64_t side = 2 * reach + 1;
+	std::vector<uint32_t> milli(static_cast<size_t>(side * side));
+	for (int64_t dy = -reach; dy <= reach; dy++) {
+		for (int64_t dx = -reach; dx <= reach; dx++) {
+			milli[static_cast<size_t>((dy + reach) * side + dx + reach)] = centre_to_tile_milli({0, 0}, {dx, dy});
 		}
-		const size_t i = static_cast<size_t>((y + off) * w + (x + off));
-		if (loaded[i] == 0) {
-			return false;
-		}
-		return open(x + 1, y) || open(x - 1, y) || open(x, y + 1) || open(x, y - 1);
-	};
+	}
 	for (int64_t ly = 0; ly < CELL_TILES; ly++) {
 		for (int64_t lx = 0; lx < CELL_TILES; lx++) {
 			const size_t i = static_cast<size_t>(Cell::index_of(lx, ly));
@@ -206,10 +240,11 @@ void MineMap::rebuild_fields(Cell &cell) {
 				for (int64_t dx = -reach; dx <= reach; dx++) {
 					const int64_t x = lx + dx;
 					const int64_t y = ly + dy;
+					const uint32_t d = milli[static_cast<size_t>((dy + reach) * side + dx + reach)];
 					if (floor && usable_face(x, y)) {
-						best_strike = std::min(best_strike, centre_to_tile_milli({lx, ly}, {x, y}));
+						best_strike = std::min(best_strike, d);
 					} else if (!floor && open(x, y)) {
-						best_depth = std::min(best_depth, centre_to_tile_milli({lx, ly}, {x, y}));
+						best_depth = std::min(best_depth, d);
 					}
 				}
 			}
@@ -278,7 +313,7 @@ bool MineMap::set_barrier(Coord coord, uint32_t barrier_id, bool open) {
 			change.x1 = std::max(change.x1, gx);
 			change.y1 = std::max(change.y1, gy);
 		}
-		rebuild_fields_around(coord);
+		stale_fields_around(coord);
 		changes_.push_back(change);
 		return true;
 	}
@@ -321,7 +356,7 @@ bool MineMap::set_collapse(Coord coord, uint32_t collapse_id, bool fallen) {
 			change.x1 = std::max(change.x1, gx);
 			change.y1 = std::max(change.y1, gy);
 		}
-		rebuild_fields_around(coord);
+		stale_fields_around(coord);
 		changes_.push_back(change);
 		return true;
 	}

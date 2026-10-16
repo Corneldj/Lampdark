@@ -81,3 +81,24 @@ TEST_CASE("the strike field reaches across cell borders") {
 	mine.unload({1, 0});
 	CHECK(mine.strike_milli({19, 10}) == MineMap::FIELD_FAR);
 }
+
+TEST_CASE("GEN-11 the fields follow a door worked after they were last read") {
+	// Rock all round but a room on rows 10-12 and a door at (10, 5), five rows above it.
+	std::vector<std::string> rows = room(0);
+	for (int y = 10; y <= 12; y++) {
+		rows[y] = "#####..........#####";
+	}
+	rows[5][10] = 'D';
+	auto cell = cell_from({0, 0}, rows);
+	Barrier door;
+	door.id = 1;
+	door.tiles = {static_cast<uint16_t>(Cell::index_of(10, 5))};
+	cell->barriers.push_back(door);
+	MineMap mine;
+	mine.commit(std::move(cell));
+	CHECK(mine.depth_milli({10, 4}) == MineMap::FIELD_FAR); // the shut door is solid; the room is out of reach
+	REQUIRE(mine.set_barrier({0, 0}, 1, true));
+	CHECK(mine.depth_milli({10, 4}) == 500u); // the open door is open floor beside it
+	REQUIRE(mine.set_barrier({0, 0}, 1, false));
+	CHECK(mine.depth_milli({10, 4}) == MineMap::FIELD_FAR);
+}

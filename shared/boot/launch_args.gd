@@ -15,7 +15,7 @@ enum Kind { FLAG, INT, PORT, ENUM, STRING, HOST_PORT, U64 }
 const USAGE: String = ("usage: lampblack [--server] [--mode friends|public|nightshift] [--transport enet|sdr|loopback]"
 	+ " [--loopback] [--port <n>] [--offline] [--parent-pid <pid>] [--control-port <n>] [--resume <path>] [--save-dir <path>]"
 	+ " [--connect <host:port>] [--no-steam] [--name <persona>] [--sdr-fake <lag_ms,loss_pct>] [--host-relay]"
-	+ " [--seed <u64>] [--map <name>] [--qa-token <t>] [--bot <brain>]"
+	+ " [--seed <u64>] [--map <name>] [--generate] [--template-pack <path>] [--qa-token <t>] [--bot <brain>]"
 	+ " [--bot-seed <u64>] [--link <rtt_ms,loss_pct>] [--receive-log <path>] [--record-inputs <path>] [--stream-audit <path>]"
 	+ " [--stats-out <path>] [--exit-after-ticks <n>] [--tuning-profile <name>] [--tuning-hot-reload]"
 	+ " [--log <path>] [--log-level debug|info|warn|error]")
@@ -48,6 +48,8 @@ const SPEC: Dictionary = {
 	"--record-inputs": [Kind.STRING, true, []],
 	"--stream-audit": [Kind.STRING, true, []],
 	"--map": [Kind.STRING, false, []],
+	"--generate": [Kind.FLAG, false, []],
+	"--template-pack": [Kind.STRING, true, []],
 	"--stats-out": [Kind.STRING, true, []],
 	"--exit-after-ticks": [Kind.INT, true, []],
 	"--tuning-profile": [Kind.STRING, true, []],
@@ -236,6 +238,10 @@ func _apply(name: String, kind: Kind, value: String, options: Array) -> void:
 			server.stream_audit_path = value
 		"--map":
 			server.map_name = value
+		"--generate":
+			server.generated = true
+		"--template-pack":
+			server.template_pack = value
 		"--stats-out":
 			server.stats_path = value
 		"--exit-after-ticks":

@@ -274,6 +274,16 @@
 			"kind": "param",
 			"note": "ticket GEN-11"
 		},
+		"mine.generation_prefetch_radius_cells": {
+			"value": 5,
+			"type": "int",
+			"unit": "cells",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-11: cells generated ahead of need, within the eviction radius's hysteresis, so required cells are mostly loaded before they are required"
+		},
 		"mine.harness_deck_sample_seeds": {
 			"value": 500,
 			"type": "int",
@@ -525,6 +535,36 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "ticket GEN-11"
+		},
+		"mine.generation_workers_fleet": {
+			"value": 1,
+			"type": "int",
+			"unit": "threads",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-11: generation workers per run process on the fleet (20-24 runs share 4 vCPUs)"
+		},
+		"mine.generation_workers_host": {
+			"value": 2,
+			"type": "int",
+			"unit": "threads",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-11: generation workers on a private host (Windows)"
+		},
+		"mine.generation_workers_deck": {
+			"value": 1,
+			"type": "int",
+			"unit": "threads",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-11: generation workers on a Steam Deck in Night Shift"
 		},
 		"mine.max_planned_poi_per_region": {
 			"value": 2,

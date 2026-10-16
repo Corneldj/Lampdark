@@ -394,6 +394,23 @@ void rule_stubs(const Template &t, const Grid &g, const ValidateParams &p, Out &
 	}
 	// The outer edge is rock but for the stubs' throats, so the sockets alone decide what joins.
 	const std::set<size_t> throats = throat_set(t, g);
+	// A door or gate beside a throat would be stranded when the stub fills: its portal would join
+	// one zone (GEN-11's finding).
+	for (const Cell &c : t.cells) {
+		for (const auto &b : c.barriers) {
+			for (uint16_t i : b.tiles) {
+				const int32_t bx = static_cast<int32_t>(c.coord.x * CELL_TILES) + i % CELL_TILES;
+				const int32_t by = static_cast<int32_t>(c.coord.y * CELL_TILES) + i / CELL_TILES;
+				const Coord next[4] = {{bx + 1, by}, {bx - 1, by}, {bx, by + 1}, {bx, by - 1}};
+				for (const Coord &n : next) {
+					if (g.in(static_cast<int32_t>(n.x), static_cast<int32_t>(n.y)) && throats.count(g.at(static_cast<int32_t>(n.x), static_cast<int32_t>(n.y))) != 0) {
+						out.add("stubs", bx, by, "a door or gate beside a stub's throat, stranded when the stub fills");
+						return;
+					}
+				}
+			}
+		}
+	}
 	for (int32_t y = 0; y < g.h; y++) {
 		for (int32_t x = 0; x < g.w; x++) {
 			const bool edge = x == 0 || y == 0 || x == g.w - 1 || y == g.h - 1;

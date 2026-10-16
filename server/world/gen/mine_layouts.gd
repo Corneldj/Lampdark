@@ -9,15 +9,16 @@ extends RefCounted
 const TEMPLATES: String = "res://data/templates"
 
 
-## The deriver for a run, or null (with an error) if its template pack cannot be read.
-static func for_run(run_seed: int, set_version: String = "") -> LbLayouts:
+## The deriver for a run, or null (with an error) if its template pack cannot be read: the pack
+## `set_version` names (a resumed run's), the current set's, or (dev and QA) the file `pack_file`.
+static func for_run(run_seed: int, set_version: String = "", pack_file: String = "") -> LbLayouts:
 	var version: String = set_version
 	if version.is_empty():
 		var current: Dictionary = Variants.dict(JSON.parse_string(FileAccess.get_file_as_string(TEMPLATES.path_join("set.json"))))
 		version = str(current.get("set_version", ""))
 	var layouts: LbLayouts = LbLayouts.new()
-	var pack_path: String = TEMPLATES.path_join("packs/%s.lbtp" % version)
-	if version.is_empty() or not layouts.load_pack(FileAccess.get_file_as_bytes(pack_path)):
+	var pack_path: String = pack_file if not pack_file.is_empty() else TEMPLATES.path_join("packs/%s.lbtp" % version)
+	if (version.is_empty() and pack_file.is_empty()) or not layouts.load_pack(FileAccess.get_file_as_bytes(pack_path)):
 		push_error("MineLayouts: no template pack %s" % pack_path)
 		return null
 	configure(layouts, run_seed)
