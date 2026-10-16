@@ -8,6 +8,8 @@ extends RefCounted
 
 ## Base camp's bed (its two layers), sent while the miner is inside.
 const BASE_CAMP: StringName = &"base_camp"
+## DIR-02: the seam ticks as it cools, through a relax, for a miner below.
+const SEAM_COOLING: StringName = &"seam_cooling"
 
 
 static func encode(layer: StringName, start: bool, fade_s: float) -> PackedByteArray:

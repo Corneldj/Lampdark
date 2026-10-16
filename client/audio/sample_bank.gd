@@ -56,6 +56,10 @@ static func bed(layer: String) -> AudioStreamWAV:
 			kind = "creak"
 			seconds = 9.0 if layer == "timber" else 13.0
 			level = 0.3
+		"seam_cooling":  # DIR-02's cooling seam: sparse dry ticks of rock giving up its heat
+			kind = "ticks"
+			seconds = 11.0
+			level = 0.35
 		"air", "draught":
 			kind = "rumble"
 			seconds = 6.0
@@ -108,8 +112,10 @@ static func make(kind: String, seconds: float, seed_value: int, level: float = 1
 			_creak(samples, rng)
 		"rumble":
 			_rumble(samples, rng)
+		"ticks":
+			_ticks(samples, rng)
 	for i: int in n:
-		if kind == "drips" or kind == "creak" or kind == "rumble":
+		if kind == "drips" or kind == "creak" or kind == "rumble" or kind == "ticks":
 			peak = maxf(peak, absf(samples[i]))
 			continue
 		var t: float = float(i) / RATE
@@ -167,6 +173,23 @@ static func _drips(out: PackedFloat32Array, rng: RandomNumberGenerator) -> void:
 				var t: float = float(i) / RATE
 				phase += TAU * pitch * (1.0 - 0.45 * minf(t / 0.03, 1.0)) / RATE
 				out[start + i] += g * sin(phase) * exp(-t * 55.0)
+
+
+## Rock ticking as it cools: a dozen or so short dry clicks, unevenly spaced, some faint.
+static func _ticks(out: PackedFloat32Array, rng: RandomNumberGenerator) -> void:
+	var n: int = out.size()
+	var count: int = rng.randi_range(9, 15)
+	for _k: int in count:
+		var at: int = rng.randi_range(0, n - int(0.02 * RATE))
+		var gain: float = rng.randf_range(0.25, 1.0)
+		var last: float = 0.0
+		for i: int in int(0.012 * RATE):
+			if at + i >= n:
+				break
+			var t: float = float(i) / RATE
+			var noise: float = rng.randf_range(-1.0, 1.0)
+			out[at + i] += gain * (noise - last) * 0.5 * exp(-t * 600.0) # a bright, dry click
+			last = noise
 
 
 ## One slow low creak somewhere in the loop: a wavering low tone under a bell-shaped swell.

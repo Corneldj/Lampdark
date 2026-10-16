@@ -1,10 +1,12 @@
 extends GutTest
 ## DIR-01: the Director reads only the true world (Gameplay §9.2: nothing in the simulation depends
-## on an illusion). No code line under server/director/ names the illusion stage, an illusion, the
-## lie log or its writers (CRT-10). Comment lines are skipped, so the rule can be explained there.
+## on an illusion). No code line under server/director/ names the illusion stage, an illusion's class,
+## state or events, the lie log or its writers (CRT-10). The other direction is allowed: DIR-02's gate
+## (illusions_allowed, illusions_cut) is the Director's own, read by the illusion stage. Comment lines
+## are skipped, so the rule can be explained there. check_module_deps.sh holds the same line.
 
 const ROOT: String = "res://server/director"
-const FORBIDDEN: String = "(?i)illusion|lie_?log|\\blies\\b|ILLUSIONS"
+const FORBIDDEN: String = "Illusion[A-Za-z_]*|\\billusion_[a-z_]+|(?i:lie_?log)|\\bILLUSIONS\\b|append_illusion_event|\\bruns?\\.illusions\\b|\\blies\\b"
 
 
 func test_no_director_code_names_an_illusion_or_the_lie_log() -> void:

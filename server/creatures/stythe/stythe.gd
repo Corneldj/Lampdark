@@ -215,6 +215,11 @@ func think(run: RunState) -> void:
 		move.tick(run, self, Tuning.f(&"stythe.circle_speed") if state.name == &"circle" else Tuning.f(&"stythe.speed"))
 
 
+## A relax holds (DIR-02's provider through CRT-01's gate) and the apex does not override it.
+func relaxed() -> bool:
+	return system != null and Variants.flag(system.gate.relax_active.call()) and not Variants.flag(system.gate.apex_on.call())
+
+
 ## Through the dark toward a miner (CRT-14's Hunt): never past its territory in a staged run, or
 ## while it keeps a body (CRT-15).
 func chase(run: RunState, miner: int) -> void:
@@ -253,6 +258,14 @@ func _lurk(run: RunState) -> void:
 				var n: Vector2i = near
 				move.head_for(run, self, n)
 			return
+	# DIR-02: in a relax it drifts home to its lair, by its own movement, and stays there.
+	if relaxed() and not is_retreating():
+		lurk_until = -1
+		if at_home(run, tile(run)):
+			move.stop()
+		else:
+			move.head_for(run, self, lair)
+		return
 	# Keeping (CRT-15), a spot picked before, outside its territory, is given up.
 	var spot_ok: bool = lurk_spot.x != 2147483647 and (not keeps() or senses.in_territory(run, self, lurk_spot))
 	if lurk_until >= 0 and run.tick < lurk_until and spot_ok:

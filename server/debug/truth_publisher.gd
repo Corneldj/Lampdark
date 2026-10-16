@@ -114,7 +114,8 @@ func build(run: RunState, slot: int, layers: PackedStringArray, events: Array[Di
 				if run.draught != null:
 					var v: float = run.draught.intensity_of(mm.entity_id)
 					intensity = v if v >= 0.0 else "untracked"
-				miners.append({"slot": s, "pull": "n/a (DIR-03)", "intensity": intensity, "unheard_s": run.heard.unheard_seconds(s) if run.heard != null else -1.0,
+				var pull: Variant = run.pull.value_of(mm.entity_id) if run.pull != null else "off (no Director)"
+				miners.append({"slot": s, "pull": pull, "intensity": intensity, "unheard_s": run.heard.unheard_seconds(s) if run.heard != null else -1.0,
 					"unheard_mark_s": Depth.unheard_mark_s(run, mm.entity_id)})
 		out["director"] = {"miners": miners, "crew_count": run.crew.count if run.crew != null else -1,
 			"active_cap": run.cap.capacity() if run.cap != null else -1}

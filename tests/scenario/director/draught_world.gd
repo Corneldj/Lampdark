@@ -53,3 +53,9 @@ static func value(s: Scenario, e: int) -> float:
 ## Sets a tracked miner's value (the Draught must have ticked once since they joined).
 static func set_value(s: Scenario, e: int, v: float) -> void:
 	assert(s.run.draught.set_intensity(e, v), "miner %d is tracked" % e)
+
+
+## Forces the cycle into a long RELAX, or back to BUILD (the cycle itself is DIR-01's to test).
+static func force_relax(s: Scenario, on: bool) -> void:
+	s.run.draught.cycle.phase = DraughtCycle.Phase.RELAX if on else DraughtCycle.Phase.BUILD
+	s.run.draught.cycle.left = 100000 if on else 0

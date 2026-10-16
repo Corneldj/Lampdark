@@ -78,6 +78,10 @@ var crew: CrewCensus = null
 var cap: ActiveCap = null
 ## DIR-01's Draught (server-only); null when the Director is off (Director.install).
 var draught: Draught = null
+## DIR-02's relax rules: the relax provider, the illusion gate, the cooling seam, the Fan roll.
+var relax: RelaxRules = null
+## DIR-03's Pull (server-only); null when the Director is off.
+var pull: Pull = null
 ## RSC-03's holds: every grab and trap (server-only).
 var holds: Holds = null
 ## RSC-01's falls and bodies (server-only).

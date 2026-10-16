@@ -64,13 +64,20 @@ func _consider(run: RunState, st: StytheCreature) -> void:
 		var row: String = StytheEligibility.row(run, st, m)
 		if st.keeps() and row != "reach" and not st.senses.in_territory(run, st, run.registry.get_entity(m).tile()):
 			continue  # keeping a body (in any state), it hunts only in its territory
+		# The most preferred it may take: a relax refuses a chosen hunt, never a miner who walks
+		# unlit into its reach (DIR-02), so a refusal moves on down the ranking.
 		if st.system.gate.request_commit(run, st, m, row != "reach"):
 			target = m
 			_enter(run, st, &"hunt", "eligible: %s" % row)
-		return
+			return
 
 
 func _hunt(run: RunState, st: StytheCreature) -> void:
+	if target != 0 and not st.system.gate.is_hunting(st) and st.relaxed():
+		# DIR-02: the relax ended its hunt: it drifts home to its lair (Lurk takes it there).
+		target = 0
+		_enter(run, st, &"keep" if st.keeps() else &"lurk", "relax: home")
+		return
 	if target == 0 or not st.system.gate.is_hunting(st) or not run.registry.has(target):
 		end_hunt(run, st, "the hunt ended")
 		return

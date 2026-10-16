@@ -72,10 +72,11 @@ class StateView:
 	func intensity(handle: MinerHandle) -> float:
 		return run.draught.intensity_of(handle.entity_id) if run.draught != null else -1.0
 
-	## The Director's Pull, the lie log and the run record (DIR-03, NET-08): later.
-	func pull() -> Variant:
-		return null
+	## DIR-03's Pull of a miner (0-100); 0 untracked, -1 with the Director off.
+	func pull(handle: MinerHandle) -> float:
+		return run.pull.value_of(handle.entity_id) if run.pull != null else -1.0
 
+	## The lie log and the run record (NET-08): later.
 	func lie_log() -> Array:
 		return []
 

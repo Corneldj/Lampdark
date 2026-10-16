@@ -146,6 +146,12 @@ func set_intensity(miner: int, value: float) -> bool:
 
 ## The miners tracked now, ascending: conscious and not Hand-driven.
 func tracked_miners(run: RunState) -> Array[int]:
+	return conscious_humans(run)
+
+
+## The Director's miners (DIR-01's Draught, DIR-03's Pull): conscious (Upright, Caught or Grabbed)
+## and not Hand-driven, ascending. Bess, the unconscious and the dead are never among them.
+static func conscious_humans(run: RunState) -> Array[int]:
 	var out: Array[int] = []
 	var all: Array[int] = run.crew.miners(run) if run.crew != null else _miners(run)
 	for e: int in all:
