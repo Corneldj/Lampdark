@@ -272,7 +272,7 @@ func _start_input() -> void:
 	closeups.in_play_layer = in_play
 	add_child(closeups)
 	map_table = MapTableCloseup.new()
-	map_table.name = "MapTable"
+	map_table.name = "MapTableCloseup"
 	map_table.client_sheet = func() -> ClientSheet: return connection.sheet if connection != null else null
 	map_table.store = bindings
 	map_table.router = router

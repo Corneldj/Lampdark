@@ -129,18 +129,20 @@ func on_close() -> void:
 	_touches.clear()
 
 
-## The router's presses (20 Hz): the label key. Esc or B while typing a label backs out of it
-## (CloseupManager asks the content first).
+## The router's presses (20 Hz): the label key.
 func handle(action: String) -> bool:
-	match action:
-		"label":
-			if not label_field.visible:
-				_show_label()
-			return true
-		"close":
-			if label_field.visible:
-				_hide_label()
-				return true
+	if action == "label":
+		if not label_field.visible:
+			_show_label()
+		return true
+	return false
+
+
+## Esc or B while a label is being typed backs out of it; otherwise the table closes.
+func back_out() -> bool:
+	if label_field.visible:
+		_hide_label()
+		return true
 	return false
 
 

@@ -193,9 +193,9 @@ func test_a_label_with_the_floating_keyboard_stops_at_40_and_b_backs_out() -> vo
 	assert_eq(str(labels[0]["text"]), "y".repeat(40))
 	assert_false(m.label_field.visible)
 	m.handle("label")
-	assert_true(m.handle("close"), "B backs out of the label")
+	assert_true(m.back_out(), "B backs out of the label")
 	assert_false(m.label_field.visible)
-	assert_false(m.handle("close"), "and then closes the table (the manager's)")
+	assert_false(m.back_out(), "and then closes the table (the manager's)")
 
 
 func test_the_manager_lets_the_label_field_take_esc_first() -> void:

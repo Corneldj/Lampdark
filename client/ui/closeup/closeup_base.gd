@@ -30,9 +30,14 @@ func on_close() -> void:
 	pass
 
 
-## One close-up action this frame; true when the content used it. "close" (Esc or B) comes here
-## first: true backs out of the content's own step (a label being typed) instead of closing.
+## One close-up action this frame; true when the content used it.
 func handle(_action: String) -> bool:
+	return false
+
+
+## Esc or B (the manager's): true when the content backs out of a step of its own instead (LFT-14's
+## label being typed), so the close-up stays open. Most contents have none.
+func back_out() -> bool:
 	return false
 
 

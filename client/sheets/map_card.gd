@@ -76,7 +76,7 @@ static func render(cs: ClientSheet, px: int) -> Image:
 	return image
 
 
-## Saves the card as user://map_cards/<run_uuid>.png; its path, or "" on failure.
+## Writes the card to user://map_cards/<run_uuid>.png; its path, or "" on failure.
 static func save(image: Image, run_uuid: String) -> String:
 	if image == null or run_uuid.is_empty() or not run_uuid.is_valid_filename():
 		return ""
