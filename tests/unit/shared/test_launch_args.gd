@@ -47,6 +47,16 @@ func test_server_arguments() -> void:
 	assert_eq(parsed.server.exit_after_ticks, 40)
 
 
+func test_director_on_a_fixed_map_only_when_asked() -> void:
+	var plain: LaunchArgs = _parse_user(["--server", "--map", "m1_greybox"], _dev())
+	assert_true(plain.ok, plain.error)
+	assert_false(plain.server.director, "QA-01's grey box runs without the Director")
+	var asked: LaunchArgs = _parse_user(["--server", "--map", "m1_greybox", "--director"], _dev())
+	assert_true(asked.server.director)
+	var released: LaunchArgs = _parse_user(["--server", "--director"], _build(PackedStringArray(["lb_server", "lb_release"])))
+	assert_true(released.server.director, "not a dev-only flag")
+
+
 func test_loopback_shorthand_and_inline_values() -> void:
 	var parsed: LaunchArgs = _parse_user(["--loopback", "--mode=public", "--log-level=debug"], _dev())
 	assert_true(parsed.ok, parsed.error)

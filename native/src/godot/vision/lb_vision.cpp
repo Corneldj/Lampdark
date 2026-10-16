@@ -32,6 +32,7 @@ void LbVision::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_bite_tiles", "id", "tiles"), &LbVision::set_bite_tiles);
 	ClassDB::bind_method(D_METHOD("bite_tiles", "at", "range", "below"), &LbVision::bite_tiles);
 	ClassDB::bind_method(D_METHOD("bite_seen", "id"), &LbVision::bite_seen);
+	ClassDB::bind_method(D_METHOD("bite_seen_at", "id"), &LbVision::bite_seen_at);
 	ClassDB::bind_integer_constant("LbVision", "", "DECAL_DIR_SHIFT", vision::DECAL_DIR_SHIFT);
 	ClassDB::bind_integer_constant("LbVision", "", "DECAL_DIR_MASK", vision::DECAL_DIR_MASK);
 	ClassDB::bind_integer_constant("LbVision", "", "COLOUR_HATCH_BIT", vision::COLOUR_HATCH_BIT);
@@ -184,6 +185,10 @@ Array LbVision::bite_tiles(Vector2 at, int64_t range, double below) const {
 
 bool LbVision::bite_seen(int64_t id) const {
 	return vision_ != nullptr && vision_->bite_seen(static_cast<uint32_t>(id));
+}
+
+double LbVision::bite_seen_at(int64_t id) const {
+	return vision_ != nullptr ? vision_->bite_seen_at(static_cast<uint32_t>(id)) : -1.0;
 }
 
 void LbVision::set_identity_threshold(int64_t entity, double light) {

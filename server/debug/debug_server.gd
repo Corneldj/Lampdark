@@ -105,7 +105,7 @@ func _run_command(run: RunState, name: String, a: Dictionary, issuer: int) -> Di
 		"set_pull":
 			return _no("the Pull arrives with DIR-03")
 		"set_intensity":
-			return _no("intensity arrives with DIR-01")
+			return _set_intensity(run, a, issuer)
 		"creatures":
 			return _creatures(run, a)
 		"freeze_ai":
@@ -203,6 +203,28 @@ func _new_creature(kind: WorldIds.EntityKind) -> Creature:
 		WorldIds.EntityKind.STYTHE:
 			return StytheCreature.new()
 	return null
+
+
+## DIR-01: the Draught intensity of one miner (by slot, or "me") or of every tracked one.
+func _set_intensity(run: RunState, a: Dictionary, issuer: int) -> Dictionary:
+	if run.draught == null:
+		return _no("the Director is off in this run")
+	var value: float = float(Variants.number(a["value"]))
+	var miners: Array[int] = []
+	if a["who"] is String and str(a["who"]) == "all":
+		miners = run.draught.tracked_miners(run)
+	else:
+		var slot: int = _slot_of(run, a["who"], issuer)
+		if slot < 0:
+			return _no("no miner in that slot")
+		miners.append(run.movement.miner(slot).entity_id)
+	var done: int = 0
+	for e: int in miners:
+		if run.draught.set_intensity(e, value):
+			done += 1
+	if done == 0:
+		return _no("nobody there holds an intensity (Hands, the fallen and the dead hold none)")
+	return _ok("intensity %.0f for %d miner%s" % [value, done, "" if done == 1 else "s"])
 
 
 func _teleport(run: RunState, a: Dictionary, issuer: int) -> Dictionary:

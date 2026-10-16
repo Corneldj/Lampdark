@@ -244,6 +244,7 @@ PerceptionFrame Vision::compute_frame(uint32_t id, const std::vector<sim::Mirror
 	}
 	frame.glow.assign(static_cast<size_t>(bucket_count()), GlowBucket{});
 	o->bite_seen = false;
+	o->bite_seen_at = -1.0;
 	if (o->blinded) {
 		frame.blinded = true;
 		return frame;
@@ -257,6 +258,12 @@ PerceptionFrame Vision::compute_frame(uint32_t id, const std::vector<sim::Mirror
 		const Unseen state = tile_state(*o, cone, t, light);
 		if (state == Unseen::BITE && light_.tile_light(t).value >= params.seen_min) {
 			o->bite_seen = true; // a tile it would have seen, taken by the bite
+			const double dx = static_cast<double>(t.x) + 0.5 - o->x;
+			const double dy = static_cast<double>(t.y) + 0.5 - o->y;
+			const double d = std::sqrt(dx * dx + dy * dy);
+			if (o->bite_seen_at < 0.0 || d < o->bite_seen_at) {
+				o->bite_seen_at = d;
+			}
 		}
 		if (state != Unseen::SEEN) {
 			return;

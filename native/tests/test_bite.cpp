@@ -64,11 +64,14 @@ TEST_CASE("a bitten tile leaves the seen set with anything on it; bite_seen says
 	CHECK(f.tokens.empty()); // the Stythe and the victim beside it, both gone
 	CHECK(f.margin_tokens.empty());
 	CHECK(v.bite_seen(1)); // it would have seen them
+	CHECK(v.bite_seen_at(1) == doctest::Approx(2.0)); // DIR-01: the nearest, (12, 10), 2 tiles off
 	v.compute(2, {});
 	CHECK_FALSE(v.bite_seen(2)); // facing away: nothing taken from it
+	CHECK(v.bite_seen_at(2) == doctest::Approx(-1.0));
 	v.set_bite_tiles(1, {});
 	v.compute(1, {});
 	CHECK_FALSE(v.bite_seen(1));
+	CHECK(v.bite_seen_at(1) == doctest::Approx(-1.0));
 }
 
 TEST_CASE("a trail's direction rides with the blood bit at 0.12, never below") {

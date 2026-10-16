@@ -111,6 +111,22 @@ func watched_entity(slot: int) -> int:
 	return int(Variants.number(_watched.get(slot, 0)))
 
 
+## Every watched miner's slot: entity -> slot (DIR-01 reads each one's seen set by it).
+func slots_by_entity() -> Dictionary:
+	var out: Dictionary = {}
+	for raw: Variant in _watched.keys():
+		out[int(Variants.number(_watched[raw]))] = int(Variants.number(raw))
+	return out
+
+
+## The slot watching `entity`, or -1.
+func slot_of(entity: int) -> int:
+	for raw: Variant in _watched.keys():
+		if int(Variants.number(_watched[raw])) == entity:
+			return int(Variants.number(raw))
+	return -1
+
+
 func tick(run: RunState) -> void:
 	var slots: Array = _watched.keys()
 	slots.sort()
@@ -170,6 +186,12 @@ func bite_seen_by(miner: int) -> bool:
 		if int(Variants.number(_watched[raw])) == miner:
 			return native.bite_seen(int(Variants.number(raw)))
 	return false
+
+
+## DIR-01: how far, in tiles, from `miner` to the nearest such bitten tile; -1 if none.
+func bite_seen_at(miner: int) -> float:
+	var slot: int = slot_of(miner)
+	return native.bite_seen_at(slot) if slot >= 0 else -1.0
 
 
 ## MNR-10: a floor tile's chalk (ChalkMarks' five glyph bytes; all zero clears it). Sent only with

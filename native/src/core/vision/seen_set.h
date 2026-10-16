@@ -148,6 +148,11 @@ public:
 		auto it = observers_.find(id);
 		return it != observers_.end() && it->second.bite_seen;
 	}
+	// DIR-01: how far, in tiles, from the observer to the centre of the nearest such tile; -1 if none.
+	double bite_seen_at(uint32_t id) const {
+		auto it = observers_.find(id);
+		return it != observers_.end() && it->second.bite_seen ? it->second.bite_seen_at : -1.0;
+	}
 	// VIS-04: seen by any miner, or in any miner's margin (CRT-01's spawn guard).
 	bool is_seen_or_margin_of_any(world::Coord tile);
 	// The band a tile falls in for an observer's own lights: 0 none, 1 geometry only, 2 entities too.
@@ -190,6 +195,7 @@ private:
 		double turn_band = 0.0;
 		std::set<world::Coord> bite;
 		bool bite_seen = false;
+		double bite_seen_at = -1.0;
 		LosField los;
 	};
 

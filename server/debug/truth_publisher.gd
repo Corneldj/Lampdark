@@ -110,10 +110,19 @@ func build(run: RunState, slot: int, layers: PackedStringArray, events: Array[Di
 		if run.movement != null:
 			for s: int in run.movement.miner_slots():
 				var mm: MovementSystem.Miner = run.movement.miner(s)
-				miners.append({"slot": s, "pull": "n/a (DIR-03)", "intensity": "n/a (DIR-01)", "unheard_s": run.heard.unheard_seconds(s) if run.heard != null else -1.0,
+				var intensity: Variant = "off (no Director)"
+				if run.draught != null:
+					var v: float = run.draught.intensity_of(mm.entity_id)
+					intensity = v if v >= 0.0 else "untracked"
+				miners.append({"slot": s, "pull": "n/a (DIR-03)", "intensity": intensity, "unheard_s": run.heard.unheard_seconds(s) if run.heard != null else -1.0,
 					"unheard_mark_s": Depth.unheard_mark_s(run, mm.entity_id)})
 		out["director"] = {"miners": miners, "crew_count": run.crew.count if run.crew != null else -1,
 			"active_cap": run.cap.capacity() if run.cap != null else -1}
+		if run.draught != null:
+			var c: DraughtCycle = run.draught.cycle
+			out["director"]["phase"] = str(DraughtCycle.Phase.find_key(c.phase)).to_lower()
+			out["director"]["phase_left_s"] = c.left / Tuning.f(&"net.tick_hz")
+			out["director"]["peaker"] = c.peaker
 	if layers.has("lies"):
 		out["lies"] = _lies.duplicate()
 	return out

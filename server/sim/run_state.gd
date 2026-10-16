@@ -76,6 +76,8 @@ var creatures: CreatureSystem = null
 ## DIR-05's crew census and active-hunter cap (server-only).
 var crew: CrewCensus = null
 var cap: ActiveCap = null
+## DIR-01's Draught (server-only); null when the Director is off (Director.install).
+var draught: Draught = null
 ## RSC-03's holds: every grab and trap (server-only).
 var holds: Holds = null
 ## RSC-01's falls and bodies (server-only).

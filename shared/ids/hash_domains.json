@@ -246,6 +246,13 @@
 				"cell_x",
 				"cell_y"
 			]
+		},
+		{
+			"name": "director.peak_hold",
+			"id": 26,
+			"owner": "DIR-01",
+			"kind": "stream",
+			"keys": []
 		}
 	]
 }

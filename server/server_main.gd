@@ -183,6 +183,9 @@ func _start_network() -> bool:
 		generation.start()
 		Log.info("generated mine: set %s, %d cells round base camp in %.1f ms, %d workers" % [layouts.set_version(),
 			mine.native.loaded_cells().size(), (TickTimer.now_usec() - started_gen) / 1000.0, workers])
+	# DIR-*: the Director paces the creatures of every generated run, and of a fixed map if asked.
+	if config.generated or config.director:
+		Director.install(run)
 	if run.saves != null:
 		run.saves.save_dir = config.save_dir
 	var resuming: bool = not _resume.is_empty()

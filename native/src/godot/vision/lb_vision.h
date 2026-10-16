@@ -39,6 +39,8 @@ public:
 	// out a bitten tile the observer would have seen.
 	::godot::Array bite_tiles(::godot::Vector2 at, int64_t range, double below) const;
 	bool bite_seen(int64_t id) const;
+	// DIR-01: tiles from the observer to the nearest bitten tile it would have seen; -1 if none.
+	double bite_seen_at(int64_t id) const;
 	void set_identity_threshold(int64_t entity, double light);
 	void set_decals(::godot::Vector2i tile, int64_t bits);
 	// MNR-10: a floor tile's chalk glyphs (five bytes: the floor, then the faces N, E, S, W).

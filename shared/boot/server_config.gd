@@ -33,6 +33,9 @@ var stream_audit_path: String = ""
 var map_name: String = ""
 ## GEN-11: a generated mine, derived lazily round its holders from the run's template pack.
 var generated: bool = false
+## DIR-*: the Director paces the creatures. Always on for a generated mine; on a fixed map only
+## with --director (QA-01's kill test on the grey box runs without).
+var director: bool = false
 ## Dev and QA: a template pack file to generate from instead of data/templates' current set.
 var template_pack: String = ""
 ## FND-09: write tick costs, input counters and the final state hash here as JSON at exit.

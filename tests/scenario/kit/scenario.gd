@@ -68,7 +68,11 @@ class StateView:
 	func road_graph_events() -> Array:
 		return []
 
-	## The Director's Pull and intensity, the lie log and the run record (DIR, NET-08): later.
+	## DIR-01's Draught intensity of a miner (0-100); -1 untracked or with the Director off.
+	func intensity(handle: MinerHandle) -> float:
+		return run.draught.intensity_of(handle.entity_id) if run.draught != null else -1.0
+
+	## The Director's Pull, the lie log and the run record (DIR-03, NET-08): later.
 	func pull() -> Variant:
 		return null
 
@@ -102,7 +106,7 @@ var _closed: bool = false
 
 ## Builds a scenario. Config keys (all optional): seed (int), fixture (FixtureMap or map name),
 ## mode (ServerConfig.Mode), tuning_profile (String), overrides ({key: value}), slots (int),
-## creatures ({kind: bool}; CRT tickets), director (bool; off in M1), systems (extra SimSystems,
+## creatures ({kind: bool}; CRT tickets), director (bool: the Director's systems, DIR-*), systems (extra SimSystems,
 ## for test stand-ins of systems that do not exist yet), generated ({pack: PackedByteArray, workers:
 ## int, centres: [Vector2i]}: a mine generated from that template pack round the seed, GEN-11,
 ## instead of a fixture, with run start's windows round base camp and each of the centres' cells
@@ -127,8 +131,6 @@ func _build(cfg: Dictionary) -> void:
 	var errors: Array[String] = Tuning.set_bundle(overlay)
 	if not errors.is_empty():
 		push_error("Scenario: bad tuning overrides: %s" % "; ".join(errors))
-	if Variants.flag(cfg.get("director", false)):
-		push_warning("Scenario: the Director is off in M1 (DIR tickets turn it on)")
 	if not Variants.dict(cfg.get("creatures", {})).is_empty():
 		push_warning("Scenario: creatures arrive with CRT-01; the setting is ignored")
 	Transport.virtual_clock_usec = CLOCK_ORIGIN_USEC
@@ -168,6 +170,9 @@ func _build(cfg: Dictionary) -> void:
 			var c: Vector2i = raw
 			centres.append(c)
 		generation.start(centres)
+	# DIR-*: off unless asked, as on a fixed map (QA-01's kill test runs without).
+	if Variants.flag(cfg.get("director", false)):
+		Director.install(run)
 	# NET-09: a scenario writes no save unless it asks ("saves": true), each into its own folder.
 	run.header.run_uuid = "%016x" % LbHash.sub_seed(_seed, HashDomain.NET_TOKEN, PackedInt64Array([-9]), 0)
 	run.saves.enabled = Variants.flag(cfg.get("saves", false)) and mode != ServerConfig.Mode.PUBLIC

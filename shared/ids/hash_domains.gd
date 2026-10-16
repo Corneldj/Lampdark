@@ -27,6 +27,7 @@ const PROFILE_NAMES: int = 21  # stream, MOD-01
 const PROFILE_LAMP_NUMBERS: int = 22  # stream, MOD-01
 const GEN_MAINROAD: int = 24  # hash, GEN-07
 const GEN_OLDFALL: int = 25  # hash, GEN-07
+const DIRECTOR_PEAK_HOLD: int = 26  # stream, DIR-01
 
 const ALL: Dictionary = {
 	"gen.socket.open": 1,
@@ -54,4 +55,5 @@ const ALL: Dictionary = {
 	"profile.lamp_numbers": 22,
 	"gen.mainroad": 24,
 	"gen.oldfall": 25,
+	"director.peak_hold": 26,
 }
