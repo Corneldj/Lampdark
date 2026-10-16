@@ -47,7 +47,7 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 			ci.draw_line(at_px, at_px + Vector2(0.14, -0.36) * px, BODY, 0.09 * px)
 			ci.draw_circle(at_px + Vector2(0.14, -0.36) * px, 0.08 * px, Palette.CHALK_WHITE.darkened(0.3))
 		SeenKind.Kind.FIXTURE:
-			draw_fixture(ci, int(Variants.number(e.get("in_hand", 0))), at_px, px)
+			draw_fixture(ci, int(Variants.number(e.get("in_hand", 0))), at_px, px, t)
 		SeenKind.Kind.ITEM:
 			# Its kind rides in the held field (replication's lying things): a grey-box shape per kind.
 			var held: int = int(Variants.number(e.get("in_hand", 0)))
@@ -62,9 +62,26 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 
 
 ## A fixture by the kind in its held field: LFT-06's paraffin tank, its sight glass marked once a can
-## of capacity with the paraffin's line (a glass to read up close, never a meter).
-static func draw_fixture(ci: CanvasItem, held: int, at: Vector2, px: float) -> void:
+## of capacity with the paraffin's line (a glass to read up close, never a meter); LFT-08's engine:
+## the prime's pump, the throttle's lever, and the crank's wheel on the engine block, still when
+## cold, shuddering at the top of a stroke, its flywheel turning when it runs.
+static func draw_fixture(ci: CanvasItem, held: int, at: Vector2, px: float, t: float = 0.0) -> void:
+	var w: float = maxf(1.5, 0.05 * px)
 	match FixtureKinds.kind_of(held):
+		FixtureKinds.Kind.ENGINE_PRIME:
+			ci.draw_rect(Rect2(at - Vector2(0.12, 0.25) * px, Vector2(0.24, 0.5) * px), DARK)
+			ci.draw_line(at - Vector2(0.0, 0.25) * px, at - Vector2(0.0, 0.42) * px, BODY, w * 1.6)
+		FixtureKinds.Kind.ENGINE_THROTTLE:
+			ci.draw_rect(Rect2(at - Vector2(0.15, 0.1) * px, Vector2(0.3, 0.2) * px), DARK)
+			ci.draw_line(at, at + Vector2(0.18, -0.3) * px, BODY, w * 1.6)
+		FixtureKinds.Kind.ENGINE_CRANK:
+			var look: FixtureKinds.Look = FixtureKinds.look_of(held)
+			var shake: Vector2 = Vector2(sin(t * 47.0), cos(t * 53.0)) * 0.03 * px if look == FixtureKinds.Look.SHUDDER else Vector2.ZERO
+			var block: Vector2 = at + shake
+			ci.draw_rect(Rect2(block - Vector2(0.42, 0.32) * px, Vector2(0.84, 0.64) * px), DARK)
+			var spin: float = t * TAU * 1.5 if look == FixtureKinds.Look.RUNNING else 0.0
+			ci.draw_arc(block, 0.22 * px, 0.0, TAU, 18, BODY, w * 1.4)
+			ci.draw_line(block, block + Vector2.from_angle(spin) * 0.22 * px, BODY, w * 1.4)
 		FixtureKinds.Kind.TANK_GLASS:
 			var glass: Dictionary = FixtureKinds.read_tank_glass(held)
 			var cans: int = maxi(1, int(Variants.number(glass["cans"])))

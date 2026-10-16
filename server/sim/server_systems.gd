@@ -244,6 +244,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.fuel = FuelTank.new()
 	run.fuel.bind(run)
 	run.add_system(run.fuel)
+	# LFT-08: the engine that starts the winder (its crank and throttle join the jobs for two).
+	run.engine = WinderEngine.new()
+	run.engine.bind(run)
+	run.add_system(run.engine)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:

@@ -6,8 +6,11 @@ extends RefCounted
 ##
 ## LFT-06's sight glass on the winder's paraffin tank (Proposed): one mark per can of capacity and
 ## the paraffin's line in lamp fills. A glass to look at, never a number or a meter on screen.
+## LFT-08's engine: its prime, its crank (bits 4-5 the winder's look: cold, shuddering, running)
+## and its throttle.
 
-enum Kind { NONE = 0, TANK_GLASS = 1 }
+enum Kind { NONE = 0, TANK_GLASS = 1, ENGINE_PRIME = 2, ENGINE_CRANK = 3, ENGINE_THROTTLE = 4 }
+enum Look { COLD = 0, SHUDDER = 1, RUNNING = 2 }
 
 const KIND_MASK: int = 0xF
 
@@ -24,3 +27,12 @@ static func tank_glass(capacity_cans: int, level_fills: int) -> int:
 ## {cans, fills} of a tank glass's bits.
 static func read_tank_glass(bits: int) -> Dictionary:
 	return {"cans": (bits >> 4) & 0xF, "fills": (bits >> 8) & 0x7F}
+
+
+## The engine's crank with the winder's look.
+static func engine(look: int) -> int:
+	return Kind.ENGINE_CRANK | (clampi(look, 0, 3) << 4)
+
+
+static func look_of(bits: int) -> Look:
+	return ((bits >> 4) & 0x3) as Look

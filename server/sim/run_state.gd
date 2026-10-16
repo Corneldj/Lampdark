@@ -145,6 +145,8 @@ var two_miner: TwoMinerJobs = null
 var repair: RepairListState = null
 ## LFT-06: the winder's paraffin tank.
 var fuel: FuelTank = null
+## LFT-08: the winder's paraffin engine.
+var engine: WinderEngine = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

@@ -80,6 +80,8 @@ var _shots_seen: int = 0
 var _doors_seen: int = 0
 ## LFT-04: two-miner job events already written.
 var _jobs_seen: int = 0
+## LFT-08: engine events (primes, catches, backfires, stops) already written.
+var _engine_seen: int = 0
 var _last_sound: int = 0
 var _last_sources: Dictionary = {}
 var _last_ids: PackedInt64Array = PackedInt64Array()
@@ -431,6 +433,10 @@ func _tick_entry(run: RunState) -> Dictionary:
 	if run.two_miner != null and run.two_miner.log.size() > _jobs_seen:
 		e["job"] = _plain(run.two_miner.log.slice(_jobs_seen))
 		_jobs_seen = run.two_miner.log.size()
+	# LFT-08: the engine's primes, catches, backfires and stops.
+	if run.engine != null and run.engine.log.size() > _engine_seen:
+		e["engine"] = _plain(run.engine.log.slice(_engine_seen))
+		_engine_seen = run.engine.log.size()
 	for pair: Array in [["v", _voice], ["g", _creature_log], ["lie", _lies], ["fall", _falls], ["death", _deaths]]:
 		var list: Array = pair[1]
 		if not list.is_empty():

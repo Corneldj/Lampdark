@@ -30,6 +30,14 @@ func test_each_kind_its_verb() -> void:
 	for kind: int in [SeenKind.Kind.STYTHE, SeenKind.Kind.MOTH, SeenKind.Kind.BESS, SeenKind.Kind.TAPPER, SeenKind.Kind.TRAP,
 			SeenKind.Kind.COAT_HEAP, SeenKind.Kind.UNKNOWN]:
 		assert_eq(InteractionVerbs.for_seen(kind), "", "no verb: no glyph (%d)" % kind)
+	# LFT-06's tank and LFT-08's engine: the fixture's kind, as the glyph reads its held field.
+	var fixture: int = SeenKind.Kind.FIXTURE
+	assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.tank_glass(4, 9) & 0x3F), "verb.pour")
+	assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.Kind.ENGINE_PRIME), "verb.prime")
+	for look: int in FixtureKinds.Look.values():
+		assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.engine(look) & 0x3F), "verb.crank", "the crank, whatever the winder's look")
+	assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.Kind.ENGINE_THROTTLE), "verb.throttle")
+	assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.Kind.NONE), "", "an unknown fixture: no glyph")
 
 
 func test_never_on_a_token_and_the_nearest_wins() -> void:

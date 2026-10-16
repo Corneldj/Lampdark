@@ -332,10 +332,15 @@ func _push_arms(run: RunState) -> void:
 			native.set_entity_facing(t.hunt.arm, t.hunt.arm_facing)
 
 
-## LFT-06: the paraffin tank's sight glass, as its identity record shows it (FixtureKinds).
+## LFT-06's sight glass and LFT-08's engine, as their identity records show them (FixtureKinds).
 func _push_fixtures(run: RunState) -> void:
 	if run.fuel != null and run.fuel.glass != 0 and run.registry.has(run.fuel.glass):
 		native.set_entity_held(run.fuel.glass, run.fuel.glass_bits(run))
+	if run.engine != null:
+		var bits: Dictionary = run.engine.fixture_bits()
+		for raw: Variant in bits.keys():
+			if run.registry.has(int(Variants.number(raw))):
+				native.set_entity_held(int(Variants.number(raw)), int(Variants.number(bits[raw])))
 
 
 ## MNR-13: a body over a carrier's shoulder is never sent as its own token.

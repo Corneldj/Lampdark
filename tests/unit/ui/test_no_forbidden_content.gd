@@ -47,6 +47,12 @@ func test_every_key_an_element_can_show_has_text() -> void:
 			var verb: String = InteractionVerbs.for_seen(kind, cues)
 			if not verb.is_empty():
 				keys.append(verb)
+	for item_kind: int in ItemKinds.Kind.values():
+		keys.append(InteractionVerbs.for_seen(SeenKind.Kind.ITEM, 0, item_kind))
+	for fixture_kind: int in FixtureKinds.Kind.values():
+		var verb: String = InteractionVerbs.for_seen(SeenKind.Kind.FIXTURE, 0, fixture_kind)
+		if not verb.is_empty():
+			keys.append(verb)
 	for option: String in ["hand_over", "douse", "share_oil", "pass_flame", "lift", "take", "cure", "revive"]:
 		keys.append("ring.%s" % option)
 	for key: String in keys:
