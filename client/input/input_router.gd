@@ -52,6 +52,9 @@ var has_chalk: bool = true
 var coming_round: bool = false
 var lamp_in_hand: bool = false
 var target_in_reach: bool = false
+## RSC-03's struggle is offered (the own status): an interact press is a STRUGGLE action, judged at
+## the shown tick it is issued.
+var struggling: bool = false
 var ring_options: Array[String] = []
 var wheel: WheelInput = WheelInput.new()
 var ring_wheel: WheelInput = WheelInput.new()
@@ -107,6 +110,8 @@ func sample(frame: Dictionary) -> InputRecord:
 		_holds(down)
 		_lamp_and_slot(down)
 		_reconcile_lamp(now)
+		if struggling and _pressed("interact", down):
+			actions.append([ActionRecord.Kind.STRUGGLE, 0, 0])
 		_fire(down)
 		_throw(frame, down)
 	_remember(down)

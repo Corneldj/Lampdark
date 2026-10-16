@@ -1198,9 +1198,13 @@
 			"movement.hurt_duration"
 		],
 		"A.8/Self-rescue": [
-			"rescue.self_rescue_attempts_per_grab",
-			"rescue.self_rescue_hold_s",
-			"rescue.self_rescue_chance"
+			"rescue.struggle_hits",
+			"rescue.struggle_sweep_s",
+			"rescue.struggle_zone_deg",
+			"rescue.struggle_zone_shrink_deg",
+			"rescue.struggle_zone_min_deg",
+			"rescue.struggle_lockout_s",
+			"rescue.struggle_zone_ahead_deg"
 		],
 		"A.8/Drag": [
 			"stythe.drag_conscious_s",

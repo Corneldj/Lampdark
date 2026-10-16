@@ -75,11 +75,9 @@ func test_the_pick_up_notice_names_what_arrived_and_where() -> void:
 func test_the_status_line_explains_the_body() -> void:
 	var s: StatusBanner = StatusBanner.new()
 	add_child_autofree(s)
-	var pinned: Dictionary = {"cues": MinerCues.HALF_IN_WALL, "flags": StatusWire.SELF_RESCUE_OFFERED}
+	var pinned: Dictionary = {"cues": MinerCues.HALF_IN_WALL, "flags": StatusWire.STRUGGLE}
 	s.update(true, MinerTransitions.Life.GRABBED, false, pinned, 0, 0.0)
-	assert_eq([s.title_key, s.sub_key], ["status.pinned", ""], "pinned; the hint offers the struggle")
-	s.update(true, MinerTransitions.Life.GRABBED, false, {"cues": MinerCues.HALF_IN_WALL, "flags": StatusWire.SELF_RESCUE_FAILED}, 0, 0.1)
-	assert_eq(s.sub_key, "status.sub.failed")
+	assert_eq([s.title_key, s.sub_key], ["status.pinned", ""], "pinned; the ring and the hint offer the struggle")
 	s.update(true, MinerTransitions.Life.GRABBED, false, {"cues": MinerCues.DRAGGED, "flags": 0}, 0, 0.2)
 	assert_eq([s.title_key, s.sub_key], ["status.dragged", "status.sub.teammate_pull"], "in a crew: a teammate pulls you free")
 	s.update(true, MinerTransitions.Life.UPRIGHT, false, {}, 0, 0.3)
@@ -97,7 +95,7 @@ func test_the_status_line_explains_the_body() -> void:
 	assert_eq(s.title_key, "status.coming_round")
 	for key: String in ["status.pinned", "status.dragged", "status.held", "status.caught", "status.caught_jaws", "status.caught_prop",
 			"status.caught_pit", "status.unconscious", "status.coming_round", "status.dead", "status.broke_free", "status.came_round",
-			"status.sub.teammate_pull", "status.sub.teammate_free", "status.sub.failed", "status.sub.carry", "status.sub.self_revive",
+			"status.sub.teammate_pull", "status.sub.teammate_free", "status.sub.carry", "status.sub.self_revive",
 			"status.sub.revive_waits", "hint.light", "hint.open_shutter", "hint.switch_on", "hint.shutter", "hint.wick",
 			"hint.struggle", "hint.crawl", "hint.call_help", "toast.picked_up", "toast.belt", "toast.lamp_hand", "toast.free_hand",
 			"hotbar.lamp", "hotbar.hand"]:
@@ -125,19 +123,33 @@ func test_the_key_hints_say_what_to_press() -> void:
 	assert_eq(k.hints.map(func(h: Array) -> String: return str(h[1])), ["hint.shutter", "hint.wick"], "first lit: the shutter and wick keys")
 	k.update(true, MinerTransitions.Life.UPRIGHT, false, out, true, {}, r, store, 1.0 + Tuning.f(&"camera.lamp_hint_s") + 0.1)
 	assert_false(k.visible, "for a while only")
-	var offered: Dictionary = {"cues": MinerCues.HALF_IN_WALL, "flags": StatusWire.SELF_RESCUE_OFFERED}
+	var offered: Dictionary = {"cues": MinerCues.HALF_IN_WALL, "flags": StatusWire.STRUGGLE}
 	k.update(true, MinerTransitions.Life.GRABBED, false, out, true, offered, r, store, 20.0)
-	assert_eq([k.hints[0][0], k.hints[0][1]], ["E", "hint.struggle"], "pinned alone: Hold E, struggle free")
-	r.record.holds = InputRecord.HOLD_INTERACT
-	k.update(true, MinerTransitions.Life.GRABBED, false, out, true, offered, r, store, 20.1)
-	k.update(true, MinerTransitions.Life.GRABBED, false, out, true, offered, r, store, 21.1)
-	var fill: float = Variants.number(k.hints[0][3])
-	assert_almost_eq(fill, 1.0 / Tuning.f(&"rescue.self_rescue_hold_s"), 1e-6, "the ring fills from the fresh press")
-	r.record.holds = 0
-	k.update(true, MinerTransitions.Life.GRABBED, false, out, true, {"cues": MinerCues.HALF_IN_WALL, "flags": 0}, r, store, 22.0)
-	assert_false(k.visible, "no offer (a crew, or spent): no hint")
+	assert_eq([k.hints[0][0], k.hints[0][1]], ["E", "hint.struggle"], "pinned: E, press in the zone")
+	var press_hold: float = Variants.number(k.hints[0][2])
+	assert_eq(press_hold, 0.0, "a press, not a hold")
+	k.update(true, MinerTransitions.Life.GRABBED, false, out, true, {"cues": MinerCues.DRAGGED, "flags": 0}, r, store, 22.0)
+	assert_false(k.visible, "no struggle offered (dragged in a crew): no hint")
 	k.update(true, MinerTransitions.Life.UNCONSCIOUS, true, out, false, {}, r, store, 30.0)
 	assert_eq(k.hints.map(func(h: Array) -> String: return str(h[1])), ["hint.crawl", "hint.call_help"], "coming round")
 	assert_eq(str(k.hints[0][0]), "W A S D")
 	k.queue_redraw()
+	await wait_process_frames(1)
+
+
+func test_the_struggle_ring_turns_at_the_servers_pace() -> void:
+	var ring: StruggleRing = StruggleRing.new()
+	add_child_autofree(ring)
+	var st: Dictionary = {"flags": StatusWire.STRUGGLE, "epoch": 100, "sweep_ticks": 28, "zone_start": 180.0, "zone_size": 70.0,
+		"hits": 1, "needed": 3, "lockout_until": 0}
+	ring.update(true, st, Vector2(960, 540), 107.0)
+	assert_true(ring.visible)
+	assert_almost_eq(ring.needle, 90.0, 1e-6, "a quarter turn after a quarter of the sweep")
+	assert_false(ring.locked)
+	st["lockout_until"] = 110
+	ring.update(true, st, Vector2(960, 540), 108.0)
+	assert_true(ring.locked, "dimmed through a miss's lockout")
+	ring.update(true, {"flags": 0}, Vector2(960, 540), 108.0)
+	assert_false(ring.visible, "no struggle: no ring")
+	ring.queue_redraw()
 	await wait_process_frames(1)

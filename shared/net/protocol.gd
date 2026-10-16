@@ -13,7 +13,8 @@ class_name Protocol
 ## 11: NET-11's Reject.SEAT_KEPT.
 ## 12: NET-09's SAVE_DATA, JOURNAL and SAVE_ACK.
 ## 13: STATUS, the own miner's status (the first playtest's standard status and key hints).
-const PROTOCOL_VERSION: int = 13
+## 14: the struggle: ActionRecord.Kind.STRUGGLE, and STATUS carries its needle and zone.
+const PROTOCOL_VERSION: int = 14
 
 enum Msg {
 	HELLO = 1,

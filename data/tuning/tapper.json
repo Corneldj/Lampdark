@@ -647,12 +647,42 @@
 			"kind": "param",
 			"note": "ticket CRT-09"
 		},
-		"tapper.windup_s": {
-			"value": 0.5,
+		"tapper.listen_cue_tiles": {
+			"value": 8,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed (first playtest, 2026-10-16)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "Miners within this straight-line distance of the face where the Tapper goes quiet to listen are told '[the tapping stops]', and its dust trickles there if lit"
+		},
+		"tapper.strike_dust_tiles": {
+			"value": 1.0,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed (first playtest, 2026-10-16)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "The dust burst's radius at the struck face through the wind-up"
+		},
+		"tapper.listen_dust_s": {
+			"value": 2.0,
 			"type": "float",
 			"unit": "s",
-			"source": "Gameplay §7.1, A.4",
-			"starting": false,
+			"source": "Proposed (first playtest, 2026-10-16)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "How long dust trickles from the face where it goes quiet to listen"
+		},
+		"tapper.windup_s": {
+			"value": 1.25,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §7.3 (Proposed after the first playtest: 1.25 s, was 0.5; a strike must be dodgeable)",
+			"starting": true,
 			"visibility": "server",
 			"kind": "param",
 			"note": "ticket CRT-09"

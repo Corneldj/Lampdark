@@ -9,7 +9,8 @@ extends RefCounted
 ## WATCH: RSC-04's watch chooser in the Dark: 1 the next teammate, 2 the one before, 0 stop.
 ## THROW: MNR-09's stone, thrown on Use's release: arg the distance in hundredths of a tile (the cursor's
 ## distance or the stick's deflection; the server clamps it to 2-8 tiles), aim the facing.
-enum Kind { CALLOUT = 0, LAMP_SIGNAL = 1, CHALK = 2, RING_CHOICE = 3, TRIGGER = 4, TAP_ROCK = 5, CLOSE_UP = 6, WATCH = 7, THROW = 8 }
+enum Kind { CALLOUT = 0, LAMP_SIGNAL = 1, CHALK = 2, RING_CHOICE = 3, TRIGGER = 4, TAP_ROCK = 5, CLOSE_UP = 6, WATCH = 7, THROW = 8,
+	STRUGGLE = 9 }
 
 const SIZE: int = 11
 
@@ -44,4 +45,4 @@ static func unpack(from: StreamPeerBuffer) -> ActionRecord:
 
 ## True when the kind is known (always checked on the server).
 func is_valid() -> bool:
-	return kind >= Kind.CALLOUT and kind <= Kind.THROW
+	return kind >= Kind.CALLOUT and kind <= Kind.STRUGGLE

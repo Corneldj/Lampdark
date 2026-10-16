@@ -43,6 +43,9 @@ func _init(server_net: ServerNet, vision: VisionSystem, mine: Mine, secret: int)
 	for name: String in SeenKind.Kind.keys():
 		if WorldIds.EntityKind.has(name):
 			native.set_seen_kind(int(Variants.number(WorldIds.EntityKind[name])), int(Variants.number(SeenKind.Kind[name])))
+	# CRT-09: the Tapper's arm is all of it ever seen: identified as the Tapper (the first playtest
+	# found it arriving as an unknown square).
+	native.set_seen_kind(WorldIds.EntityKind.TAPPER_ARM, SeenKind.Kind.TAPPER)
 
 
 func _params(full_frames: bool) -> Dictionary:
@@ -131,6 +134,7 @@ func tick(run: RunState) -> void:
 					native.set_entity_held(m.entity_id, run.inventory.held_bits(m.entity_id))
 	_push_flames(run)
 	_push_lying_lamps(run)
+	_push_arms(run)
 	illusions_sent.clear()
 	for session: Sessions.Session in net.sessions.welcomed():
 		_ensure(session.slot)
@@ -310,6 +314,16 @@ func _push_lying_lamps(run: RunState) -> void:
 	for raw: Variant in now.keys():
 		native.set_entity_held(int(Variants.number(raw)), int(Variants.number(now[raw])))
 	_lying_set = now
+
+
+## CRT-09: each Tapper arm's facing, out of the wall toward its target.
+func _push_arms(run: RunState) -> void:
+	if run.creatures == null:
+		return
+	for c: Creature in run.creatures.creatures:
+		var t: Tapper = c as Tapper
+		if t != null and t.hunt.arm != 0:
+			native.set_entity_facing(t.hunt.arm, t.hunt.arm_facing)
 
 
 ## MNR-13: a body over a carrier's shoulder is never sent as its own token.

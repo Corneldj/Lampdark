@@ -61,7 +61,8 @@ func test_spoiled_pull_restrikes() -> void:
 	var windups: Array[Dictionary] = s.run.creatures.log.of_type(&"wind_up_started")
 	var restrike: Dictionary = windups[windups.size() - 1]
 	assert_eq(int(Variants.number(restrike["start"])) - at_spoil, 80, "the ReStrike 80 ticks after the spoiling word")
-	assert_eq(int(Variants.number(restrike["end"])) - int(Variants.number(restrike["start"])), 10, "a 0.5 s wind-up")
+	assert_eq(int(Variants.number(restrike["end"])) - int(Variants.number(restrike["start"])),
+		roundi(Tuning.f(&"tapper.windup_s") * Tuning.f(&"net.tick_hz")), "the tuned wind-up (1.25 s since the first playtest)")
 	assert_gt(landed[0], 0, "it landed: pinned again")
 	assert_eq(s.run.holds.grab_of(ann.entity_id).id, g.id, "the same grab")
 	gut.p("crush at the pull: %d ticks; at the ReStrike's landing: %d" % [elapsed, elapsed_at_landing[0]])

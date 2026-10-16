@@ -17,8 +17,6 @@ var elapsed: int = 0
 var state: State = State.ACTIVE
 var outcome: Outcome = Outcome.NONE
 var began_tick: int = 0
-## The self-rescue's one attempt is spent (solo and lone human only).
-var rescue_spent: bool = false
 
 
 ## MNR-03's name for the kind.

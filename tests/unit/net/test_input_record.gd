@@ -46,7 +46,7 @@ func test_bounds() -> void:
 	var bad_wick: PackedByteArray = PackedByteArray([0, 0, 1 | (6 << 2), 0, 0, 0, 0])
 	b.data_array = bad_wick
 	assert_false(InputRecord.unpack(b).is_valid(), "wick step 3 is out of range")
-	var action_bytes: PackedByteArray = PackedByteArray([0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0])
+	var action_bytes: PackedByteArray = PackedByteArray([0, 0, 200, 0, 0, 0, 0, 0, 0, 0, 0])
 	b.data_array = action_bytes
 	assert_false(ActionRecord.unpack(b).is_valid(), "unknown action kind")
 	assert_eq(_record(0, InputRecord.Gait.WALK, 16384, 0, 2).facing_radians(), PI / 2.0)
@@ -181,5 +181,5 @@ func test_schema_carries_intent_only() -> void:
 		for field: String in fields:
 			assert_null(forbidden.search(field), "%s is not a result field" % field)
 	var actions: PackedStringArray = PackedStringArray(ActionRecord.Kind.keys())
-	assert_eq(actions, PackedStringArray(["CALLOUT", "LAMP_SIGNAL", "CHALK", "RING_CHOICE", "TRIGGER", "TAP_ROCK", "CLOSE_UP", "WATCH", "THROW"]),
-		"a trigger carries its tick and aim; no action kind reports a hit")
+	assert_eq(actions, PackedStringArray(["CALLOUT", "LAMP_SIGNAL", "CHALK", "RING_CHOICE", "TRIGGER", "TAP_ROCK", "CLOSE_UP", "WATCH", "THROW",
+		"STRUGGLE"]), "a trigger carries its tick and aim; a struggle only its tick (the server judges it); no action kind reports a hit")

@@ -101,8 +101,9 @@ func test_a_member_assembles_the_same_file_from_the_parts() -> void:
 
 
 func test_seeds_and_streams_stay_inside_the_sealed_sections() -> void:
-	S.clear(941)
-	var s: Scenario = make(S.cfg(941))
+	# A long seed: a short one's decimal digits turn up by chance in the plain bundle hash.
+	S.clear(941941941941)
+	var s: Scenario = make(S.cfg(941941941941))
 	var ann: MinerHandle = S.miner(s, "ann", Vector2i(3, 3))
 	S.miner(s, "bob", Vector2i(8, 3))
 	s.step(10)

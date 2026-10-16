@@ -115,7 +115,7 @@ func end_grab(run: RunState, grab_id: int, outcome: GrabHold.Outcome) -> bool:
 				run.miner_state.end_grab(g.victim, false)
 			_:
 				run.miner_state.end_grab(g.victim, was != GrabHold.State.BODY)
-	self_rescue.progress.erase(grab_id)
+	self_rescue.checks.erase(grab_id)
 	log_event(run, &"grab_ended", {"grab_id": grab_id, "outcome": outcome})
 	grab_ended.emit(grab_id, outcome)
 	return true
@@ -217,7 +217,11 @@ func write_state(writer: SimStateWriter) -> void:
 		writer.put_i64(g.victim)
 		writer.put_i64(g.state)
 		writer.put_i64(g.elapsed)
-		writer.put_bool(g.rescue_spent)
+		var k: SelfRescue.Check = self_rescue.check_of(g.id)
+		writer.put_i64(k.hits if k != null else -1)
+		writer.put_i64(roundi(k.zone_start * 100.0) if k != null else 0)
+		writer.put_i64(roundi(k.zone_size * 100.0) if k != null else 0)
+		writer.put_i64(k.lockout_until if k != null else -1)
 	var victims: Array = caught.keys()
 	victims.sort()
 	writer.put_i64(victims.size())

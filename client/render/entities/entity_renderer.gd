@@ -24,7 +24,21 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 		SeenKind.Kind.COAT_HEAP:
 			ci.draw_circle(at_px, 0.5 * px, BODY)
 		SeenKind.Kind.TAPPER:
-			ci.draw_line(at_px, at_px + facing * 0.6 * px, DARK, 0.12 * px)
+			# Its arm out of the wall (the record sits 0.75 tiles from the face, facing out): a jointed
+			# limb of coal and bone, five nails at the tip.
+			var root: Vector2 = at_px - facing * 0.7 * px
+			var side: Vector2 = Vector2(-facing.y, facing.x)
+			var joint: Vector2 = at_px - facing * 0.15 * px + side * 0.08 * px
+			var tip: Vector2 = at_px + facing * 0.35 * px
+			var bone: Color = Palette.CHALK_WHITE.darkened(0.45)
+			ci.draw_line(root, joint, DARK, 0.2 * px)
+			ci.draw_line(joint, tip, DARK, 0.16 * px)
+			ci.draw_line(root, joint, bone, 0.06 * px)
+			ci.draw_line(joint, tip, bone, 0.05 * px)
+			ci.draw_circle(joint, 0.09 * px, bone)
+			for i: int in 5:
+				var spread: float = (i - 2) * 0.07
+				ci.draw_line(tip, tip + (facing * 0.16 + side * spread) * px, bone.lightened(0.2), maxf(1.5, 0.025 * px))
 		SeenKind.Kind.BESS:
 			ci.draw_rect(Rect2(at_px - Vector2(0.6, 0.3) * px, Vector2(1.2, 0.6) * px), BODY)
 		SeenKind.Kind.LEVER:

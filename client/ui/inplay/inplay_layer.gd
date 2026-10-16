@@ -20,6 +20,7 @@ var hotbar: Hotbar = Hotbar.new()
 var pickup: PickupNotice = PickupNotice.new()
 var status: StatusBanner = StatusBanner.new()
 var hints: KeyHints = KeyHints.new()
+var struggle: StruggleRing = StruggleRing.new()
 ## UI-06's streamer mode: the Aside tag shows only with it on.
 var streamer_mode: bool = false
 ## The last check's violations (debug and test builds).
@@ -35,7 +36,7 @@ var _was_holding: bool = false
 func _init() -> void:
 	layer = LAYER
 	name = "InPlay"
-	for element: Node in [check_lamp, glyph, feel.arc, feel, wheel, ring, aside, hotbar, pickup, status, hints]:
+	for element: Node in [check_lamp, glyph, feel.arc, feel, wheel, ring, aside, hotbar, pickup, status, hints, struggle]:
 		add_child(element)
 
 
@@ -97,6 +98,8 @@ func update(frame: Dictionary) -> void:
 	pickup.update(play_shown and not check_lamp.visible, inventory, store, family, now_s)
 	status.update(not in_close_up, life, in_window, own_status, int(Variants.number(frame.get("server_tick", 0))), now_s)
 	hints.update(not in_close_up and not check_lamp.visible, life, in_window, inventory, lamp_shows != 0, own_status, router, store, now_s)
+	struggle.update(not black and not in_close_up and life == StatusWire.LIFE_GRABBED, own_status, own_px,
+		float(Variants.number(frame.get("shown_tick", frame.get("server_tick", 0)))))
 	var anchor: Vector2 = frame.get("wheel_anchor", own_px)
 	var short_side: float = float(Variants.number(frame.get("short_side", 1080.0)))
 	var open_wheel: bool = router != null and router.context == InputContexts.Context.WHEEL

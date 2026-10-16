@@ -11,7 +11,8 @@ const META: StringName = &"screen_element"
 ## The hotbar, the pick-up notice, the status line and the key hints are the first playtest's
 ## standard implementations (Gameplay §14.3, Proposed).
 const TYPES: Array[StringName] = [&"interaction_glyph", &"feel_glyph", &"arc", &"breath_cloud", &"check_lamp", &"wheel",
-	&"aside_tag", &"caption", &"edge_glow", &"own_miner", &"hotbar", &"pickup_notice", &"status", &"hint"]
+	&"aside_tag", &"caption", &"edge_glow", &"own_miner", &"hotbar", &"pickup_notice", &"status", &"hint",
+	&"struggle"]
 ## UI-01's colours: plain and modern, and never the world's reserved amber, umber, egg-glow or
 ## firedamp blue (Palette.RESERVED_FOR_WORLD).
 const INK: Color = Color(0.93, 0.93, 0.95)

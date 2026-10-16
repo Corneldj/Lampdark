@@ -14,6 +14,8 @@ var pin: TapperPin = TapperPin.new()
 var face: Vector2i = Vector2i.ZERO
 var until: int = -1
 var arm: int = 0
+## The arm's facing out of the wall toward its target (u16, as a miner's facing): the client draws it.
+var arm_facing: int = 0
 var striking: int = 0
 ## LFT-10: () -> Array[Vector2i], the cage's sides as faces in the ride's bare-rock window.
 var extra_faces: Callable = func() -> Array[Vector2i]: return []
@@ -93,7 +95,10 @@ func tick(run: RunState, t: Tapper, heard: Array[TapperHearing.HeardEvent]) -> v
 				pin.tick(run, t, self, heard)
 
 
-## The 0.5 s wind-up at the face nearest the miner: the arm leaves the wall with a double tap.
+## The wind-up (tapper.windup_s) at the face nearest the miner: the arm leaves the wall with a double
+## tap. The target is warned unmistakably (the first playtest: the strike could not be told from
+## its hunting taps, nor dodged in 0.5 s): a crack only they hear, beside them ('[the rock cracks
+## beside you!]'), and dust bursting off that face for anyone who sees it lit.
 func begin_windup(run: RunState, t: Tapper, miner: int) -> void:
 	var faces: Array[Vector2i] = faces_here(run, t)
 	if faces.is_empty():
@@ -108,6 +113,7 @@ func begin_windup(run: RunState, t: Tapper, miner: int) -> void:
 	t.follower.stop()
 	_arm_out(run, at)
 	run.noise.emit(NoiseTypes.Type.ROCK_TAP, face, {"level_np": Tuning.f(&"tapper.tap_np"), "source": t.entity_id})
+	_warn_strike(run, _slot_of(run, miner), face)
 	var strike_face: Vector2i = face
 	var reach: float = Tuning.f(&"tapper.reach_tiles")
 	var slot: int = _slot_of(run, miner)
@@ -188,6 +194,7 @@ func _arm_out(run: RunState, toward: Vector2) -> void:
 	var centre: Vector2 = Vector2(face) + Vector2(0.5, 0.5)
 	var dir: Vector2 = (toward - centre).normalized() if toward.distance_to(centre) > 0.01 else Vector2.ZERO
 	arm = run.registry.create(WorldIds.EntityKind.TAPPER_ARM, centre + dir * 0.75).id
+	arm_facing = Intents.facing_u16(rad_to_deg(atan2(dir.y, dir.x))) if dir != Vector2.ZERO else 0
 
 
 func _after_miss(run: RunState, t: Tapper) -> void:
@@ -202,6 +209,51 @@ func _after_miss(run: RunState, t: Tapper) -> void:
 func _listen(run: RunState, t: Tapper) -> void:
 	t.enter(run, &"listen", "at the wall")
 	until = run.tick + roundi(CreatureTables.tapper_listen_pause_s(run.crew.count if run.crew != null else 1) * Tuning.f(&"net.tick_hz"))
+	_cue_listening(run, face)
+
+
+## The strike's warning to its target: a crack beside them only they hear (a local sound, not a Road
+## Graph event: nothing else hears it), and dust bursting off the face through the wind-up.
+func _warn_strike(run: RunState, slot: int, at_face: Vector2i) -> void:
+	var centre: Vector2 = Vector2(at_face) + Vector2(0.5, 0.5)
+	if run.tells != null:
+		run.tells.dust_burst(centre, Tuning.f(&"tapper.strike_dust_tiles"), Tuning.f(&"tapper.windup_s"))
+	if slot < 0 or run.audio == null:
+		return
+	var r: AudioRecord = AudioRecord.new()
+	r.type = LocalSounds.Type.ROCK_CRACK
+	r.start_tick = run.tick
+	r.apparent = centre
+	r.level_np = 0.0
+	r.remaining_np = 0.0
+	r.duration_s = Tuning.f(&"tapper.windup_s")
+	r.flags = AudioRecord.LOCAL
+	run.audio.deliver(slot, r)
+
+
+## Going quiet to listen, near a miner: '[the tapping stops]' (diffuse: never where), and dust
+## trickling from the face, seen only where lit. The silence the design calls the tell made legible.
+func _cue_listening(run: RunState, at_face: Vector2i) -> void:
+	if run.movement == null:
+		return
+	var centre: Vector2 = Vector2(at_face) + Vector2(0.5, 0.5)
+	var near: bool = false
+	for slot: int in run.movement.miner_slots():
+		var m: MovementSystem.Miner = run.movement.miner(slot)
+		if Vector2(m.state.x, m.state.y).distance_to(centre) > Tuning.f(&"tapper.listen_cue_tiles") + 1e-9:
+			continue
+		near = true
+		if run.audio != null:
+			var r: AudioRecord = AudioRecord.new()
+			r.type = LocalSounds.Type.ROCK_HUSH
+			r.start_tick = run.tick
+			r.level_np = 0.0
+			r.remaining_np = 0.0
+			r.duration_s = Tuning.f(&"tapper.listen_dust_s")
+			r.flags = AudioRecord.DIFFUSE
+			run.audio.deliver(slot, r)
+	if near and run.tells != null:
+		run.tells.dust_burst(centre, 0.6, Tuning.f(&"tapper.listen_dust_s"))
 
 
 static func _loudest(heard: Array[TapperHearing.HeardEvent]) -> TapperHearing.HeardEvent:

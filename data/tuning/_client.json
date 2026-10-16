@@ -1,5 +1,5 @@
 {
-	"hash": "f89438e3e556a7aa74cf2f8a2a42a537f843e83a480ce74d6950dab084d9bbc6",
+	"hash": "5ac5100cc7f4bfafd008bbb8e51d60e70215b7476045af97d11d8d36902b2f9c",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -963,13 +963,6 @@
 		},
 		"rescue.kit_use_s": {
 			"value": 5.0,
-			"type": "float",
-			"unit": "s",
-			"visibility": "client",
-			"kind": "param"
-		},
-		"rescue.self_rescue_hold_s": {
-			"value": 2.0,
 			"type": "float",
 			"unit": "s",
 			"visibility": "client",

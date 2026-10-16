@@ -102,7 +102,7 @@ func test_an_invalid_action_is_skipped_without_stalling_the_rest() -> void:
 	var p: InputPacket = InputPacket.new()
 	p.inputs.append(InputRecord.new())
 	var bad: ActionRecord = ActionRecord.new()
-	bad.kind = 9 as ActionRecord.Kind
+	bad.kind = 200 as ActionRecord.Kind
 	var good: ActionRecord = ActionRecord.new()
 	good.action_seq = 1
 	p.actions = [bad, good] as Array[ActionRecord]

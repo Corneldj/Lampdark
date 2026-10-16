@@ -140,35 +140,75 @@
 			"kind": "param",
 			"note": "ticket RSC-08"
 		},
-		"rescue.self_rescue_attempts_per_grab": {
-			"value": 1,
-			"type": "float",
-			"unit": "attempts",
-			"source": "Gameplay §11.11",
-			"starting": false,
+		"rescue.struggle_hits": {
+			"value": 3,
+			"type": "int",
+			"unit": "count",
+			"source": "Gameplay §11.3, §11.11 (Proposed after the first playtest: a skill check replaces the 50% roll)",
+			"starting": true,
 			"visibility": "server",
 			"kind": "param",
-			"note": "ticket RSC-03"
+			"note": "Presses inside the zone that break a grab free"
 		},
-		"rescue.self_rescue_chance": {
-			"value": 0.5,
-			"type": "float",
-			"unit": "probability",
-			"source": "Gameplay §11.11, §A.8",
-			"starting": false,
-			"visibility": "server",
-			"kind": "param",
-			"note": "ticket RSC-03"
-		},
-		"rescue.self_rescue_hold_s": {
-			"value": 2,
+		"rescue.struggle_sweep_s": {
+			"value": 1.4,
 			"type": "float",
 			"unit": "s",
-			"source": "Gameplay §11.11, §A.8",
-			"starting": false,
-			"visibility": "client",
+			"source": "Gameplay §11.3, §11.11 (Proposed after the first playtest: a skill check replaces the 50% roll)",
+			"starting": true,
+			"visibility": "server",
 			"kind": "param",
-			"note": "ticket RSC-03"
+			"note": "One turn of the struggle's needle"
+		},
+		"rescue.struggle_zone_deg": {
+			"value": 70,
+			"type": "float",
+			"unit": "deg",
+			"source": "Gameplay §11.3, §11.11 (Proposed after the first playtest: a skill check replaces the 50% roll)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "The zone's size at the start of a struggle"
+		},
+		"rescue.struggle_zone_shrink_deg": {
+			"value": 15,
+			"type": "float",
+			"unit": "deg",
+			"source": "Gameplay §11.3, §11.11 (Proposed after the first playtest: a skill check replaces the 50% roll)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "How much a miss shrinks the zone"
+		},
+		"rescue.struggle_zone_min_deg": {
+			"value": 30,
+			"type": "float",
+			"unit": "deg",
+			"source": "Gameplay §11.3, §11.11 (Proposed after the first playtest: a skill check replaces the 50% roll)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "The smallest the zone gets"
+		},
+		"rescue.struggle_lockout_s": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Gameplay §11.3, §11.11 (Proposed after the first playtest: a skill check replaces the 50% roll)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "After a miss, presses are ignored this long (no mashing)"
+		},
+		"rescue.struggle_zone_ahead_deg": {
+			"value": [100, 260],
+			"type": "range",
+			"unit": "deg",
+			"source": "Gameplay §11.3, §11.11 (Proposed after the first playtest: a skill check replaces the 50% roll)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "Where a new zone appears, ahead of the needle"
 		},
 		"rescue.self_revive_delay_s": {
 			"value": 30,

@@ -25,7 +25,11 @@ static func stream(type: int) -> AudioStreamWAV:
 		kind = "bell"
 	elif id.contains("hiss") or id.contains("ticking") or id.contains("moth"):
 		kind = "hiss"
-	var s: AudioStreamWAV = make(kind, 0.4 if kind != "bell" else 0.8, type)
+	if id == "rock_crack":
+		kind = "crack"
+	elif id == "rock_hush":
+		kind = "trickle"
+	var s: AudioStreamWAV = make(kind, 0.8 if kind == "bell" or kind == "crack" else (1.2 if kind == "trickle" else 0.4), type, 0.35 if kind == "trickle" else 1.0)
 	_cache[type] = s
 	return s
 
@@ -124,6 +128,10 @@ static func make(kind: String, seconds: float, seed_value: int, level: float = 1
 				v = 0.6 * sin(TAU * 50.0 * t) + 0.3 * sin(TAU * 100.0 * t)
 			"hiss":
 				v = rng.randf_range(-1.0, 1.0) * 0.5
+			"crack":  # the strike from the rock: a sharp split of rock over a low knock
+				v = rng.randf_range(-1.0, 1.0) * exp(-t * 26.0) + 0.8 * sin(TAU * 90.0 * t) * exp(-t * 9.0)
+			"trickle":  # it goes quiet: a few grains of grit falling, very soft
+				v = rng.randf_range(-1.0, 1.0) * 0.25 * exp(-fmod(t, 0.23) * 60.0) * exp(-t * 2.0)
 			"ringing":
 				v = (sin(TAU * 3800.0 * t) + 0.3 * sin(TAU * 4100.0 * t)) * (1.0 - t / seconds)
 			_:

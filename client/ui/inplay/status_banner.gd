@@ -32,9 +32,7 @@ func update(shown: bool, life: int, in_window: bool, status: Dictionary, server_
 	match life:
 		StatusWire.LIFE_GRABBED:
 			title_key = "status.pinned" if (cues & MinerCues.HALF_IN_WALL) != 0 else ("status.dragged" if (cues & MinerCues.DRAGGED) != 0 else "status.held")
-			if (flags & StatusWire.SELF_RESCUE_FAILED) != 0:
-				sub_key = "status.sub.failed"
-			elif (flags & StatusWire.SELF_RESCUE_OFFERED) == 0:
+			if (flags & StatusWire.STRUGGLE) == 0:
 				sub_key = "status.sub.teammate_pull"
 		StatusWire.LIFE_CAUGHT:
 			title_key = "status.caught"

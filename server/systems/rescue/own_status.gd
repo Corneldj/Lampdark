@@ -1,8 +1,8 @@
 class_name OwnStatus
 extends RefCounted
-## The own miner's status as StatusWire carries it (to its owner only): its body cues, the self-rescue
-## offer (RSC-03's SelfRescue: alone, the grab live, its one attempt unspent) or its failure, and the
-## self-revive's count (RSC-09 fills the REVIVE flags). Server-only; the replication sends it on change.
+## The own miner's status as StatusWire carries it (to its owner only): its body cues, the struggle
+## while one is offered (RSC-03's SelfRescue: its needle and zone, the hits made and needed), and the
+## self-revive's count (RSC-09). Server-only; the replication sends it on change.
 
 
 static func of(run: RunState, miner: int) -> Dictionary:
@@ -13,11 +13,16 @@ static func of(run: RunState, miner: int) -> Dictionary:
 	var flags: int = 0
 	if run.holds != null:
 		var g: GrabHold = run.holds.grab_of(miner)
-		if g != null and g.is_live():
-			if SelfRescue.offered(run, g):
-				flags |= StatusWire.SELF_RESCUE_OFFERED
-			elif g.rescue_spent and g.state == GrabHold.State.ACTIVE:
-				flags |= StatusWire.SELF_RESCUE_FAILED
+		var k: SelfRescue.Check = run.holds.self_rescue.check_of(g.id) if g != null else null
+		if k != null and SelfRescue.offered(run, g):
+			flags |= StatusWire.STRUGGLE
+			out["epoch"] = k.epoch
+			out["sweep_ticks"] = SelfRescue.sweep_ticks()
+			out["zone_start"] = k.zone_start
+			out["zone_size"] = k.zone_size
+			out["hits"] = k.hits
+			out["needed"] = Tuning.i(&"rescue.struggle_hits")
+			out["lockout_until"] = maxi(0, k.lockout_until)
 	# RSC-09: the self-revive's count, for the status line's ring.
 	if run.self_revive != null:
 		var r: Dictionary = run.self_revive.status_of(run, miner)

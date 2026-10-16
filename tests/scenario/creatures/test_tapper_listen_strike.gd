@@ -71,3 +71,33 @@ func test_the_arm_is_seen_the_tapper_never() -> void:
 	assert_eq(t.state.name, &"pin")
 	assert_ne(s.run.vision.native.sees_entity(bob.slot, t.hunt.arm), LbVision.LEVEL_NONE, "the arm out of the wall is seen in light")
 	assert_eq(s.run.vision.native.sees_entity(bob.slot, t.entity_id), LbVision.LEVEL_NONE, "the Tapper in the rock never is")
+
+
+## The first playtest: its silence was the tell nobody noticed. Going quiet to listen within
+## tapper.listen_cue_tiles of a miner, it tells them '[the tapping stops]' (diffuse: never where),
+## and its dust trickles from the face; a miner far off is told nothing.
+func test_going_quiet_near_a_miner_is_noticed() -> void:
+	var s: Scenario = make({"seed": 4, "fixture": W.road()})
+	var bob: MinerHandle = s.add_miner("bob", Vector2i(14, 5))
+	bob.brain = null
+	var far: MinerHandle = s.add_miner("far", Vector2i(40, 5))
+	far.brain = null
+	var heard: Dictionary = {}
+	var prev: Callable = s.run.audio.sink
+	s.run.audio.sink = func(slot: int, r: AudioRecord) -> void:
+		if r.type == LocalSounds.Type.ROCK_HUSH:
+			heard[slot] = r.flags
+		if prev.is_valid():
+			prev.call(slot, r)
+	var t: Tapper = W.tapper(s, Vector2i(10, 4))
+	t.follower.stop()
+	s.step(2)
+	var bursts: int = s.run.tells.bursts_sent
+	W.talk(s, bob)
+	W.until_state(s, t, &"listen", 200)
+	assert_eq(t.state.name, &"listen", "it came to the wall nearest the sound and went quiet")
+	s.step(1)
+	assert_true(heard.has(bob.slot), "Bob is told the tapping stopped")
+	assert_ne(int(Variants.number(heard.get(bob.slot, 0))) & AudioRecord.DIFFUSE, 0, "from nowhere in particular")
+	assert_false(heard.has(far.slot), "the far miner is told nothing")
+	assert_gte(s.run.tells.bursts_sent, bursts, "its dust trickles where lit")

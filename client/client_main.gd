@@ -352,6 +352,8 @@ func _input(event: InputEvent) -> void:
 func _sample_input(shown_tick: int) -> InputRecord:
 	router.know_inventory(connection.inventory)
 	router.know_ring(connection.ring)
+	router.struggling = (int(Variants.number(connection.status.get("flags", 0))) & StatusWire.STRUGGLE) != 0 \
+		and DarkView.life_of(connection.view) == StatusWire.LIFE_GRABBED
 	source.wheel_open = router.picking()
 	var frame: Dictionary = source.frame(Time.get_ticks_msec() / 1000.0, bindings)
 	if steam != null and steam.overlay_active:
@@ -432,6 +434,7 @@ func _show_in_play(own: Vector2) -> void:
 		"black": world_view.mode == WorldView.Mode.BLACK, "inventory": connection.inventory, "feel": connection.feel,
 		"router": router, "store": bindings, "wheel_anchor": source.wheel_anchor() if router.family == "kbm" else screen / 2.0,
 		"status": connection.status, "server_tick": connection.last_frame_tick,
+		"shown_tick": _shown_tick_f(),
 		"short_side": minf(screen.x, screen.y), "now_s": Time.get_ticks_msec() / 1000.0})
 	if config.build.is_release():
 		return
@@ -439,6 +442,12 @@ func _show_in_play(own: Vector2) -> void:
 		if not _ui_violations_seen.has(v):
 			_ui_violations_seen[v] = true
 			push_error("UI-01: unregistered in-play element %s" % v)
+
+
+## The tick the client shows now, with its fraction (the struggle's needle turns smoothly on it).
+func _shown_tick_f() -> float:
+	var stamp: PackedInt64Array = connection.shown_stamp(Transport.now_usec())
+	return float(stamp[0]) + stamp[1] / 256.0
 
 
 ## NET-12: one probe frame against the lamp the client predicts, and a telemetry line each minute.

@@ -3,10 +3,10 @@ extends Node2D
 ## Standard contextual key hints above the hotbar (the first playtest: nothing said how to light the
 ## lamp or how to get free; GDD §14.4 shows each lamp key once in a first run, MOD-04, and this shows
 ## them whenever they apply): "Hold R · Light the lamp" with a lamp out in hand, "Q · Open the
-## shutter" with it shuttered, the shutter and wick keys for a while after it is first lit, "Hold E ·
-## Struggle free" while the one self-rescue is offered (a ring fills from a fresh press over the
-## server's time), and coming round "W A S D · Crawl" and "Z · Call for help". Each hint is a key
-## label from the bindings and a text key; the server decides everything.
+## shutter" with it shuttered, the shutter and wick keys for a while after it is first lit, "E · Press
+## in the zone" while a struggle is offered (StruggleRing draws it), and coming round "W A S D ·
+## Crawl" and "Z · Call for help". Each hint is a key label from the bindings and a text key; the
+## server decides everything.
 
 ## [key label, verb key, hold seconds (0: a press), fill 0..1 or -1]
 var hints: Array[Array] = []
@@ -28,9 +28,8 @@ func update(shown: bool, life: int, in_window: bool, inventory: Dictionary, lamp
 	var family: String = router.family if router != null else "kbm"
 	var flags: int = int(Variants.number(status.get("flags", 0)))
 	var holds: int = router.record.holds if router != null else 0
-	if life == StatusWire.LIFE_GRABBED and (flags & StatusWire.SELF_RESCUE_OFFERED) != 0:
-		_add(store, family, "interact", "hint.struggle", Tuning.f(&"rescue.self_rescue_hold_s"),
-			_fill(&"interact", (holds & InputRecord.HOLD_INTERACT) != 0, Tuning.f(&"rescue.self_rescue_hold_s"), now_s))
+	if life == StatusWire.LIFE_GRABBED and (flags & StatusWire.STRUGGLE) != 0:
+		_add(store, family, "interact", "hint.struggle", 0.0, -1.0)
 	elif life == StatusWire.LIFE_UNCONSCIOUS and in_window:
 		var key_label: String = " ".join(PackedStringArray([GlyphText.label(store, "move_up", family), GlyphText.label(store, "move_left", family),
 			GlyphText.label(store, "move_down", family), GlyphText.label(store, "move_right", family)])) if store != null else ""
