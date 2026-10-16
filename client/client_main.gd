@@ -365,6 +365,7 @@ func _input(event: InputEvent) -> void:
 func _sample_input(shown_tick: int) -> InputRecord:
 	router.know_inventory(connection.inventory)
 	router.know_ring(connection.ring)
+	router.at_job = (int(Variants.number(connection.status.get("flags", 0))) & StatusWire.AT_JOB) != 0
 	router.struggling = (int(Variants.number(connection.status.get("flags", 0))) & StatusWire.STRUGGLE) != 0 \
 		and DarkView.life_of(connection.view) == StatusWire.LIFE_GRABBED
 	source.wheel_open = router.picking()

@@ -223,6 +223,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.add_system(run.dark)
 	# RSC-09: the solo and lone-human rules.
 	_install_lone_rules(run)
+	# LFT-04: the jobs for two (each job ticket adds its own).
+	run.two_miner = TwoMinerJobs.new()
+	run.two_miner.bind(run)
+	run.add_system(run.two_miner)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:

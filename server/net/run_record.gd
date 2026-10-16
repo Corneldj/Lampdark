@@ -78,6 +78,8 @@ var _decisions_seen: int = 0
 ## MNR-16: shots already written.
 var _shots_seen: int = 0
 var _doors_seen: int = 0
+## LFT-04: two-miner job events already written.
+var _jobs_seen: int = 0
 var _last_sound: int = 0
 var _last_sources: Dictionary = {}
 var _last_ids: PackedInt64Array = PackedInt64Array()
@@ -425,6 +427,10 @@ func _tick_entry(run: RunState) -> Dictionary:
 	if run.revolver != null and run.revolver.shots.size() > _shots_seen:
 		e["shot"] = _plain(run.revolver.shots.slice(_shots_seen))
 		_shots_seen = run.revolver.shots.size()
+	# LFT-04: cues, presses, successes and misses at the jobs for two (Inquiry lines).
+	if run.two_miner != null and run.two_miner.log.size() > _jobs_seen:
+		e["job"] = _plain(run.two_miner.log.slice(_jobs_seen))
+		_jobs_seen = run.two_miner.log.size()
 	for pair: Array in [["v", _voice], ["g", _creature_log], ["lie", _lies], ["fall", _falls], ["death", _deaths]]:
 		var list: Array = pair[1]
 		if not list.is_empty():

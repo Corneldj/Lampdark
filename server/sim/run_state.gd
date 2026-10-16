@@ -133,6 +133,8 @@ var saves: Saves = null
 var self_revive: SelfRevive = null
 var alone_watch: AloneWatch = null
 var lone: LoneSwitchboard = null
+## LFT-04: the jobs for two (cue-and-press and shared work) and their places.
+var two_miner: TwoMinerJobs = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

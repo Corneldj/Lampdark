@@ -409,6 +409,16 @@
 			"visibility": "server",
 			"kind": "target",
 			"note": "A.6 Expedition length (target)"
+		},
+		"lift.now_ruling_cap_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "a missed 'Now!' is ruled at the latest this long after the cue, whatever a stuck client still holds; ticket LFT-04"
 		}
 	}
 }

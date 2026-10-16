@@ -23,7 +23,7 @@ func test_a_lone_human_among_hands() -> void:
 	assert_true(AloneRules.is_alone(s.run, ann.entity_id), "the only human: a lone human")
 	assert_eq(s.run.crew.count, Tuning.i(&"director.lone_human_crew_count"), "crew count 1")
 	assert_eq(Tuning.i(&"director.lone_human_crew_count"), 1)
-	assert_eq(s.run.lone.active_substitutions(s.run, ann.entity_id), ["heard_by_companion", "self_rescue", "self_revive"] as Array[String])
+	assert_eq(s.run.lone.active_substitutions(s.run, ann.entity_id), ["heard_by_companion", "self_rescue", "self_revive", "solo_jobs"] as Array[String])
 	var id: int = s.run.holds.grab(s.run, ann.entity_id, GrabHold.Kind.TAPPER_PIN, 0, 400)
 	var g: GrabHold = s.run.holds.grabs[id]
 	assert_true(SelfRescue.offered(s.run, g), "the self-rescue offered")
@@ -47,7 +47,7 @@ func test_a_second_human_ends_it_in_the_same_tick() -> void:
 	var hands: Dictionary = {crew[1].entity_id: true, crew[2].entity_id: true, crew[3].entity_id: true}
 	LW.hands(s, hands)
 	s.step(2)
-	assert_eq(s.run.lone.active_substitutions(s.run, ann.entity_id).size(), 3, "alone: all on")
+	assert_eq(s.run.lone.active_substitutions(s.run, ann.entity_id).size(), 4, "alone: all on (LFT-04's solo jobs among them)")
 	# A human takes over h1 (a rejoin): two conscious humans.
 	hands.erase(crew[1].entity_id)
 	assert_eq(s.run.lone.active_substitutions(s.run, ann.entity_id), [] as Array[String], "all off at once, for her")

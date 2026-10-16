@@ -46,6 +46,8 @@ var revolver_drawn: bool = false
 var slot_kinds: Array[int] = []
 var free_kind: int = ItemKinds.Kind.NONE
 var carrying: bool = false
+## LFT-04: the own miner stands at a job for two (the own status): the job page too.
+var at_job: bool = false
 ## MNR-10: the own miner carries chalk (InventoryWire; false under the no-chalk rule): else its wheel stays shut.
 var has_chalk: bool = true
 ## RSC-04: coming round in the Dark (the callout wheel offers 'Help!' and a moan, no rings).
@@ -300,7 +302,7 @@ func _wheels(down: Dictionary, now: float, pick_vec: Vector2) -> void:
 				continue
 			if _pressed(action, down):
 				var kind: int = pair[1]
-				wheel.open(action, kind, now, carrying and action == "callout")
+				wheel.open(action, kind, now, (carrying or at_job) and action == "callout")
 				wheel.timing = action == "callout" and store.callout_timing
 				wheel.combined = action == "signal_wheel" and _same_specs("signal_wheel", "chalk_wheel") and has_chalk
 				context = InputContexts.Context.WHEEL

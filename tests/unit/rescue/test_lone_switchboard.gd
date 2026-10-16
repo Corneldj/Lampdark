@@ -2,10 +2,11 @@ extends "res://tests/scenario/kit/scenario_test.gd"
 ## RSC-09: every substitution switches on and off together with AloneRules.is_alone, and the alone
 ## watch says so (`alone_changed`). The matrix: a friends lobby of one; a friends crew that began with
 ## two (its last conscious human); one that began with three (never); Night Shift; a public lone
-## human among Hands. DIR-03 (the Pull) and LFT-04 (solo jobs) register theirs when they land.
+## human among Hands. LFT-04's solo jobs are among them; DIR-03's Pull registers only with the
+## Director installed.
 
 const LW = preload("res://tests/unit/rescue/lone_world.gd")
-const ALL: Array[String] = ["heard_by_companion", "self_rescue", "self_revive"]
+const ALL: Array[String] = ["heard_by_companion", "self_rescue", "self_revive", "solo_jobs"]
 
 
 func before_all() -> void:
@@ -62,4 +63,4 @@ func test_a_spent_self_revive_drops_out_of_the_list() -> void:
 	var ann: MinerHandle = w[1][0]
 	LW.fall(s, ann)
 	s.step(610)
-	assert_eq(_subs(s, ann), ["heard_by_companion", "self_rescue"] as Array[String], "the self-revive spent")
+	assert_eq(_subs(s, ann), ["heard_by_companion", "self_rescue", "solo_jobs"] as Array[String], "the self-revive spent")

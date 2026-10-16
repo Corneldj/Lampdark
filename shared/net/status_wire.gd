@@ -11,6 +11,8 @@ extends RefCounted
 
 ## A struggle is offered now (its fields are valid).
 const STRUGGLE: int = 1
+## LFT-04: the miner stands at a job for two (SND-11's job page replaces the callout wheel).
+const AT_JOB: int = 2
 ## RSC-09: the self-revive's count is running (due at `revive_due_tick`).
 const REVIVE_COUNTING: int = 4
 ## RSC-09: a self-revive is pending but waits (a drag holds the body).

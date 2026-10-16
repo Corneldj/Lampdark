@@ -32,5 +32,7 @@ static func of(run: RunState, miner: int) -> Dictionary:
 			flags |= StatusWire.REVIVE_WAITING
 		out["revive_due_tick"] = int(Variants.number(r.get("due_tick", 0)))
 		out["revive_ticks"] = int(Variants.number(r.get("ticks", 0)))
+	if run.two_miner != null and run.two_miner.at_two_person_job(miner):
+		flags |= StatusWire.AT_JOB
 	out["flags"] = flags
 	return out
