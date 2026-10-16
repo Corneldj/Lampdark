@@ -5,6 +5,7 @@
 // It never reads loaded cells, the diff log, entities, time, threads or call order, so a cell is
 // the same whichever way the mine is explored, after eviction and after a resume. Server-only.
 
+#include "core/gen/run_header.h"
 #include "core/gen/stub_fill.h"
 
 #include <atomic>
@@ -14,15 +15,6 @@
 #include <optional>
 
 namespace lb::core::gen {
-
-// What GEN-08's run plan fixes for generation. Until GEN-08, the seed, the socket numbers, the
-// reroll limit (GEN-12's) and the sockets forced up front (base camp's, from GEN-02).
-struct RunHeader {
-	uint64_t seed = 0;
-	SocketParams sockets;
-	int32_t reroll_limit = 20; // mine.validator_max_rerolls
-	FixedSockets forced;
-};
 
 // A cell's kind, biome and road widths (GEN-06's biome, GEN-07's main roads, GEN-09's points of
 // interest). `templated` is false for base camp, which GEN-02 builds.

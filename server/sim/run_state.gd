@@ -24,6 +24,8 @@ class Header:
 	## fixed map it plays on (GEN-03), which a resume loads again.
 	var run_uuid: String = ""
 	var map_name: String = ""
+	## GEN-08: a generated run's header and plan, as LbLayouts serialises it (RunPlan).
+	var plan: PackedByteArray = PackedByteArray()
 
 
 var header: Header = Header.new()

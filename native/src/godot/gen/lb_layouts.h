@@ -6,6 +6,7 @@
 
 #include "core/gen/gen_pool.h"
 #include "core/gen/main_roads.h"
+#include "core/gen/plan.h"
 
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/array.hpp>
@@ -54,6 +55,26 @@ public:
 	void set_verify(bool on);
 	int64_t verify_failures() const;
 
+	// GEN-08's plan for the configured seed (configure and force_socket first): params {list_kind,
+	// jobs, cans, solo, draw, staging, hard_variant, data_version, tuning: {...}}. The template
+	// version is the loaded pack's. Spine sockets and spine cells then join every derive. Returns
+	// plan_dict().
+	::godot::Dictionary plan(const ::godot::Dictionary &params);
+	// A saved header's bytes (NET-09's resume): false, changing nothing, unless they are one whole
+	// header for the configured seed.
+	bool load_plan(const ::godot::PackedByteArray &bytes);
+	// The header, serialised canonically (what a save keeps).
+	::godot::PackedByteArray plan_bytes() const;
+	// {ok, error, list_kind, jobs, cans, solo, draw, staging, hard_variant, generator_version,
+	// hash_version, template_version, data_version, sites: [{kind, need, door, door_side, cells,
+	// holds: {item: count}, spine, attempt}], spines: [{site, gate, cells, replan}], revolver,
+	// revolver_cell, boxes, homes: [names], bytes}; server-only, never sent.
+	::godot::Dictionary plan_dict() const;
+	bool is_spine_cell(::godot::Vector2i cell) const;
+	// GEN-10's and HAZ-01's sections of the header.
+	void set_home(const ::godot::String &name, const ::godot::PackedByteArray &bytes);
+	::godot::PackedByteArray home(const ::godot::String &name) const;
+
 	// GEN-11's worker pool: `threads` workers derive wanted cells (0: synchronous, in take()),
 	// below normal priority if `background` (a server on a player's machine). Set the deriver up
 	// first; reconfiguring restarts the pool and forgets every job.
@@ -97,6 +118,7 @@ private:
 	std::unique_ptr<lb::core::gen::MainRoads> roads_;
 	std::unique_ptr<lb::core::gen::MainRoadCells> road_cells_;
 	std::unique_ptr<lb::core::gen::MainRoadSockets> road_sockets_;
+	std::unique_ptr<lb::core::gen::SpineSockets> spine_sockets_;
 	std::unique_ptr<lb::core::gen::Deriver> deriver_;
 	std::unique_ptr<lb::core::gen::GenPool> pool_;
 	int64_t pool_threads_ = -1; // -1: no pool

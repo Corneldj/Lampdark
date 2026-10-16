@@ -45,7 +45,7 @@ static func capture(run: RunState, net: ServerNet) -> Dictionary:
 			seats[raw] = {"slot": s.slot, "miner": miner, "state": s.state, "token": s.token}
 	var head: Dictionary = {"run_seed": run.header.run_seed, "mode": run.header.mode, "offline": run.header.offline,
 		"run_uuid": run.header.run_uuid, "map_name": run.header.map_name, "tick": run.tick, "phase": run.phase,
-		"streams": run.stream_states(), "seats": seats}
+		"streams": run.stream_states(), "seats": seats, "plan": run.header.plan}
 	var state: Dictionary = {}
 	for sys: SimSystem in run.stages.all_systems():
 		var d: Dictionary = sys.save_state()
@@ -100,6 +100,10 @@ static func restore(run: RunState, net: ServerNet, sections: Dictionary, journal
 	run.phase = int(Variants.number(head.get("phase", 0))) as RunState.Phase
 	run.header.run_uuid = str(head.get("run_uuid", ""))
 	run.header.map_name = str(head.get("map_name", ""))
+	# GEN-08: the plan the mine was generated with (server_main loads it before any derive).
+	var plan: Variant = head.get("plan", PackedByteArray())
+	if plan is PackedByteArray:
+		run.header.plan = plan
 	run.restore_streams(Variants.dict(head.get("streams", {})))
 	var reader: SimStateReader = SimStateReader.new(section(sections, SECTION_REGISTRY))
 	run.registry.read_state(reader)

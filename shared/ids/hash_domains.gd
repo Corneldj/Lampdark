@@ -29,6 +29,7 @@ const GEN_MAINROAD: int = 24  # hash, GEN-07
 const GEN_OLDFALL: int = 25  # hash, GEN-07
 const DIRECTOR_PEAK_HOLD: int = 26  # stream, DIR-01
 const DIRECTOR_FAN_ROLL: int = 27  # stream, DIR-02
+const GEN_PLAN: int = 28  # hash, GEN-08
 
 const ALL: Dictionary = {
 	"gen.socket.open": 1,
@@ -58,4 +59,5 @@ const ALL: Dictionary = {
 	"gen.oldfall": 25,
 	"director.peak_hold": 26,
 	"director.fan_roll": 27,
+	"gen.plan": 28,
 }

@@ -170,6 +170,15 @@ func _start_network() -> bool:
 			return false
 	ServerSystems.install(run, net, mine)
 	if layouts != null:
+		# GEN-08: the plan from the seed and the list (or the save's), before any cell is derived.
+		var saved: PackedByteArray = PackedByteArray()
+		var raw: Variant = Variants.dict(_resume.get("head", {})).get("plan", null)
+		if raw is PackedByteArray:
+			saved = raw
+		if RunPlan.fix(layouts, run, saved).is_empty():
+			Log.error("the run's plan failed")
+			get_tree().quit(ExitCode.FATAL)
+			return false
 		var started_gen: int = TickTimer.now_usec()
 		# A fleet server, or one on a player's machine (hosted: a private host or Night Shift;
 		# Steam sets SteamDeck=1 on a Deck), whose workers yield to the game's frame.

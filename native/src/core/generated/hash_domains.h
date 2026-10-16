@@ -34,6 +34,7 @@ constexpr uint64_t GEN_MAINROAD = 24; // hash, GEN-07
 constexpr uint64_t GEN_OLDFALL = 25; // hash, GEN-07
 constexpr uint64_t DIRECTOR_PEAK_HOLD = 26; // stream, DIR-01
 constexpr uint64_t DIRECTOR_FAN_ROLL = 27; // stream, DIR-02
+constexpr uint64_t GEN_PLAN = 28; // hash, GEN-08
 
 struct Entry {
 	const char *name;
@@ -68,6 +69,7 @@ constexpr Entry ALL[] = {
 	{"gen.oldfall", 25},
 	{"director.peak_hold", 26},
 	{"director.fan_roll", 27},
+	{"gen.plan", 28},
 };
 constexpr size_t COUNT = sizeof(ALL) / sizeof(ALL[0]);
 

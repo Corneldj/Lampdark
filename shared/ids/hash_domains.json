@@ -260,6 +260,17 @@
 			"owner": "DIR-02",
 			"kind": "stream",
 			"keys": []
+		},
+		{
+			"name": "gen.plan",
+			"id": 28,
+			"owner": "GEN-08",
+			"kind": "hash",
+			"keys": [
+				"need",
+				"index",
+				"attempt"
+			]
 		}
 	]
 }

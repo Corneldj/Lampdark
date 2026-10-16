@@ -4,6 +4,7 @@
 
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/array.hpp>
+#include <godot_cpp/variant/packed_string_array.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 
 #include <cmath>
@@ -85,6 +86,104 @@ std::vector<int32_t> ints(const Variant &v, std::vector<int32_t> fallback) {
 	return out;
 }
 
+std::vector<std::string> strings(const Variant &v) {
+	std::vector<std::string> out;
+	if (v.get_type() != Variant::ARRAY && v.get_type() != Variant::PACKED_STRING_ARRAY) {
+		return out;
+	}
+	const Array a = v;
+	for (int64_t i = 0; i < a.size(); i++) {
+		out.push_back(to_std(String(a[i])));
+	}
+	return out;
+}
+
+// Three [lo, hi] pairs, one per list kind (Short, Standard, Full).
+void pairs3(const Variant &v, std::array<std::pair<int64_t, int64_t>, 3> &out) {
+	if (v.get_type() != Variant::ARRAY) {
+		return;
+	}
+	const Array a = v;
+	for (int64_t i = 0; i < a.size() && i < 3; i++) {
+		const Array pair = a[i];
+		if (pair.size() == 2) {
+			out[static_cast<size_t>(i)] = {static_cast<int64_t>(pair[0]), static_cast<int64_t>(pair[1])};
+		}
+	}
+}
+
+int64_t whole(const Dictionary &d, const char *key, int64_t fallback) {
+	return d.has(key) ? static_cast<int64_t>(std::llround(static_cast<double>(d[key]))) : fallback;
+}
+
+uint32_t ppm(const Dictionary &d, const char *key, uint32_t fallback) {
+	return d.has(key) ? static_cast<uint32_t>(std::llround(static_cast<double>(d[key]) * 1000000.0)) : fallback;
+}
+
+// GEN-08's numbers from the tuning dictionary run_plan.gd builds; anything missing keeps its default.
+gen::PlanParams plan_params(const Dictionary &t, const std::vector<int64_t> &ring_bounds) {
+	gen::PlanParams p;
+	p.ring_bounds = ring_bounds;
+	pairs3(t.get("substation", Variant()), p.substation);
+	pairs3(t.get("hoard", Variant()), p.hoard);
+	pairs3(t.get("lair", Variant()), p.lair);
+	pairs3(t.get("parts_rings", Variant()), p.parts_rings);
+	if (t.has("lair_min_bearing_deg")) {
+		p.lair_min_bearing_deg = static_cast<double>(t["lair_min_bearing_deg"]);
+	}
+	p.drum_gear_ring = whole(t, "drum_gear_ring", p.drum_gear_ring);
+	p.tools_ring = whole(t, "tools_ring", p.tools_ring);
+	p.paraffin_factor = whole(t, "paraffin_factor", p.paraffin_factor);
+	p.paraffin_max_ring = whole(t, "paraffin_max_ring", p.paraffin_max_ring);
+	p.fuel_cans_min = whole(t, "fuel_cans_min", p.fuel_cans_min);
+	p.fuel_cans_max = whole(t, "fuel_cans_max", p.fuel_cans_max);
+	p.spare_ppm = ppm(t, "spare_probability", p.spare_ppm);
+	p.revolver_ppm = ppm(t, "revolver_probability", p.revolver_ppm);
+	p.boxes_min = whole(t, "boxes_min", p.boxes_min);
+	p.boxes_max = whole(t, "boxes_max", p.boxes_max);
+	p.max_retries = static_cast<int32_t>(whole(t, "max_retries", p.max_retries));
+	p.max_per_region = static_cast<int32_t>(whole(t, "max_per_region", p.max_per_region));
+	const Dictionary fw = t.get("footprint_w", Dictionary());
+	const Dictionary fh = t.get("footprint_h", Dictionary());
+	const Dictionary rmin = t.get("ring_min", Dictionary());
+	const Dictionary rmax = t.get("ring_max", Dictionary());
+	for (size_t k = 0; k < static_cast<size_t>(gen::PoiKind::COUNT); k++) {
+		const String name = String::utf8(gen::poi_kind_name(static_cast<gen::PoiKind>(k)));
+		if (fw.has(name) && fh.has(name)) {
+			p.footprint[k] = {static_cast<int32_t>(static_cast<int64_t>(fw[name])), static_cast<int32_t>(static_cast<int64_t>(fh[name]))};
+		}
+		if (rmin.has(name) && rmax.has(name)) {
+			p.rings[k] = {static_cast<int64_t>(rmin[name]), static_cast<int64_t>(rmax[name])};
+		}
+	}
+	return p;
+}
+
+Vector2i v2(const lb::core::world::Coord &c) {
+	return Vector2i(static_cast<int32_t>(c.x), static_cast<int32_t>(c.y));
+}
+
+Array cells_array(const std::vector<lb::core::world::Coord> &cells) {
+	Array out;
+	for (const lb::core::world::Coord &c : cells) {
+		out.append(v2(c));
+	}
+	return out;
+}
+
+PackedByteArray packed(const std::vector<uint8_t> &bytes) {
+	PackedByteArray out;
+	out.resize(static_cast<int64_t>(bytes.size()));
+	for (size_t i = 0; i < bytes.size(); i++) {
+		out.set(static_cast<int64_t>(i), bytes[i]);
+	}
+	return out;
+}
+
+std::vector<uint8_t> unpacked(const PackedByteArray &bytes) {
+	return std::vector<uint8_t>(bytes.ptr(), bytes.ptr() + bytes.size());
+}
+
 } // namespace
 
 void LbLayouts::_bind_methods() {
@@ -96,6 +195,13 @@ void LbLayouts::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("biome_of", "cell"), &LbLayouts::biome_of);
 	ClassDB::bind_method(D_METHOD("road_of", "cell"), &LbLayouts::road_of);
 	ClassDB::bind_method(D_METHOD("derive", "cell", "reroll"), &LbLayouts::derive);
+	ClassDB::bind_method(D_METHOD("plan", "params"), &LbLayouts::plan);
+	ClassDB::bind_method(D_METHOD("load_plan", "bytes"), &LbLayouts::load_plan);
+	ClassDB::bind_method(D_METHOD("plan_bytes"), &LbLayouts::plan_bytes);
+	ClassDB::bind_method(D_METHOD("plan_dict"), &LbLayouts::plan_dict);
+	ClassDB::bind_method(D_METHOD("is_spine_cell", "cell"), &LbLayouts::is_spine_cell);
+	ClassDB::bind_method(D_METHOD("set_home", "name", "bytes"), &LbLayouts::set_home);
+	ClassDB::bind_method(D_METHOD("home", "name"), &LbLayouts::home);
 	ClassDB::bind_method(D_METHOD("set_caching", "on"), &LbLayouts::set_caching);
 	ClassDB::bind_method(D_METHOD("clear_caches"), &LbLayouts::clear_caches);
 	ClassDB::bind_method(D_METHOD("set_verify", "on"), &LbLayouts::set_verify);
@@ -128,6 +234,7 @@ void LbLayouts::rebuild() {
 	in.header = &header_;
 	in.templates = set_.get();
 	in.cells = cells_.get();
+	spine_sockets_.reset();
 	road_sockets_.reset();
 	road_cells_.reset();
 	roads_.reset();
@@ -145,6 +252,15 @@ void LbLayouts::rebuild() {
 		road_sockets_ = std::make_unique<gen::MainRoadSockets>(*roads_, *road_cells_, header_.sockets);
 		in.cells = road_cells_.get();
 		in.providers = {road_sockets_.get()};
+	}
+	// GEN-08: spine edges forced open after main roads; spine cells take no old fall.
+	if (!header_.plan.spines.empty()) {
+		spine_sockets_ = std::make_unique<gen::SpineSockets>(header_.seed, header_.plan, *in.cells, header_.sockets);
+		in.providers.push_back(spine_sockets_.get());
+	}
+	if (roads_) {
+		const gen::SpineSockets *spines = spine_sockets_.get();
+		roads_->is_spine = [spines](lb::core::world::Coord c) { return spines != nullptr && spines->is_spine_cell(c); };
 	}
 	deriver_ = std::make_unique<gen::Deriver>(in);
 	deriver_->set_caching(caching_);
@@ -206,6 +322,141 @@ void LbLayouts::configure(int64_t seed, const Dictionary &params) {
 		}
 	}
 	rebuild();
+}
+
+Dictionary LbLayouts::plan(const Dictionary &params) {
+	header_.list_kind = static_cast<int32_t>(static_cast<int64_t>(params.get("list_kind", 1)));
+	header_.jobs = strings(params.get("jobs", Variant()));
+	header_.cans = static_cast<int32_t>(static_cast<int64_t>(params.get("cans", 4)));
+	header_.solo = static_cast<bool>(params.get("solo", false));
+	header_.draw = strings(params.get("draw", Variant()));
+	header_.staging = to_std(String(params.get("staging", "")));
+	header_.hard_variant = to_std(String(params.get("hard_variant", "")));
+	header_.generator_version = gen::GENERATOR_VERSION;
+	header_.hash_version = lb::core::HASH_VERSION;
+	header_.template_version = set_->set_version();
+	header_.data_version = to_std(String(params.get("data_version", "")));
+	header_.homes.clear();
+	const gen::PlanParams p = plan_params(params.get("tuning", Dictionary()), ring_bounds_);
+	gen::PlanWorld world;
+	if (roads_) {
+		const gen::MainRoads *roads = roads_.get();
+		world.is_main_road_cell = [roads](lb::core::world::Coord c) { return roads->is_main_road_cell(c); };
+	}
+	for (int e = 0; e < 4; e++) {
+		const std::optional<gen::Socket> s = header_.forced.query(gen::edge_of({0, 0}, static_cast<gen::Edge>(e)));
+		if (!s || s->open) {
+			world.gates.push_back(static_cast<gen::Edge>(e));
+		}
+	}
+	header_.plan = gen::make_plan(header_, p, world);
+	if (!header_.plan.error.empty()) {
+		UtilityFunctions::push_error("LbLayouts.plan: ", String::utf8(header_.plan.error.c_str()));
+	}
+	rebuild();
+	return plan_dict();
+}
+
+bool LbLayouts::load_plan(const PackedByteArray &bytes) {
+	const std::optional<gen::RunHeader> h = gen::parse_header(unpacked(bytes));
+	ERR_FAIL_COND_V_MSG(!h, false, "LbLayouts.load_plan: not a run header");
+	ERR_FAIL_COND_V_MSG(h->seed != header_.seed, false, "LbLayouts.load_plan: the header is another seed's");
+	header_.list_kind = h->list_kind;
+	header_.jobs = h->jobs;
+	header_.cans = h->cans;
+	header_.solo = h->solo;
+	header_.draw = h->draw;
+	header_.staging = h->staging;
+	header_.hard_variant = h->hard_variant;
+	header_.generator_version = h->generator_version;
+	header_.hash_version = h->hash_version;
+	header_.template_version = h->template_version;
+	header_.data_version = h->data_version;
+	header_.plan = h->plan;
+	header_.homes = h->homes;
+	rebuild();
+	return true;
+}
+
+PackedByteArray LbLayouts::plan_bytes() const {
+	return packed(gen::serialise_header(header_));
+}
+
+Dictionary LbLayouts::plan_dict() const {
+	const gen::RunPlan &plan = header_.plan;
+	Dictionary d;
+	d["ok"] = plan.error.empty();
+	d["error"] = String::utf8(plan.error.c_str());
+	d["list_kind"] = header_.list_kind;
+	PackedStringArray jobs;
+	for (const std::string &j : header_.jobs) {
+		jobs.append(String::utf8(j.c_str()));
+	}
+	d["jobs"] = jobs;
+	d["cans"] = header_.cans;
+	d["solo"] = header_.solo;
+	PackedStringArray draw;
+	for (const std::string &x : header_.draw) {
+		draw.append(String::utf8(x.c_str()));
+	}
+	d["draw"] = draw;
+	d["staging"] = String::utf8(header_.staging.c_str());
+	d["hard_variant"] = String::utf8(header_.hard_variant.c_str());
+	d["generator_version"] = static_cast<int64_t>(header_.generator_version);
+	d["hash_version"] = static_cast<int64_t>(header_.hash_version);
+	d["template_version"] = String::utf8(header_.template_version.c_str());
+	d["data_version"] = String::utf8(header_.data_version.c_str());
+	Array sites;
+	for (const gen::PlannedSite &site : plan.sites) {
+		Dictionary s;
+		s["kind"] = String::utf8(gen::poi_kind_name(site.kind));
+		s["need"] = String::utf8(site.need.c_str());
+		s["door"] = v2(site.door);
+		s["door_side"] = String(SIDES[static_cast<size_t>(site.door_side)]);
+		s["cells"] = cells_array(site.cells);
+		Dictionary holds;
+		for (const gen::Holding &h : site.holds) {
+			holds[String::utf8(h.item.c_str())] = h.count;
+		}
+		s["holds"] = holds;
+		s["spine"] = site.spine;
+		s["attempt"] = site.attempt;
+		sites.append(s);
+	}
+	d["sites"] = sites;
+	Array spines;
+	for (const gen::Spine &sp : plan.spines) {
+		Dictionary s;
+		s["site"] = sp.site;
+		s["gate"] = String(SIDES[static_cast<size_t>(sp.gate)]);
+		s["cells"] = cells_array(sp.cells);
+		s["replan"] = sp.replan;
+		spines.append(s);
+	}
+	d["spines"] = spines;
+	d["revolver"] = plan.revolver;
+	d["revolver_cell"] = v2(plan.revolver_cell);
+	d["boxes"] = cells_array(plan.box_cells);
+	PackedStringArray homes;
+	for (const auto &[name, value] : header_.homes) {
+		homes.append(String::utf8(name.c_str()));
+	}
+	d["homes"] = homes;
+	d["bytes"] = plan_bytes();
+	return d;
+}
+
+bool LbLayouts::is_spine_cell(Vector2i cell) const {
+	return spine_sockets_ && spine_sockets_->is_spine_cell({cell.x, cell.y});
+}
+
+void LbLayouts::set_home(const String &name, const PackedByteArray &bytes) {
+	header_.homes[to_std(name)] = unpacked(bytes);
+}
+
+PackedByteArray LbLayouts::home(const String &name) const {
+	const auto it = header_.homes.find(to_std(name));
+	return it != header_.homes.end() ? packed(it->second) : PackedByteArray();
 }
 
 bool LbLayouts::force_socket(Vector2i cell, const String &side, const Dictionary &socket) {
