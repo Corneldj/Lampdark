@@ -24,6 +24,8 @@ const FELLED: StringName = &"felled"
 const GRABBED: StringName = &"grabbed"
 const DISCONNECTED: StringName = &"disconnected"
 const LOST: StringName = &"lost"
+## MNR-14: set down into an empty tub.
+const ON_TUB: StringName = &"tub"
 
 ## carrier -> body
 var carries: Dictionary = {}
@@ -106,6 +108,14 @@ func set_down(run: RunState, carrier: int, reason: StringName = SET_DOWN) -> boo
 	var at: SimEntity = run.registry.get_entity(carrier)
 	var table: Vector2i = _free_table_near(run, at.position) if at != null and reason == SET_DOWN else Vector2i(-1, -1)
 	var on_table: bool = table.x >= 0 and run.base_camp.cupboard().lay(table, body)
+	# MNR-14: beside an empty tub, it goes into the tub.
+	if not on_table and at != null and reason == SET_DOWN and run.tubs != null and b != null:
+		b.carried_by = 0
+		if run.tubs.take_body(run, body, at.position):
+			diff_log.append({"tick": run.tick, "carrier": carrier, "body": body, "tile": at.tile(), "table": false, "reason": "tub"})
+			_end(run, carrier, body, ON_TUB)
+			return true
+		b.carried_by = carrier
 	if b != null:
 		b.carried_by = 0
 		b.on_table = on_table
@@ -154,6 +164,9 @@ func _liftable(run: RunState, lifter: int, body: int) -> bool:
 	var b: BodyState = run.falls.body_of(body)
 	if b == null or b.held_by_trap or b.carried_by != 0 or b.dragged_by != 0:
 		return false
+	# MNR-14: not off a stretcher or out of a tub someone holds.
+	if b.on_load != 0 and ((run.loads != null and run.loads.is_held(b.on_load)) or (run.tubs != null and run.tubs.is_held(b.on_load))):
+		return false
 	if run.miner_state != null and run.miner_state.miner(lifter) != null:
 		return run.miner_state.life(lifter) == MinerTransitions.Life.UPRIGHT
 	return true
@@ -163,6 +176,11 @@ func _begin(run: RunState, carrier: int, body: int) -> void:
 	var b: BodyState = run.falls.body_of(body)
 	if b.on_table and run.base_camp != null:
 		run.base_camp.cupboard().take_off(body)
+	# MNR-14: lifted off a stretcher or out of a tub.
+	if b.on_load != 0 and run.loads != null:
+		run.loads.take_body_off(run, body)
+	if b.on_load != 0 and run.tubs != null:
+		run.tubs.take_body_off(run, body)
 	b.carried_by = carrier
 	b.on_floor = false
 	b.on_table = false

@@ -11,6 +11,9 @@ var posture: Posture = Posture.LYING
 var on_floor: bool = true
 ## The miner carrying it (MNR-13), 0 if none.
 var carried_by: int = 0
+## MNR-14: the item uid of the stretcher it lies on or the tub it rides in, 0 if none (not on the
+## floor meanwhile; Loads and Tubs move it with the load).
+var on_load: int = 0
 var on_table: bool = false
 ## RSC-03's trap still holding it (a miner who falls in a trap stays in it until freed).
 var held_by_trap: bool = false

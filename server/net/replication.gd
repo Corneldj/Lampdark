@@ -295,6 +295,7 @@ func _push_flames(run: RunState) -> void:
 ## miner's hand uses), so the player can tell a spanner from a fuse once it is lit to identity
 ## (0.30) and the glyph can name it; a lamp also shows whether its flame shows. Records of items no
 ## longer lying are cleared. (Lamps only until the first playtest found "Pick up" told nothing.)
+## MNR-14: a load also shows its heading (its record's facing), and a tub the cans in it.
 func _push_lying_lamps(run: RunState) -> void:
 	if run.inventory == null:
 		return
@@ -302,6 +303,10 @@ func _push_lying_lamps(run: RunState) -> void:
 	for raw: Variant in run.inventory.world.items.keys():
 		var it: Item = run.inventory.world.items[raw]
 		var bits: int = it.kind
+		if ItemKinds.is_load(it.kind):
+			native.set_entity_facing(int(Variants.number(raw)), int(Variants.number(it.state.get("heading", 0))) & 0xFFFF)
+			if it.kind == ItemKinds.Kind.TUB:
+				bits |= Variants.array(it.state.get("cans", [])).size() << ItemKinds.TUB_CANS_SHIFT
 		if run.lamps != null and run.lamps.lamps.has(it.uid):
 			var l: GauzeLamp = run.lamps.lamps[it.uid]
 			if l.held():

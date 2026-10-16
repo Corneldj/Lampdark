@@ -6,9 +6,15 @@ extends RefCounted
 ## a coat heap, a creature, a trap or a fixture shows no glyph.
 
 
-static func for_seen(kind: int, cues: int = 0) -> String:
+## `item_kind`: an item's kind, as its record's held field shows it (MNR-14's loads are taken, not
+## picked up).
+static func for_seen(kind: int, cues: int = 0, item_kind: int = 0) -> String:
 	match kind:
 		SeenKind.Kind.ITEM:
+			if item_kind == ItemKinds.Kind.TUB:
+				return "verb.take_hold"
+			if item_kind == ItemKinds.Kind.STRETCHER or item_kind == ItemKinds.Kind.DRUM_GEAR:
+				return "verb.take_end"
 			return "verb.pick_up"
 		SeenKind.Kind.MINER:
 			return "verb.lift" if (cues & (MinerCues.LYING_BREATHING | MinerCues.LYING_STILL)) != 0 else "verb.ring"

@@ -325,6 +325,7 @@ func write_state(writer: SimStateWriter) -> void:
 		writer.put_i64(id)
 		writer.put_bool(b.on_floor)
 		writer.put_i64(b.carried_by)
+		writer.put_i64(b.on_load)
 		writer.put_bool(b.held_by_trap)
 		writer.put_bool(b.dead)
 	writer.put_i64(journal.size())
@@ -336,7 +337,7 @@ func save_state() -> Dictionary:
 	var out: Dictionary = {}
 	for e: int in _sorted_bodies():
 		var b: BodyState = bodies[e]
-		out[e] = StateDicts.pick(b, ["posture", "on_floor", "on_table", "held_by_trap", "kept_in_lair", "dead", "fall_id"])
+		out[e] = StateDicts.pick(b, ["posture", "on_floor", "on_table", "on_load", "held_by_trap", "kept_in_lair", "dead", "fall_id"])
 	return {"bodies": out, "journal": journal.duplicate(true), "next_fall_id": _next_fall_id}
 
 
@@ -347,7 +348,7 @@ func load_state(_r: RunState, state: Dictionary) -> void:
 		StateDicts.put(b, Variants.dict(saved[raw]))
 		b.carried_by = 0
 		b.dragged_by = 0
-		if not b.on_table:
+		if not b.on_table and b.on_load == 0:
 			b.on_floor = true
 	journal.clear()
 	for r: Variant in Variants.array(state.get("journal", [])):

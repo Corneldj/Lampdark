@@ -32,7 +32,8 @@ static func pick(view: ReceivedView, reach: float) -> Dictionary:
 		var e: Dictionary = view.entities[raw]
 		if int(Variants.number(e.get("level", 0))) != 2:
 			continue  # fringe and margin tokens never get a glyph
-		var verb: String = InteractionVerbs.for_seen(int(Variants.number(e.get("size_or_kind", 0))), int(Variants.number(e.get("cues", 0))))
+		var verb: String = InteractionVerbs.for_seen(int(Variants.number(e.get("size_or_kind", 0))), int(Variants.number(e.get("cues", 0))),
+			int(Variants.number(e.get("in_hand", 0))) & 0x3F)
 		var at: Vector2 = e.get("position", Vector2.ZERO)
 		var d: float = at.distance_to(own)
 		if verb.is_empty() or d > reach + 1e-6 or d >= best_d:

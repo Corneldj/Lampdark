@@ -4,7 +4,8 @@ extends RefCounted
 ## with where it rides (hand class), its stack size (read from tuning) and its text key. Every
 ## item is a small thing (VIS-03): seen only at vision.small_thing_light_min, never a token.
 ## Behaviour lives in each owning ticket (MNR-06 to MNR-12, MNR-16, RSC-02). Wire values: append
-## only. Stretchers and the drum gear are loads (MNR-14), not items; the lamp check, chalk and the
+## only. The stretcher, the drum gear and the tub are loads (MNR-14): ITEM entities of the LOAD
+## class, never in a hand or a slot, moved only by Loads and Tubs. The lamp check, chalk and the
 ## Pocket Book need no slot and are not items at all (HandsAndBelt keeps them).
 
 enum Kind {
@@ -30,11 +31,14 @@ enum Kind {
 	ROUNDS = 19,
 	CANARY = 20,
 	NOTE = 21,
+	STRETCHER = 22,
+	DRUM_GEAR = 23,
+	TUB = 24,
 }
 
 ## Where a kind rides: a lamp (the lamp hand, else a slot), a belt slot, the free hand only (the
-## paraffin can), or the Pocket Book (found notes).
-enum HandClass { LAMP = 0, BELT = 1, FREE_ONLY = 2, BOOK = 3 }
+## paraffin can), the Pocket Book (found notes), or nowhere: a load lies where it is set down.
+enum HandClass { LAMP = 0, BELT = 1, FREE_ONLY = 2, BOOK = 3, LOAD = 4 }
 
 ## kind -> [hand class, stack tuning key or "" for items.stack_default]
 const TABLE: Dictionary = {
@@ -59,10 +63,19 @@ const TABLE: Dictionary = {
 	Kind.ROUNDS: [HandClass.BELT, "items.stack_rounds"],
 	Kind.CANARY: [HandClass.BELT, ""],
 	Kind.NOTE: [HandClass.BOOK, ""],
+	Kind.STRETCHER: [HandClass.LOAD, ""],
+	Kind.DRUM_GEAR: [HandClass.LOAD, ""],
+	Kind.TUB: [HandClass.LOAD, ""],
 }
 
 ## Not an item: NET-04's held bits show it filling both hands (MNR-13's fireman's carry).
 const LOAD_BODY: int = 255
+## MNR-14's held bits for both hands on a load: an end of a stretcher or the drum gear (the load
+## shows as its own entity), and hold of a tub.
+const LOAD_END: int = 254
+const LOAD_TUB: int = 253
+## MNR-14: a tub's lying record carries the cans in it in the high byte of its held bits.
+const TUB_CANS_SHIFT: int = 8
 ## VIS-06: NET-04's held bits, low byte: bit 6 set while that lamp's flame shows (lit and open).
 const LAMP_LIT_BIT: int = 0x40
 
@@ -79,6 +92,11 @@ static func is_kind(kind: int) -> bool:
 
 static func hand_class(kind: int) -> HandClass:
 	return int(Variants.number(Variants.array(TABLE[kind])[0])) as HandClass
+
+
+## A load (MNR-14): never picked up, carried or pushed by Loads and Tubs.
+static func is_load(kind: int) -> bool:
+	return TABLE.has(kind) and hand_class(kind) == HandClass.LOAD
 
 
 static func is_lamp(kind: int) -> bool:

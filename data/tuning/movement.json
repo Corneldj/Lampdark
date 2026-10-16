@@ -301,6 +301,16 @@
 			"kind": "param",
 			"note": "ticket MNR-14"
 		},
+		"movement.tub_push_angle": {
+			"value": 75,
+			"type": "float",
+			"unit": "deg",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MNR-14: a pusher pushes a way along the rails only within this angle of it (a push across them moves nothing)"
+		},
 		"movement.walk_speed": {
 			"value": 3,
 			"type": "float",

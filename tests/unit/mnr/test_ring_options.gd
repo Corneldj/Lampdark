@@ -69,10 +69,11 @@ func test_bodies() -> void:
 	assert_true(inv.give(s.run, ann.entity_id, inv.world.make(ItemKinds.Kind.HEALING_KIT)))
 	s.run.falls.fall_unconscious(s.run, bob.entity_id, FallCause.Cause.BLAST)
 	s.step(2)
-	assert_eq(_offered(s, ann, bob), ["lift", "take:0", "take:1", "cure", "lay"] as Array[String], "unconscious")
+	# MNR-14 lists lay right after lift, as §4.3 does.
+	assert_eq(_offered(s, ann, bob), ["lift", "lay", "take:0", "take:1", "cure"] as Array[String], "unconscious")
 	s.run.miner_state.kill(bob.entity_id, "test")
 	s.step(2)
-	assert_eq(_offered(s, ann, bob), ["lift", "take:0", "take:1", "lay"] as Array[String], "dead: no cure")
+	assert_eq(_offered(s, ann, bob), ["lift", "lay", "take:0", "take:1"] as Array[String], "dead: no cure")
 
 
 func test_no_both_hold_with_a_hand() -> void:

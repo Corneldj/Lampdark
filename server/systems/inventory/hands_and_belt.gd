@@ -85,6 +85,8 @@ func fits(item: Item) -> bool:
 	if lit_candle(item) and lamp_hand == null:
 		return true
 	match ItemKinds.hand_class(item.kind):
+		ItemKinds.HandClass.LOAD:
+			return false  # MNR-14: a load is carried or pushed, never held
 		ItemKinds.HandClass.BOOK:
 			return true
 		ItemKinds.HandClass.FREE_ONLY:

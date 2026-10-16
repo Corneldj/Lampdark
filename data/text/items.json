@@ -21,6 +21,9 @@
 		"item.revolver": "the Webley revolver",
 		"item.rounds": "a box of rounds",
 		"item.canary": "a canary in its cage",
-		"item.note": "a note"
+		"item.note": "a note",
+		"item.stretcher": "a stretcher",
+		"item.drum_gear": "the drum gear",
+		"item.tub": "a tub"
 	}
 }

@@ -117,6 +117,25 @@ func place(run: RunState, entity: int, at: Vector2) -> void:
 		run.registry.move(entity, at)
 
 
+## MNR-14: a carrier moved by their load (a stretcher's or the drum gear's end, a tub's handle):
+## placed, their facing set (-1 keeps it) and their speed this tick, so the still and pace queries
+## see them walk; the registry and SND-01's listener follow.
+func carry(run: RunState, slot: int, at: Vector2, facing: int = -1) -> void:
+	var m: Miner = miner(slot)
+	if m == null:
+		return
+	var moved: float = Vector2(m.state.x, m.state.y).distance_to(at)
+	m.state.x = at.x
+	m.state.y = at.y
+	m.state.speed = moved * Tuning.f(&"net.tick_hz")
+	m.state.gait = MinerMotion.WALK if moved > 0.0 else MinerMotion.STILL
+	if facing >= 0:
+		m.state.facing = facing & 0xFFFF
+	run.registry.move(m.entity_id, at)
+	if run.noise != null:
+		run.noise.set_player_listener(slot, Vector2i(floori(at.x), floori(at.y)))
+
+
 func facing_of(slot: int) -> int:
 	var m: Miner = miner(slot)
 	return m.state.facing if m != null else 0

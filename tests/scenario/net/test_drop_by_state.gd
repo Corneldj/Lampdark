@@ -2,8 +2,8 @@ extends "res://tests/scenario/kit/scenario_test.gd"
 ## NET-11: each row of the drop table. A conscious miner: a Hand takes it where it stands, the lamp
 ## turned down on the belt. Unconscious or dead: nothing changes. The operator stands up from the
 ## board. A carrier sets the load down without a knock. Caught or Grabbed: the hold runs on. A timed
-## action in progress is cancelled, nothing spent; an outcome already decided stays.
-## (A stretcher end waits for MNR-14, which adds its set-down here.)
+## action in progress is cancelled, nothing spent; an outcome already decided stays. A stretcher
+## carrier (MNR-14) sets it down at once, with no knock, and the other carrier lets go too.
 
 const R = preload("res://tests/unit/mnr/revolver_world.gd")
 const L = preload("res://tests/unit/mnr/lamp_world.gd")
@@ -92,6 +92,33 @@ func test_a_carrier_sets_the_load_down_without_a_knock() -> void:
 	assert_false(s.run.carry.is_carrying(ann.entity_id), "set down")
 	for e: NoiseSystem.Event in s.run.noise.event_log.slice(from):
 		assert_ne(e.type, NoiseTypes.Type.CARRY_KNOCK, "no knock")
+
+
+func test_a_stretcher_carrier_sets_it_down_without_a_knock() -> void:
+	var w: Array = _world(1327)
+	var s: Scenario = w[0]
+	var ann: MinerHandle = w[1]
+	var bob: MinerHandle = w[2]
+	var load: int = s.run.loads.place(s.run, ItemKinds.Kind.STRETCHER, Vector2(6.5, 2.5), 0)
+	s.run.movement.place(s.run, ann.entity_id, Vector2(7.5, 2.5))
+	s.run.movement.place(s.run, bob.entity_id, Vector2(5.5, 2.5))
+	ann.at(s.run.tick).hold(InputRecord.HOLD_INTERACT, 26)
+	bob.at(s.run.tick).hold(InputRecord.HOLD_INTERACT, 26)
+	s.step(29)
+	assert_true(s.run.loads.carrying(ann.entity_id) and s.run.loads.carrying(bob.entity_id), "both ends taken")
+	ann.at(s.run.tick).move(0.0, InputRecord.Gait.WALK, 400)
+	bob.at(s.run.tick).move(0.0, InputRecord.Gait.WALK, 400)
+	s.step(10)
+	var from: int = s.run.noise.event_log.size()
+	var row: Dictionary = _drop(s, ann)
+	assert_false(s.run.loads.carrying(ann.entity_id), "set down")
+	assert_false(s.run.loads.carrying(bob.entity_id), "the other end let go too")
+	assert_string_contains(str(row["what"]), "load set down")
+	for e: NoiseSystem.Event in s.run.noise.event_log.slice(from):
+		assert_ne(e.type, NoiseTypes.Type.CARRY_KNOCK, "no knock")
+	var at: Vector2 = s.run.registry.get_entity(load).position
+	s.step(10)
+	assert_eq(s.run.registry.get_entity(load).position, at, "it lies where it went down")
 
 
 func test_caught_and_grabbed_holds_run_on() -> void:

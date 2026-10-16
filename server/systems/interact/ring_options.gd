@@ -22,7 +22,8 @@ var options: Dictionary = {}
 var order: Array[String] = []
 
 
-func register(id: String, target_states: Array[int], actor_check: Callable, make: Callable, both: bool = false) -> void:
+## `after`: an option id this one is listed right after (the design's order), else last.
+func register(id: String, target_states: Array[int], actor_check: Callable, make: Callable, both: bool = false, after: String = "") -> void:
 	var o: Option = Option.new()
 	o.id = id
 	o.states = target_states
@@ -30,7 +31,11 @@ func register(id: String, target_states: Array[int], actor_check: Callable, make
 	o.make = make
 	o.both = both
 	if not options.has(id):
-		order.append(id)
+		var at: int = order.find(after) if not after.is_empty() else -1
+		if at >= 0:
+			order.insert(at + 1, id)
+		else:
+			order.append(id)
 	options[id] = o
 
 

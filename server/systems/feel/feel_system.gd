@@ -201,7 +201,8 @@ func verb_key(run: RunState, entity: int) -> String:
 	var e: SimEntity = run.registry.get_entity(entity)
 	var seen: int = int(Variants.number(SeenKind.Kind.get(str(WorldIds.EntityKind.find_key(e.kind)), 0)))
 	var down: bool = e.kind == WorldIds.EntityKind.MINER and run.falls != null and run.falls.body_of(entity) != null
-	return InteractionVerbs.for_seen(seen, MinerCues.LYING_BREATHING if down else 0)  # UI-01's glyph reads the same table
+	var item: Item = run.inventory.world.item_at(entity) if run.inventory != null else null
+	return InteractionVerbs.for_seen(seen, MinerCues.LYING_BREATHING if down else 0, item.kind if item != null else 0)  # UI-01's glyph reads the same table
 
 
 ## 0-15 steps of vision.feel_bearing_step_deg from east, clockwise (+y down): the step whose

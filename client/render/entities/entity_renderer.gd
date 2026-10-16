@@ -48,11 +48,45 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 			ci.draw_circle(at_px + Vector2(0.14, -0.36) * px, 0.08 * px, Palette.CHALK_WHITE.darkened(0.3))
 		SeenKind.Kind.ITEM:
 			# Its kind rides in the held field (replication's lying things): a grey-box shape per kind.
-			draw_item(ci, int(Variants.number(e.get("in_hand", 0))) & 0x3F, at_px, px)
+			var held: int = int(Variants.number(e.get("in_hand", 0)))
+			if ItemKinds.is_load(held & 0x3F):
+				draw_load(ci, held, at_px, px, facing)
+			else:
+				draw_item(ci, held & 0x3F, at_px, px)
 			_held_flame(ci, e, at_px, px, t)
 		_:
 			ci.draw_rect(Rect2(at_px - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 			_held_flame(ci, e, at_px, px, t)
+
+
+## MNR-14's loads at their heading: a 2-tile stretcher (two poles and its canvas), the drum gear
+## (a toothed wheel on its 1.5-tile carrying bar) and a tub (a box on the rails, its cans as discs).
+static func draw_load(ci: CanvasItem, held: int, at: Vector2, px: float, facing: Vector2) -> void:
+	var along: Vector2 = facing * px
+	var side: Vector2 = Vector2(-facing.y, facing.x) * px
+	var w: float = maxf(1.5, 0.06 * px)
+	match held & 0x3F:
+		ItemKinds.Kind.STRETCHER:
+			ci.draw_colored_polygon(PackedVector2Array([at + along * 0.8 + side * 0.24, at + along * 0.8 - side * 0.24,
+				at - along * 0.8 - side * 0.24, at - along * 0.8 + side * 0.24]), BODY)
+			for s: float in [0.28, -0.28]:
+				ci.draw_line(at + along + side * s, at - along + side * s, DARK, w * 1.6)
+		ItemKinds.Kind.DRUM_GEAR:
+			ci.draw_line(at + along * 0.75, at - along * 0.75, DARK, w * 1.8)
+			for i: int in 20:
+				var a: float = TAU * i / 20.0
+				ci.draw_line(at + Vector2.from_angle(a) * 0.42 * px, at + Vector2.from_angle(a) * 0.5 * px, DARK, w * 1.4)
+			ci.draw_circle(at, 0.42 * px, BODY)
+			ci.draw_circle(at, 0.1 * px, DARK)
+		ItemKinds.Kind.TUB:
+			ci.draw_colored_polygon(PackedVector2Array([at + along * 0.5 + side * 0.4, at + along * 0.5 - side * 0.4,
+				at - along * 0.5 - side * 0.4, at - along * 0.5 + side * 0.4]), DARK)
+			ci.draw_colored_polygon(PackedVector2Array([at + along * 0.42 + side * 0.32, at + along * 0.42 - side * 0.32,
+				at - along * 0.42 - side * 0.32, at - along * 0.42 + side * 0.32]), BODY)
+			var cans: int = (held >> ItemKinds.TUB_CANS_SHIFT) & 0xFF
+			for i: int in mini(cans, 4):
+				var spot: Vector2 = at + along * (-0.24 + 0.16 * i)
+				ci.draw_circle(spot, 0.07 * px, Palette.CHALK_WHITE.darkened(0.25))
 
 
 ## A grey-box shape for each item kind (art replaces them), so a spanner reads apart from a fuse.
