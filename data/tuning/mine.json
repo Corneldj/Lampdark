@@ -874,6 +874,46 @@
 			"kind": "param",
 			"note": "ticket GEN-04"
 		},
+		"mine.timber_hook_reach_tiles": {
+			"value": 4,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04: every road tile within this many tiles by path of a hook, the reading of about every 6"
+		},
+		"mine.rubble_heaps_min": {
+			"value": 1,
+			"type": "float",
+			"unit": "count",
+			"source": "Gameplay §12.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.rubble_heaps_max": {
+			"value": 2,
+			"type": "float",
+			"unit": "count",
+			"source": "Gameplay §12.3",
+			"starting": false,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04"
+		},
+		"mine.collapse_length_max_tiles": {
+			"value": 3,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-04: a collapse alternate's fallen set, along its road"
+		},
 		"mine.v1_deep_biome_override": {
 			"value": "old_workings",
 			"type": "string",

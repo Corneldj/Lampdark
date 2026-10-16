@@ -67,6 +67,18 @@ uint64_t content_digest(const Cell &cell) {
 				b.u8(w.material);
 			}
 		}
+		// GEN-04's pre-cut fallen state, only when cut (older cells keep their digests).
+		if (!c.zones.empty() || !c.fallen_road_graph.empty()) {
+			b.u8(0xA4);
+			b.u32(c.zones.size());
+			for (const ZoneWrite &z : c.zones) {
+				b.u32(z.index);
+				b.u32(z.standing);
+				b.u32(z.fallen);
+			}
+			b.u32(c.fallen_road_graph.size());
+			b.data.insert(b.data.end(), c.fallen_road_graph.begin(), c.fallen_road_graph.end());
+		}
 	}
 	b.u32(cell.road_graph.size());
 	b.data.insert(b.data.end(), cell.road_graph.begin(), cell.road_graph.end());

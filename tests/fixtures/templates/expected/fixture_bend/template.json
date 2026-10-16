@@ -1,0 +1,20 @@
+{
+	"format": 1,
+	"id": "fixture_bend",
+	"kind": "biome_cell",
+	"biome": "seam",
+	"footprint": [1,1],
+	"poi_kind": "",
+	"weight": 1.5,
+	"author_version": 2,
+	"cells": [[0,0]],
+	"stubs": [
+		{"cell":[0,0],"depth":2,"door":false,"edge":"north","max_width":1,"offset":10},
+		{"cell":[0,0],"depth":2,"door":false,"edge":"east","max_width":3,"offset":10},
+		{"cell":[0,0],"depth":2,"door":false,"edge":"west","max_width":3,"offset":10}
+	],
+	"rib": [
+		{"cell":[0,0],"index":169,"milli":50},
+		{"cell":[0,0],"index":266,"milli":200}
+	]
+}

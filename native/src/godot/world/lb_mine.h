@@ -41,6 +41,13 @@ public:
 	void add_collapse(int64_t id, const ::godot::PackedInt32Array &standing_indices, const ::godot::PackedByteArray &standing_materials,
 			const ::godot::PackedInt32Array &fallen_indices, const ::godot::PackedByteArray &fallen_materials, bool is_fallen);
 	void set_road_graph(const ::godot::PackedByteArray &bytes);
+	// GEN-04: collapse `id`'s pre-cut fallen state (each changed tile's standing and fallen zone,
+	// and the cell's whole block with it fallen). False for an unknown collapse.
+	bool set_collapse_zones(int64_t id, const ::godot::PackedInt32Array &indices, const ::godot::PackedInt32Array &standing,
+			const ::godot::PackedInt32Array &fallen, const ::godot::PackedByteArray &fallen_road_graph);
+	// GEN-04's zone cutter over this cell and its collapse alternates: tile zones, barriers and the
+	// Road Graph blocks. `room_kind`: "chamber", "poi" or "base_camp". False for another name.
+	bool cut_zones(const ::godot::String &room_kind);
 	::godot::Array get_anchors() const;
 	::godot::Array get_barriers() const;
 	::godot::Array get_collapses() const;
@@ -49,6 +56,8 @@ public:
 
 	std::unique_ptr<lb::core::world::Cell> take();
 	bool is_taken() const { return cell_ == nullptr; }
+	const lb::core::world::Cell *peek() const { return cell_.get(); }
+	static ::godot::Ref<LbCellData> wrap(const lb::core::world::Cell &cell);
 
 private:
 	std::unique_ptr<lb::core::world::Cell> cell_;

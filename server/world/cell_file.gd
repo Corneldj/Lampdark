@@ -4,7 +4,9 @@ class_name CellFile
 ## re-serialises byte for byte. Server-only (client presets exclude data/maps/).
 ##
 ## The road_graph field is SND-01's zone and portal block as JSON (RoadGraphBlock); each tile's
-## zone is in "zones". Tile characters: '.' floor, '=' floor with rails, '~' sump mud, '#' rock, 'c' coal,
+## zone is in "zones". A collapse cut by GEN-04's template pipeline also carries its fallen state:
+## "zones" ([[index, standing zone, fallen zone], ...]) and "fallen_road_graph" (the cell's whole
+## block with it fallen); a collapse without them has neither key. Tile characters: '.' floor, '=' floor with rails, '~' sump mud, '#' rock, 'c' coal,
 ## 'B' brick, 'T' timber, 'S' shut gate, 's' open gate, 'D' shut air door, 'd' open air door.
 
 const FORMAT: int = 1
@@ -87,8 +89,12 @@ static func from_dict(file: Dictionary, label: String) -> LbCellData:
 		var standing_materials: PackedByteArray = standing[1]
 		var fallen_indices: PackedInt32Array = fallen[0]
 		var fallen_materials: PackedByteArray = fallen[1]
-		data.add_collapse(int(Variants.number(c.get("id", 0))), standing_indices, standing_materials,
+		var collapse_id: int = int(Variants.number(c.get("id", 0)))
+		data.add_collapse(collapse_id, standing_indices, standing_materials,
 			fallen_indices, fallen_materials, Variants.flag(c.get("is_fallen", false)))
+		if c.has("zones") or c.has("fallen_road_graph"):
+			var cut: Array[PackedInt32Array] = _zone_writes(c.get("zones", []))
+			data.set_collapse_zones(collapse_id, cut[0], cut[1], cut[2], RoadGraphBlock.encode(Variants.dict(c.get("fallen_road_graph", {}))))
 	data.set_road_graph(RoadGraphBlock.encode(Variants.dict(file.get("road_graph", {}))))
 	return data
 
@@ -120,7 +126,13 @@ static func serialize(data: LbCellData) -> String:
 	_append_objects(lines, "barriers", data.get_barriers(), func(b: Dictionary) -> Dictionary:
 		return {"id": b["id"], "portal": b["portal"], "tiles": Variants.list(b["tiles"]), "open": b["open"]})
 	_append_objects(lines, "collapses", data.get_collapses(), func(c: Dictionary) -> Dictionary:
-		return {"id": c["id"], "standing": _write_pairs(c["standing"]), "fallen": _write_pairs(c["fallen"]), "is_fallen": c["is_fallen"]})
+		var shaped: Dictionary = {"id": c["id"], "standing": _write_pairs(c["standing"]), "fallen": _write_pairs(c["fallen"]), "is_fallen": c["is_fallen"]}
+		var zones: Array = Variants.array(c.get("zones", []))
+		var block: PackedByteArray = c.get("fallen_road_graph", PackedByteArray())
+		if not zones.is_empty() or not block.is_empty():
+			shaped["zones"] = zones
+			shaped["fallen_road_graph"] = RoadGraphBlock.decode(block)
+		return shaped)
 	lines.append("\t\"road_graph\": %s" % JSON.stringify(RoadGraphBlock.decode(data.get_road_graph())))
 	lines.append("}")
 	return "\n".join(lines) + "\n"
@@ -170,6 +182,20 @@ static func _write_pairs(raw: Variant) -> Array:
 		var pair: Array = Variants.array(item)
 		out.append([int(Variants.number(pair[0])), _char_for(int(Variants.number(pair[1])), 0)])
 	return out
+
+
+## [[index, standing, fallen], ...] -> [indices, standing zones, fallen zones]
+static func _zone_writes(raw: Variant) -> Array[PackedInt32Array]:
+	var indices: PackedInt32Array = PackedInt32Array()
+	var standing: PackedInt32Array = PackedInt32Array()
+	var fallen: PackedInt32Array = PackedInt32Array()
+	for item: Variant in Variants.array(raw):
+		var triple: Array = Variants.array(item)
+		if triple.size() == 3:
+			indices.append(int(Variants.number(triple[0])))
+			standing.append(int(Variants.number(triple[1])))
+			fallen.append(int(Variants.number(triple[2])))
+	return [indices, standing, fallen]
 
 
 static func _indices(raw: Variant) -> PackedInt32Array:

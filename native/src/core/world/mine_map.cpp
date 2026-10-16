@@ -295,6 +295,22 @@ bool MineMap::set_collapse(Coord coord, uint32_t collapse_id, bool fallen) {
 			continue;
 		}
 		col.is_fallen = fallen;
+		// GEN-04: a pre-cut alternate swaps its zones and the cell's Road Graph block too.
+		for (const ZoneWrite &z : col.zones) {
+			if (z.index < CELL_AREA) {
+				c->tiles[z.index].zone = fallen ? z.fallen : z.standing;
+			}
+		}
+		if (!col.fallen_road_graph.empty()) {
+			if (fallen) {
+				if (col.standing_road_graph.empty()) {
+					col.standing_road_graph = c->road_graph;
+				}
+				c->road_graph = col.fallen_road_graph;
+			} else if (!col.standing_road_graph.empty()) {
+				c->road_graph = col.standing_road_graph;
+			}
+		}
 		TileChange change{coord, INT64_MAX, INT64_MAX, INT64_MIN, INT64_MIN, fallen ? "collapse_fallen" : "collapse_standing"};
 		for (const TileWrite &wr : fallen ? col.fallen : col.standing) {
 			c->tiles[wr.index].material = wr.material;

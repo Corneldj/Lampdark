@@ -1,5 +1,8 @@
 #include "godot/world/lb_mine.h"
 
+#include "core/gen/template.h"
+#include "core/sound/zone_block.h"
+
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
@@ -63,6 +66,8 @@ void LbCellData::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("add_barrier", "id", "portal", "local_indices", "open"), &LbCellData::add_barrier);
 	ClassDB::bind_method(D_METHOD("add_collapse", "id", "standing_indices", "standing_materials", "fallen_indices", "fallen_materials", "is_fallen"), &LbCellData::add_collapse);
 	ClassDB::bind_method(D_METHOD("set_road_graph", "bytes"), &LbCellData::set_road_graph);
+	ClassDB::bind_method(D_METHOD("set_collapse_zones", "id", "indices", "standing", "fallen", "fallen_road_graph"), &LbCellData::set_collapse_zones);
+	ClassDB::bind_method(D_METHOD("cut_zones", "room_kind"), &LbCellData::cut_zones);
 	ClassDB::bind_method(D_METHOD("get_anchors"), &LbCellData::get_anchors);
 	ClassDB::bind_method(D_METHOD("get_barriers"), &LbCellData::get_barriers);
 	ClassDB::bind_method(D_METHOD("get_collapses"), &LbCellData::get_collapses);
@@ -154,6 +159,38 @@ void LbCellData::set_road_graph(const PackedByteArray &bytes) {
 	cell_->road_graph.assign(bytes.ptr(), bytes.ptr() + bytes.size());
 }
 
+bool LbCellData::set_collapse_zones(int64_t id, const PackedInt32Array &indices, const PackedInt32Array &standing,
+		const PackedInt32Array &fallen, const PackedByteArray &fallen_road_graph) {
+	ERR_FAIL_NULL_V(cell_, false);
+	for (world::Collapse &c : cell_->collapses) {
+		if (c.id != static_cast<uint32_t>(id)) {
+			continue;
+		}
+		c.zones.clear();
+		for (int64_t i = 0; i < indices.size() && i < standing.size() && i < fallen.size(); i++) {
+			c.zones.push_back({static_cast<uint16_t>(indices[i]), static_cast<uint16_t>(standing[i]), static_cast<uint16_t>(fallen[i])});
+		}
+		c.fallen_road_graph.assign(fallen_road_graph.ptr(), fallen_road_graph.ptr() + fallen_road_graph.size());
+		return true;
+	}
+	return false;
+}
+
+bool LbCellData::cut_zones(const String &room_kind) {
+	ERR_FAIL_NULL_V(cell_, false);
+	const std::string kind = to_std(room_kind);
+	uint8_t room = static_cast<uint8_t>(lb::core::sound::ZoneKind::CHAMBER);
+	if (kind == "poi") {
+		room = static_cast<uint8_t>(lb::core::sound::ZoneKind::POI);
+	} else if (kind != "chamber" && kind != "base_camp") {
+		UtilityFunctions::push_error("LbCellData: unknown room kind '", room_kind, "'");
+		return false;
+	}
+	lb::core::gen::cut_zones(*cell_, room, kind == "base_camp");
+	lb::core::gen::cut_collapses(*cell_, room, kind == "base_camp");
+	return true;
+}
+
 Array LbCellData::get_anchors() const {
 	Array out;
 	ERR_FAIL_NULL_V(cell_, out);
@@ -202,6 +239,21 @@ Array LbCellData::get_collapses() const {
 		d["standing"] = tile_writes(c.standing);
 		d["fallen"] = tile_writes(c.fallen);
 		d["is_fallen"] = c.is_fallen;
+		Array zones;
+		for (const world::ZoneWrite &z : c.zones) {
+			Array triple;
+			triple.push_back(static_cast<int64_t>(z.index));
+			triple.push_back(static_cast<int64_t>(z.standing));
+			triple.push_back(static_cast<int64_t>(z.fallen));
+			zones.push_back(triple);
+		}
+		d["zones"] = zones;
+		PackedByteArray block;
+		block.resize(static_cast<int64_t>(c.fallen_road_graph.size()));
+		for (size_t i = 0; i < c.fallen_road_graph.size(); i++) {
+			block.set(static_cast<int64_t>(i), c.fallen_road_graph[i]);
+		}
+		d["fallen_road_graph"] = block;
 		out.push_back(d);
 	}
 	return out;
@@ -225,6 +277,13 @@ int64_t LbCellData::digest() const {
 
 std::unique_ptr<world::Cell> LbCellData::take() {
 	return std::move(cell_);
+}
+
+Ref<LbCellData> LbCellData::wrap(const world::Cell &cell) {
+	Ref<LbCellData> out;
+	out.instantiate();
+	*out->cell_ = cell;
+	return out;
 }
 
 // ---- LbMine ----

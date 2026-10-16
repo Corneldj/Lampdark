@@ -324,7 +324,13 @@ void RoadGraph::on_tiles_changed(Coord cell) {
 	if (it == blocks_.end()) {
 		return;
 	}
-	const CellBlock block = it->second;
+	// GEN-04: a collapse may have swapped in its pre-cut block; the cell's own block is the truth.
+	CellBlock block = it->second;
+	if (const lb::core::world::Cell *c = mine_.cell(cell); c != nullptr && !c->road_graph.empty()) {
+		if (std::optional<CellBlock> now = decode_block(c->road_graph)) {
+			block = *now;
+		}
+	}
 	unload(cell);
 	stitch(cell, block);
 }

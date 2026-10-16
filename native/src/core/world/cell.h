@@ -51,11 +51,23 @@ struct TileWrite {
 };
 
 // A collapse alternate: the standing and fallen tile sets (HAZ-03 decides when it falls).
+// GEN-04: a tile's zone in a collapse's standing and fallen states.
+struct ZoneWrite {
+	uint16_t index = 0;
+	uint16_t standing = 0;
+	uint16_t fallen = 0;
+};
+
 struct Collapse {
 	uint32_t id = 0;
 	std::vector<TileWrite> standing;
 	std::vector<TileWrite> fallen;
 	bool is_fallen = false;
+	// GEN-04: the template's pre-cut fallen state for the Road Graph: each changed tile's zone,
+	// and the cell's whole zone and portal block with this collapse fallen (empty: none cut).
+	std::vector<ZoneWrite> zones;
+	std::vector<uint8_t> fallen_road_graph;
+	std::vector<uint8_t> standing_road_graph; // kept at the first fall, to stand again
 };
 
 struct Cell {

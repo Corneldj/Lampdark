@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # FND-04, per push: the static checks, tuning validation and generated-file freshness (FND-05,
-# FND-07) and the voice set (SND-13). Runs every check and reports each; fails if any failed.
+# FND-07), the template set (GEN-04) and the voice set (SND-13). Runs every check and reports each; fails if any failed.
 set -uo pipefail
 GAME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$GAME_DIR"
@@ -27,6 +27,8 @@ coverage_args=()
 step tuning_coverage "$GODOT" --headless --path . -s tools/build/check_tuning_coverage.gd "${coverage_args[@]}"
 step tuning_client_table "$GODOT" --headless --path . -s tools/build/gen_tuning_client.gd -- --check
 step tuning_keys "$GODOT" --headless --path . -s tools/build/gen_tuning_keys.gd -- --check
+# GEN-04: every template valid, and the committed export, set.json and pack what the sources give.
+step templates "$GODOT" --headless --path . -s tools/build/export_templates.gd -- --check
 step voice_set python3 tools/build/voice_import/voice_import.py check --decode
 step voice_tool python3 -m unittest discover -s tools/build/voice_import/tests
 step kill_test_tools python3 -m unittest discover -s tools/kill_test/tests

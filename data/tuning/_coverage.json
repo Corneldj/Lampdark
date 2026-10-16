@@ -77,7 +77,8 @@
 		"A.1/Set down, hang, pick up": [
 			"lamp.set_down_time",
 			"lamp.pick_up_time",
-			"mine.timber_hook_spacing_tiles"
+			"mine.timber_hook_spacing_tiles",
+			"mine.timber_hook_reach_tiles"
 		],
 		"A.1/Oil burn; full fount": [
 			"lamp.burn_factor_wick_down",
@@ -1415,7 +1416,9 @@
 		"A.11/Templates": [
 			"mine.target_cell_templates",
 			"mine.target_poi_templates",
-			"mine.target_cell_templates_by_biome"
+			"mine.target_cell_templates_by_biome",
+			"mine.rubble_heaps_min",
+			"mine.rubble_heaps_max"
 		],
 		"A.11/Biome patches": [
 			"mine.biome_block_cells",
@@ -1483,6 +1486,7 @@
 			"mine.collapse_min_from_basecamp_tiles",
 			"mine.collapse_min_spacing_tiles",
 			"mine.collapse_min_path_from_sites_tiles",
+			"mine.collapse_length_max_tiles",
 			"hazards.collapse_creak_s",
 			"noise.roof_fall_np"
 		],

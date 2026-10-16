@@ -9,6 +9,7 @@
 #include "godot/voice/lb_voice_playout.h"
 #include "godot/voice/lb_voice_capture.h"
 #include "godot/lb_core_info.h"
+#include "godot/gen/lb_templates.h"
 #include "godot/light/lb_light.h"
 #include "godot/vision/lb_vision.h"
 #include "godot/world/lb_det_math.h"
@@ -48,6 +49,7 @@ void initialize_lampblack_core(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(lb::godot::LbEntityMirror);
 	GDREGISTER_CLASS(lb::godot::LbCellData);
 	GDREGISTER_CLASS(lb::godot::LbMine);
+	GDREGISTER_CLASS(lb::godot::LbTemplates);
 	GDREGISTER_CLASS(lb::godot::LbLightGrid);
 	GDREGISTER_CLASS(lb::godot::LbLightMath);
 	GDREGISTER_CLASS(lb::godot::LbRoadGraph);

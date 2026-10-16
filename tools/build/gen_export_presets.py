@@ -8,11 +8,13 @@ from pathlib import Path
 
 GAME = Path(__file__).resolve().parents[2]
 
-# GUT is a development tool and ships in no build.
-COMMON_EXCLUDE = ["tests/*", "tools/*", "addons/gut/*", ".gutconfig.json"]
+# GUT and the template authoring plugin (GEN-04) are development tools and ship in no build.
+COMMON_EXCLUDE = ["tests/*", "tools/*", "addons/gut/*", "addons/lampblack_templates/*", ".gutconfig.json"]
 # Cell data, templates and the material table are server-only (GEN-01, Gameplay §5.10).
 CLIENT_EXCLUDE = ["server/*", "data/maps/*", "data/templates/*", "data/world/*"] + COMMON_EXCLUDE
-SERVER_EXCLUDE = ["client/*", "data/text/*"] + COMMON_EXCLUDE  # data/text: client-only text (SND-10's notice)
+# data/text: client-only text (SND-10's notice). Servers load template packs, never their sources
+# or the readable export (GEN-04).
+SERVER_EXCLUDE = ["client/*", "data/text/*", "data/templates/src/*", "data/templates/export/*"] + COMMON_EXCLUDE
 RELEASE_EXCLUDE = ["*/debug/*"]
 
 
@@ -67,8 +69,9 @@ def preset_block(index, name, platform, role, flavour, extra):
     else:
         lines += ['export_filter="all_resources"']
     lines += [
-        # SND-13's character voices (.lbv) are raw files the client reads, not imported resources.
-        f'include_filter="{"*.json, *.lbv" if role == "client" else "*.json"}"',
+        # SND-13's character voices (.lbv) are raw files the client reads, not imported resources;
+        # GEN-04's template packs (.lbtp) are raw files the server reads.
+        f'include_filter="{"*.json, *.lbv" if role == "client" else "*.json, *.lbtp"}"',
         f'exclude_filter="{", ".join(exclude)}"',
         f'export_path="build/{name}/{EXE[(platform, role)]}"',
         "patches=PackedStringArray()",

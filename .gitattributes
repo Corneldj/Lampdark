@@ -5,6 +5,8 @@
 
 # Golden files hold the same bytes on every platform (FND-06)
 *.golden -text
+# Template packs are binary, byte for byte the exporter's (GEN-04)
+*.lbtp -text
 
 # Binary assets go through Git LFS
 *.png filter=lfs diff=lfs merge=lfs -text
