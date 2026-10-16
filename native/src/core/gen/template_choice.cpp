@@ -1,5 +1,7 @@
 #include "core/gen/template_choice.h"
 
+#include "core/gen/derive.h"
+
 #include "core/generated/hash_domains.h"
 #include "core/rng/hash.h"
 
@@ -26,9 +28,25 @@ bool TemplateSet::load(const std::vector<uint8_t> &pack) {
 }
 
 void TemplateSet::build_index() {
+	transposed_.clear();
+	transposed_of_.clear();
 	for (const Template &t : templates_) {
 		index_[{t.kind, t.biome}].push_back(&t);
+		if (t.kind == TemplateKind::MAIN_ROAD) {
+			transposed_.push_back(transpose(t));
+		}
 	}
+	size_t k = 0;
+	for (const Template &t : templates_) {
+		if (t.kind == TemplateKind::MAIN_ROAD) {
+			transposed_of_[&t] = &transposed_[k++];
+		}
+	}
+}
+
+const Template *TemplateSet::transposed(const Template *t) const {
+	auto it = transposed_of_.find(t);
+	return it == transposed_of_.end() ? t : it->second;
 }
 
 const std::vector<const Template *> &TemplateSet::of(TemplateKind kind, const std::string &biome) const {
@@ -64,15 +82,27 @@ bool covers(const Template &t, const CellSockets &sockets) {
 
 Choice choose_template(const TemplateSet &set, TemplateKind kind, const std::string &biome, const CellSockets &sockets,
 		uint64_t seed, Coord cell, int32_t reroll, int32_t reroll_limit) {
+	CellClass cls;
+	cls.kind = kind;
+	cls.biome = biome;
+	return choose_template(set, cls, sockets, seed, cell, reroll, reroll_limit);
+}
+
+Choice choose_template(const TemplateSet &set, const CellClass &cls, const CellSockets &sockets, uint64_t seed, Coord cell,
+		int32_t reroll, int32_t reroll_limit) {
 	Choice out;
 	if (reroll < reroll_limit) {
 		// Weights as whole thousandths, so the pick is integer arithmetic on every machine.
 		std::vector<std::pair<const Template *, uint64_t>> candidates;
 		uint64_t total = 0;
-		for (const Template *t : set.of(kind, biome)) {
+		for (const Template *t : set.of(cls.kind, cls.biome)) {
+			if (t->shape != cls.shape || t->old_fall != cls.old_fall) {
+				continue;
+			}
+			const Template *use = cls.transpose ? set.transposed(t) : t;
 			const uint64_t w = t->weight > 0.0 ? static_cast<uint64_t>(std::llround(t->weight * 1000.0)) : 0;
-			if (w > 0 && covers(*t, sockets)) {
-				candidates.emplace_back(t, w);
+			if (w > 0 && covers(*use, sockets)) {
+				candidates.emplace_back(use, w);
 				total += w;
 			}
 		}
@@ -88,7 +118,7 @@ Choice choose_template(const TemplateSet &set, TemplateKind kind, const std::str
 			}
 		}
 	}
-	out.chosen = set.fallback(biome);
+	out.chosen = set.fallback(cls.dress.empty() ? cls.biome : cls.dress);
 	out.fallback = out.chosen != nullptr;
 	return out;
 }

@@ -25,6 +25,8 @@ const STEAM_FAKE_ID: int = 20  # hash, STM-01
 const RESCUE_COMING_ROUND: int = 23  # stream, RSC-04
 const PROFILE_NAMES: int = 21  # stream, MOD-01
 const PROFILE_LAMP_NUMBERS: int = 22  # stream, MOD-01
+const GEN_MAINROAD: int = 24  # hash, GEN-07
+const GEN_OLDFALL: int = 25  # hash, GEN-07
 
 const ALL: Dictionary = {
 	"gen.socket.open": 1,
@@ -50,4 +52,6 @@ const ALL: Dictionary = {
 	"rescue.coming_round": 23,
 	"profile.names": 21,
 	"profile.lamp_numbers": 22,
+	"gen.mainroad": 24,
+	"gen.oldfall": 25,
 }

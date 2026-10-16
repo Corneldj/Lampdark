@@ -25,6 +25,11 @@ const TILE_PX: int = 16
 		footprint = value
 		queue_redraw()
 @export var poi_kind: String = ""
+## A main road's shape (GEN-07), drawn east to west: its bend's position, or a crossing ("none"
+## for every other kind).
+@export_enum("none", "straight", "bend_5", "bend_10", "bend_15", "crossing") var shape: String = "none"
+## A straight main road choked at its middle, with exits north at 5 and south at 15.
+@export var old_fall: bool = false
 @export var weight: float = 1.0
 @export var author_version: int = 1
 

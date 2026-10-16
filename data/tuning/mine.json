@@ -436,6 +436,16 @@
 			"kind": "param",
 			"note": "ticket GEN-07"
 		},
+		"mine.main_road_bend_reach_tiles": {
+			"value": 2,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket GEN-07: a bend breaks the line of sight; no straight floor run along the road reaches from this many tiles before the bend to this many after"
+		},
 		"mine.main_road_max_ring": {
 			"value": 3,
 			"type": "int",

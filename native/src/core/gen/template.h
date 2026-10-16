@@ -54,6 +54,10 @@ struct Template {
 	int32_t footprint_w = 1;
 	int32_t footprint_h = 1;
 	std::string poi_kind;
+	// GEN-07: a main-road template's shape, drawn east to west: "straight", "bend_5", "bend_10",
+	// "bend_15" or "crossing"; old_fall for a straight road choked at its middle.
+	std::string shape;
+	bool old_fall = false;
 	double weight = 1.0;
 	uint32_t author_version = 1;
 	std::vector<lb::core::world::Cell> cells; // coords (0, 0) .. (w - 1, h - 1)
@@ -83,6 +87,9 @@ struct ValidateParams {
 	std::map<std::string, int32_t> poi_slots; // point-of-interest kind -> contents lines (GEN-09)
 	std::set<std::string> poi_phone_kinds; // kinds with a pit phone (LFT-12)
 	std::string lair_kind = "lair";
+	int32_t main_road_width = 3; // mine.main_road_width_tiles (GEN-07)
+	int32_t main_road_offset = 10; // mine.main_road_edge_offset_tiles
+	int32_t bend_reach = 2; // mine.main_road_bend_reach_tiles: no sight line spans the bend +/- this
 };
 
 struct Problem {
@@ -99,6 +106,11 @@ std::optional<TemplateKind> kind_from(const std::string &name);
 // Every rule's problems, in rule order (empty: valid).
 std::vector<Problem> validate(const Template &t, const ValidateParams &p);
 std::string describe(const Template &t, const Problem &problem); // "template <id>: <rule>: cell (x, y) tile (x, y): ..."
+
+// GEN-07: a one-cell template turned about its main diagonal ((x, y) -> (y, x)): tiles, anchors,
+// barriers, collapses and rib art; north stubs become west ones and south east ones at the same
+// offsets, so an east-west main road serves north-south lines. Zones and portals are cut again.
+Template transpose(const Template &t);
 
 // The throat tiles of a stub at `width`, as footprint-global tiles: along its edge from
 // offset - floor(width / 2) (GEN-05's opening rule), `depth` tiles in.
@@ -119,7 +131,7 @@ void cut_collapses(lb::core::world::Cell &cell, uint8_t room_kind, bool base_cam
 
 // The packed binary (data/templates/packs/<set_version>.lbtp): "LBTP", u16 format, the set
 // version, then each template with its cells. Little-endian, canonical.
-constexpr uint16_t PACK_FORMAT = 1;
+constexpr uint16_t PACK_FORMAT = 2; // 2 adds GEN-07's shape and old_fall; format 1 packs still load
 std::vector<uint8_t> encode_pack(const std::string &set_version, const std::vector<Template> &templates);
 struct Pack {
 	std::string set_version;

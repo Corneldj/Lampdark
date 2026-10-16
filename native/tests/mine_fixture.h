@@ -1,5 +1,5 @@
 #pragma once
-// Builds cells from ASCII rows for GEN-01's tests: '.' floor, '#' rock, 'c' coal, 'B' brick,
+// Builds cells from ASCII rows for GEN-01's tests: '.' floor, '=' rails, '~' sump mud, '#' rock, 'c' coal, 'B' brick,
 // 'T' timber, 'S' shut steel gate, 's' open gate, 'D' shut air door, 'd' open air door.
 // Missing rows and columns are rock.
 
@@ -22,6 +22,14 @@ inline std::unique_ptr<Cell> cell_from(Coord coord, const std::vector<std::strin
 			Tile &t = cell->tiles[Cell::index_of(x, y)];
 			switch (ch) {
 				case '.': t.material = static_cast<uint8_t>(TileMaterial::FLOOR); break;
+				case '=':
+					t.material = static_cast<uint8_t>(TileMaterial::FLOOR);
+					t.state = STATE_RAIL;
+					break;
+				case '~':
+					t.material = static_cast<uint8_t>(TileMaterial::FLOOR);
+					t.state = STATE_MUD;
+					break;
 				case 'c': t.material = static_cast<uint8_t>(TileMaterial::COAL); break;
 				case 'B': t.material = static_cast<uint8_t>(TileMaterial::BRICK); break;
 				case 'T': t.material = static_cast<uint8_t>(TileMaterial::TIMBER); break;

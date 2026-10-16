@@ -94,6 +94,7 @@ void LbLayouts::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("force_socket", "cell", "side", "socket"), &LbLayouts::force_socket);
 	ClassDB::bind_method(D_METHOD("socket", "cell", "side"), &LbLayouts::socket);
 	ClassDB::bind_method(D_METHOD("biome_of", "cell"), &LbLayouts::biome_of);
+	ClassDB::bind_method(D_METHOD("road_of", "cell"), &LbLayouts::road_of);
 	ClassDB::bind_method(D_METHOD("derive", "cell", "reroll"), &LbLayouts::derive);
 	ClassDB::bind_method(D_METHOD("set_caching", "on"), &LbLayouts::set_caching);
 	ClassDB::bind_method(D_METHOD("clear_caches"), &LbLayouts::clear_caches);
@@ -114,6 +115,24 @@ void LbLayouts::rebuild() {
 	in.header = &header_;
 	in.templates = set_.get();
 	in.cells = cells_.get();
+	road_sockets_.reset();
+	road_cells_.reset();
+	roads_.reset();
+	if (has_roads_) {
+		// The arches run into the cells beyond base camp's open edges (GEN-02): no old fall there.
+		std::set<lb::core::world::Coord> arch_cells;
+		for (int e = 0; e < 4; e++) {
+			const std::optional<gen::Socket> s = header_.forced.query(gen::edge_of({0, 0}, static_cast<gen::Edge>(e)));
+			if (s && s->open) {
+				arch_cells.insert(gen::neighbour({0, 0}, static_cast<gen::Edge>(e)));
+			}
+		}
+		roads_ = std::make_unique<gen::MainRoads>(header_.seed, road_params_, ring_bounds_, arch_cells);
+		road_cells_ = std::make_unique<gen::MainRoadCells>(*roads_, *cells_);
+		road_sockets_ = std::make_unique<gen::MainRoadSockets>(*roads_, *road_cells_, header_.sockets);
+		in.cells = road_cells_.get();
+		in.providers = {road_sockets_.get()};
+	}
 	deriver_ = std::make_unique<gen::Deriver>(in);
 	deriver_->set_caching(caching_);
 	deriver_->set_verify(verify_);
@@ -142,9 +161,27 @@ void LbLayouts::configure(int64_t seed, const Dictionary &params) {
 		header_.reroll_limit = static_cast<int32_t>(static_cast<int64_t>(params["reroll_limit"]));
 	}
 	if (params.has("biomes")) {
-		cells_ = std::make_unique<gen::BiomeCells>(header_.seed, biome_table(params["biomes"]), header_.sockets);
+		const gen::BiomeTable table = biome_table(params["biomes"]);
+		ring_bounds_ = table.ring_bounds;
+		cells_ = std::make_unique<gen::BiomeCells>(header_.seed, table, header_.sockets);
 	} else {
 		cells_ = std::make_unique<gen::UniformCells>(to_std(String(params.get("biome", ""))), header_.sockets.widths);
+	}
+	has_roads_ = params.has("main_roads");
+	if (has_roads_) {
+		const Dictionary r = params["main_roads"];
+		auto get = [&](const char *key, int32_t fallback) {
+			return r.has(key) ? static_cast<int32_t>(std::llround(static_cast<double>(r[key]))) : fallback;
+		};
+		road_params_.spacing = get("spacing", road_params_.spacing);
+		road_params_.width = get("width", road_params_.width);
+		road_params_.offset = get("offset", road_params_.offset);
+		road_params_.run_min = get("run_min", road_params_.run_min);
+		road_params_.run_max = get("run_max", road_params_.run_max);
+		road_params_.max_ring = get("max_ring", road_params_.max_ring);
+		if (r.has("old_fall_probability")) {
+			road_params_.old_fall_ppm = static_cast<uint32_t>(std::llround(static_cast<double>(r["old_fall_probability"]) * 1000000.0));
+		}
 	}
 	rebuild();
 }
@@ -169,6 +206,21 @@ Dictionary LbLayouts::socket(Vector2i cell, const String &side) const {
 
 String LbLayouts::biome_of(Vector2i cell) const {
 	return String::utf8(cells_->classify({cell.x, cell.y}).biome.c_str());
+}
+
+Dictionary LbLayouts::road_of(Vector2i cell) const {
+	Dictionary out;
+	const bool main = roads_ && roads_->is_main_road_cell({cell.x, cell.y});
+	out["main_road"] = main;
+	out["crossing"] = main && roads_->is_crossing({cell.x, cell.y});
+	if (main) {
+		const gen::CellClass c = road_cells_->classify({cell.x, cell.y});
+		out["shape"] = String::utf8(c.shape.c_str());
+		out["old_fall"] = c.old_fall;
+		out["transpose"] = c.transpose;
+		out["dress"] = String::utf8(c.dress.c_str());
+	}
+	return out;
 }
 
 Dictionary LbLayouts::derive(Vector2i cell, int64_t reroll) const {

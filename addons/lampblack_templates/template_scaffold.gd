@@ -36,6 +36,8 @@ static func from_spec(spec: Dictionary) -> TemplateSource:
 	var footprint: Array = Variants.array(spec.get("footprint", [1, 1]))
 	src.footprint = Vector2i(int(Variants.number(footprint[0])), int(Variants.number(footprint[1])))
 	src.poi_kind = str(spec.get("poi_kind", ""))
+	src.shape = str(spec.get("shape", "")) if not str(spec.get("shape", "")).is_empty() else "none"
+	src.old_fall = Variants.flag(spec.get("old_fall", false))
 	src.weight = float(Variants.number(spec.get("weight", 1.0)))
 	src.author_version = int(Variants.number(spec.get("author_version", 1)))
 	var geometry: TileMapLayer = _layer("Geometry", palette, src)

@@ -110,31 +110,6 @@ std::vector<uint8_t> flood4(const Grid &g, const std::vector<uint8_t> &walk, Coo
 	return seen;
 }
 
-// The first walkable tile not 4-connected to the first walkable tile, if any.
-std::optional<Coord> disconnected(const Grid &g, const std::vector<uint8_t> &walk) {
-	std::optional<Coord> first;
-	for (int32_t y = 0; y < g.h && !first; y++) {
-		for (int32_t x = 0; x < g.w; x++) {
-			if (walk[g.at(x, y)]) {
-				first = Coord{x, y};
-				break;
-			}
-		}
-	}
-	if (!first) {
-		return std::nullopt;
-	}
-	const std::vector<uint8_t> seen = flood4(g, walk, *first);
-	for (int32_t y = 0; y < g.h; y++) {
-		for (int32_t x = 0; x < g.w; x++) {
-			if (walk[g.at(x, y)] && !seen[g.at(x, y)]) {
-				return Coord{x, y};
-			}
-		}
-	}
-	return std::nullopt;
-}
-
 struct Out {
 	std::vector<Problem> &list;
 	void add(const std::string &rule, int32_t gx, int32_t gy, const std::string &message) {
@@ -209,10 +184,76 @@ std::set<size_t> throat_set(const Template &t, const Grid &g) {
 	return out;
 }
 
+// Each walkable tile's 4-connected piece, numbered from 1 in scan order (0 for none).
+std::vector<int32_t> pieces(const Grid &g, const std::vector<uint8_t> &walk, int32_t &count) {
+	std::vector<int32_t> label(walk.size(), 0);
+	count = 0;
+	for (int32_t y = 0; y < g.h; y++) {
+		for (int32_t x = 0; x < g.w; x++) {
+			if (!walk[g.at(x, y)] || label[g.at(x, y)] != 0) {
+				continue;
+			}
+			count++;
+			std::deque<Coord> q{Coord{x, y}};
+			label[g.at(x, y)] = count;
+			while (!q.empty()) {
+				const Coord c = q.front();
+				q.pop_front();
+				const Coord next[4] = {{c.x + 1, c.y}, {c.x - 1, c.y}, {c.x, c.y + 1}, {c.x, c.y - 1}};
+				for (const Coord &n : next) {
+					const int32_t nx = static_cast<int32_t>(n.x);
+					const int32_t ny = static_cast<int32_t>(n.y);
+					if (g.in(nx, ny) && walk[g.at(nx, ny)] && label[g.at(nx, ny)] == 0) {
+						label[g.at(nx, ny)] = count;
+						q.push_back(n);
+					}
+				}
+			}
+		}
+	}
+	return label;
+}
+
+// A tile of `after` (a subset of `before`'s floor) cut off from floor it shared a piece with in
+// `before`: removing tiles split a piece. nullopt if every piece stayed whole.
+std::optional<Coord> split_from(const Grid &g, const std::vector<uint8_t> &before, const std::vector<uint8_t> &after) {
+	int32_t nb = 0;
+	int32_t na = 0;
+	const std::vector<int32_t> lb = pieces(g, before, nb);
+	const std::vector<int32_t> la = pieces(g, after, na);
+	std::map<int32_t, int32_t> first_after; // before piece -> the first after piece inside it
+	for (int32_t y = 0; y < g.h; y++) {
+		for (int32_t x = 0; x < g.w; x++) {
+			const int32_t a = la[g.at(x, y)];
+			if (a == 0) {
+				continue;
+			}
+			auto it = first_after.find(lb[g.at(x, y)]);
+			if (it == first_after.end()) {
+				first_after[lb[g.at(x, y)]] = a;
+			} else if (it->second != a) {
+				return Coord{x, y};
+			}
+		}
+	}
+	return std::nullopt;
+}
+
 void rule_connected(const Template &t, const Grid &g, Out &out) {
-	(void)t;
-	if (std::optional<Coord> c = disconnected(g, g.walk)) {
-		out.add("connected_floor", c->x, c->y, "floor not 4-connected to the rest with every collapse standing");
+	// One piece; a main road's old fall leaves two, one on each side (GEN-07's rule checks which).
+	const int32_t allowed = t.kind == TemplateKind::MAIN_ROAD && t.old_fall ? 2 : 1;
+	int32_t count = 0;
+	const std::vector<int32_t> label = pieces(g, g.walk, count);
+	if (count <= allowed) {
+		return;
+	}
+	for (int32_t y = 0; y < g.h; y++) {
+		for (int32_t x = 0; x < g.w; x++) {
+			if (label[g.at(x, y)] == allowed + 1) {
+				out.add("connected_floor", x, y, "floor not 4-connected to the rest with every collapse standing");
+				return;
+			}
+		}
 	}
 }
 
@@ -382,8 +423,8 @@ void rule_stubs(const Template &t, const Grid &g, const ValidateParams &p, Out &
 				}
 			}
 		}
-		if (std::optional<Coord> c = disconnected(g, walk)) {
-			out.add("stubs", c->x, c->y, "filling stubs (mask " + std::to_string(mask) + ") splits the floor");
+		if (std::optional<Coord> c = split_from(g, g.walk, walk)) {
+			out.add("stubs", static_cast<int32_t>(c->x), static_cast<int32_t>(c->y), "filling stubs (mask " + std::to_string(mask) + ") splits the floor");
 			return;
 		}
 	}
@@ -400,8 +441,8 @@ void rule_stubs(const Template &t, const Grid &g, const ValidateParams &p, Out &
 					walk[g.at(c.x, c.y)] = 0;
 				}
 			}
-			if (std::optional<Coord> c = disconnected(g, walk)) {
-				out.add("stubs", c->x, c->y, "narrowing a stub to " + std::to_string(w) + " splits the floor");
+			if (std::optional<Coord> c = split_from(g, g.walk, walk)) {
+				out.add("stubs", static_cast<int32_t>(c->x), static_cast<int32_t>(c->y), "narrowing a stub to " + std::to_string(w) + " splits the floor");
 				return;
 			}
 		}
@@ -576,12 +617,12 @@ void rule_collapses(const Template &t, const Grid &g, const ValidateParams &p, O
 				out.add("collapses", falls[0].x, falls[0].y, "collapse " + std::to_string(col.id) + " longer than " + std::to_string(p.collapse_length_max) + " tiles");
 				return;
 			}
-			// The fallen set chokes its road: the floor is no longer one piece.
+			// The fallen set chokes its road: it splits a piece of floor.
 			std::vector<uint8_t> walk = g.walk;
 			for (const Coord &f : falls) {
 				walk[g.at(f.x, f.y)] = 0;
 			}
-			if (!disconnected(g, walk)) {
+			if (!split_from(g, g.walk, walk)) {
 				out.add("collapses", falls[0].x, falls[0].y, "collapse " + std::to_string(col.id) + " does not choke its road");
 				return;
 			}
@@ -762,7 +803,128 @@ void rule_fallback(const Template &t, const ValidateParams &p, Out &out) {
 	}
 }
 
+// GEN-07: a main-road template, drawn east to west: its road stubs at the road's offset and width,
+// rails on the centre line at every road mouth, a bend that breaks the line of sight, and an old
+// fall that chokes the road with an exit on each side (north at 5, south at 15).
+void rule_main_road(const Template &t, const Grid &g, const ValidateParams &p, Out &out) {
+	if (t.kind != TemplateKind::MAIN_ROAD) {
+		return;
+	}
+	static const std::set<std::string> SHAPES{"straight", "bend_5", "bend_10", "bend_15", "crossing"};
+	if (t.footprint_w != 1 || t.footprint_h != 1) {
+		out.add("main_road", -1, -1, "a main road is one cell");
+		return;
+	}
+	if (SHAPES.count(t.shape) == 0) {
+		out.add("main_road", -1, -1, "shape '" + t.shape + "' is not straight, bend_5, bend_10, bend_15 or crossing");
+		return;
+	}
+	if (t.old_fall && t.shape != "straight") {
+		out.add("main_road", -1, -1, "only a straight main road holds an old fall");
+		return;
+	}
+	const Cell &cell = t.cells.front();
+	std::vector<Edge> ends{Edge::WEST, Edge::EAST};
+	if (t.shape == "crossing") {
+		ends.push_back(Edge::NORTH);
+		ends.push_back(Edge::SOUTH);
+	}
+	const int32_t o = p.main_road_offset;
+	for (Edge e : ends) {
+		bool found = false;
+		for (const Stub &s : t.stubs) {
+			found = found || (s.edge == e && s.offset == o && s.max_width == p.main_road_width);
+		}
+		const Coord mouth = e == Edge::WEST ? Coord{0, o} : e == Edge::EAST ? Coord{CELL_TILES - 1, o}
+				: e == Edge::NORTH                                          ? Coord{o, 0}
+																			: Coord{o, CELL_TILES - 1};
+		const auto &tile = cell.tiles[static_cast<size_t>(Cell::index_of(mouth.x, mouth.y))];
+		if (!found) {
+			out.add("main_road", static_cast<int32_t>(mouth.x), static_cast<int32_t>(mouth.y),
+					"no road stub here at offset " + std::to_string(o) + ", " + std::to_string(p.main_road_width) + " wide");
+		} else if (tile.material != static_cast<uint8_t>(TileMaterial::FLOOR) || (tile.state & lb::core::world::STATE_RAIL) == 0) {
+			out.add("main_road", static_cast<int32_t>(mouth.x), static_cast<int32_t>(mouth.y), "no rail on the road's centre line at its mouth");
+		}
+	}
+	if (t.shape.rfind("bend_", 0) == 0) {
+		// The bend breaks the line of sight (Proposed measure): no straight floor run along the road
+		// reaches from bend_reach tiles before it to bend_reach after.
+		const int32_t at = std::stoi(t.shape.substr(5));
+		for (int32_t y = 0; y < g.h; y++) {
+			bool through = true;
+			for (int32_t x = std::max(0, at - p.bend_reach); x <= std::min(g.w - 1, at + p.bend_reach); x++) {
+				through = through && g.walk[g.at(x, y)];
+			}
+			if (through) {
+				out.add("main_road", at, y, "a straight line of sight runs through the bend");
+				break;
+			}
+		}
+	}
+	if (t.old_fall) {
+		const Stub *north = nullptr;
+		const Stub *south = nullptr;
+		for (const Stub &s : t.stubs) {
+			north = s.edge == Edge::NORTH && s.offset == 5 ? &s : north;
+			south = s.edge == Edge::SOUTH && s.offset == 15 ? &s : south;
+		}
+		if (north == nullptr || south == nullptr) {
+			out.add("main_road", -1, -1, "an old fall needs a side stub north at 5 and south at 15");
+			return;
+		}
+		int32_t count = 0;
+		const std::vector<int32_t> label = pieces(g, g.walk, count);
+		const Coord nw = throat(t, *north, 1).front();
+		const Coord se = throat(t, *south, 1).front();
+		const int32_t west = label[g.at(0, o)];
+		const int32_t east = label[g.at(CELL_TILES - 1, o)];
+		if (count != 2 || west == east || label[g.at(static_cast<int32_t>(nw.x), static_cast<int32_t>(nw.y))] != west || label[g.at(static_cast<int32_t>(se.x), static_cast<int32_t>(se.y))] != east) {
+			out.add("main_road", o, o, "the old fall must split the road in two, the north exit with the west end and the south exit with the east");
+		}
+	}
+}
+
 } // namespace
+
+Template transpose(const Template &t) {
+	Template out = t;
+	if (t.cells.size() != 1) {
+		return out;
+	}
+	auto flip = [](uint16_t i) { return static_cast<uint16_t>((i % CELL_TILES) * CELL_TILES + i / CELL_TILES); };
+	const Cell &c = t.cells.front();
+	Cell n = c;
+	for (int64_t y = 0; y < CELL_TILES; y++) {
+		for (int64_t x = 0; x < CELL_TILES; x++) {
+			n.tiles[static_cast<size_t>(Cell::index_of(y, x))] = c.tiles[static_cast<size_t>(Cell::index_of(x, y))];
+		}
+	}
+	for (Anchor &a : n.anchors) {
+		std::swap(a.x, a.y);
+		std::swap(a.w, a.h);
+	}
+	for (auto &col : n.collapses) {
+		for (auto &w : col.standing) {
+			w.index = flip(w.index);
+		}
+		for (auto &w : col.fallen) {
+			w.index = flip(w.index);
+		}
+	}
+	using lb::core::sound::ZoneKind;
+	const uint8_t room = static_cast<uint8_t>(t.kind == TemplateKind::POI ? ZoneKind::POI : ZoneKind::CHAMBER);
+	cut_zones(n, room, t.kind == TemplateKind::BASE_CAMP);
+	cut_collapses(n, room, t.kind == TemplateKind::BASE_CAMP);
+	out.cells = {n};
+	for (Stub &s : out.stubs) {
+		static const Edge SWAP[4] = {Edge::WEST, Edge::SOUTH, Edge::EAST, Edge::NORTH}; // N->W, E->S, S->E, W->N
+		s.edge = SWAP[static_cast<size_t>(s.edge)];
+	}
+	for (RibOffset &r : out.rib) {
+		r.index = flip(r.index);
+	}
+	return out;
+}
 
 std::vector<Coord> throat(const Template &t, const Stub &s, int32_t width) {
 	std::vector<Coord> out;
@@ -809,6 +971,7 @@ std::vector<Problem> validate(const Template &t, const ValidateParams &p) {
 	rule_anchor_fit(t, g, mine, p, out);
 	rule_poi(t, p, out);
 	rule_fallback(t, p, out);
+	rule_main_road(t, g, p, out);
 	return list;
 }
 

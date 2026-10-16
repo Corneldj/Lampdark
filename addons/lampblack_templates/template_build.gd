@@ -94,7 +94,8 @@ static func build(src: TemplateSource, rules_in: Dictionary) -> Dictionary:
 			data.cut_zones(room_kind)
 			cells.append(data)
 	var template: Dictionary = {"id": src.template_id, "kind": src.kind, "biome": src.biome, "footprint": [size.x, size.y],
-		"poi_kind": src.poi_kind, "weight": src.weight, "author_version": src.author_version, "stubs": stubs, "rib": rib, "cells": cells}
+		"poi_kind": src.poi_kind, "shape": "" if src.shape == "none" else src.shape, "old_fall": src.old_fall, "weight": src.weight, "author_version": src.author_version,
+		"stubs": stubs, "rib": rib, "cells": cells}
 	return {"template": template if errors.is_empty() else {}, "errors": errors}
 
 
@@ -130,6 +131,9 @@ static func rules(tuning: TuningSet, extra: Dictionary = {}) -> Dictionary:
 		"gas_dead_end_max": roundi(tuning.f(&"hazards.blackdamp_road_max_tiles")),
 		"collapse_length_max": roundi(tuning.f(&"mine.collapse_length_max_tiles")),
 		"biome_widths_max": tuning.table(&"mine.biome_socket_widths_max"),
+		"main_road_width": roundi(tuning.f(&"mine.main_road_width_tiles")),
+		"main_road_offset": roundi(tuning.f(&"mine.main_road_edge_offset_tiles")),
+		"bend_reach": roundi(tuning.f(&"mine.main_road_bend_reach_tiles")),
 	}
 	if FileAccess.file_exists(POI_KINDS):
 		var table: Dictionary = Variants.dict(JSON.parse_string(FileAccess.get_file_as_string(POI_KINDS)))
@@ -173,8 +177,8 @@ static func files(template: Dictionary) -> Dictionary:
 		out["%s/cell_%d_%d.json" % [id, c.x, c.y]] = CellFile.serialize(data)
 	var lines: PackedStringArray = PackedStringArray(["{"])
 	lines.append("\t\"format\": %d," % FORMAT)
-	for key: String in ["id", "kind", "biome", "footprint", "poi_kind", "weight", "author_version"]:
-		lines.append("\t\"%s\": %s," % [key, JSON.stringify(template[key])])
+	for key: String in ["id", "kind", "biome", "footprint", "poi_kind", "shape", "old_fall", "weight", "author_version"]:
+		lines.append("\t\"%s\": %s," % [key, JSON.stringify(template.get(key, "" if key == "shape" else false))])
 	lines.append("\t\"cells\": %s," % JSON.stringify(cells))
 	for key: String in ["stubs", "rib"]:
 		var items: Array = Variants.array(template[key])
@@ -201,8 +205,9 @@ static func load_export(dir: String) -> Dictionary:
 			return {}
 		cells.append(data)
 	var template: Dictionary = {}
-	for key: String in ["id", "kind", "biome", "poi_kind"]:
+	for key: String in ["id", "kind", "biome", "poi_kind", "shape"]:
 		template[key] = str(meta.get(key, ""))
+	template["old_fall"] = Variants.flag(meta.get("old_fall", false))
 	var footprint: Array = Variants.array(meta.get("footprint", [1, 1]))
 	template["footprint"] = [int(Variants.number(footprint[0])), int(Variants.number(footprint[1]))]
 	template["weight"] = float(Variants.number(meta.get("weight", 1.0)))

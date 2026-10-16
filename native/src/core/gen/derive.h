@@ -28,9 +28,15 @@ struct RunHeader {
 // interest). `templated` is false for base camp, which GEN-02 builds.
 struct CellClass {
 	TemplateKind kind = TemplateKind::BIOME_CELL;
-	std::string biome;
+	std::string biome; // the template pool's biome ("main_road" for a main-road cell)
 	std::vector<int32_t> widths;
 	bool templated = true;
+	// GEN-07, a main-road cell: the template shape it needs, its old fall, whether its road runs
+	// north-south (east-west templates are transposed), and the biome that dresses it.
+	std::string shape;
+	bool old_fall = false;
+	bool transpose = false;
+	std::string dress;
 };
 
 class CellClassifier {

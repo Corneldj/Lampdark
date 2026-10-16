@@ -5,6 +5,8 @@
 	"biome": "seam",
 	"footprint": [1,1],
 	"poi_kind": "",
+	"shape": "",
+	"old_fall": false,
 	"weight": 1.0,
 	"author_version": 1,
 	"cells": [[0,0]],

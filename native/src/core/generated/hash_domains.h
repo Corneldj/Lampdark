@@ -30,6 +30,8 @@ constexpr uint64_t STEAM_FAKE_ID = 20; // hash, STM-01
 constexpr uint64_t RESCUE_COMING_ROUND = 23; // stream, RSC-04
 constexpr uint64_t PROFILE_NAMES = 21; // stream, MOD-01
 constexpr uint64_t PROFILE_LAMP_NUMBERS = 22; // stream, MOD-01
+constexpr uint64_t GEN_MAINROAD = 24; // hash, GEN-07
+constexpr uint64_t GEN_OLDFALL = 25; // hash, GEN-07
 
 struct Entry {
 	const char *name;
@@ -60,6 +62,8 @@ constexpr Entry ALL[] = {
 	{"rescue.coming_round", 23},
 	{"profile.names", 21},
 	{"profile.lamp_numbers", 22},
+	{"gen.mainroad", 24},
+	{"gen.oldfall", 25},
 };
 constexpr size_t COUNT = sizeof(ALL) / sizeof(ALL[0]);
 

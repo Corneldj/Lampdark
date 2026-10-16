@@ -58,6 +58,8 @@ bool template_from(const Dictionary &d, gen::Template &t, std::string &why) {
 	t.kind = *kind;
 	t.biome = to_std(String(d.get("biome", "")));
 	t.poi_kind = to_std(String(d.get("poi_kind", "")));
+	t.shape = to_std(String(d.get("shape", "")));
+	t.old_fall = static_cast<bool>(d.get("old_fall", false));
 	const world::Coord fp = pair_coord(d.get("footprint", Array()));
 	t.footprint_w = static_cast<int32_t>(fp.x);
 	t.footprint_h = static_cast<int32_t>(fp.y);
@@ -115,6 +117,8 @@ Dictionary dict_from(const gen::Template &t) {
 	fp.push_back(t.footprint_h);
 	d["footprint"] = fp;
 	d["poi_kind"] = from_std(t.poi_kind);
+	d["shape"] = from_std(t.shape);
+	d["old_fall"] = t.old_fall;
 	d["weight"] = t.weight;
 	d["author_version"] = static_cast<int64_t>(t.author_version);
 	Array stubs;
@@ -191,6 +195,9 @@ gen::ValidateParams params_from(const Dictionary &d) {
 	if (d.has("lair_kind")) {
 		p.lair_kind = to_std(String(d["lair_kind"]));
 	}
+	i32("main_road_width", p.main_road_width);
+	i32("main_road_offset", p.main_road_offset);
+	i32("bend_reach", p.bend_reach);
 	return p;
 }
 

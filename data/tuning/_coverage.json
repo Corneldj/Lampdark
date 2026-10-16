@@ -1406,7 +1406,9 @@
 			"mine.main_road_run_min_tiles",
 			"mine.main_road_run_max_tiles",
 			"mine.old_fall_probability",
-			"mine.main_road_max_ring"
+			"mine.main_road_max_ring",
+			"mine.main_road_edge_offset_tiles",
+			"mine.main_road_bend_reach_tiles"
 		],
 		"A.11/Sockets": [
 			"mine.socket_widths_tiles",

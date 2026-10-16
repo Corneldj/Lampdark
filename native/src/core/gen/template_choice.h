@@ -31,10 +31,14 @@ public:
 	const std::vector<const Template *> &of(TemplateKind kind, const std::string &biome) const;
 	// The biome's plain fallback (its first by id), or nullptr.
 	const Template *fallback(const std::string &biome) const;
+	// A main-road template turned for a north-south road (GEN-07), made once at load.
+	const Template *transposed(const Template *t) const;
 
 private:
 	std::string version_;
 	std::vector<Template> templates_;
+	std::vector<Template> transposed_;
+	std::map<const Template *, const Template *> transposed_of_;
 	std::map<std::pair<TemplateKind, std::string>, std::vector<const Template *>> index_;
 	void build_index();
 };
@@ -53,5 +57,11 @@ struct Choice {
 // at the reroll limit (GEN-12's).
 Choice choose_template(const TemplateSet &set, TemplateKind kind, const std::string &biome, const CellSockets &sockets,
 		uint64_t seed, lb::core::world::Coord cell, int32_t reroll, int32_t reroll_limit);
+
+struct CellClass;
+// The same for a classified cell (GEN-07): only templates of its shape and old fall, transposed
+// for a north-south road; a main-road cell falls back to its dressing biome's plain fallback.
+Choice choose_template(const TemplateSet &set, const CellClass &cls, const CellSockets &sockets, uint64_t seed,
+		lb::core::world::Coord cell, int32_t reroll, int32_t reroll_limit);
 
 } // namespace lb::core::gen

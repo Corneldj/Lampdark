@@ -225,6 +225,27 @@
 			"keys": [
 				"what the draw is for: 0 the first roster, else the replaced miner's id"
 			]
+		},
+		{
+			"name": "gen.mainroad",
+			"id": 24,
+			"owner": "GEN-07",
+			"kind": "hash",
+			"keys": [
+				"axis",
+				"line",
+				"segment"
+			]
+		},
+		{
+			"name": "gen.oldfall",
+			"id": 25,
+			"owner": "GEN-07",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y"
+			]
 		}
 	]
 }

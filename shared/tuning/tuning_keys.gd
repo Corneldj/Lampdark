@@ -352,6 +352,7 @@ const MINE_LAIR_MIN_BEARING_FROM_HOARD_DEG: StringName = &"mine.lair_min_bearing
 const MINE_LAMP_CABIN_REGIONS_PER: StringName = &"mine.lamp_cabin_regions_per"
 const MINE_LANDMARK_NO_REPEAT_CELLS: StringName = &"mine.landmark_no_repeat_cells"
 const MINE_LANDMARKS_PER_CELL: StringName = &"mine.landmarks_per_cell"
+const MINE_MAIN_ROAD_BEND_REACH_TILES: StringName = &"mine.main_road_bend_reach_tiles"
 const MINE_MAIN_ROAD_EDGE_OFFSET_TILES: StringName = &"mine.main_road_edge_offset_tiles"
 const MINE_MAIN_ROAD_MAX_RING: StringName = &"mine.main_road_max_ring"
 const MINE_MAIN_ROAD_RUN_MAX_TILES: StringName = &"mine.main_road_run_max_tiles"

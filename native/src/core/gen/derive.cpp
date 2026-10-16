@@ -1,5 +1,7 @@
 #include "core/gen/derive.h"
 
+#include "core/gen/main_roads.h"
+
 #include "core/generated/hash_domains.h"
 #include "core/rng/hash.h"
 
@@ -55,14 +57,16 @@ std::optional<Layout> layout_from(const DeriveInputs &in, Coord cell, int32_t re
 		out.digest = layout_digest(out);
 		return out;
 	}
-	const Choice choice = choose_template(*in.templates, cls.kind, cls.biome, sockets, in.header->seed, cell, reroll,
-			in.header->reroll_limit);
+	const Choice choice = choose_template(*in.templates, cls, sockets, in.header->seed, cell, reroll, in.header->reroll_limit);
 	if (choice.chosen == nullptr) {
 		return std::nullopt;
 	}
 	out.fallback = choice.fallback;
 	out.template_id = choice.chosen->id;
 	out.cell = fill_stubs(*choice.chosen, sockets, cell);
+	if (choice.chosen->kind == TemplateKind::MAIN_ROAD) {
+		dress(out.cell, cls.dress); // GEN-07: main-road templates take their faces from the biome they cross
+	}
 	out.digest = layout_digest(out);
 	return out;
 }

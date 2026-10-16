@@ -2,9 +2,9 @@ class_name MineLayouts
 extends RefCounted
 ## GEN-05: the run's layout deriver (LbLayouts) set up from data: the template pack the run names
 ## (data/templates/set.json's current set unless a resumed run names its own, §12.6), the socket
-## numbers and GEN-06's biome table from tuning, and base camp's forced sockets (GEN-02). GEN-11
-## derives cells from it on its workers (cell_data). Server-only: no socket, layout, biome or seed
-## reaches a client.
+## numbers, GEN-06's biome table and GEN-07's main roads from tuning, and base camp's forced
+## sockets (GEN-02). GEN-11 derives cells from it on its workers (cell_data). Server-only: no
+## socket, layout, biome or seed reaches a client.
 
 const TEMPLATES: String = "res://data/templates"
 
@@ -32,6 +32,15 @@ static func configure(layouts: LbLayouts, run_seed: int) -> void:
 		"widths": Tuning.list_i(&"mine.socket_widths_tiles"),
 		"reroll_limit": roundi(Tuning.f(&"mine.validator_max_rerolls")),
 		"biomes": biome_table(),
+		"main_roads": {
+			"spacing": Tuning.i(&"mine.main_road_spacing_cells"),
+			"width": roundi(Tuning.f(&"mine.main_road_width_tiles")),
+			"offset": roundi(Tuning.f(&"mine.main_road_edge_offset_tiles")),
+			"run_min": roundi(Tuning.f(&"mine.main_road_run_min_tiles")),
+			"run_max": roundi(Tuning.f(&"mine.main_road_run_max_tiles")),
+			"max_ring": Tuning.i(&"mine.main_road_max_ring"),
+			"old_fall_probability": Tuning.f(&"mine.old_fall_probability"),
+		},
 	})
 	var gates: Dictionary = Basecamp.gate_sockets(run_seed)
 	for side: String in Basecamp.SIDES:

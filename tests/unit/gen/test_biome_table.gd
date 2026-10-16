@@ -62,8 +62,8 @@ func test_openings_take_widths_both_cells_allow() -> void:
 			if a == Vector2i.ZERO or b == Vector2i.ZERO:
 				continue
 			var s: Dictionary = layouts.socket(a, "east")
-			if not Variants.flag(s["open"]):
-				continue
+			if not Variants.flag(s["open"]) or Variants.flag(s["forced"]):
+				continue # main roads (GEN-07) are 3 wide whatever the biome
 			open += 1
 			var w: int = int(Variants.number(s["width"]))
 			var ba: String = layouts.biome_of(a)
@@ -79,7 +79,7 @@ func test_openings_take_widths_both_cells_allow() -> void:
 
 func test_a_templates_stubs_keep_to_its_biomes_widths() -> void:
 	var problems: Array[String] = []
-	Specs.pack([Specs.grid_spec("old_mens_grid", "biome_cell", "old_mens", 1.0)], problems)
+	Specs.pack([Specs.grid_spec("old_mens_grid", "biome_cell", "old_mens", 1.0, 3)], problems)
 	assert_eq(problems.size(), 12, "each 3-wide stub in the Old Men's Workings (1 wide) is refused")
 	if not problems.is_empty():
 		assert_eq(problems[0], "template old_mens_grid: stubs: cell (0, 0) tile (5, 0): stub width 3 wider than the biome allows (1)")

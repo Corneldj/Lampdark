@@ -213,6 +213,8 @@ std::vector<uint8_t> encode_pack(const std::string &set_version, const std::vect
 		w.u8(static_cast<uint64_t>(t.footprint_w));
 		w.u8(static_cast<uint64_t>(t.footprint_h));
 		w.str(t.poi_kind);
+		w.str(t.shape);
+		w.u8(t.old_fall ? 1 : 0);
 		uint64_t bits = 0;
 		std::memcpy(&bits, &t.weight, sizeof bits);
 		w.u64(bits);
@@ -248,7 +250,8 @@ std::optional<Pack> decode_pack(const std::vector<uint8_t> &bytes) {
 	}
 	size_t at = 4;
 	R r{bytes, at};
-	if (r.u16() != PACK_FORMAT) {
+	const uint64_t format = r.u16();
+	if (format != 1 && format != PACK_FORMAT) {
 		return std::nullopt;
 	}
 	Pack pack;
@@ -269,6 +272,10 @@ std::optional<Pack> decode_pack(const std::vector<uint8_t> &bytes) {
 		t.footprint_w = static_cast<int32_t>(r.u8());
 		t.footprint_h = static_cast<int32_t>(r.u8());
 		t.poi_kind = r.str();
+		if (format >= 2) {
+			t.shape = r.str();
+			t.old_fall = r.u8() != 0;
+		}
 		const uint64_t bits = r.u64();
 		std::memcpy(&t.weight, &bits, sizeof bits);
 		t.author_version = static_cast<uint32_t>(r.u32());
@@ -276,7 +283,11 @@ std::optional<Pack> decode_pack(const std::vector<uint8_t> &bytes) {
 		for (Stub &s : t.stubs) {
 			s.cell.x = static_cast<int64_t>(r.u8());
 			s.cell.y = static_cast<int64_t>(r.u8());
-			s.edge = static_cast<Edge>(r.u8());
+			const uint64_t edge = r.u8();
+			if (edge >= static_cast<uint64_t>(Edge::COUNT)) {
+				return std::nullopt;
+			}
+			s.edge = static_cast<Edge>(edge);
 			s.offset = static_cast<int32_t>(r.u8());
 			s.max_width = static_cast<int32_t>(r.u8());
 			s.depth = static_cast<int32_t>(r.u8());
