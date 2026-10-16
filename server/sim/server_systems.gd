@@ -227,6 +227,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.two_miner = TwoMinerJobs.new()
 	run.two_miner.bind(run)
 	run.add_system(run.two_miner)
+	# LFT-03: the repair list, drawn from the run seed (MOD-03 chooses its kind).
+	run.repair = RepairListState.new()
+	run.repair.bind(run, net)
+	run.add_system(run.repair)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:

@@ -23,6 +23,7 @@ enum Op {
 	PEN = 17,  ## server, frames lane: pen u16, blob (a stroke as it is made, unsigned)
 	PEN_UP = 18,  ## server: pen u16 (that stroke is done or abandoned)
 	FREEZE = 19,  ## server: digest s64, count u32, run uuid (the sheet as the cage left it)
+	SELECT = 20,  ## both: u8 SheetKind, the sheet the ops after it are for (none: the map table)
 }
 
 
@@ -60,6 +61,13 @@ static func sketch(stroke_seq: int, points: PackedVector2Array) -> PackedByteArr
 	var out: PackedByteArray = _head(Op.SKETCH, 2)
 	out.encode_u16(1, stroke_seq & 0xFFFF)
 	out.append_array(blob)
+	return out
+
+
+## The sheet the ops after it in a message are for (LFT-03: the Manual's pencil).
+static func select(kind: int) -> PackedByteArray:
+	var out: PackedByteArray = _head(Op.SELECT, 1)
+	out[1] = kind
 	return out
 
 
@@ -140,8 +148,8 @@ static func freeze(digest: int, count: int, run_uuid: String) -> PackedByteArray
 
 
 ## Every op in a message, in order: dictionaries with "op" and its fields ("seq", "id", "points",
-## "anchor", "text", "author", "pen", "on", "digest", "count", "run_uuid"). [] when any part is
-## malformed: a message is taken whole or not at all.
+## "anchor", "text", "author", "pen", "on", "digest", "count", "run_uuid", "sheet"). [] when any
+## part is malformed: a message is taken whole or not at all.
 static func decode(payload: PackedByteArray) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	var at: int = 0
@@ -153,6 +161,23 @@ static func decode(payload: PackedByteArray) -> Array[Dictionary]:
 			return [] as Array[Dictionary]
 		out.append(d)
 		at = next
+	return out
+
+
+## Decoded ops by the sheet they are for (SELECT switches it; none means the map table):
+## SheetKind -> Array[Dictionary], each in order, the SELECTs left out.
+static func by_sheet(ops: Array[Dictionary]) -> Dictionary:
+	var out: Dictionary = {}
+	var kind: int = SheetKind.Kind.MAP_TABLE
+	for d: Dictionary in ops:
+		if int(Variants.number(d["op"])) == Op.SELECT:
+			kind = int(Variants.number(d["sheet"]))
+			continue
+		var list: Array[Dictionary] = []
+		if out.has(kind):
+			list = out[kind]
+		list.append(d)
+		out[kind] = list
 	return out
 
 
@@ -206,6 +231,11 @@ static func _fields(b: PackedByteArray, at: int, op: int, d: Dictionary) -> int:
 			if at + 1 > b.size() or b[at] > 1:
 				return -1
 			d["on"] = b[at] == 1
+			return at + 1
+		Op.SELECT:
+			if at + 1 > b.size() or not SheetKind.is_valid(b[at]):
+				return -1
+			d["sheet"] = b[at]
 			return at + 1
 		Op.FREEZE:
 			if at + 12 > b.size():

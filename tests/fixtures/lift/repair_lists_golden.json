@@ -1,0 +1,102 @@
+{
+	"1": [
+		"power,fuel,magneto,free_cage,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,free_cage,start",
+		"power,fuel,magneto,drive_belt,free_cage,rope_clamps,start"
+	],
+	"10": [
+		"power,fuel,drive_belt,free_cage,start",
+		"power,fuel,drive_belt,brake_shoes,drum_gear,free_cage,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,rope_clamps,start"
+	],
+	"11": [
+		"power,fuel,brake_shoes,drum_gear,start",
+		"power,fuel,drive_belt,brake_shoes,drum_gear,free_cage,start",
+		"power,fuel,magneto,drive_belt,free_cage,rope_clamps,start"
+	],
+	"12": [
+		"power,fuel,free_cage,rope_clamps,start",
+		"power,fuel,brake_shoes,drum_gear,free_cage,rope_clamps,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,rope_clamps,start"
+	],
+	"13": [
+		"power,fuel,magneto,drive_belt,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,free_cage,start",
+		"power,fuel,magneto,brake_shoes,free_cage,rope_clamps,start"
+	],
+	"14": [
+		"power,fuel,drive_belt,rope_clamps,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,rope_clamps,start",
+		"power,fuel,magneto,drive_belt,free_cage,rope_clamps,start"
+	],
+	"15": [
+		"power,fuel,magneto,free_cage,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,free_cage,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,free_cage,start"
+	],
+	"16": [
+		"power,fuel,free_cage,rope_clamps,start",
+		"power,fuel,magneto,drum_gear,free_cage,rope_clamps,start",
+		"power,fuel,magneto,drive_belt,free_cage,rope_clamps,start"
+	],
+	"17": [
+		"power,fuel,drum_gear,free_cage,start",
+		"power,fuel,drive_belt,drum_gear,free_cage,rope_clamps,start",
+		"power,fuel,drive_belt,brake_shoes,free_cage,rope_clamps,start"
+	],
+	"18": [
+		"power,fuel,drum_gear,free_cage,start",
+		"power,fuel,magneto,brake_shoes,drum_gear,free_cage,start",
+		"power,fuel,magneto,drive_belt,free_cage,rope_clamps,start"
+	],
+	"19": [
+		"power,fuel,drive_belt,brake_shoes,start",
+		"power,fuel,drive_belt,brake_shoes,drum_gear,free_cage,start",
+		"power,fuel,magneto,brake_shoes,free_cage,rope_clamps,start"
+	],
+	"2": [
+		"power,fuel,drum_gear,free_cage,start",
+		"power,fuel,brake_shoes,drum_gear,free_cage,rope_clamps,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,rope_clamps,start"
+	],
+	"20": [
+		"power,fuel,brake_shoes,free_cage,start",
+		"power,fuel,magneto,brake_shoes,free_cage,rope_clamps,start",
+		"power,fuel,magneto,brake_shoes,free_cage,rope_clamps,start"
+	],
+	"3": [
+		"power,fuel,drum_gear,free_cage,start",
+		"power,fuel,magneto,brake_shoes,drum_gear,free_cage,start",
+		"power,fuel,magneto,drive_belt,free_cage,rope_clamps,start"
+	],
+	"4": [
+		"power,fuel,drive_belt,drum_gear,start",
+		"power,fuel,magneto,drive_belt,drum_gear,rope_clamps,start",
+		"power,fuel,drive_belt,brake_shoes,free_cage,rope_clamps,start"
+	],
+	"5": [
+		"power,fuel,magneto,drive_belt,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,free_cage,start",
+		"power,fuel,drive_belt,brake_shoes,free_cage,rope_clamps,start"
+	],
+	"6": [
+		"power,fuel,drive_belt,drum_gear,start",
+		"power,fuel,drive_belt,brake_shoes,drum_gear,rope_clamps,start",
+		"power,fuel,magneto,drive_belt,free_cage,rope_clamps,start"
+	],
+	"7": [
+		"power,fuel,brake_shoes,drum_gear,start",
+		"power,fuel,drive_belt,brake_shoes,drum_gear,free_cage,start",
+		"power,fuel,drive_belt,brake_shoes,free_cage,rope_clamps,start"
+	],
+	"8": [
+		"power,fuel,drum_gear,free_cage,start",
+		"power,fuel,brake_shoes,drum_gear,free_cage,rope_clamps,start",
+		"power,fuel,drive_belt,brake_shoes,free_cage,rope_clamps,start"
+	],
+	"9": [
+		"power,fuel,drive_belt,brake_shoes,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,drum_gear,start",
+		"power,fuel,magneto,drive_belt,brake_shoes,free_cage,start"
+	]
+}

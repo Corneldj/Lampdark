@@ -71,6 +71,8 @@ var callout_wheel: CalloutWheel = null
 ## LFT-14: the map table's close-up, and the map card once the sheet freezes (RSC-06 shows it).
 var map_table: MapTableCloseup = null
 var map_card: Image = null
+## LFT-03: the Manual at its lectern.
+var manual_closeup: ManualCloseup = null
 var _closeup_messages_seen: int = 0
 var _ui_violations_seen: Dictionary = {}
 var drawn: DrawnSet = DrawnSet.new()
@@ -280,6 +282,16 @@ func _start_input() -> void:
 	map_table.show_keyboard = func(field: Rect2i) -> bool:
 		return steam != null and steam.mode == SteamService.Mode.STEAM and steam.api.show_floating_keyboard(field)
 	closeups.register(CloseupKind.Kind.MAP_TABLE, map_table)
+	manual_closeup = ManualCloseup.new()
+	manual_closeup.name = "ManualCloseup"
+	manual_closeup.client_sheet = func() -> ClientSheet:
+		return connection.sheet_of(SheetKind.Kind.MANUAL) if connection != null else null
+	manual_closeup.manual_list = func() -> Dictionary: return connection.manual if connection != null else {}
+	manual_closeup.store = bindings
+	manual_closeup.router = router
+	manual_closeup.pad_state = map_table.pad_state
+	manual_closeup.show_keyboard = map_table.show_keyboard
+	closeups.register(CloseupKind.Kind.MANUAL, manual_closeup)
 	AudioBuses.install()
 	events_player = EventPlayer.new()
 	events_player.name = "EventPlayer"

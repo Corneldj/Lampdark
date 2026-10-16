@@ -71,11 +71,15 @@ static func sheet_messages(h: MinerHandle) -> Array[Dictionary]:
 	return out
 
 
-## The ops of every SHEET message, in order, of the kinds asked (all when empty).
-static func ops_of(h: MinerHandle, kinds: Array = []) -> Array[Dictionary]:
+## The ops for one sheet (the map table's unless asked) of every SHEET message, in order, of the
+## kinds asked (all when empty).
+static func ops_of(h: MinerHandle, kinds: Array = [], sheet: int = SheetKind.Kind.MAP_TABLE) -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
 	for m: Dictionary in sheet_messages(h):
-		for d: Dictionary in Variants.array(m["ops"]):
+		var ops: Array[Dictionary] = []
+		ops.assign(Variants.array(m["ops"]))
+		var parts: Dictionary = SheetCodec.by_sheet(ops)
+		for d: Dictionary in Variants.array(parts.get(sheet, [])):
 			if kinds.is_empty() or kinds.has(int(Variants.number(d["op"]))):
 				out.append(d)
 	return out

@@ -11,6 +11,8 @@ extends RefCounted
 ## A little slack on the server's one-second window, so jitter never bunches commits into it.
 const WINDOW_USEC: int = 1100000
 
+## Which sheet this copy is (SheetKind): the Manual's pencil (LFT-03) leads its messages with SELECT.
+var kind: int = SheetKind.Kind.MAP_TABLE
 ## (lane, payload) -> Error: sends one SHEET message (ClientConnection wires it).
 var send: Callable = Callable()
 ## STM-08's FilterText: (text, author SteamID) -> String. Every label that carries an author (a
@@ -42,17 +44,27 @@ var _lifted: Dictionary = {}
 var _resync_asked: bool = false
 
 
-## One SHEET message from the server. False when malformed.
+func _init(of_kind: int = SheetKind.Kind.MAP_TABLE) -> void:
+	kind = of_kind
+
+
+## One SHEET message from the server, all of it for this sheet. False when malformed.
 func on_message(payload: PackedByteArray, now_usec: int) -> bool:
 	var ops: Array[Dictionary] = SheetCodec.decode(payload)
 	if ops.is_empty():
 		malformed += 1
 		return false
+	apply_ops(ops, now_usec)
+	return true
+
+
+## This sheet's ops from one message (ClientConnection splits a message by sheet).
+func apply_ops(ops: Array[Dictionary], now_usec: int) -> void:
 	messages += 1
 	for d: Dictionary in ops:
-		_apply(d, now_usec)
+		if int(Variants.number(d["op"])) != SheetCodec.Op.SELECT:
+			_apply(d, now_usec)
 	revision += 1
-	return true
 
 
 func _apply(d: Dictionary, now_usec: int) -> void:
@@ -224,5 +236,7 @@ func _take_seq() -> int:
 func _send(lane: int, payload: PackedByteArray) -> Error:
 	if not send.is_valid():
 		return ERR_UNCONFIGURED
-	var r: Variant = send.call(lane, payload)
+	var body: PackedByteArray = SheetCodec.select(kind) if kind != SheetKind.Kind.MAP_TABLE else PackedByteArray()
+	body.append_array(payload)
+	var r: Variant = send.call(lane, body)
 	return int(Variants.number(r)) as Error

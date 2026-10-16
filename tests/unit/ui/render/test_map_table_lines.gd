@@ -26,7 +26,7 @@ func _closeup(cs: ClientSheet, squares: float, weight: float) -> MapTableCloseup
 ## The line's ink across row `y` near x: the sum of each pixel's darkening, paper to pencil.
 func _ink(img: Image, x: int, y: int) -> float:
 	var paper: float = CloseupBase.PAPER.get_luminance()
-	var pencil: float = MapTableCloseup.PENCIL_GREY.get_luminance()
+	var pencil: float = SheetCloseup.PENCIL_GREY.get_luminance()
 	var ink: float = 0.0
 	for dx: int in range(-12, 13):
 		var l: float = img.get_pixel(x + dx, y).get_luminance()

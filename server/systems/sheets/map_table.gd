@@ -1,7 +1,8 @@
 class_name MapTable
 extends RefCounted
 ## LFT-14: the map table in base camp (Gameplay §12.7, §14.3), the crew's only map: one shared
-## survey sheet, drawn only by miners at the table with its close-up open. It holds the sheet, who
+## survey sheet, drawn only by miners at the table with its close-up open. LFT-03 keeps the
+## Manual's pencil layer in one of these too (`kind`, SheetKind.MANUAL), with its own section. It holds the sheet, who
 ## drew what (by identity, so a resume keeps it), and the sheet's copy in the diff log's run-level
 ## section (GEN-13: kept through knock-offs and resumes, gone with the run after Lamp Check). It
 ## never draws, snaps or updates anything itself: a road drawn open stays open after a fall until
@@ -14,6 +15,8 @@ signal frozen_now(cause: String)
 ## x s16, y s16, a length byte and its UTF-8; and the author table and next id under "meta".
 const META: String = "meta"
 
+## Which sheet this is (SheetKind): its close-up and its diff-log section.
+var kind: int = SheetKind.Kind.MAP_TABLE
 var sheet: Sheet = Sheet.new()
 ## Identities (SteamIDs, or dev names) of everyone who has drawn, by author index.
 var authors: PackedStringArray = PackedStringArray()
@@ -24,9 +27,13 @@ var freeze_cause: String = ""
 var _section: DiffLog.Section = null
 
 
+func _init(of_kind: int = SheetKind.Kind.MAP_TABLE) -> void:
+	kind = of_kind
+
+
 func bind(run: RunState) -> void:
 	if run.diff_log != null:
-		_section = run.diff_log.run_section(DiffLog.MAP_TABLE)
+		_section = run.diff_log.run_section(str(SheetKind.SECTIONS[kind]))
 		# Before every save and compaction: the next id, so a resume never reuses one.
 		run.diff_log.on_refresh(func(_r: RunState) -> void: _keep_meta())
 

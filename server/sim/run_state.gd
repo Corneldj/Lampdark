@@ -135,6 +135,8 @@ var alone_watch: AloneWatch = null
 var lone: LoneSwitchboard = null
 ## LFT-04: the jobs for two (cue-and-press and shared work) and their places.
 var two_miner: TwoMinerJobs = null
+## LFT-03: the run's repair list and which jobs are done.
+var repair: RepairListState = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

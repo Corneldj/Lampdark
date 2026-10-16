@@ -17,7 +17,9 @@ extends SimSystem
 ##   frames lane and only to the other miners with the table open, under a pen number that names
 ##   nobody; a commit, or the drawer leaving the table, lifts the pen (PEN_UP).
 ## - Once the sheet freezes (the cage's departure or a wipe) every client is sent all of it, then
-##   its digest (FREEZE) for the map card. Server-only.
+##   its digest (FREEZE) for the map card.
+## One sync a sheet (LFT-03: the Manual's pencil is another, its messages led by a SELECT op);
+## readers are the miners in that sheet's close-up. Server-only.
 
 ## One client's sync.
 class Client:
@@ -46,6 +48,8 @@ class Client:
 
 const LIVE_LIVES: Array[int] = [MinerTransitions.Life.UPRIGHT, MinerTransitions.Life.CAUGHT, MinerTransitions.Life.GRABBED]
 
+## The sheet this syncs (SheetKind).
+var kind: int = SheetKind.Kind.MAP_TABLE
 ## STM-08's safety lists: (slot) -> the identities its player blocks. Unset: nobody is blocked.
 var blocks_of: Callable = Callable()
 ## slot -> Client.
@@ -67,16 +71,20 @@ var _sketch_ticks: Dictionary = {}
 var _lifted_seq: Dictionary = {}
 
 
+func _init(of_kind: int = SheetKind.Kind.MAP_TABLE) -> void:
+	kind = of_kind
+
+
 func stage() -> int:
 	return StageTable.Stage.SEND
 
 
 func order() -> int:
-	return 10
+	return 10 + kind
 
 
 func system_name() -> String:
-	return "sheet_sync"
+	return "sheet_sync" if kind == SheetKind.Kind.MAP_TABLE else "sheet_sync_%s" % SheetKind.SECTIONS[kind]
 
 
 func bind(run: RunState, net: ServerNet, table: MapTable) -> void:
@@ -182,7 +190,8 @@ func tick(run: RunState) -> void:
 		_send(run, session, c, entity)
 		if _table.frozen and not c.freeze_told and c.queue.is_empty() and c.backlog.is_empty():
 			c.freeze_told = true
-			var msg: PackedByteArray = SheetCodec.freeze(digest_for(c), _held_count(c), run.header.run_uuid)
+			var msg: PackedByteArray = _prefix()
+			msg.append_array(SheetCodec.freeze(digest_for(c), _held_count(c), run.header.run_uuid))
 			_net.transport.send(session.peer, Lane.Id.BULK, Protocol.frame(Protocol.Msg.SHEET, msg))
 		_close_tick(c)
 	for raw: Variant in clients.keys():
@@ -207,37 +216,34 @@ func digest_for(c: Client) -> int:
 	return view.digest()
 
 
-## SND-07's pattern for SKETCH, between ticks (ServerNet.service) or in its pump: the drawer's
-## newest points to the others at the table at once. False only for a malformed message.
-func on_sketch(slot: int, payload: PackedByteArray) -> bool:
-	var ops: Array[Dictionary] = SheetCodec.decode(payload)
-	if ops.size() != 1 or int(Variants.number(ops[0]["op"])) != SheetCodec.Op.SKETCH:
-		return false
+## A drawer's newest points (SheetService takes SKETCH between ticks, as SND-07 takes voice): to the
+## others reading this sheet at once.
+func relay(slot: int, seq: int, points: PackedVector2Array) -> void:
 	if _run == null or _table.frozen or _run.closeups == null:
 		sketches_refused += 1
-		return true
+		return
 	var entity: int = _miner_of(_run, slot)
-	var points: PackedVector2Array = ops[0]["points"]
-	if entity == 0 or _run.closeups.kind_of(entity) != CloseupKind.Kind.MAP_TABLE or not _sketch_window(slot) \
+	if entity == 0 or not _at_table(_run, entity) or not _sketch_window(slot) \
 			or points.size() > Tuning.i(&"mine.sheet_stroke_max_points"):
 		sketches_refused += 1
-		return true
-	var seq: int = int(Variants.number(ops[0]["seq"]))
+		return
 	if int(Variants.number(_lifted_seq.get(slot, -1))) == seq:
-		return true
+		return
 	var pen: Array = Variants.array(_pens.get(slot, []))
 	if pen.is_empty() or int(Variants.number(pen[0])) != seq:
 		_lift(slot)
 		_next_pen = (_next_pen % 0xFFFF) + 1
 		pen = [seq, _next_pen]
 		_pens[slot] = pen
-	var msg: PackedByteArray = Protocol.frame(Protocol.Msg.SHEET, SheetCodec.pen(int(Variants.number(pen[1])), points))
+	var body: PackedByteArray = _prefix()
+	body.append_array(SheetCodec.pen(int(Variants.number(pen[1])), points))
+	var msg: PackedByteArray = Protocol.frame(Protocol.Msg.SHEET, body)
 	var author: String = _identity_of(slot)
 	for session: Sessions.Session in _net.sessions.welcomed():
 		if session.slot == slot:
 			continue
 		var reader: int = _miner_of(_run, session.slot)
-		if reader == 0 or _run.closeups.kind_of(reader) != CloseupKind.Kind.MAP_TABLE:
+		if not _at_table(_run, reader):
 			continue
 		var c: Client = clients.get(session.slot, null)
 		if c != null and c.blocked.has(author):
@@ -249,7 +255,11 @@ func on_sketch(slot: int, payload: PackedByteArray) -> bool:
 			_run.replication.native.spend(session.slot, msg.size())
 		pen_bytes[session.slot] = int(Variants.number(pen_bytes.get(session.slot, 0))) + msg.size()
 	_net.transport.flush()
-	return true
+
+
+## This sheet's ops are led by a SELECT unless it is the map table's.
+func _prefix() -> PackedByteArray:
+	return SheetCodec.select(kind) if kind != SheetKind.Kind.MAP_TABLE else PackedByteArray()
 
 
 ## A stroke as made fits the reader's last second with room kept for the frames.
@@ -328,7 +338,9 @@ func _send(run: RunState, session: Sessions.Session, c: Client, entity: int) -> 
 			out.append_array(bytes)
 	if out.is_empty():
 		return
-	var msg: PackedByteArray = Protocol.frame(Protocol.Msg.SHEET, out)
+	var body: PackedByteArray = _prefix()
+	body.append_array(out)
+	var msg: PackedByteArray = Protocol.frame(Protocol.Msg.SHEET, body)
 	_net.transport.send(session.peer, Lane.Id.BULK, msg)
 	if run.replication != null and not _table.frozen:
 		run.replication.native.spend(session.slot, msg.size())
@@ -392,8 +404,8 @@ func _down_bytes(c: Client) -> int:
 ## One op's bytes for this client, or none when it no longer applies (an id gone or blocked, a
 ## removal of something never sent). Pure: _apply() records it once it is sent.
 func _bytes_for(c: Client, op: Array, public: bool) -> PackedByteArray:
-	var kind: int = op[0]
-	match kind:
+	var op_kind: int = op[0]
+	match op_kind:
 		SheetCodec.Op.ADD_STROKE:
 			var id: int = op[1]
 			if c.held.has(id) or not _table.sheet.has(id) or _blocks(c, _author_of(id)):
@@ -474,8 +486,9 @@ func _held_count(c: Client) -> int:
 	return c.held.size()
 
 
+## Reading this sheet now: in its close-up.
 func _at_table(run: RunState, entity: int) -> bool:
-	return entity != 0 and run.closeups != null and run.closeups.kind_of(entity) == CloseupKind.Kind.MAP_TABLE
+	return entity != 0 and run.closeups != null and run.closeups.kind_of(entity) == SheetKind.close_up(kind)
 
 
 func _identity_of(slot: int) -> String:

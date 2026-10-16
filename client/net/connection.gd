@@ -54,8 +54,12 @@ var callouts: Array[CalloutRecord] = []
 ## UI-02: the own close-up and the board's seat as last received (CloseupKind.decode); {} before any.
 var closeup: Dictionary = {}
 var closeup_messages: int = 0
-## LFT-14: this client's copy of the map table's sheet (shown only in its close-up).
-var sheet: ClientSheet = ClientSheet.new()
+## LFT-14: this client's copy of the map table's sheet (shown only in its close-up), and LFT-03's
+## of the Manual's pencil layer: SheetKind -> ClientSheet.
+var sheet: ClientSheet = ClientSheet.new(SheetKind.Kind.MAP_TABLE)
+var sheets: Dictionary = {}
+## LFT-03: the run's repair list as the Manual prints it ({kind, cans, jobs}), {} until first shown.
+var manual: Dictionary = {}
 ## SND-07: voice packets from the server in arrival order, [packet, arrival usec]; VoicePlayback
 ## drains them (a bounded queue: older ones go first if nobody does).
 var voice_in: Array[Array] = []
@@ -86,7 +90,11 @@ var _started_usec: int = 0
 
 func _init(net_transport: Transport) -> void:
 	transport = net_transport
-	sheet.send = func(lane: int, payload: PackedByteArray) -> Error: return send(lane, payload, Protocol.Msg.SHEET)
+	sheets[SheetKind.Kind.MAP_TABLE] = sheet
+	sheets[SheetKind.Kind.MANUAL] = ClientSheet.new(SheetKind.Kind.MANUAL)
+	for raw: Variant in sheets.values():
+		var cs: ClientSheet = raw
+		cs.send = func(lane: int, payload: PackedByteArray) -> Error: return send(lane, payload, Protocol.Msg.SHEET)
 	if Tuning.current.has_key(&"net.handshake_timeout_s"):
 		handshake_timeout_usec = roundi(Tuning.f(&"net.handshake_timeout_s") * 1000000.0)
 
@@ -120,8 +128,16 @@ func poll() -> void:
 	if state == State.CONNECTED and clock.ping_due(now):
 		transport.send(peer, Lane.Id.CONTROL, Protocol.ping(now))
 	if state == State.CONNECTED:
-		sheet.pump(now)
+		for raw: Variant in sheets.values():
+			var cs: ClientSheet = raw
+			cs.pump(now)
 	transport.flush()
+
+
+## LFT-14 and LFT-03: this client's copy of a sheet (SheetKind), or null.
+func sheet_of(kind: int) -> ClientSheet:
+	var cs: ClientSheet = sheets.get(kind, null)
+	return cs
 
 
 func send(lane: int, payload: PackedByteArray, type: int) -> Error:
@@ -240,7 +256,16 @@ func _on_message(event: TransportEvent, now: int) -> void:
 				callouts.append(r)
 		Protocol.Msg.SHEET:
 			if event.lane == Lane.Id.BULK or event.lane == Lane.Id.FRAMES:
-				sheet.on_message(payload, now)
+				var parts: Dictionary = SheetCodec.by_sheet(SheetCodec.decode(payload))
+				for raw: Variant in parts.keys():
+					var cs: ClientSheet = sheets.get(int(Variants.number(raw)), null)
+					if cs != null:
+						var ops: Array[Dictionary] = parts[raw]
+						cs.apply_ops(ops, now)
+		Protocol.Msg.MANUAL:
+			var list: Dictionary = RepairJobs.decode(payload)
+			if not list.is_empty():
+				manual = list
 		Protocol.Msg.CLOSE_UP:
 			var c: Dictionary = CloseupKind.decode(payload)
 			if not c.is_empty():

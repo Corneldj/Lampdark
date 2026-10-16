@@ -289,10 +289,11 @@ func _check_status(slot: int, payload: PackedByteArray) -> void:
 		_fail(slot, "STATUS", "status", "not exactly the receiving miner's own status")
 
 
-## LFT-14: the map table's ops. Only server ops, whole; strokes as made (PEN) alone on the frames
-## lane and only to a client whose miner reads the table; everything else on the bulk lane; nothing
-## to a client whose miner is unconscious or dead unless the sheet is frozen (the map card); a
-## label's author only in a public lobby (STM-08's filter); FREEZE only once frozen.
+## LFT-14: a sheet's ops (LFT-03: SELECT names the sheet for the ops after it). Only server ops,
+## whole; strokes as made (PEN) alone on the frames lane and only to a client whose miner reads that
+## sheet; everything else on the bulk lane; nothing to a client whose miner is unconscious or dead
+## unless the sheet is frozen (the map card); a label's author only in a public lobby (STM-08's
+## filter); FREEZE only for the map table, once frozen.
 const SHEET_CLIENT_OPS: Array[int] = [SheetCodec.Op.COMMIT_STROKE, SheetCodec.Op.COMMIT_LABEL, SheetCodec.Op.RUB,
 	SheetCodec.Op.SKETCH, SheetCodec.Op.RESYNC]
 
@@ -308,20 +309,41 @@ func _check_sheet(slot: int, lane: int, payload: PackedByteArray) -> void:
 	if not frozen and (reader == 0 or run.miner_state == null
 			or not [MinerTransitions.Life.UPRIGHT, MinerTransitions.Life.CAUGHT, MinerTransitions.Life.GRABBED].has(run.miner_state.life(reader))):
 		_fail(slot, "SHEET", "sheet", "sheet data to a client whose miner is not conscious")
-	var pen: bool = int(Variants.number(ops[0]["op"])) == SheetCodec.Op.PEN
+	var parts: Dictionary = SheetCodec.by_sheet(ops)
+	var pen: bool = false
+	for raw: Variant in parts.keys():
+		var kind: int = int(Variants.number(raw))
+		var list: Array[Dictionary] = parts[raw]
+		for d: Dictionary in list:
+			var op: int = int(Variants.number(d["op"]))
+			if op == SheetCodec.Op.PEN:
+				pen = true
+				if list.size() != 1 or parts.size() != 1 or run.closeups == null or run.closeups.kind_of(reader) != SheetKind.close_up(kind):
+					_fail(slot, "SHEET", "sheet", "a stroke as made to a client not reading its sheet")
+			elif SHEET_CLIENT_OPS.has(op):
+				_fail(slot, "SHEET", "sheet", "a client's op sent to a client")
+			elif op == SheetCodec.Op.ADD_LABEL and not str(d["author"]).is_empty() and run.header.mode != ServerConfig.Mode.PUBLIC:
+				_fail(slot, "SHEET", "sheet", "a label's author outside a public lobby")
+			elif op == SheetCodec.Op.FREEZE and (not frozen or kind != SheetKind.Kind.MAP_TABLE):
+				_fail(slot, "SHEET", "sheet", "a map card's digest before the map table froze")
 	_lane(slot, lane, Lane.Id.FRAMES if pen else Lane.Id.BULK, Protocol.Msg.SHEET)
-	if pen and (ops.size() != 1 or run.closeups == null or run.closeups.kind_of(reader) != CloseupKind.Kind.MAP_TABLE):
-		_fail(slot, "SHEET", "sheet", "a stroke as made to a client not reading the table")
-	for d: Dictionary in ops:
-		var op: int = int(Variants.number(d["op"]))
-		if SHEET_CLIENT_OPS.has(op):
-			_fail(slot, "SHEET", "sheet", "a client's op sent to a client")
-		elif op == SheetCodec.Op.PEN and not pen:
-			_fail(slot, "SHEET", "sheet", "a stroke as made inside the sync")
-		elif op == SheetCodec.Op.ADD_LABEL and not str(d["author"]).is_empty() and run.header.mode != ServerConfig.Mode.PUBLIC:
-			_fail(slot, "SHEET", "sheet", "a label's author outside a public lobby")
-		elif op == SheetCodec.Op.FREEZE and not frozen:
-			_fail(slot, "SHEET", "sheet", "the map card's digest before the sheet froze")
+
+
+## LFT-03: the repair list as the Manual prints it: exactly the run's kind, can count and jobs, in
+## the Company's order, to a client whose miner reads the Manual. Never the seed, a place or a done
+## flag: the layout has room for none.
+func _check_manual(slot: int, lane: int, payload: PackedByteArray) -> void:
+	_lane(slot, lane, Lane.Id.CONTROL, Protocol.Msg.MANUAL)
+	var d: Dictionary = RepairJobs.decode(payload)
+	var m: MovementSystem.Miner = run.movement.miner(slot) if run.movement != null else null
+	if d.is_empty() or run.repair == null or run.repair.list == null:
+		_fail(slot, "MANUAL", "manual", "malformed, or no list")
+		return
+	var l: RepairList = run.repair.list
+	if RepairJobs.encode(l.kind, l.cans_required, l.jobs) != payload:
+		_fail(slot, "MANUAL", "manual", "not exactly the run's list")
+	if m == null or run.closeups == null or run.closeups.kind_of(m.entity_id) != CloseupKind.Kind.MANUAL:
+		_fail(slot, "MANUAL", "manual", "to a client whose miner is not reading the Manual")
 
 
 ## NET-09: saves reach members as opaque sealed bytes. Never in a public run; a snapshot's data on
@@ -415,6 +437,8 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 			_check_status(slot, payload)
 		"sheet":
 			_check_sheet(slot, lane, payload)
+		"manual":
+			_check_manual(slot, lane, payload)
 		"callout":
 			_lane(slot, lane, Lane.Id.CONTROL, type)
 			var r: CalloutRecord = CalloutRecord.decode(payload)
