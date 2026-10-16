@@ -25,6 +25,7 @@
 #include "godot/tuning/lb_tuning.h"
 #include "godot/world/lb_mine.h"
 #include "godot/world/lb_world.h"
+#include "godot/sheets/lb_sheet.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/class_db.hpp>
@@ -61,6 +62,7 @@ void initialize_lampblack_core(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(lb::godot::LbFrameCodec);
 	GDREGISTER_CLASS(lb::godot::LbCreatureNav);
 	GDREGISTER_CLASS(lb::godot::LbAudioMixer);
+	GDREGISTER_CLASS(lb::godot::LbSheet); // LFT-14's map card and rubber
 #ifdef LB_DEBUG_TOOLS
 	GDREGISTER_CLASS(lb::godot::LbAuditReference); // NET-08's stream audit: dev and QA only
 #endif

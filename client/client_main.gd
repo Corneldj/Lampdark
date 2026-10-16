@@ -68,6 +68,9 @@ var dark: DarkView = DarkView.new()
 ## SND-11's callouts: played as heard; the wheel's picks.
 var callout_player: CalloutPlayer = null
 var callout_wheel: CalloutWheel = null
+## LFT-14: the map table's close-up, and the map card once the sheet freezes (RSC-06 shows it).
+var map_table: MapTableCloseup = null
+var map_card: Image = null
 var _closeup_messages_seen: int = 0
 var _ui_violations_seen: Dictionary = {}
 var drawn: DrawnSet = DrawnSet.new()
@@ -209,6 +212,7 @@ func _process(delta: float) -> void:
 		_report_connection()
 		_follow_camera(delta)
 		_play_audio()
+		_keep_map_card()
 		if voice_capture != null:
 			voice_capture.voice_live = connection.state == ClientConnection.State.CONNECTED
 			voice_capture.tick(Time.get_ticks_usec())
@@ -267,6 +271,15 @@ func _start_input() -> void:
 	closeups.input_context = CloseupInputContext.new(router, camera)
 	closeups.in_play_layer = in_play
 	add_child(closeups)
+	map_table = MapTableCloseup.new()
+	map_table.name = "MapTable"
+	map_table.client_sheet = func() -> ClientSheet: return connection.sheet if connection != null else null
+	map_table.store = bindings
+	map_table.router = router
+	map_table.pad_state = func() -> Dictionary: return source.close_up_pad(bindings)
+	map_table.show_keyboard = func(field: Rect2i) -> bool:
+		return steam != null and steam.mode == SteamService.Mode.STEAM and steam.api.show_floating_keyboard(field)
+	closeups.register(CloseupKind.Kind.MAP_TABLE, map_table)
 	AudioBuses.install()
 	events_player = EventPlayer.new()
 	events_player.name = "EventPlayer"
@@ -425,6 +438,26 @@ func _follow_camera(delta: float) -> void:
 		lights, Time.get_ticks_msec() / 1000.0)
 	_show_in_play(own)
 	_probe(predicted)
+
+
+## LFT-14: once the sheet freezes and this copy matches it, the map card is drawn once and kept for
+## RSC-06's Lamp Check, which offers saving it (save_map_card).
+func _keep_map_card() -> void:
+	if map_card != null or not connection.sheet.card_ready():
+		return
+	map_card = MapCard.render(connection.sheet, Tuning.i(&"mine.map_card_px"))
+	Log.info("map card ready: %d strokes and labels" % connection.sheet.sheet.count())
+
+
+## The player keeps the card: user://map_cards/<run_uuid>.png, and Steam's screenshot library
+## (Proposed). Its path, or "".
+func save_map_card() -> String:
+	if map_card == null:
+		return ""
+	var path: String = MapCard.save(map_card, str(connection.sheet.frozen.get("run_uuid", "")))
+	if not path.is_empty() and steam != null and steam.mode == SteamService.Mode.STEAM:
+		MapCard.to_steam_library(steam.api, path, map_card)
+	return path
 
 
 ## UI-01: the in-play elements; debug and test builds check that nothing else is drawn.

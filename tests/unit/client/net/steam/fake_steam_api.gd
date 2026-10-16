@@ -11,6 +11,9 @@ var friends: Dictionary = {}
 var overlay_on: bool = true
 var language: String = "english"
 var hardware_value: Hardware = Hardware.NONE
+## LFT-14: the text fields the floating keyboard was shown over, and the screenshots added.
+var keyboard_fields: Array[Rect2i] = []
+var screenshots: Array[Array] = []
 ## Every call by name, in order.
 var calls: Array[String] = []
 var _up: bool = false
@@ -248,3 +251,17 @@ func run_callbacks() -> void:
 	calls.append("run_callbacks")
 	if sns_net != null:
 		sns_net.call(&"deliver", id)
+
+
+func show_floating_keyboard(field: Rect2i) -> bool:
+	calls.append("show_floating_keyboard")
+	if _up:
+		keyboard_fields.append(field)
+	return _up
+
+
+func add_screenshot(path: String, width: int, height: int) -> bool:
+	calls.append("add_screenshot")
+	if _up:
+		screenshots.append([path, width, height])
+	return _up

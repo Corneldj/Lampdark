@@ -61,6 +61,24 @@ func frame(now_s: float, store: BindingsStore) -> Dictionary:
 		"face_stick": face_stick, "wheel_vec": wheel_vec}
 
 
+## LFT-14: the pad's state for a close-up's own frame-rate input (the map table's cursor, its
+## pencil and rubber triggers through the bindings, pan, and zoom on the D-pad, Proposed).
+func close_up_pad(store: BindingsStore) -> Dictionary:
+	return {"pencil": action_down("pencil", store, "pad"), "rubber": action_down("rubber", store, "pad"),
+		"stick_r": Vector2(Input.get_joy_axis(device, JOY_AXIS_RIGHT_X), Input.get_joy_axis(device, JOY_AXIS_RIGHT_Y)),
+		"stick_l": Vector2(Input.get_joy_axis(device, JOY_AXIS_LEFT_X), Input.get_joy_axis(device, JOY_AXIS_LEFT_Y)),
+		"zoom_in": Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_UP),
+		"zoom_out": Input.is_joy_button_pressed(device, JOY_BUTTON_DPAD_DOWN)}
+
+
+## True while any of the action's bindings for `input_family` is down.
+func action_down(action: String, store: BindingsStore, input_family: String) -> bool:
+	for spec_raw: Variant in store.specs(action, input_family):
+		if _spec_down(Variants.dict(spec_raw)):
+			return true
+	return false
+
+
 func _spec_down(spec: Dictionary) -> bool:
 	match str(spec.get("type", "")):
 		"key":

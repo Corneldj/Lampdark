@@ -512,7 +512,7 @@
 			"unit": "px",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "unit as written: pixels square; ticket LFT-14"
 		},
@@ -818,11 +818,11 @@
 		},
 		"mine.sheet_label_max_chars": {
 			"value": 40,
-			"type": "float",
+			"type": "int",
 			"unit": "characters",
 			"source": "Gameplay §A.11; GDD §15.11",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket LFT-14"
 		},
@@ -842,7 +842,7 @@
 			"unit": "sheet_units",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "unit as written: sheet units, minimum; ticket LFT-14"
 		},
@@ -852,7 +852,7 @@
 			"unit": "sheet_units",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "unit as written: sheet units; ticket LFT-14"
 		},
@@ -862,7 +862,7 @@
 			"unit": "points",
 			"source": "Proposed (GDD §15.11 caps stroke length)",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "ticket LFT-14"
 		},
@@ -872,7 +872,7 @@
 			"unit": "Hz",
 			"source": "Gameplay §A.11; GDD §15.11",
 			"starting": false,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
 			"note": "unit as written: strokes a second, per miner; ticket LFT-14"
 		},
@@ -1735,6 +1735,126 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "A.11 Landmarks: never repeated within 2 cells; ticket GEN-10"
+		},
+		"mine.sheet_label_height_units": {
+			"value": 160.0,
+			"type": "float",
+			"unit": "sheet_units",
+			"source": "Proposed (labels one size, GDD §14.1)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "a label's height on the sheet, which also sizes the box the rubber touches; ticket LFT-14"
+		},
+		"mine.sheet_label_char_units": {
+			"value": 96.0,
+			"type": "float",
+			"unit": "sheet_units",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "a label character's advance for the rubber's touch box (the server has no font); ticket LFT-14"
+		},
+		"mine.sheet_sketch_hz": {
+			"value": 10,
+			"type": "int",
+			"unit": "Hz",
+			"source": "Proposed (LFT-14: in-progress points at 10 Hz)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "in-progress points go unreliable at this rate, only to the table; ticket LFT-14"
+		},
+		"mine.sheet_sketch_timeout_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "an in-progress stroke heard nothing of this long is dropped from view; ticket LFT-14"
+		},
+		"mine.pencil_width_units": {
+			"value": 10.0,
+			"type": "float",
+			"unit": "sheet_units",
+			"source": "Proposed (pencil grey, GDD §14.1)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "a pencil line's width on the paper at 1x, never under mine.pencil_min_px on screen; ticket LFT-14"
+		},
+		"mine.pencil_min_px": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "px",
+			"source": "GDD §14.1 (lines at least 3 px wide on a Deck at 1x)",
+			"starting": false,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: px on screen at 1x; ticket LFT-14"
+		},
+		"mine.pencil_cursor_px_s": {
+			"value": 900.0,
+			"type": "float",
+			"unit": "px",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: px a second at 1080p, full stick; the pad's pencil cursor; ticket LFT-14"
+		},
+		"mine.sheet_pan_px_s": {
+			"value": 900.0,
+			"type": "float",
+			"unit": "px",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "unit as written: px a second at 1080p, held key or full stick; ticket LFT-14"
+		},
+		"mine.sheet_view_squares": {
+			"value": 12.0,
+			"type": "float",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "printed squares across the short side when the table opens; ticket LFT-14"
+		},
+		"mine.sheet_view_squares_min": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "closest zoom: squares across the short side; ticket LFT-14"
+		},
+		"mine.sheet_view_squares_max": {
+			"value": 128.0,
+			"type": "float",
+			"unit": "count",
+			"source": "Proposed (the whole sheet)",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "farthest zoom: squares across the short side; ticket LFT-14"
+		},
+		"mine.sheet_zoom_step": {
+			"value": 1.25,
+			"type": "float",
+			"unit": "×",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "zoom per wheel notch or D-pad press; ticket LFT-14"
 		}
 	}
 }

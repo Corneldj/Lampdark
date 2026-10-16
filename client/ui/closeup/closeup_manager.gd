@@ -82,7 +82,9 @@ func process_input(router: InputRouter) -> Array[int]:
 	if kind != CloseupKind.Kind.NONE:
 		for action: String in router.close_up_events:
 			if action == "close":
-				_ask(CloseupKind.Ask.CLOSE)
+				# A content may back out of its own step first (the map table's label field).
+				if _current == null or not _current.handle(action):
+					_ask(CloseupKind.Ask.CLOSE)
 			elif action == "close_up_open" and seat == CloseupKind.Seat.STANDING:
 				_ask(CloseupKind.Ask.STAY_SEATED)
 			elif _current != null:

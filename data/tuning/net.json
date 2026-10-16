@@ -986,6 +986,36 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "unit as written: violations a minute; ticket NET-13"
+		},
+		"net.sheet_background_kbps": {
+			"value": 8,
+			"type": "int",
+			"unit": "kbps",
+			"source": "Proposed (LFT-14: ≤ 8 kbps)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "sheet sync to a client away from the table, inside NET-04's budget; ticket LFT-14"
+		},
+		"net.sheet_reserve_bytes": {
+			"value": 1200,
+			"type": "int",
+			"unit": "bytes",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "what sheet sync leaves in NET-04's per-client bucket for the frames (sheets go last); ticket LFT-14"
+		},
+		"net.sheet_flush_bytes_per_tick": {
+			"value": 32768,
+			"type": "int",
+			"unit": "bytes",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "sheet sync per client per tick once the sheet is frozen for the map card; ticket LFT-14"
 		}
 	}
 }

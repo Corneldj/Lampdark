@@ -55,6 +55,10 @@ public:
 	::godot::PackedByteArray build(int64_t slot, int64_t observer, int64_t tick, const ::godot::Dictionary &own, int64_t action_ack, int64_t input_depth, int64_t input_ack = 0xFFFF);
 	::godot::Dictionary last_stats(int64_t slot) const;
 	int64_t token_of(int64_t slot, int64_t entity) const;
+	// LFT-14: the slot's budget left after this tick's frame, in whole bytes (0 for an unknown
+	// slot or before its first frame); the sheets spend from it what they send.
+	int64_t bucket_bytes(int64_t slot) const;
+	void spend(int64_t slot, int64_t bytes);
 	::godot::Array last_numbered(int64_t slot) const;
 	// NET-07: the view frame `tick` leaves the client holding, in ReceivedView.to_dict()'s shape,
 	// while that frame is in the history ({} after). The client's decoder gives the same view.

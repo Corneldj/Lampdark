@@ -137,6 +137,8 @@ var lone: LoneSwitchboard = null
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.
 var closeups: CloseupState = null
+## LFT-14: the map table's sheet, its checks and its sync.
+var sheets: SheetService = null
 ## NET-07's run record (server-only, outside the state hash).
 var record: RunRecord = null
 ## SND-15's fall scream, cut and knocks.

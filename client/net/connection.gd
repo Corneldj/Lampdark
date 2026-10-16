@@ -54,6 +54,8 @@ var callouts: Array[CalloutRecord] = []
 ## UI-02: the own close-up and the board's seat as last received (CloseupKind.decode); {} before any.
 var closeup: Dictionary = {}
 var closeup_messages: int = 0
+## LFT-14: this client's copy of the map table's sheet (shown only in its close-up).
+var sheet: ClientSheet = ClientSheet.new()
 ## SND-07: voice packets from the server in arrival order, [packet, arrival usec]; VoicePlayback
 ## drains them (a bounded queue: older ones go first if nobody does).
 var voice_in: Array[Array] = []
@@ -84,6 +86,7 @@ var _started_usec: int = 0
 
 func _init(net_transport: Transport) -> void:
 	transport = net_transport
+	sheet.send = func(lane: int, payload: PackedByteArray) -> Error: return send(lane, payload, Protocol.Msg.SHEET)
 	if Tuning.current.has_key(&"net.handshake_timeout_s"):
 		handshake_timeout_usec = roundi(Tuning.f(&"net.handshake_timeout_s") * 1000000.0)
 
@@ -116,6 +119,8 @@ func poll() -> void:
 		transport.disconnect_peer(peer)
 	if state == State.CONNECTED and clock.ping_due(now):
 		transport.send(peer, Lane.Id.CONTROL, Protocol.ping(now))
+	if state == State.CONNECTED:
+		sheet.pump(now)
 	transport.flush()
 
 
@@ -233,6 +238,9 @@ func _on_message(event: TransportEvent, now: int) -> void:
 			var r: CalloutRecord = CalloutRecord.decode(payload)
 			if r != null:
 				callouts.append(r)
+		Protocol.Msg.SHEET:
+			if event.lane == Lane.Id.BULK or event.lane == Lane.Id.FRAMES:
+				sheet.on_message(payload, now)
 		Protocol.Msg.CLOSE_UP:
 			var c: Dictionary = CloseupKind.decode(payload)
 			if not c.is_empty():

@@ -32,6 +32,9 @@ const DISTANCE_WORLDWIDE: int = 3
 const COMPARISON_EQUAL: int = 0
 const RESULT_OK: int = 1
 const FRIEND_FLAG_IMMEDIATE: int = 4
+## EFloatingGamepadTextInputMode and INVALID_SCREENSHOT_HANDLE (LFT-14).
+const FLOATING_SINGLE_LINE: int = 0
+const INVALID_SCREENSHOT: int = 0
 
 ## Steam Networking Sockets (STM-03): connection states, send flags, info flags and config keys.
 enum SnsState { NONE = 0, CONNECTING = 1, FINDING_ROUTE = 2, CONNECTED = 3, CLOSED_BY_PEER = 4, PROBLEM = 5 }
@@ -124,6 +127,20 @@ func overlay_enabled() -> bool:
 ## Steam's current game language ("english", "schinese", ...), for UI-07's default.
 func game_language() -> String:
 	return str(_steam.call(&"getCurrentGameLanguage")) if _steam != null else ""
+
+
+## LFT-14: Steam's floating on-screen keyboard over a text field (a Deck, Big Picture), one line;
+## its keys arrive as ordinary key events. False when Steam cannot show it.
+func show_floating_keyboard(field: Rect2i) -> bool:
+	return _steam != null and Variants.flag(_steam.call(&"showFloatingGamepadTextInput", FLOATING_SINGLE_LINE,
+		field.position.x, field.position.y, field.size.x, field.size.y))
+
+
+## LFT-14: a saved PNG into the player's Steam screenshot library (the map card, Proposed).
+func add_screenshot(path: String, width: int, height: int) -> bool:
+	if _steam == null:
+		return false
+	return Variants.whole(_steam.call(&"addScreenshotToLibrary", path, "", width, height)) != INVALID_SCREENSHOT
 
 
 func hardware() -> Hardware:

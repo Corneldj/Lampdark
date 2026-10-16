@@ -9,6 +9,7 @@
 #include <godot_cpp/variant/packed_vector2_array.hpp>
 
 #include <algorithm>
+#include <cmath>
 
 using namespace godot;
 using lb::core::world::Coord;
@@ -35,6 +36,8 @@ void LbReplication::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("build", "slot", "observer", "tick", "own", "action_ack", "input_depth", "input_ack"), &LbReplication::build, DEFVAL(0xFFFF));
 	ClassDB::bind_method(D_METHOD("last_stats", "slot"), &LbReplication::last_stats);
 	ClassDB::bind_method(D_METHOD("token_of", "slot", "entity"), &LbReplication::token_of);
+	ClassDB::bind_method(D_METHOD("bucket_bytes", "slot"), &LbReplication::bucket_bytes);
+	ClassDB::bind_method(D_METHOD("spend", "slot", "bytes"), &LbReplication::spend);
 	ClassDB::bind_method(D_METHOD("last_numbered", "slot"), &LbReplication::last_numbered);
 	ClassDB::bind_method(D_METHOD("sent_view", "slot", "tick"), &LbReplication::sent_view);
 }
@@ -255,6 +258,18 @@ Dictionary LbReplication::last_stats(int64_t slot) const {
 int64_t LbReplication::token_of(int64_t slot, int64_t entity) const {
 	auto it = clients_.find(slot);
 	return it == clients_.end() ? 0 : it->second->token_of(static_cast<uint32_t>(entity));
+}
+
+int64_t LbReplication::bucket_bytes(int64_t slot) const {
+	auto it = clients_.find(slot);
+	return it == clients_.end() ? 0 : static_cast<int64_t>(std::floor(it->second->bucket()));
+}
+
+void LbReplication::spend(int64_t slot, int64_t bytes) {
+	auto it = clients_.find(slot);
+	if (it != clients_.end() && bytes > 0) {
+		it->second->spend(static_cast<double>(bytes));
+	}
 }
 
 // FND-08: [{number, type, start_tick, ax16, ay16}] for the events numbered at this client's last

@@ -324,3 +324,27 @@ TEST_CASE("MNR-10: chalk glyphs ride a tile with its chalk bit, and a changed gl
 	CHECK(st.tiles_sent == 1);
 	CHECK(client.latest().tiles.at(d.frame.tiles[0].tile).chalk == (0x8C000000ULL | 0xA0ULL));
 }
+
+TEST_CASE("LFT-14: other lanes spend from the frames' bucket, which may run below zero without refilling") {
+	ClientView server(11, 1);
+	Client client;
+	ReplicationParams p;
+	p.budget_bytes_per_tick = 400;
+	p.burst_bytes = 2400;
+	const Desired d = room(10.0, 5.0, 60);
+	CHECK(server.bucket() == 0.0); // nothing before the first build
+	server.spend(500.0);
+	CHECK(server.bucket() == 0.0);
+	const std::vector<uint8_t> first = server.build(1, d, 0xFFFF, 0, p);
+	const double left = server.bucket();
+	CHECK(left == doctest::Approx(2400.0 - static_cast<double>(first.size())));
+	// The sheets take what is left and more: the bucket goes below zero ...
+	server.spend(left + 300.0);
+	CHECK(server.bucket() == doctest::Approx(-300.0));
+	client.receive(first);
+	client.ack(server, 1);
+	// ... and the next frame refills from there, never from a fresh burst.
+	const std::vector<uint8_t> second = server.build(2, d, 0xFFFF, 0, p);
+	CHECK(server.bucket() == doctest::Approx(-300.0 + 400.0 - static_cast<double>(second.size())));
+	CHECK(second.size() <= 400);
+}

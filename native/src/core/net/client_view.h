@@ -216,6 +216,16 @@ public:
 	// The events numbered at the last build, with their numbers (FND-08's overlay tags name an
 	// illusion by its number; nothing here is sent).
 	const std::vector<EventRec> &last_numbered() const { return last_numbered_; }
+	// LFT-14: what the budget's bucket holds after this tick's frame, in bytes (frames go first;
+	// the sheets on the bulk lane and the strokes as made spend what is left). 0 before the
+	// first build.
+	double bucket() const { return bucket_started_ ? bucket_ : 0.0; }
+	// LFT-14: bytes this client was sent on another lane, taken from the same budget.
+	void spend(double bytes) {
+		if (bucket_started_) {
+			bucket_ -= bytes;
+		}
+	}
 
 private:
 	uint64_t secret_;
@@ -232,7 +242,8 @@ private:
 	uint16_t next_event_ = 1;
 	std::map<std::pair<int, Coord>, uint32_t> pending_since_; // (kind, key) -> tick first pending
 	std::map<uint32_t, uint32_t> margin_since_;  // entity -> tick it entered the margin (the planted delay)
-	double bucket_ = -1.0;
+	double bucket_ = 0.0;
+	bool bucket_started_ = false; // the bucket may run below zero (a frame's fixed part, LFT-14's spending)
 
 	uint16_t new_token(uint32_t tick, int64_t cooldown);
 	void number_incoming();

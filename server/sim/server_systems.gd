@@ -146,6 +146,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.closeups = CloseupState.new()
 	run.closeups.bind(run, net)
 	run.add_system(run.closeups)
+	# LFT-14: the map table (its sync joins stage SEND after NET-04's frames).
+	run.sheets = SheetService.new()
+	run.sheets.bind(run, net)
+	run.add_system(run.sheets)
 	# MNR-09's candles, flares and stones.
 	run.candles = Candles.new()
 	run.candles.bind(run)

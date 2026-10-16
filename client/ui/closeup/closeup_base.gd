@@ -30,7 +30,8 @@ func on_close() -> void:
 	pass
 
 
-## One close-up action this frame; true when the content used it.
+## One close-up action this frame; true when the content used it. "close" (Esc or B) comes here
+## first: true backs out of the content's own step (a label being typed) instead of closing.
 func handle(_action: String) -> bool:
 	return false
 

@@ -35,6 +35,7 @@ const MESSAGES: Dictionary = {
 	"JOURNAL": "save",  # NET-09: one sealed journal entry, never in public
 	"SAVE_ACK": "client_only",  # NET-09: a member's acknowledgement
 	"STATUS": "status",  # the own miner's status, to its owner only: exactly its own cues and offers
+	"SHEET": "sheet",  # LFT-14: the map table's sync; strokes as made only to the table; never to the fallen
 }
 
 ## Each record a frame carries -> its rule (client_view's layout, FrameDecoder's fields).

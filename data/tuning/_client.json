@@ -1,5 +1,5 @@
 {
-	"hash": "5ac5100cc7f4bfafd008bbb8e51d60e70215b7476045af97d11d8d36902b2f9c",
+	"hash": "b14f6e88c010eff669a73ce6d07342ea98bdddfb2539758b8ff0fb070fde029a",
 	"keys": {
 		"basecamp.gate_lever_s": {
 			"value": 1.5,
@@ -479,8 +479,134 @@
 			"visibility": "client",
 			"kind": "param"
 		},
+		"mine.map_card_px": {
+			"value": 2048,
+			"type": "int",
+			"unit": "px",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.pencil_cursor_px_s": {
+			"value": 900.0,
+			"type": "float",
+			"unit": "px",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.pencil_min_px": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "px",
+			"visibility": "client",
+			"kind": "param"
+		},
 		"mine.pencil_slow_cursor_scale": {
 			"value": 0.35,
+			"type": "float",
+			"unit": "×",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.pencil_width_units": {
+			"value": 10.0,
+			"type": "float",
+			"unit": "sheet_units",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_label_char_units": {
+			"value": 96.0,
+			"type": "float",
+			"unit": "sheet_units",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_label_height_units": {
+			"value": 160.0,
+			"type": "float",
+			"unit": "sheet_units",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_label_max_chars": {
+			"value": 40,
+			"type": "int",
+			"unit": "characters",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_pan_px_s": {
+			"value": 900.0,
+			"type": "float",
+			"unit": "px",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_point_spacing_units": {
+			"value": 16.0,
+			"type": "float",
+			"unit": "sheet_units",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_rubber_radius_units": {
+			"value": 48.0,
+			"type": "float",
+			"unit": "sheet_units",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_sketch_hz": {
+			"value": 10,
+			"type": "int",
+			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_sketch_timeout_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_stroke_max_points": {
+			"value": 64,
+			"type": "int",
+			"unit": "points",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_strokes_per_s": {
+			"value": 10,
+			"type": "int",
+			"unit": "Hz",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_view_squares": {
+			"value": 12.0,
+			"type": "float",
+			"unit": "count",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_view_squares_max": {
+			"value": 128.0,
+			"type": "float",
+			"unit": "count",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_view_squares_min": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "count",
+			"visibility": "client",
+			"kind": "param"
+		},
+		"mine.sheet_zoom_step": {
+			"value": 1.25,
 			"type": "float",
 			"unit": "×",
 			"visibility": "client",

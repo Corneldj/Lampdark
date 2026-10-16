@@ -57,7 +57,9 @@ func send(peer: int, lane: int, data: PackedByteArray) -> Error:
 		return ERR_DOES_NOT_EXIST
 	var error: Error = _send_raw(peer, lane, data)
 	if error == OK:
-		stats(peer).bytes_out += data.size()
+		var st: PeerStats = stats(peer)
+		st.bytes_out += data.size()
+		st.lane_out[lane] += data.size()
 	return error
 
 

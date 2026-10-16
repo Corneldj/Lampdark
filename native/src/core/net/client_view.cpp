@@ -354,8 +354,9 @@ std::vector<uint8_t> ClientView::build(uint32_t tick, const Desired &desired, ui
 	std::stable_sort(cands.begin(), cands.end(), [](const Candidate &a, const Candidate &b) { return a.score < b.score; });
 
 	// The budget: a token bucket, and never more than an unreliable message holds.
-	if (bucket_ < 0.0) {
+	if (!bucket_started_) {
 		bucket_ = static_cast<double>(p.burst_bytes);
+		bucket_started_ = true;
 	}
 	bucket_ = std::min(static_cast<double>(p.burst_bytes), bucket_ + static_cast<double>(p.budget_bytes_per_tick));
 	const size_t fixed = HEADER_BYTES + OWN_BYTES + COUNT_BYTES;

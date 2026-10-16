@@ -14,7 +14,8 @@ class_name Protocol
 ## 12: NET-09's SAVE_DATA, JOURNAL and SAVE_ACK.
 ## 13: STATUS, the own miner's status (the first playtest's standard status and key hints).
 ## 14: the struggle: ActionRecord.Kind.STRUGGLE, and STATUS carries its needle and zone.
-const PROTOCOL_VERSION: int = 14
+## 15: LFT-14's SHEET (the map table's ops, SheetCodec).
+const PROTOCOL_VERSION: int = 15
 
 enum Msg {
 	HELLO = 1,
@@ -46,6 +47,7 @@ enum Msg {
 	JOURNAL = 27,  ## NET-09: one fall or death entry, sealed (SaveWire), control lane, to every member the tick it happens
 	SAVE_ACK = 28,  ## NET-09: a member stored a snapshot (its sequence number), client to server, control lane
 	STATUS = 29,  ## the own miner's status (StatusWire): its body cues, the self-rescue offer, the self-revive, control lane, to its owner
+	SHEET = 30,  ## LFT-14: sheet ops (SheetCodec), both ways: commits and sync on the bulk lane, strokes as made on inputs (up) and frames (down)
 }
 
 enum Reject {

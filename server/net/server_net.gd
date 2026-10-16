@@ -16,6 +16,9 @@ var bad_messages: Dictionary = {}
 var routed: Dictionary = {}
 ## SND-07: VoiceSystem.on_voice(slot, payload) -> bool; voice packets go to it as they arrive.
 var voice: Callable = Callable()
+## LFT-14: SheetSync.on_sketch(slot, payload) -> bool; strokes as they are made (SHEET on the
+## inputs lane) go to it as they arrive, like voice.
+var sheet_sketch: Callable = Callable()
 ## FND-08: this server's build flavour (a release client never joins a dev or QA server, nor the
 ## reverse) and its QA token: a dev or QA server opens the debug lane to a client presenting it,
 ## and a dev server also to a local client without one. A release server opens it to nobody.
@@ -66,7 +69,7 @@ func tick(run: RunState) -> void:
 func service() -> void:
 	var now: int = Transport.now_usec()
 	for event: TransportEvent in transport.poll():
-		if event.kind == TransportEvent.Kind.MESSAGE and (_answer_ping(event, now) or _take_voice(event)):
+		if event.kind == TransportEvent.Kind.MESSAGE and (_answer_ping(event, now) or _take_voice(event) or _take_sketch(event)):
 			continue
 		_buffered.append(event)
 	transport.flush()
@@ -84,6 +87,22 @@ func _take_voice(event: TransportEvent) -> bool:
 	if message.is_empty() or int(Variants.number(message["type"])) != Protocol.Msg.VOICE:
 		return false
 	if not Variants.flag(voice.call(session.slot, message["payload"])):
+		_count_bad(event.peer)
+	return true
+
+
+## LFT-14: a stroke as it is made, from a welcomed client, goes to SheetSync on arrival; a
+## malformed one counts against the peer.
+func _take_sketch(event: TransportEvent) -> bool:
+	if not sheet_sketch.is_valid() or event.lane != Lane.Id.INPUTS:
+		return false
+	var session: Sessions.Session = sessions.for_peer(event.peer)
+	if session == null or not session.welcomed or _closing.has(event.peer):
+		return false
+	var message: Dictionary = Protocol.unframe(event.data)
+	if message.is_empty() or int(Variants.number(message["type"])) != Protocol.Msg.SHEET:
+		return false
+	if not Variants.flag(sheet_sketch.call(session.slot, message["payload"])):
 		_count_bad(event.peer)
 	return true
 
@@ -171,6 +190,9 @@ func _on_message(run: RunState, event: TransportEvent, now: int) -> void:
 			transport.send(event.peer, Lane.Id.CONTROL, Protocol.pong(Protocol.read_i64(payload), now))
 		Protocol.Msg.VOICE when voice.is_valid() and event.lane == Lane.Id.VOICE:
 			if not Variants.flag(voice.call(session.slot, payload)):
+				_count_bad(event.peer)
+		Protocol.Msg.SHEET when sheet_sketch.is_valid() and event.lane == Lane.Id.INPUTS:
+			if not Variants.flag(sheet_sketch.call(session.slot, payload)):
 				_count_bad(event.peer)
 		Protocol.Msg.MIC_LABEL:
 			if event.lane != Lane.Id.CONTROL or payload.size() != 1 or payload[0] > 1:
