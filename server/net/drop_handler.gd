@@ -92,10 +92,10 @@ func on_drop(run: RunState, slot: int) -> void:
 		what += "set down; "
 	# MNR-14: a load's end or a tub is let go at once, with no knock.
 	if run.loads != null and run.loads.carrying(miner):
-		run.loads.set_down(run, miner, Loads.DISCONNECTED)
+		run.loads.set_down(run, miner, LoadCarry.DISCONNECTED)
 		what += "load set down; "
 	if run.tubs != null and run.tubs.holding(miner):
-		run.tubs.let_go(run, miner, Tubs.DISCONNECTED)
+		run.tubs.let_go(run, miner, TubRails.DISCONNECTED)
 		what += "tub let go; "
 	match life:
 		MinerTransitions.Life.UPRIGHT:

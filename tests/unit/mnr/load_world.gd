@@ -80,7 +80,7 @@ static func broken(s: Scenario, load: int) -> String:
 	var is_solid: Callable = func(tile: Vector2i) -> bool: return not s.run.mine.native.is_walkable(tile)
 	if seg.collides(seg.x, seg.y, seg.heading, is_solid):
 		return "the load overlaps rock at %s" % seg.centre()
-	var l: Loads.Load = s.run.loads.active.get(uid_of(s, load), null)
+	var l: LoadCarry.Load = s.run.loads.active.get(uid_of(s, load), null)
 	if l == null:
 		return ""
 	for pair: Array in [[l.front, seg.front_end()], [l.rear, seg.rear_end()]]:

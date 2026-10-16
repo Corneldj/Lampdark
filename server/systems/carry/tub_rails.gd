@@ -1,6 +1,6 @@
-class_name Tubs
+class_name TubRails
 extends SimSystem
-## MNR-14 (stage MINERS, after Loads): tubs on their rails (Gameplay §4.3, §12.4; GDD §15.8). A tub
+## MNR-14 (stage MINERS, after LoadCarry): tubs on their rails (Gameplay §4.3, §12.4; GDD §15.8). A tub
 ## is an ITEM entity of the LOAD class standing on a rail tile (a walkable tile with GEN-01's rail
 ## state bit). A pusher takes hold with both hands in movement.load_take_time of held interact (the
 ## lamp hooked from the start, Proposed), up to two at once, and pushes with their movement input:
@@ -14,7 +14,7 @@ extends SimSystem
 ## set down from a fireman's carry, or the drum gear set down, within touch range of an empty tub
 ## goes into it; a can goes in by interact with it in the free hand. A tap of interact (released
 ## before the hold completes) unloads instead (Proposed): a can back into the empty free hand, else
-## the ring on a body in it, whose lift takes it out. The gear comes out by taking an end (Loads).
+## the ring on a body in it, whose lift takes it out. The gear comes out by taking an end (LoadCarry).
 ## Interact or set down again lets go; a pusher grabbed, caught, felled or disconnected lets go at
 ## once. Cans in a tub live in its item state, so GEN-13 keeps them with it. Server-only.
 
@@ -84,7 +84,7 @@ func bind(run: RunState) -> void:
 ## A tub on the rails (GEN-10's placement, tests): its entity, or 0 off the rails.
 func place(run: RunState, tile: Vector2i, axis: Vector2i = Vector2i(1, 0)) -> int:
 	if not on_rails(run, tile):
-		push_error("Tubs.place: %s is not a rail tile" % tile)
+		push_error("TubRails.place: %s is not a rail tile" % tile)
 		return 0
 	var it: Item = run.inventory.world.make(ItemKinds.Kind.TUB, 1, {"heading": _heading_of(axis), "cans": []})
 	return run.inventory.world.put(run, it, Vector2(tile) + Vector2(0.5, 0.5))
@@ -234,7 +234,7 @@ func take_can(run: RunState, miner: int, tub: int) -> bool:
 	return true
 
 
-## The drum gear taken up (Loads): out of its tub, if it was in one.
+## The drum gear taken up (LoadCarry): out of its tub, if it was in one.
 func unload(run: RunState, gear: int) -> void:
 	var g: Item = run.inventory.world.item_at(gear)
 	if g == null or not g.state.has("in_tub"):

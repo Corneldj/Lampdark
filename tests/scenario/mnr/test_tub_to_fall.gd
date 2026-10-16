@@ -43,7 +43,7 @@ func test_a_tub_pushed_toward_a_fall_stops_before_its_rubble() -> void:
 	bob.at(s.run.tick).hold(InputRecord.HOLD_INTERACT, 26)
 	s.step(29)
 	assert_true(s.run.tubs.holding(ann.entity_id) and s.run.tubs.holding(bob.entity_id), "both take hold")
-	assert_true(Tubs.on_rails(s.run, Vector2i(FALL_X, 2)), "the rails run on before the fall")
+	assert_true(TubRails.on_rails(s.run, Vector2i(FALL_X, 2)), "the rails run on before the fall")
 	var from: int = s.run.noise.event_log.size()
 	var entered: Array[bool] = [false]
 	s.on_tick = func(sc: Scenario) -> void:
@@ -56,7 +56,7 @@ func test_a_tub_pushed_toward_a_fall_stops_before_its_rubble() -> void:
 	assert_gt(running_at, 3.5 + 2.0, "under way")
 	# The roof comes down ahead of it.
 	assert_true(s.run.mine.native.set_collapse(Vector2i.ZERO, 1, true))
-	assert_false(Tubs.on_rails(s.run, Vector2i(FALL_X, 2)), "rubble over the rails")
+	assert_false(TubRails.on_rails(s.run, Vector2i(FALL_X, 2)), "rubble over the rails")
 	s.step(180)
 	assert_eq(s.run.registry.get_entity(tub).position, Vector2(FALL_X - 0.5, 2.5), "stopped at the last rail tile before the fall")
 	assert_false(entered[0], "never into it")

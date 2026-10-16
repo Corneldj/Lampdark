@@ -141,10 +141,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.add_system(run.carry)
 	run.ring.bind(run)
 	# MNR-14: two-person loads (the ring's lay joins after lift), tubs and the can.
-	run.loads = Loads.new()
+	run.loads = LoadCarry.new()
 	run.loads.bind(run)
 	run.add_system(run.loads)
-	run.tubs = Tubs.new()
+	run.tubs = TubRails.new()
 	run.tubs.bind(run)
 	run.add_system(run.tubs)
 	run.cans = CanCarry.new()

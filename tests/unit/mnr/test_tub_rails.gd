@@ -175,7 +175,7 @@ func test_one_cargo_at_a_time() -> void:
 	var ann: MinerHandle = w[1]
 	var bob: MinerHandle = w[2]
 	var tub: int = w[3]
-	var tubs: Tubs = s.run.tubs
+	var tubs: TubRails = s.run.tubs
 	# A body set down from a carry beside it goes in.
 	assert_true(s.run.falls.fall_unconscious(s.run, bob.entity_id, FallCause.Cause.BLAST))
 	s.step(2)

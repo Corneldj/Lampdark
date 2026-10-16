@@ -5,7 +5,7 @@ extends RefCounted
 ## item is a small thing (VIS-03): seen only at vision.small_thing_light_min, never a token.
 ## Behaviour lives in each owning ticket (MNR-06 to MNR-12, MNR-16, RSC-02). Wire values: append
 ## only. The stretcher, the drum gear and the tub are loads (MNR-14): ITEM entities of the LOAD
-## class, never in a hand or a slot, moved only by Loads and Tubs. The lamp check, chalk and the
+## class, never in a hand or a slot, moved only by the server's carries. The lamp check, chalk and the
 ## Pocket Book need no slot and are not items at all (HandsAndBelt keeps them).
 
 enum Kind {
@@ -94,7 +94,7 @@ static func hand_class(kind: int) -> HandClass:
 	return int(Variants.number(Variants.array(TABLE[kind])[0])) as HandClass
 
 
-## A load (MNR-14): never picked up, carried or pushed by Loads and Tubs.
+## A load (MNR-14): never picked up, only carried or pushed.
 static func is_load(kind: int) -> bool:
 	return TABLE.has(kind) and hand_class(kind) == HandClass.LOAD
 

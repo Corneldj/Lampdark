@@ -36,7 +36,7 @@ func candidates(run: RunState, actor: int, slot: int, world: ItemWorld) -> Array
 		var id: int = int(Variants.number(raw))
 		if not seen.has(id) and id != felt_entity:
 			continue
-		# MNR-14: a load is never picked up; Loads and Tubs offer it as their own target.
+		# MNR-14: a load is never picked up; LoadCarry and TubRails offer it as their own target.
 		var lying: Item = world.items[raw]
 		if ItemKinds.is_load(lying.kind):
 			continue

@@ -1,6 +1,6 @@
-class_name Stretcher
+class_name StretcherRules
 extends RefCounted
-## MNR-14: what only a stretcher does (Gameplay §4.3, §11.4, §11.5), for Loads. Laying an
+## MNR-14: what only a stretcher does (Gameplay §4.3, §11.4, §11.5), for LoadCarry. Laying an
 ## unconscious or dead body on a set-down stretcher is the ring's lay option: movement.
 ## stretcher_lay_time of held interact in touch range of the body, the lamp hooked from the start
 ## like a lift (Proposed: it takes both hands), onto the nearest free stretcher within touch range

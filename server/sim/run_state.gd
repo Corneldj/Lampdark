@@ -91,8 +91,8 @@ var base_camp: BaseCampState = null
 ## MNR-13's fireman's carry.
 var carry: FiremanCarry = null
 ## MNR-14: the stretcher and the drum gear, tubs on their rails, and the paraffin can.
-var loads: Loads = null
-var tubs: Tubs = null
+var loads: LoadCarry = null
+var tubs: TubRails = null
 var cans: CanCarry = null
 ## RSC-02's medbay revival and healing-kit cure.
 var revival: Revival = null

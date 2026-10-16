@@ -19,7 +19,7 @@ extends RefCounted
 ## lasts until the older one, so a carrier whose inputs arrive later never makes a knock, only a
 ## real disagreement does. Headings are u16 facings like a miner's (0 east, a quarter turn south)
 ## and directions come from LbDetMath's bit-identical unit vectors, so the same inputs move it the
-## same on every platform. Pure: Loads drives it and places the carriers at its ends.
+## same on every platform. Pure: LoadCarry drives it and places the carriers at its ends.
 
 ## One carrier's push this tick (NET-03's consumed input): a movement direction (0-254, or
 ## InputRecord.NO_DIRECTION standing), the tick its client showed when it was issued, and whether

@@ -1,4 +1,4 @@
-class_name Loads
+class_name LoadCarry
 extends SimSystem
 ## MNR-14 (stage MINERS, right after movement): the stretcher and the drum gear (Gameplay §4.3,
 ## §11.4, §11.5; GDD §15.8). Each is an ITEM entity of the LOAD class, lying where it was set down
@@ -15,10 +15,10 @@ extends SimSystem
 ## carrier grabbed, caught, felled or disconnected (NET-11) sets it down the same way, never with a
 ## knock (Proposed).
 ##
-## A body laid on a stretcher (the ring's lay, Stretcher) rides at its centre. Set down with the
+## A body laid on a stretcher (the ring's lay, StretcherRules) rides at its centre. Set down with the
 ## body within touch range of a free medbay table, it goes onto the table
 ## movement.stretcher_to_table_time later, unless the stretcher is taken up first (Proposed). The
-## drum gear set down within touch range of an empty tub goes into it (Tubs). Server-only: others
+## drum gear set down within touch range of an empty tub goes into it (TubRails). Server-only: others
 ## see the load as its own entity (kind and heading) and its carriers by their held bits.
 
 signal carry_started(carrier: int, load_entity: int)
@@ -92,8 +92,8 @@ func bind(run: RunState) -> void:
 		run.miner_state.state_changed.connect(_on_state_changed)
 	if run.ring != null:
 		var down: Array[int] = [MinerTransitions.Life.UNCONSCIOUS, MinerTransitions.Life.DEAD]
-		var can_lay: Callable = func(r: RunState, actor: int, target: int) -> bool: return Stretcher.may_lay(r, actor, target)
-		var lay: Callable = func(r: RunState, actor: int, target: int) -> TimedAction: return Stretcher.lay_action(r, actor, target)
+		var can_lay: Callable = func(r: RunState, actor: int, target: int) -> bool: return StretcherRules.may_lay(r, actor, target)
+		var lay: Callable = func(r: RunState, actor: int, target: int) -> TimedAction: return StretcherRules.lay_action(r, actor, target)
 		run.ring.registry.register("lay", down, can_lay, lay, false, "lift")
 
 
@@ -104,7 +104,7 @@ func bind(run: RunState) -> void:
 func place(run: RunState, kind: ItemKinds.Kind, at: Vector2, heading: int = 0) -> int:
 	var seg: LoadSegment = LoadSegment.make(kind, at, heading)
 	if seg.collides(seg.x, seg.y, seg.heading, _solid):
-		push_error("Loads.place: a %s at %s overlaps rock" % [ItemKinds.text_key(kind), at])
+		push_error("LoadCarry.place: a %s at %s overlaps rock" % [ItemKinds.text_key(kind), at])
 		return 0
 	return run.inventory.world.put(run, run.inventory.world.make(kind, 1, {"heading": seg.heading}), at)
 
@@ -166,7 +166,7 @@ func entity_of(run: RunState, uid: int, hint: int = 0) -> int:
 	return 0
 
 
-## Loads of `kinds` (default the stretcher and the drum gear) lying with their centre within `r`
+## The loads of `kinds` (default the stretcher and the drum gear) lying with their centre within `r`
 ## of `at`, ascending entity.
 func lying(run: RunState, at: Vector2, r: float, kinds: Array[int] = [ItemKinds.Kind.STRETCHER, ItemKinds.Kind.DRUM_GEAR]) -> Array[int]:
 	var out: Array[int] = []
@@ -282,7 +282,7 @@ func _rest(run: RunState, l: Load, reason: StringName) -> void:
 	var tile: Vector2i = Vector2i(floori(l.segment.x), floori(l.segment.y))
 	diff_log.append({"tick": run.tick, "uid": l.uid, "kind": l.segment.kind, "tile": tile, "reason": str(reason)})
 	if l.segment.kind == ItemKinds.Kind.STRETCHER and l.body != 0:
-		l.table = Stretcher.free_table_near(run, l.segment.centre())
+		l.table = StretcherRules.free_table_near(run, l.segment.centre())
 		if l.table.x >= 0:
 			l.transfer_at = run.tick + roundi(Tuning.f(&"movement.stretcher_to_table_time") * Tuning.f(&"net.tick_hz"))
 	elif l.segment.kind == ItemKinds.Kind.DRUM_GEAR and run.tubs != null:
