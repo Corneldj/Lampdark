@@ -266,6 +266,15 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 		run.air_doors = AirDoorSystem.new()
 		run.air_doors.bind(run)
 		run.add_system(run.air_doors)
+		# HAZ-03: collapse points (their falls replay first in a cell) and the timber pins they drop.
+		run.collapses = CollapsePoints.new()
+		run.collapses.bind(run)
+		run.add_system(run.collapses)
+	run.trap_events = TrapEvents.new()
+	run.trap_events.bind(run)
+	run.timber_pins = TimberPins.new()
+	run.timber_pins.bind(run)
+	run.add_system(run.timber_pins)
 	# GEN-13: after every owner, so a committed cell replays once their own load hooks have run.
 	if run.vision != null:
 		run.vision.trail_changed.connect(func(tile: Vector2i, direction: int) -> void:

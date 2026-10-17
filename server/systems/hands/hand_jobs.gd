@@ -115,9 +115,10 @@ static func act(run: RunState, hand: int, job: Dictionary, worked_ticks: int) ->
 	match int(Variants.number(job["kind"])):
 		Kind.FREE:
 			var hold: CaughtHold = run.holds.caught[target]
-			# A timber pin takes two (HAZ-03): the Hand only as the second miner beside a human.
-			if hold.kind == CaughtHold.Kind.TIMBER_PIN and not _human_beside(run, hand, target):
-				return {"interact": false, "done": false}
+			# A timber pin takes two (HAZ-03): the Hand holds beside a human as the second miner of
+			# their lift (TimberPins), and never frees it by itself.
+			if hold.kind == CaughtHold.Kind.TIMBER_PIN:
+				return {"interact": _human_beside(run, hand, target), "done": false}
 			if worked_ticks >= roundi(Tuning.f(&"hands.free_s") * Tuning.f(&"net.tick_hz")):
 				run.holds.release_caught(run, target, CaughtHold.Outcome.FREED)
 				return {"interact": false, "done": true}

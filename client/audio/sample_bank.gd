@@ -29,7 +29,12 @@ static func stream(type: int) -> AudioStreamWAV:
 		kind = "crack"
 	elif id == "rock_hush":
 		kind = "trickle"
-	var s: AudioStreamWAV = make(kind, 0.8 if kind == "bell" or kind == "crack" else (1.2 if kind == "trickle" else 0.4), type, 0.35 if kind == "trickle" else 1.0)
+	elif id == "collapse_creak":  # HAZ-03: the roof groaning, a second at a time
+		kind = "creak"
+	var seconds: float = 0.8 if kind == "bell" or kind == "crack" else (1.2 if kind == "trickle" else 0.4)
+	if kind == "creak":
+		seconds = 1.5  # room for _creak's groan of up to 1.3 s
+	var s: AudioStreamWAV = make(kind, seconds, type, 0.35 if kind == "trickle" else 1.0)
 	_cache[type] = s
 	return s
 

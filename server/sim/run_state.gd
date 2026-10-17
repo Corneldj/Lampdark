@@ -154,6 +154,10 @@ var hands: HandController = null
 ## MOD-05: knocking off, and an absent player's miner waiting off the map.
 var knock_off: KnockOff = null
 var absent: AbsentMiners = null
+## HAZ-03: collapse points and the timber pins they drop; HAZ-01 to HAZ-03's trap events.
+var collapses: CollapsePoints = null
+var timber_pins: TimberPins = null
+var trap_events: TrapEvents = null
 ## NET-09: snapshots, knock-off saves and the journal.
 var saves: Saves = null
 ## RSC-09: the solo self-revive, the alone watch and the substitutions' switchboard.

@@ -2,11 +2,13 @@ extends "res://tests/scenario/kit/scenario_test.gd"
 ## MOD-08 (Gameplay §13.9, §11.4, §4.3): POINT takes the job at the lit spot. A body is lifted onto
 ## the Hand's shoulders (MNR-13's 2 s lift), carried as it follows, and set down where it stands at
 ## STOP; a stretcher end is taken (MNR-14) and carried; a paraffin can is picked up and carried; a
-## caught miner is freed after hands.free_s beside them (a timber pin only with a human beside too).
+## caught miner is freed after hands.free_s beside them; a timber pin only by a human's lift, the Hand
+## holding as its second miner (HAZ-03).
 ## A Hand never rescues or frees anyone without a POINT, and picks up nothing it is not POINTed at.
 
 const HW = preload("res://tests/unit/hands/hand_world.gd")
 const W = preload("res://tests/unit/sound/signal_world.gd")
+const RW = preload("res://tests/unit/mnr/ring_world.gd")
 
 
 func before_all() -> void:
@@ -124,7 +126,16 @@ func test_a_timber_pin_takes_a_human_beside() -> void:
 	_point(s, ann)
 	s.step(roundi((Tuning.f(&"hands.free_s") + 10.0) * Tuning.f(&"net.tick_hz")))
 	assert_true(s.run.holds.caught.has(bob.entity_id), "alone, a Hand cannot free a timber pin")
-	ann.at(s.run.tick).walk_to(lit - Vector2i(1, 0))
-	assert_true(s.run_until(func(sc: Scenario) -> bool: return not sc.run.holds.caught.has(bob.entity_id), 600),
-		"with Ann beside him, the Hand is the second miner")
+	# Ann comes round to his north side, the Hand at his west.
+	ann.at(s.run.tick).walk_to(lit + Vector2i(0, -1))
+	s.step(80)
+	assert_true(s.run.holds.caught.has(bob.entity_id), "nor with a human merely beside him")
+	ann.at(s.run.tick).face(90.0)
+	s.step(4)
+	RW.tap(s, ann)
+	assert_true(RW.pick_and_hold(s, ann, "lift_prop", 80), "Ann lifts the prop")
+	assert_false(s.run.holds.caught.has(bob.entity_id), "the Hand held as the second miner")
+	var row: Dictionary = s.run.timber_pins.history[s.run.timber_pins.history.size() - 1]
+	assert_eq(str(row["how"]), "pair")
+	assert_eq(int(Variants.number(row["by"])), ann.entity_id, "Ann's lift, never the Hand's")
 

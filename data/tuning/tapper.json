@@ -108,11 +108,12 @@
 				"drag_scrape",
 				"flare_strike",
 				"struggle",
-				"trip_lever"
+				"trip_lever",
+				"collapse_creak"
 			],
 			"type": "string_list",
 			"unit": "enum",
-			"note": "SND-02 catalogue ids the Deaf hears. Unlisted in §7.3 and Proposed as struck: drag_scrape, buzzer, main_switch, trip_lever, cage_freed, mantrap_snap, flare_strike, backfire, staple_pit_crash, firedamp_blast, struggle; ticket CRT-12",
+			"note": "SND-02 catalogue ids the Deaf hears. Unlisted in §7.3 and Proposed as struck: drag_scrape, buzzer, main_switch, trip_lever, cage_freed, mantrap_snap, flare_strike, backfire, staple_pit_crash, firedamp_blast, struggle, collapse_creak (HAZ-03: the mine's sound, not a body's); ticket CRT-12",
 			"source": "Gameplay §7.3; unlisted kinds Proposed",
 			"starting": false,
 			"visibility": "server",

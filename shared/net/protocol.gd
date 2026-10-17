@@ -20,7 +20,8 @@ class_name Protocol
 ## 18: MOD-03's seating: Hello's candidate miners, preferred badge and New Brigade runs, Welcome's
 ##     seated miner, badge and run UUID, and Reject.LAMP_NUMBERS.
 ## 19: MOD-05's Reject.KNOCKED_OFF.
-const PROTOCOL_VERSION: int = 19
+## 20: HAZ-03's collapse point (SeenKind.COLLAPSE_POINT) and the collapse creak (NoiseTypes).
+const PROTOCOL_VERSION: int = 20
 ## MOD-03: the most roster miners a Hello offers (a roster's three, Gameplay §13.2).
 const MAX_CANDIDATES: int = 3
 ## MOD-03: a candidate's name and each shown page are at most this long (bytes, UTF-8).

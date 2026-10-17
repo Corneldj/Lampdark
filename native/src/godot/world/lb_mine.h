@@ -112,6 +112,9 @@ public:
 	::godot::Array anchors(::godot::Vector2i cell) const;
 	// GEN-15: a loaded cell's barriers: [{id, portal, open, material (of the tiles), tiles (world)}].
 	::godot::Array barriers(::godot::Vector2i cell) const;
+	// HAZ-03: a loaded cell's collapse alternates: [{id, is_fallen, standing, fallen (world tiles each
+	// state writes), rubble (the fallen writes that are solid: where a roof fall lands)}].
+	::godot::Array collapses(::godot::Vector2i cell) const;
 
 	// For other native systems (the light grid, the Road Graph) attached to this mine.
 	const lb::core::world::MineMap &map() const { return map_; }

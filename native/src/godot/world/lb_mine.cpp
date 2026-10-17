@@ -316,6 +316,7 @@ void LbMine::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("digest", "cell"), &LbMine::digest);
 	ClassDB::bind_method(D_METHOD("anchors", "cell"), &LbMine::anchors);
 	ClassDB::bind_method(D_METHOD("barriers", "cell"), &LbMine::barriers);
+	ClassDB::bind_method(D_METHOD("collapses", "cell"), &LbMine::collapses);
 	ADD_SIGNAL(MethodInfo("tiles_changed", PropertyInfo(Variant::VECTOR2I, "cell"), PropertyInfo(Variant::RECT2I, "rect"), PropertyInfo(Variant::STRING, "reason")));
 	ADD_SIGNAL(MethodInfo("cell_loaded", PropertyInfo(Variant::VECTOR2I, "cell")));
 	ADD_SIGNAL(MethodInfo("cell_unloading", PropertyInfo(Variant::VECTOR2I, "cell")));
@@ -528,6 +529,40 @@ Array LbMine::barriers(Vector2i cell) const {
 		}
 		d["tiles"] = tiles;
 		d["material"] = material;
+		out.push_back(d);
+	}
+	return out;
+}
+
+Array LbMine::collapses(Vector2i cell) const {
+	Array out;
+	const world::Cell *c = map_.cell(coord(cell));
+	if (c == nullptr) {
+		return out;
+	}
+	const auto world_tile = [&cell](uint16_t i) {
+		return Vector2i(static_cast<int32_t>(cell.x * world::CELL_TILES + i % world::CELL_TILES),
+				static_cast<int32_t>(cell.y * world::CELL_TILES + i / world::CELL_TILES));
+	};
+	for (const world::Collapse &k : c->collapses) {
+		Dictionary d;
+		d["id"] = static_cast<int64_t>(k.id);
+		d["is_fallen"] = k.is_fallen;
+		TypedArray<Vector2i> standing;
+		for (const world::TileWrite &w : k.standing) {
+			standing.push_back(world_tile(w.index));
+		}
+		TypedArray<Vector2i> fallen;
+		TypedArray<Vector2i> rubble;
+		for (const world::TileWrite &w : k.fallen) {
+			fallen.push_back(world_tile(w.index));
+			if (map_.materials.get(static_cast<world::TileMaterial>(w.material)).solid) {
+				rubble.push_back(world_tile(w.index));
+			}
+		}
+		d["standing"] = standing;
+		d["fallen"] = fallen;
+		d["rubble"] = rubble;
 		out.push_back(d);
 	}
 	return out;

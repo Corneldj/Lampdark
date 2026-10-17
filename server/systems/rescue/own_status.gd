@@ -34,5 +34,7 @@ static func of(run: RunState, miner: int) -> Dictionary:
 		out["revive_ticks"] = int(Variants.number(r.get("ticks", 0)))
 	if run.two_miner != null and run.two_miner.at_two_person_job(miner):
 		flags |= StatusWire.AT_JOB
+	if run.timber_pins != null and TimberPins.may_struggle(run, miner):
+		flags |= StatusWire.TRAP_STRUGGLE
 	out["flags"] = flags
 	return out

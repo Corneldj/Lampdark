@@ -4,8 +4,8 @@ extends Node2D
 ## lamp or how to get free; GDD §14.4 shows each lamp key once in a first run, MOD-04, and this shows
 ## them whenever they apply): "Hold R · Light the lamp" with a lamp out in hand, "Q · Open the
 ## shutter" with it shuttered, the shutter and wick keys for a while after it is first lit, "E · Press
-## in the zone" while a struggle is offered (StruggleRing draws it), and coming round "W A S D ·
-## Crawl" and "Z · Call for help". Each hint is a key label from the bindings and a text key; the
+## in the zone" while a struggle is offered (StruggleRing draws it), "Hold E · Struggle free" under
+## a timber pin (HAZ-03), and coming round "W A S D · Crawl" and "Z · Call for help". Each hint is a key label from the bindings and a text key; the
 ## server decides everything.
 
 ## [key label, verb key, hold seconds (0: a press), fill 0..1 or -1]
@@ -36,6 +36,8 @@ func update(shown: bool, life: int, in_window: bool, inventory: Dictionary, lamp
 		hints.append([key_label, "hint.crawl", 0.0, -1.0])
 		_add(store, family, "callout", "hint.call_help", 0.0, -1.0)
 	elif life == StatusWire.LIFE_UPRIGHT or life == StatusWire.LIFE_CAUGHT:
+		if life == StatusWire.LIFE_CAUGHT and (flags & StatusWire.TRAP_STRUGGLE) != 0:
+			_add(store, family, "interact", "hint.struggle_free", Tuning.f(&"traps.timber_pin_struggle_s"), -1.0)
 		_lamp_hints(inventory, lamp_shows, holds, store, family, now_s)
 	visible = shown and not hints.is_empty()
 	queue_redraw()

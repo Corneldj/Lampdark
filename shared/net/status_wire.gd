@@ -17,6 +17,8 @@ const AT_JOB: int = 2
 const REVIVE_COUNTING: int = 4
 ## RSC-09: a self-revive is pending but waits (a drag holds the body).
 const REVIVE_WAITING: int = 8
+## HAZ-03: Caught under a timber pin, holding interact struggles free (nobody's lift to hold for).
+const TRAP_STRUGGLE: int = 128
 const SIZE: int = 25
 ## The own block's life bits (flags bits 4-6) as the client names them: MNR-03's states, wire values
 ## (test_standard_hud checks them against the server's own states, which client code never names).

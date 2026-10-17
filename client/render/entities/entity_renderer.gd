@@ -3,7 +3,7 @@ extends RefCounted
 ## VIS-06: identity sprites (grey-box placeholders until art), drawn only for identity records
 ## (level 2): miners with their cap badge (colour and engraved pattern), facing and what is in their
 ## hands; the faceless Stythe; the moth (asleep, a heap's shape); the tapper's arm; Bess; items,
-## traps, phones and fixtures; coat heaps; a gate's lever. A token (level 1) is TokenRenderer's and never shows any
+## traps, phones and fixtures; coat heaps; a gate's lever; a collapse point's bowed props. A token (level 1) is TokenRenderer's and never shows any
 ## of this.
 
 const BODY: Color = Color(0.46, 0.42, 0.38)
@@ -48,6 +48,8 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 			ci.draw_circle(at_px + Vector2(0.14, -0.36) * px, 0.08 * px, Palette.CHALK_WHITE.darkened(0.3))
 		SeenKind.Kind.FIXTURE:
 			draw_fixture(ci, int(Variants.number(e.get("in_hand", 0))), at_px, px, t)
+		SeenKind.Kind.COLLAPSE_POINT:
+			_collapse_tell(ci, at_px, px, t)
 		SeenKind.Kind.ITEM:
 			# Its kind rides in the held field (replication's lying things): a grey-box shape per kind.
 			var held: int = int(Variants.number(e.get("in_hand", 0)))
@@ -59,6 +61,22 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 		_:
 			ci.draw_rect(Rect2(at_px - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 			_held_flame(ci, e, at_px, px, t)
+
+
+## HAZ-03's tell, seen only at 0.30: two props bowed under the roof and stone dribbling between
+## them, a grain every so often (grey box until art).
+static func _collapse_tell(ci: CanvasItem, at: Vector2, px: float, t: float) -> void:
+	var timber: Color = Palette.CHALK_WHITE.darkened(0.55)
+	for side: float in [-1.0, 1.0]:
+		var foot: Vector2 = at + Vector2(0.32 * side, 0.4) * px
+		var head: Vector2 = at + Vector2(0.32 * side, -0.4) * px
+		var bow: Vector2 = at + Vector2(0.2 * side, 0.0) * px
+		ci.draw_line(foot, bow, timber, maxf(2.0, 0.08 * px))
+		ci.draw_line(bow, head, timber, maxf(2.0, 0.08 * px))
+	ci.draw_line(at + Vector2(-0.45, -0.42) * px, at + Vector2(0.45, -0.42) * px, DARK, maxf(2.0, 0.1 * px))
+	for i: int in 3:
+		var phase: float = fposmod(t * 0.9 + i * 0.37, 1.0)
+		ci.draw_circle(at + Vector2((i - 1) * 0.1, -0.38 + phase * 0.8) * px, maxf(1.0, 0.03 * px), BODY.lightened(0.15))
 
 
 ## A fixture by the kind in its held field: LFT-06's paraffin tank, its sight glass marked once a can

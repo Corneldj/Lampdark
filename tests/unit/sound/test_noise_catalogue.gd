@@ -17,8 +17,9 @@ const TABLE: Dictionary = {
 	"backfire": 30, "roof_fall": 30,
 	"shot": 40, "firedamp_blast": 40,
 }
-## Not in §6.1's table, Proposed: catalogue id -> np (LFT-05's trip lever, the main switch's cue).
-const PROPOSED: Dictionary = {"trip_lever": 8}
+## Not in §6.1's table, Proposed: catalogue id -> np (LFT-05's trip lever, the main switch's cue;
+## HAZ-03's collapse creak).
+const PROPOSED: Dictionary = {"trip_lever": 8, "collapse_creak": 12}
 const VOCAL: Array[String] = ["panting", "gasp", "cough", "trapped_cry", "voice", "callout", "fall_scream"]
 ## Gameplay §7.3: the Deaf hears these, and not these.
 const STRUCK: Array[String] = ["step_walk", "step_run", "flint_click", "lamp_hang_clink", "rock_tap", "rail_bang",

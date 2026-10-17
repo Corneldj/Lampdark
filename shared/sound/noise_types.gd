@@ -51,6 +51,7 @@ enum Type {
 	CALLOUT = 43,
 	FALL_SCREAM = 44,
 	TRIP_LEVER = 45,
+	COLLAPSE_CREAK = 46,
 }
 
 

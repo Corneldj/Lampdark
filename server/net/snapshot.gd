@@ -19,8 +19,10 @@ const SECTION_REGISTRY: String = "registry"
 const SECTION_STATE: String = "state"
 const SECTION_DIFF_LOG: String = "diff_log"
 const SECTION_WINDOWS: String = "windows"
-## Entities a resume makes again from elsewhere (items: the diff log; a Tapper's arm: its hunt).
-const NOT_KEPT: Array[WorldIds.EntityKind] = [WorldIds.EntityKind.ITEM, WorldIds.EntityKind.TAPPER_ARM]
+## Entities a resume makes again from elsewhere (items: the diff log; a Tapper's arm: its hunt; a
+## collapse point's tell: its cell's load, HAZ-03).
+const NOT_KEPT: Array[WorldIds.EntityKind] = [WorldIds.EntityKind.ITEM, WorldIds.EntityKind.TAPPER_ARM,
+	WorldIds.EntityKind.COLLAPSE_POINT]
 
 
 ## Whether a snapshot may be taken now (no grab under way).

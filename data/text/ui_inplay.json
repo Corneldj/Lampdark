@@ -40,6 +40,7 @@
 		"hint.shutter": "Shutter",
 		"hint.wick": "Wick",
 		"hint.struggle": "Press in the zone to break free",
+		"hint.struggle_free": "Struggle free",
 		"hint.crawl": "Crawl",
 		"hint.call_help": "Call for help",
 		"wheel.signal.stop": "Stop",

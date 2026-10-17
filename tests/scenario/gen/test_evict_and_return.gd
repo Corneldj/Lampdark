@@ -1,8 +1,7 @@
 extends "res://tests/scenario/kit/scenario_test.gd"
 ## GEN-11: a generated cell is evicted when everyone is more than 6 cells away and derived again
 ## on return, identical; its diff replays (GEN-13). The cell holds dropped and moved items, an air
-## door worked open, chalk and a collapse fallen. Falls belong to HAZ-03, so this test registers a
-## stand-in replay for its records.
+## door worked open, chalk and a collapse fallen (HAZ-03's FALL record, replayed by CollapsePoints).
 
 const Specs = preload("res://tests/unit/gen/template_specs.gd")
 const W = preload("res://tests/scenario/world/diff_world.gd")
@@ -57,10 +56,8 @@ func test_a_cell_left_and_returned_to_comes_back_as_it_was() -> void:
 	s.run.registry.move(spanner, Vector2(base + Vector2i(14, 10)) + Vector2(0.5, 0.5))
 	s.run.inventory.world.moved(s.run, spanner)
 	s.run.chalk.store.put(s.run, base + Vector2i(10, 15), ChalkMarks.Surface.FLOOR, ChalkMarks.glyph(ChalkMarks.Kind.DIGIT_3), 1)
-	s.run.diff_log.register(DiffLog.Kind.FALL, func(r: RunState, cell: Vector2i, key: String, _p: Dictionary, _t: int) -> void:
-		r.mine.native.set_collapse(cell, int(key.substr(9)), true)) # HAZ-03's stand-in
 	s.mine.native.set_collapse(CELL, 1, true)
-	s.run.diff_log.record(CELL, DiffLog.Kind.FALL, "collapse:1", {"fallen": true})
+	s.run.diff_log.record(CELL, DiffLog.Kind.FALL, "collapse:1", {"fallen_at": s.run.tick, "cuts": []})
 	s.step(2)
 	var before: int = s.mine.native.digest(CELL)
 	assert_ne(before, fresh, "the door and the fall changed the cell")

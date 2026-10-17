@@ -541,6 +541,18 @@
 			"sample": "sfx.trip_lever",
 			"owner": "LFT-05",
 			"source": "Gameplay §3.3, §6.1"
+		},
+		{
+			"id": "collapse_creak",
+			"np_key": "noise.collapse_creak_np",
+			"rate_key": "hazards.collapse_creak_interval_s",
+			"duration_key": "",
+			"vocal": false,
+			"category": "hazard",
+			"caption": "caption.noise.collapse_creak",
+			"sample": "sfx.collapse_creak",
+			"owner": "HAZ-03",
+			"source": "Gameplay §12.5, §6.1 (Proposed: 12 np, once a second)"
 		}
 	],
 	"silent": [

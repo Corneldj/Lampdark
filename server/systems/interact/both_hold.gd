@@ -3,7 +3,8 @@ extends RefCounted
 ## MNR-05: a timed action every participant must hold (sharing oil, passing a flame, the two-miner
 ## timber pin). Built on MNR-04's TimedAction: each partner holds the same input and stays within
 ## touch range; any release cancels it with nothing changed and records who let go (`let_go`). Hired
-## Hands never hold interact, so no both-hold involves one (§13.9).
+## Hands never hold interact, so no both-hold involves one (§13.9); HAZ-03's timber-pin lift is
+## the exception, where a POINTed Hand holds as the second miner (TimberPins, Proposed).
 
 
 ## Adds `others` as partners of `a` (the initiator is its actor).
