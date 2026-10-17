@@ -147,6 +147,8 @@ var repair: RepairListState = null
 var fuel: FuelTank = null
 ## LFT-08: the winder's paraffin engine.
 var engine: WinderEngine = null
+## LFT-05: the Power job at the District Substation.
+var power: PowerJob = null
 ## LFT-09: the pit wakes, from the engine's catch until the cage leaves.
 var apex: ApexController = null
 ## LFT-10: the cage, the signal cord and the ride.

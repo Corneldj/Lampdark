@@ -381,6 +381,16 @@
 			"kind": "param",
 			"note": "A.2 20 np: main switch; SND-02 catalogue"
 		},
+		"noise.trip_lever_np": {
+			"value": 8,
+			"type": "int",
+			"unit": "np",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "LFT-05: the trip lever's catch as it is taken, the main switch's cue (LFT-04's TimedCues); a small click like the reload click or a lamp hung on its hook (8 np)"
+		},
 		"noise.mantrap_snap_np": {
 			"value": 14,
 			"type": "int",

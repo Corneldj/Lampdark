@@ -65,7 +65,8 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 ## of capacity with the paraffin's line (a glass to read up close, never a meter); LFT-08's engine:
 ## the prime's pump, the throttle's lever, and the crank's wheel on the engine block, still when
 ## cold, shuddering at the top of a stroke, its flywheel turning when it runs; LFT-10's cage, its
-## cord and the open shaft it leaves.
+## cord and the open shaft it leaves; LFT-05's fuse board (its burnt links until cleared, a cartridge
+## in each filled way), its trip lever (up, or down when held) and its main switch (open or closed).
 static func draw_fixture(ci: CanvasItem, held: int, at: Vector2, px: float, t: float = 0.0) -> void:
 	var w: float = maxf(1.5, 0.05 * px)
 	match FixtureKinds.kind_of(held):
@@ -117,6 +118,26 @@ static func draw_fixture(ci: CanvasItem, held: int, at: Vector2, px: float, t: f
 			ci.draw_circle(at + Vector2(0.0, 0.34) * px, 0.08 * px, BODY)
 		FixtureKinds.Kind.OPEN_SHAFT:
 			ci.draw_rect(Rect2(at - Vector2(1.8, 2.3) * px, Vector2(3.6, 4.6) * px), DARK)
+		FixtureKinds.Kind.FUSE_BOARD:
+			var board: Dictionary = FixtureKinds.read_fuse_board(held)
+			ci.draw_rect(Rect2(at - Vector2(0.42, 0.3) * px, Vector2(0.84, 0.6) * px), DARK)
+			var fuses: int = int(Variants.number(board["fuses"]))
+			for k: int in 3:
+				var way: Vector2 = at + Vector2(-0.25 + 0.25 * k, 0.0) * px
+				if k < fuses:
+					ci.draw_rect(Rect2(way - Vector2(0.06, 0.16) * px, Vector2(0.12, 0.32) * px), BODY)
+				elif not Variants.flag(board["cleared"]):
+					ci.draw_line(way - Vector2(0.06, 0.14) * px, way + Vector2(0.06, 0.14) * px, Color(0.25, 0.2, 0.15), w)
+				else:
+					ci.draw_rect(Rect2(way - Vector2(0.06, 0.16) * px, Vector2(0.12, 0.32) * px), BODY, false, w * 0.6)
+		FixtureKinds.Kind.TRIP_LEVER:
+			ci.draw_rect(Rect2(at - Vector2(0.1, 0.1) * px, Vector2(0.2, 0.2) * px), DARK)
+			var tip: Vector2 = Vector2(0.18, 0.28) if FixtureKinds.flag_of(held) else Vector2(0.18, -0.28)
+			ci.draw_line(at, at + tip * px, BODY, w * 1.6)
+		FixtureKinds.Kind.MAIN_SWITCH:
+			ci.draw_rect(Rect2(at - Vector2(0.3, 0.35) * px, Vector2(0.6, 0.7) * px), DARK)
+			var arm: Vector2 = Vector2(0.0, -0.28) if FixtureKinds.flag_of(held) else Vector2(0.22, -0.18)
+			ci.draw_line(at + Vector2(0.0, 0.2) * px, at + arm * px, BODY, w * 2.0)
 		_:
 			ci.draw_rect(Rect2(at - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 

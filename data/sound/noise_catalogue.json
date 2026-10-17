@@ -529,6 +529,18 @@
 			"sample": "sfx.fall_scream",
 			"owner": "SND-15",
 			"source": "Gameplay §6.8, A.3"
+		},
+		{
+			"id": "trip_lever",
+			"np_key": "noise.trip_lever_np",
+			"rate_key": "",
+			"duration_key": "",
+			"vocal": false,
+			"category": "lift",
+			"caption": "caption.noise.trip_lever",
+			"sample": "sfx.trip_lever",
+			"owner": "LFT-05",
+			"source": "Gameplay §3.3, §6.1"
 		}
 	],
 	"silent": [

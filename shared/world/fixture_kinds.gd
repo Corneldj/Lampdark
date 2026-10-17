@@ -8,9 +8,12 @@ extends RefCounted
 ## the paraffin's line in lamp fills. A glass to look at, never a number or a meter on screen.
 ## LFT-08's engine: its prime, its crank (bits 4-5 the winder's look: cold, shuddering, running)
 ## and its throttle. LFT-10's cage (bits 4-5 its look: standing askew, wedged fast, riding, stopped
-## in the dark), its signal cord, and the open shaft it leaves.
+## in the dark), its signal cord, and the open shaft it leaves. LFT-05's substation: the fuse board
+## (bit 4 the burnt links cleared, bits 5-6 the fuses in, bit 7 every fuse way filled), the trip
+## lever (bit 4 held) and the main switch (bit 4 closed).
 
-enum Kind { NONE = 0, TANK_GLASS = 1, ENGINE_PRIME = 2, ENGINE_CRANK = 3, ENGINE_THROTTLE = 4, CAGE = 5, CAGE_CORD = 6, OPEN_SHAFT = 7 }
+enum Kind { NONE = 0, TANK_GLASS = 1, ENGINE_PRIME = 2, ENGINE_CRANK = 3, ENGINE_THROTTLE = 4, CAGE = 5, CAGE_CORD = 6, OPEN_SHAFT = 7,
+	FUSE_BOARD = 8, TRIP_LEVER = 9, MAIN_SWITCH = 10 }
 enum Look { COLD = 0, SHUDDER = 1, RUNNING = 2 }
 enum CageLook { STANDING = 0, WEDGED = 1, RIDING = 2, STOPPED = 3 }
 
@@ -43,3 +46,28 @@ static func look_of(bits: int) -> Look:
 ## The cage with its look (CageLook).
 static func cage(look: int) -> int:
 	return Kind.CAGE | (clampi(look, 0, 3) << 4)
+
+
+## LFT-05's fuse board: its links cleared, how many fuses are in (0-3), and every way filled.
+static func fuse_board(cleared: bool, fuses: int, full: bool) -> int:
+	return Kind.FUSE_BOARD | ((1 if cleared else 0) << 4) | (clampi(fuses, 0, 3) << 5) | ((1 if full else 0) << 7)
+
+
+## {cleared, fuses, full} of a fuse board's bits.
+static func read_fuse_board(bits: int) -> Dictionary:
+	return {"cleared": ((bits >> 4) & 1) == 1, "fuses": (bits >> 5) & 0x3, "full": ((bits >> 7) & 1) == 1}
+
+
+## LFT-05's trip lever, held or not.
+static func trip_lever(held: bool) -> int:
+	return Kind.TRIP_LEVER | ((1 if held else 0) << 4)
+
+
+## LFT-05's main switch, closed or not.
+static func main_switch(closed: bool) -> int:
+	return Kind.MAIN_SWITCH | ((1 if closed else 0) << 4)
+
+
+## Bit 4: the trip held, the switch closed.
+static func flag_of(bits: int) -> bool:
+	return ((bits >> 4) & 1) == 1

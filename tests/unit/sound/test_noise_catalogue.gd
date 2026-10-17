@@ -1,6 +1,7 @@
 extends GutTest
-## SND-02's catalogue: every source in Gameplay §6.1's table at its np, with an owner, rate,
-## duration, struck flag and source section; the wire ids match; silent sources are listed.
+## SND-02's catalogue: every source in Gameplay §6.1's table at its np (and the Proposed sounds the
+## jobs need beside it), with an owner, rate, duration, struck flag and source section; the wire ids
+## match; silent sources are listed.
 
 ## Gameplay §6.1 / A.2: catalogue id -> np.
 const TABLE: Dictionary = {
@@ -16,6 +17,8 @@ const TABLE: Dictionary = {
 	"backfire": 30, "roof_fall": 30,
 	"shot": 40, "firedamp_blast": 40,
 }
+## Not in §6.1's table, Proposed: catalogue id -> np (LFT-05's trip lever, the main switch's cue).
+const PROPOSED: Dictionary = {"trip_lever": 8}
 const VOCAL: Array[String] = ["panting", "gasp", "cough", "trapped_cry", "voice", "callout", "fall_scream"]
 ## Gameplay §7.3: the Deaf hears these, and not these.
 const STRUCK: Array[String] = ["step_walk", "step_run", "flint_click", "lamp_hang_clink", "rock_tap", "rail_bang",
@@ -32,13 +35,15 @@ func before_all() -> void:
 
 
 func test_every_source_at_its_np() -> void:
-	for id: String in TABLE.keys():
+	var all: Dictionary = TABLE.duplicate()
+	all.merge(PROPOSED)
+	for id: String in all.keys():
 		var e: NoiseCatalogue.Entry = catalogue.entry(NoiseTypes.from_id(id))
 		assert_not_null(e, "%s is catalogued" % id)
 		if e != null:
-			var np: int = TABLE[id]
+			var np: int = all[id]
 			assert_eq(e.np, float(np), "%s at %d np" % [id, np])
-	assert_eq(catalogue.entries.size(), TABLE.size() + 3, "the table plus voice, callouts and the fall's scream")
+	assert_eq(catalogue.entries.size(), TABLE.size() + PROPOSED.size() + 3, "the table and the Proposed sounds, plus voice, callouts and the fall's scream")
 
 
 func test_every_entry_is_complete() -> void:

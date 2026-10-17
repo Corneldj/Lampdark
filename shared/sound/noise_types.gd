@@ -50,6 +50,7 @@ enum Type {
 	VOICE = 42,
 	CALLOUT = 43,
 	FALL_SCREAM = 44,
+	TRIP_LEVER = 45,
 }
 
 

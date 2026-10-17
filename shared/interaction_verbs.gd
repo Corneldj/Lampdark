@@ -21,7 +21,7 @@ static func for_seen(kind: int, cues: int = 0, item_kind: int = 0) -> String:
 		SeenKind.Kind.PHONE:
 			return "verb.crank"
 		SeenKind.Kind.FIXTURE:
-			# LFT-06's tank, LFT-08's engine and LFT-10's cord: the fixture's kind rides in the held field.
+			# LFT-06's tank, LFT-08's engine, LFT-10's cord, LFT-05's substation: the fixture's kind rides in the held field.
 			match FixtureKinds.kind_of(item_kind):
 				FixtureKinds.Kind.TANK_GLASS:
 					return "verb.pour"
@@ -33,6 +33,16 @@ static func for_seen(kind: int, cues: int = 0, item_kind: int = 0) -> String:
 					return "verb.throttle"
 				FixtureKinds.Kind.CAGE_CORD:
 					return "verb.pull_cord"
+				# LFT-05's substation: the board's next step, the trip, the switch until closed.
+				FixtureKinds.Kind.FUSE_BOARD:
+					var board: Dictionary = FixtureKinds.read_fuse_board(item_kind)
+					if not Variants.flag(board["cleared"]):
+						return "verb.clear_links"
+					return "" if Variants.flag(board["full"]) else "verb.fit_fuse"
+				FixtureKinds.Kind.TRIP_LEVER:
+					return "verb.hold_trip"
+				FixtureKinds.Kind.MAIN_SWITCH:
+					return "" if FixtureKinds.flag_of(item_kind) else "verb.throw"
 		SeenKind.Kind.LEVER:
 			return "verb.lever"
 	return ""

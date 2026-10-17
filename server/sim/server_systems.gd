@@ -244,6 +244,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.fuel = FuelTank.new()
 	run.fuel.bind(run)
 	run.add_system(run.fuel)
+	# LFT-05: the Power job at the substation (its main switch joins the jobs for two).
+	run.power = PowerJob.new()
+	run.power.bind(run)
+	run.add_system(run.power)
 	# LFT-08: the engine that starts the winder (its crank and throttle join the jobs for two).
 	run.engine = WinderEngine.new()
 	run.engine.bind(run)
