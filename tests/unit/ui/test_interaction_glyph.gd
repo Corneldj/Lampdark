@@ -37,6 +37,9 @@ func test_each_kind_its_verb() -> void:
 	for look: int in FixtureKinds.Look.values():
 		assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.engine(look) & 0x3F), "verb.crank", "the crank, whatever the winder's look")
 	assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.Kind.ENGINE_THROTTLE), "verb.throttle")
+	assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.Kind.CAGE_CORD), "verb.pull_cord", "LFT-10's cord: 'Pull'")
+	for look: int in FixtureKinds.CageLook.values():
+		assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.cage(look) & 0x3F), "", "the cage itself: no glyph")
 	assert_eq(InteractionVerbs.for_seen(fixture, 0, FixtureKinds.Kind.NONE), "", "an unknown fixture: no glyph")
 
 

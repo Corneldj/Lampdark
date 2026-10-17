@@ -252,6 +252,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.apex = ApexController.new()
 	run.apex.bind(run)
 	run.add_system(run.apex)
+	# LFT-10: the cage, the signal cord and the one ride.
+	run.cage = Cage.new()
+	run.cage.bind(run)
+	run.add_system(run.cage)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:

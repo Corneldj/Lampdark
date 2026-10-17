@@ -21,7 +21,7 @@ static func for_seen(kind: int, cues: int = 0, item_kind: int = 0) -> String:
 		SeenKind.Kind.PHONE:
 			return "verb.crank"
 		SeenKind.Kind.FIXTURE:
-			# LFT-06's tank and LFT-08's engine: the fixture's kind rides in the held field.
+			# LFT-06's tank, LFT-08's engine and LFT-10's cord: the fixture's kind rides in the held field.
 			match FixtureKinds.kind_of(item_kind):
 				FixtureKinds.Kind.TANK_GLASS:
 					return "verb.pour"
@@ -31,6 +31,8 @@ static func for_seen(kind: int, cues: int = 0, item_kind: int = 0) -> String:
 					return "verb.crank"
 				FixtureKinds.Kind.ENGINE_THROTTLE:
 					return "verb.throttle"
+				FixtureKinds.Kind.CAGE_CORD:
+					return "verb.pull_cord"
 		SeenKind.Kind.LEVER:
 			return "verb.lever"
 	return ""

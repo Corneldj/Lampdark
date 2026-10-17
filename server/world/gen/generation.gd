@@ -34,6 +34,8 @@ var run_seed: int = 0
 var synchronous: bool = false
 ## Never evicted: base camp and the cells its gate roads enter.
 var pinned: Array[Vector2i] = []
+## This tick's pinned cells: those, and the cage's ride zone once it has left.
+var _pins: Array[Vector2i] = []
 
 var radius: int = 4
 var prefetch_radius: int = 5
@@ -96,6 +98,7 @@ func _init(server_mine: Mine, deriver: LbLayouts, seed_value: int, sync: bool = 
 		_gate_cells[cell] = true
 		pinned.append(cell)
 	pinned.append(Vector2i.ZERO)
+	_pins = pinned.duplicate()
 	layouts.start_pool(0 if synchronous else maxi(1, workers), background)
 	layouts.set_window(radius, prefetch_radius)
 
@@ -132,11 +135,17 @@ func tick(run: RunState) -> void:
 	_tick = run.tick
 	var holders: Array[Vector2i] = []
 	var miners: Array[Vector2i] = []
+	# LFT-10: the cage's ride zone lies off the plane: its riders ask for no cells, and it stays.
+	var ride: Array[Vector2i] = run.cage.ride_cells() if run.cage != null else ([] as Array[Vector2i])
+	_pins = pinned.duplicate()
+	_pins.append_array(ride)
 	for id: int in run.registry.ids():
 		var e: SimEntity = run.registry.get_entity(id)
 		if e == null or not HOLDERS.has(int(e.kind)):
 			continue
 		var cell: Vector2i = WorldCoords.cell_of(WorldCoords.tile_at(e.position))
+		if ride.has(cell):
+			continue
 		holders.append(cell)
 		if e.kind == WorldIds.EntityKind.MINER:
 			miners.append(cell)
@@ -157,7 +166,7 @@ func tick(run: RunState) -> void:
 		_evict_due = true
 	if _evict_due or mine.native.loaded_count() > max_live:
 		_evict_due = false
-		_list_evictions(layouts.evictions_now(mine.native, pinned, evict_radius, max_live))
+		_list_evictions(layouts.evictions_now(mine.native, _pins, evict_radius, max_live))
 	# This stage's queued work (MineCommitSystem) spent part of the budget already; the commits
 	# leave room for an unload, if any is due, and for the closing checks.
 	var budget: int = commit_budget_usec - mine.last_apply_usec
@@ -243,7 +252,7 @@ func _unload(started: int, budget: int) -> int:
 ## prefetch ring), listing them afresh if none is listed. Nothing goes if every live cell is wanted.
 func _make_room() -> void:
 	if _to_evict.is_empty():
-		_list_evictions(layouts.evictions_now(mine.native, pinned, evict_radius, max_live - 1))
+		_list_evictions(layouts.evictions_now(mine.native, _pins, evict_radius, max_live - 1))
 	while not _to_evict.is_empty():
 		var cell: Vector2i = _to_evict.pop_front()
 		if _drop(cell):

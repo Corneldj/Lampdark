@@ -7,10 +7,12 @@ extends RefCounted
 ## LFT-06's sight glass on the winder's paraffin tank (Proposed): one mark per can of capacity and
 ## the paraffin's line in lamp fills. A glass to look at, never a number or a meter on screen.
 ## LFT-08's engine: its prime, its crank (bits 4-5 the winder's look: cold, shuddering, running)
-## and its throttle.
+## and its throttle. LFT-10's cage (bits 4-5 its look: standing askew, wedged fast, riding, stopped
+## in the dark), its signal cord, and the open shaft it leaves.
 
-enum Kind { NONE = 0, TANK_GLASS = 1, ENGINE_PRIME = 2, ENGINE_CRANK = 3, ENGINE_THROTTLE = 4 }
+enum Kind { NONE = 0, TANK_GLASS = 1, ENGINE_PRIME = 2, ENGINE_CRANK = 3, ENGINE_THROTTLE = 4, CAGE = 5, CAGE_CORD = 6, OPEN_SHAFT = 7 }
 enum Look { COLD = 0, SHUDDER = 1, RUNNING = 2 }
+enum CageLook { STANDING = 0, WEDGED = 1, RIDING = 2, STOPPED = 3 }
 
 const KIND_MASK: int = 0xF
 
@@ -36,3 +38,8 @@ static func engine(look: int) -> int:
 
 static func look_of(bits: int) -> Look:
 	return ((bits >> 4) & 0x3) as Look
+
+
+## The cage with its look (CageLook).
+static func cage(look: int) -> int:
+	return Kind.CAGE | (clampi(look, 0, 3) << 4)

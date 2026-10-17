@@ -257,6 +257,16 @@ func end_tell(run: RunState, t: Tell) -> void:
 	log.add(run.tick, &"tell_ended", {"id": t.id, "creature": t.creature.kind_name(), "end": run.tick})
 
 
+## LFT-10: moves a creature where it cannot walk (the Tapper into the shaft's rock beside the
+## riding cage, and back below at the brick): logged, and never counted as a teleport.
+func relocate(run: RunState, c: Creature, at: Vector2) -> void:
+	run.registry.move(c.entity_id, at)
+	_last[c.entity_id] = at
+	if c is Tapper:
+		(c as Tapper).follower.stop()
+	log.add(run.tick, &"relocated", {"creature": c.kind_name(), "to": at})
+
+
 ## The revolver's threshold, or a flare on the Moth while it lays or carries a lamp home: for
 ## creatures.retreat_s the wind-up is cancelled, any grab drops and the hunt stands down.
 func begin_retreat(run: RunState, c: Creature, cause: String) -> void:

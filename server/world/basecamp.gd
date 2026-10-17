@@ -8,6 +8,8 @@ extends RefCounted
 ## basecamp.arch_length_tiles past each gate (apply_gate_arches, for this cell and the cells the
 ## gate roads enter). Server-only: the seed, the blind side and the anchors never reach a client.
 
+## LFT-10: base camp's collapse alternate that is the open shaft (the deck's tiles turned to steel).
+const OPEN_SHAFT_COLLAPSE: int = 900
 const SOURCE: String = "res://data/maps/basecamp/cell_0_0.json"
 const SIDES: Array[String] = ["north", "east", "south", "west"]
 const FACINGS: Array[String] = ["N", "E", "S", "W"]
@@ -122,7 +124,20 @@ static func _tile_at(along: int, depth: int, s: int) -> Vector2i:
 
 
 static func cell_data(run_seed: int, side: int = -1) -> LbCellData:
-	return CellFile.from_dict(cell_dict(run_seed, side), "basecamp")
+	var file: Dictionary = cell_dict(run_seed, side)
+	# LFT-10: the open shaft the cage leaves behind. Its deck's tiles stand as floor; at departure
+	# Cage swaps in the shaft's guard steel, so the deck site is never boarded again.
+	var deck: Rect2i = deck_rect(run_seed, side)
+	var standing: Array = []
+	var fallen: Array = []
+	for y: int in range(deck.position.y, deck.end.y):
+		for x: int in range(deck.position.x, deck.end.x):
+			standing.append([y * N + x, "."])
+			fallen.append([y * N + x, "S"])
+	var collapses: Array = Variants.array(file.get("collapses", [])).duplicate()
+	collapses.append({"id": OPEN_SHAFT_COLLAPSE, "standing": standing, "fallen": fallen, "is_fallen": false})
+	file["collapses"] = collapses
+	return CellFile.from_dict(file, "basecamp")
 
 
 ## The layout turned clockwise `steps` quarter turns about the cell centre: (x, y) -> (19 - y, x).

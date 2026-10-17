@@ -64,7 +64,8 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 ## A fixture by the kind in its held field: LFT-06's paraffin tank, its sight glass marked once a can
 ## of capacity with the paraffin's line (a glass to read up close, never a meter); LFT-08's engine:
 ## the prime's pump, the throttle's lever, and the crank's wheel on the engine block, still when
-## cold, shuddering at the top of a stroke, its flywheel turning when it runs.
+## cold, shuddering at the top of a stroke, its flywheel turning when it runs; LFT-10's cage, its
+## cord and the open shaft it leaves.
 static func draw_fixture(ci: CanvasItem, held: int, at: Vector2, px: float, t: float = 0.0) -> void:
 	var w: float = maxf(1.5, 0.05 * px)
 	match FixtureKinds.kind_of(held):
@@ -96,6 +97,26 @@ static func draw_fixture(ci: CanvasItem, held: int, at: Vector2, px: float, t: f
 				var y: float = tube.end.y - tube.size.y * k / cans
 				ci.draw_line(Vector2(tube.position.x - 0.03 * px, y), Vector2(tube.position.x, y), Palette.CHALK_WHITE.darkened(0.3),
 					maxf(1.0, 0.02 * px))
+		FixtureKinds.Kind.CAGE:
+			# LFT-10: the barred cage about its deck: askew in its guides, wedged (a chock at its
+			# foot), riding (its bars sliding past) or stopped in the dark.
+			var cage_look: int = FixtureKinds.look_of(held)
+			var half: Vector2 = Vector2(1.9, 2.4) * px
+			var tilt: float = 0.04 if cage_look == FixtureKinds.CageLook.STANDING else (0.07 if cage_look == FixtureKinds.CageLook.WEDGED else 0.0)
+			var skew: Vector2 = Vector2(tilt * half.y, 0.0)
+			ci.draw_polyline(PackedVector2Array([at - half + skew, at + Vector2(half.x, -half.y) + skew, at + half - skew,
+				at + Vector2(-half.x, half.y) - skew, at - half + skew]), BODY, w)
+			var slide: float = fposmod(t * 3.0, 1.0) if cage_look == FixtureKinds.CageLook.RIDING else 0.0
+			for k: int in 5:
+				var y: float = -half.y + (float(k) + slide) * half.y * 2.0 / 5.0
+				ci.draw_line(at + Vector2(-half.x, y), at + Vector2(half.x, y), DARK, w * 0.7)
+			if cage_look == FixtureKinds.CageLook.WEDGED:
+				ci.draw_rect(Rect2(at + Vector2(half.x - 0.3 * px, half.y - 0.25 * px), Vector2(0.3, 0.25) * px), BODY)
+		FixtureKinds.Kind.CAGE_CORD:
+			ci.draw_line(at - Vector2(0.0, 0.45) * px, at + Vector2(0.0, 0.3) * px, BODY, w)
+			ci.draw_circle(at + Vector2(0.0, 0.34) * px, 0.08 * px, BODY)
+		FixtureKinds.Kind.OPEN_SHAFT:
+			ci.draw_rect(Rect2(at - Vector2(1.8, 2.3) * px, Vector2(3.6, 4.6) * px), DARK)
 		_:
 			ci.draw_rect(Rect2(at - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 

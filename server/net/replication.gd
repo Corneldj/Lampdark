@@ -336,8 +336,12 @@ func _push_arms(run: RunState) -> void:
 func _push_fixtures(run: RunState) -> void:
 	if run.fuel != null and run.fuel.glass != 0 and run.registry.has(run.fuel.glass):
 		native.set_entity_held(run.fuel.glass, run.fuel.glass_bits(run))
+	var all: Array[Dictionary] = []
 	if run.engine != null:
-		var bits: Dictionary = run.engine.fixture_bits()
+		all.append(run.engine.fixture_bits())
+	if run.cage != null:
+		all.append(run.cage.fixture_bits(run))
+	for bits: Dictionary in all:
 		for raw: Variant in bits.keys():
 			if run.registry.has(int(Variants.number(raw))):
 				native.set_entity_held(int(Variants.number(raw)), int(Variants.number(bits[raw])))
