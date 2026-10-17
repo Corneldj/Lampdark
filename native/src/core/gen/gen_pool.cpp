@@ -199,7 +199,7 @@ bool GenPool::run_one(std::unique_lock<std::mutex> &lock) {
 	running_[cell] = priority;
 	lock.unlock();
 	const auto start = std::chrono::steady_clock::now();
-	std::optional<Layout> layout = deriver_.derive(cell, 0);
+	std::optional<Layout> layout = deriver_.derive_final(cell); // GEN-12: rerolled until valid
 	const double ms = std::chrono::duration<double, std::milli>(std::chrono::steady_clock::now() - start).count();
 	lock.lock();
 	running_.erase(cell);

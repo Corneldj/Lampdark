@@ -84,7 +84,7 @@ class PlacementWorld {
 public:
 	virtual ~PlacementWorld() = default;
 	virtual const RunHeader &header() const = 0;
-	// The cell's layout (reroll 0 until GEN-12's validator names another); nullopt for none.
+	// The cell's final layout (GEN-12's: the reroll its validator accepted); nullopt for none.
 	virtual std::optional<Layout> layout(lb::core::world::Coord cell) const = 0;
 	virtual CellFacts facts(lb::core::world::Coord cell) const = 0;
 	virtual const std::vector<int64_t> &ring_bounds() const = 0;
@@ -204,7 +204,24 @@ Homes read_homes(const RunHeader &header);
 int64_t staged_value(const RunHeader &header, const std::vector<int64_t> &table, int64_t plain);
 
 // Everything placed in `cell`, in pass order (none for base camp or a cell with no layout).
-std::vector<Placement> place_cell(const PlacementWorld &world, const PlacementParams &params, lb::core::world::Coord cell);
+// GEN-12's retries re-seed the cell's own passes (contents' anchors, air doors, gas, traps,
+// remains, loose finds, coat heaps) from `retry`'s sub-seed (gen.place.retry). What other cells
+// read of it (its pit phones and its collapse arming), its landmark, its rich rock and every ID
+// stay retry 0's, so a retry never changes a neighbour.
+std::vector<Placement> place_cell(const PlacementWorld &world, const PlacementParams &params, lb::core::world::Coord cell,
+		int32_t retry = 0);
+
+// GEN-12: what the cross-cell rules read of a cell, from its pure layout (never a retry):
+// - its pit phones' tiles: the homes' near-gate ones in it, its own roll's, its point of
+//   interest's phone fixture (none under Dead Lines);
+// - the door tiles of the point of interest it lies in;
+// - the tiles (standing and fallen) of the collapse point pass 4 arms there (empty for none).
+std::vector<lb::core::world::Coord> phone_tiles(const PlacementWorld &world, const PlacementParams &params, lb::core::world::Coord cell);
+std::vector<lb::core::world::Coord> poi_door_tiles(const PlacementWorld &world, lb::core::world::Coord cell);
+std::vector<lb::core::world::Coord> armed_collapse_tiles(const PlacementWorld &world, const PlacementParams &params,
+		lb::core::world::Coord cell);
+// The world tiles (standing and fallen) of a layout's collapse alternate `id` (empty for none).
+std::vector<lb::core::world::Coord> collapse_tiles(const Layout &layout, uint32_t id);
 // A digest of a cell's placements (GEN-05's order tests).
 uint64_t placement_digest(const std::vector<Placement> &list);
 

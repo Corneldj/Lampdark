@@ -4,6 +4,7 @@ extends GutTest
 ## trip exactly (a second deriver loading them has the same header and the same spines); a header
 ## for another seed, or bytes that are not one, are refused; and a snapshot keeps the bytes.
 
+const Specs = preload("res://tests/unit/gen/template_specs.gd")
 const STANDARD_JOBS: Array[String] = ["power", "fuel", "magneto", "rope_clamps", "start"]
 
 
@@ -14,6 +15,15 @@ func before_all() -> void:
 func _layouts(run_seed: int) -> LbLayouts:
 	var layouts: LbLayouts = MineLayouts.for_run(run_seed)
 	assert_not_null(layouts)
+	return layouts
+
+
+## A deriver on GEN-07's road pack (grid cells and plain fallbacks for every biome): RunPlan.fix walks
+## every spine (GEN-12), and the shipped pack cannot build one until GEN-16's templates.
+func _road_layouts(run_seed: int) -> LbLayouts:
+	var layouts: LbLayouts = LbLayouts.new()
+	assert_true(layouts.load_pack(Specs.road_pack()))
+	MineLayouts.configure(layouts, run_seed)
 	return layouts
 
 
@@ -93,7 +103,7 @@ func test_run_plan_fixes_the_plan_into_the_run_header() -> void:
 	var run: RunState = RunState.new()
 	run.header.run_seed = 4405
 	run.header.mode = ServerConfig.Mode.FRIENDS
-	var layouts: LbLayouts = _layouts(4405)
+	var layouts: LbLayouts = _road_layouts(4405)
 	var plan: Dictionary = RunPlan.fix(layouts, run)
 	assert_false(plan.is_empty())
 	assert_eq(run.header.plan, layouts.plan_bytes())
@@ -104,7 +114,7 @@ func test_run_plan_fixes_the_plan_into_the_run_header() -> void:
 	# A resumed run restores its plan instead of planning again.
 	var resumed: RunState = RunState.new()
 	resumed.header.run_seed = 4405
-	var again: LbLayouts = _layouts(4405)
+	var again: LbLayouts = _road_layouts(4405)
 	assert_false(RunPlan.fix(again, resumed, run.header.plan).is_empty())
 	assert_eq(again.plan_bytes(), run.header.plan)
 	assert_eq(resumed.header.plan, run.header.plan)

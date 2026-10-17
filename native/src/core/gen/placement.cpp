@@ -233,11 +233,97 @@ bool within(const std::vector<Coord> &a, const std::vector<Coord> &b, int64_t ti
 	return false;
 }
 
+// A point of interest's phone fixtures in one of its cells' layouts.
+std::vector<Coord> poi_phone_fixtures(const Layout &l) {
+	std::vector<Coord> out;
+	for (int32_t i : anchors_of(l, AnchorType::WALL_FIXTURE)) {
+		if (l.cell.anchors[static_cast<size_t>(i)].kind == "phone") {
+			out.push_back(anchor_tile(l, l.cell.anchors[static_cast<size_t>(i)]));
+		}
+	}
+	return out;
+}
+
+// Pass 4's verdict on a cell: its candidate, if it stands against the cross-cell rules over the
+// 3x3 cells: 7 or more tiles (straight line, so never fewer by path) from every pit phone and
+// point-of-interest door, 12 or more from every nearby candidate of a higher priority.
+std::optional<CollapseCandidate> armed(const PlacementWorld &w, const PlacementParams &p, Coord cell, const Layout &l, const CellFacts &f,
+		const PoiRef &poi, const Homes &homes) {
+	std::optional<CollapseCandidate> mine = collapse_candidate(w, p, cell, l, f);
+	if (!mine) {
+		return std::nullopt;
+	}
+	const RunHeader &h = w.header();
+	std::vector<Coord> sites;
+	std::set<std::pair<Coord, int32_t>> doors_seen;
+	for (const Coord &t : homes.gate_phones) {
+		sites.push_back(t);
+	}
+	for (int64_t dy = -1; dy <= 1; dy++) {
+		for (int64_t dx = -1; dx <= 1; dx++) {
+			const Coord n{cell.x + dx, cell.y + dy};
+			const std::optional<Layout> nl = (dx == 0 && dy == 0) ? std::optional<Layout>(l) : w.layout(n);
+			const PoiRef np = (dx == 0 && dy == 0) ? poi : w.poi_at(n);
+			if (nl) {
+				const CellFacts nf = (dx == 0 && dy == 0) ? f : w.facts(n);
+				for (const Placement &ph : own_phones(w, p, n, *nl, nf, static_cast<bool>(np))) {
+					sites.push_back(ph.tile);
+				}
+				// A point of interest's own phone at its phone fixture.
+				if (np && !dead_lines(h)) {
+					for (const Coord &t : poi_phone_fixtures(*nl)) {
+						sites.push_back(t);
+					}
+				}
+			}
+			if (np && doors_seen.insert({np->door, static_cast<int32_t>(np->door_side)}).second) {
+				for (const Coord &t : door_tiles(w, *np)) {
+					sites.push_back(t);
+				}
+			}
+		}
+	}
+	if (within(mine->tiles, sites, p.collapse_min_from_sites)) {
+		return std::nullopt;
+	}
+	for (int64_t dy = -1; dy <= 1; dy++) {
+		for (int64_t dx = -1; dx <= 1; dx++) {
+			if (dx == 0 && dy == 0) {
+				continue;
+			}
+			const Coord n{cell.x + dx, cell.y + dy};
+			const std::optional<Layout> nl = w.layout(n);
+			if (!nl) {
+				continue;
+			}
+			const std::optional<CollapseCandidate> other = collapse_candidate(w, p, n, *nl, w.facts(n));
+			if (!other || !within(mine->tiles, other->tiles, p.collapse_min_spacing)) {
+				continue;
+			}
+			const bool beats = other->priority != mine->priority ? other->priority > mine->priority : n < cell;
+			if (beats) {
+				return std::nullopt;
+			}
+		}
+	}
+	return mine;
+}
+
+// The sub-seed of a cell's own passes on a GEN-12 retry (the run's seed on the first try).
+uint64_t retry_seed(uint64_t seed, Coord cell, int32_t retry) {
+	if (retry <= 0) {
+		return seed;
+	}
+	const int64_t keys[2] = {cell.x, cell.y};
+	return sub_seed(seed, hd::GEN_PLACE_RETRY, keys, 2, retry);
+}
+
 // One cell's pipeline.
 class Placer {
 public:
-	Placer(const PlacementWorld &world, const PlacementParams &p, Coord cell, const Layout &l)
-		: w_(world), p_(p), h_(world.header()), cell_(cell), l_(l), f_(world.facts(cell)), homes_(read_homes(world.header())) {
+	Placer(const PlacementWorld &world, const PlacementParams &p, Coord cell, const Layout &l, int32_t retry)
+		: w_(world), p_(p), h_(world.header()), s_(retry_seed(world.header().seed, cell, retry)), cell_(cell), l_(l), f_(world.facts(cell)),
+		  homes_(read_homes(world.header())) {
 		poi_ = w_.poi_at(cell);
 	}
 
@@ -262,6 +348,7 @@ private:
 	const PlacementWorld &w_;
 	const PlacementParams &p_;
 	const RunHeader &h_;
+	uint64_t s_; // the seed of the cell's own passes (a GEN-12 retry's sub-seed)
 	Coord cell_;
 	const Layout &l_;
 	CellFacts f_;
@@ -381,7 +468,7 @@ private:
 		}
 		// GEN-08: the revolver on a deputy's remains, each box at an item anchor, on spine cells.
 		if (h_.plan.revolver && h_.plan.revolver_cell == cell_) {
-			Rng r = stream(h_.seed, hd::GEN_PLACE_CONTENTS, cell_, 1);
+			Rng r = stream(s_, hd::GEN_PLACE_CONTENTS, cell_, 1);
 			int32_t a = pick_free(r, AnchorType::REMAINS);
 			if (a < 0) {
 				a = pick_free(r, AnchorType::ITEM);
@@ -404,7 +491,7 @@ private:
 				box++;
 				continue;
 			}
-			Rng r = stream(h_.seed, hd::GEN_PLACE_CONTENTS, cell_, 2 + box);
+			Rng r = stream(s_, hd::GEN_PLACE_CONTENTS, cell_, 2 + box);
 			const int32_t a = pick_free(r, AnchorType::ITEM);
 			std::optional<Coord> t = a >= 0 ? std::optional<Coord>(anchor_tile(l_, l_.cell.anchors[static_cast<size_t>(a)])) : centre_floor(l_);
 			if (t) {
@@ -461,7 +548,7 @@ private:
 			return;
 		}
 		for (int32_t a : anchors_of(l_, AnchorType::DOOR_SITE)) {
-			if (roll(h_.seed, hd::GEN_PLACE_DOOR, cell_, a, p_.air_door_ppm)) {
+			if (roll(s_, hd::GEN_PLACE_DOOR, cell_, a, p_.air_door_ppm)) {
 				out_.push_back(area(PlacedKind::AIR_DOOR, "door", a));
 				used_.insert(a);
 			}
@@ -472,63 +559,9 @@ private:
 	// more tiles (straight line, so never fewer by path) from every pit phone and point-of-interest
 	// door, 12 or more from every nearby candidate of a higher priority.
 	void collapse() {
-		const std::optional<CollapseCandidate> mine = collapse_candidate(w_, p_, cell_, l_, f_);
+		const std::optional<CollapseCandidate> mine = armed(w_, p_, cell_, l_, f_, poi_, homes_);
 		if (!mine) {
 			return;
-		}
-		std::vector<Coord> sites;
-		std::set<std::pair<Coord, int32_t>> doors_seen;
-		for (const Coord &t : homes_.gate_phones) {
-			sites.push_back(t);
-		}
-		for (int64_t dy = -1; dy <= 1; dy++) {
-			for (int64_t dx = -1; dx <= 1; dx++) {
-				const Coord n{cell_.x + dx, cell_.y + dy};
-				const std::optional<Layout> nl = (dx == 0 && dy == 0) ? std::optional<Layout>(l_) : w_.layout(n);
-				const PoiRef np = (dx == 0 && dy == 0) ? poi_ : w_.poi_at(n);
-				if (nl) {
-					const CellFacts nf = (dx == 0 && dy == 0) ? f_ : w_.facts(n);
-					for (const Placement &ph : own_phones(w_, p_, n, *nl, nf, static_cast<bool>(np))) {
-						sites.push_back(ph.tile);
-					}
-					// A point of interest's own phone at its phone fixture.
-					if (np && !dead_lines(h_)) {
-						for (int32_t i : anchors_of(*nl, AnchorType::WALL_FIXTURE)) {
-							if (nl->cell.anchors[static_cast<size_t>(i)].kind == "phone") {
-								sites.push_back(anchor_tile(*nl, nl->cell.anchors[static_cast<size_t>(i)]));
-							}
-						}
-					}
-				}
-				if (np && doors_seen.insert({np->door, static_cast<int32_t>(np->door_side)}).second) {
-					for (const Coord &t : door_tiles(w_, *np)) {
-						sites.push_back(t);
-					}
-				}
-			}
-		}
-		if (within(mine->tiles, sites, p_.collapse_min_from_sites)) {
-			return;
-		}
-		for (int64_t dy = -1; dy <= 1; dy++) {
-			for (int64_t dx = -1; dx <= 1; dx++) {
-				if (dx == 0 && dy == 0) {
-					continue;
-				}
-				const Coord n{cell_.x + dx, cell_.y + dy};
-				const std::optional<Layout> nl = w_.layout(n);
-				if (!nl) {
-					continue;
-				}
-				const std::optional<CollapseCandidate> other = collapse_candidate(w_, p_, n, *nl, w_.facts(n));
-				if (!other || !within(mine->tiles, other->tiles, p_.collapse_min_spacing)) {
-					continue;
-				}
-				const bool beats = other->priority != mine->priority ? other->priority > mine->priority : n < cell_;
-				if (beats) {
-					return;
-				}
-			}
 		}
 		Coord lo = mine->tiles[0];
 		Coord hi = mine->tiles[0];
@@ -560,14 +593,14 @@ private:
 		} else if (f_.ring >= 3) {
 			ppm = p_.firedamp_beyond_ppm;
 		}
-		if (roll(h_.seed, hd::GEN_PLACE_GAS, cell_, 0, ppm)) {
-			Rng r = stream(h_.seed, hd::GEN_PLACE_GAS, cell_, 1);
+		if (roll(s_, hd::GEN_PLACE_GAS, cell_, 0, ppm)) {
+			Rng r = stream(s_, hd::GEN_PLACE_GAS, cell_, 1);
 			const int32_t a = pick_free(r, AnchorType::GAS_AREA);
 			if (a >= 0) {
 				out_.push_back(area(PlacedKind::FIREDAMP, "gas", a));
 			}
 		}
-		if (f_.biome == "old_workings" && roll(h_.seed, hd::GEN_PLACE_GAS, cell_, 2, p_.blackdamp_ppm)) {
+		if (f_.biome == "old_workings" && roll(s_, hd::GEN_PLACE_GAS, cell_, 2, p_.blackdamp_ppm)) {
 			// Dead ends first: a run tagged dead_end before any other.
 			std::vector<int32_t> runs;
 			for (int32_t i : anchors_of(l_, AnchorType::GAS_DEAD_END)) {
@@ -579,7 +612,7 @@ private:
 				runs = anchors_of(l_, AnchorType::GAS_DEAD_END);
 			}
 			if (!runs.empty()) {
-				Rng r = stream(h_.seed, hd::GEN_PLACE_GAS, cell_, 3);
+				Rng r = stream(s_, hd::GEN_PLACE_GAS, cell_, 3);
 				const int32_t a = runs[static_cast<size_t>(*r.range(0, static_cast<int64_t>(runs.size()) - 1))];
 				used_.insert(a);
 				out_.push_back(area(PlacedKind::BLACKDAMP, "gas", a));
@@ -595,8 +628,8 @@ private:
 		if (f_.base_camp || f_.ring < floor_ring) {
 			return;
 		}
-		if (f_.ring >= p_.man_trap_min_ring && roll(h_.seed, hd::GEN_PLACE_TRAP, cell_, 0, p_.man_trap_ppm)) {
-			Rng r = stream(h_.seed, hd::GEN_PLACE_TRAP, cell_, 1);
+		if (f_.ring >= p_.man_trap_min_ring && roll(s_, hd::GEN_PLACE_TRAP, cell_, 0, p_.man_trap_ppm)) {
+			Rng r = stream(s_, hd::GEN_PLACE_TRAP, cell_, 1);
 			const int32_t a = pick_free(r, AnchorType::TRAP_SITE);
 			if (a >= 0) {
 				out_.push_back(at_anchor(PlacedKind::MAN_TRAP, "trap", a));
@@ -608,15 +641,15 @@ private:
 				out_.push_back(x);
 			}
 		}
-		if (f_.biome == "old_workings" && f_.ring >= p_.staple_pit_min_ring && roll(h_.seed, hd::GEN_PLACE_TRAP, cell_, 2, p_.staple_pit_ppm)) {
-			Rng r = stream(h_.seed, hd::GEN_PLACE_TRAP, cell_, 3);
+		if (f_.biome == "old_workings" && f_.ring >= p_.staple_pit_min_ring && roll(s_, hd::GEN_PLACE_TRAP, cell_, 2, p_.staple_pit_ppm)) {
+			Rng r = stream(s_, hd::GEN_PLACE_TRAP, cell_, 3);
 			const int32_t a = pick_free(r, AnchorType::TRAP_SITE);
 			if (a >= 0) {
 				out_.push_back(at_anchor(PlacedKind::STAPLE_PIT, "trap", a));
 			}
 		}
-		if (f_.ring >= p_.sump_mud_min_ring && roll(h_.seed, hd::GEN_PLACE_TRAP, cell_, 4, p_.sump_mud_ppm)) {
-			Rng r = stream(h_.seed, hd::GEN_PLACE_TRAP, cell_, 5);
+		if (f_.ring >= p_.sump_mud_min_ring && roll(s_, hd::GEN_PLACE_TRAP, cell_, 4, p_.sump_mud_ppm)) {
+			Rng r = stream(s_, hd::GEN_PLACE_TRAP, cell_, 5);
 			const int32_t a = pick_free(r, AnchorType::LOW_ROAD);
 			if (a >= 0) {
 				out_.push_back(area(PlacedKind::SUMP_MUD, "trap", a));
@@ -628,10 +661,10 @@ private:
 	// what the man carried (the table's rolls in order, the first two kept; never a lamp under One Lamp).
 	void remains() {
 		if (f_.base_camp || poi_ || f_.ring < p_.remains_ring_min || f_.ring > p_.remains_ring_max ||
-				!roll(h_.seed, hd::GEN_PLACE_REMAINS, cell_, 0, p_.remains_ppm)) {
+				!roll(s_, hd::GEN_PLACE_REMAINS, cell_, 0, p_.remains_ppm)) {
 			return;
 		}
-		Rng r = stream(h_.seed, hd::GEN_PLACE_REMAINS, cell_, 1);
+		Rng r = stream(s_, hd::GEN_PLACE_REMAINS, cell_, 1);
 		const int32_t a = pick_free(r, AnchorType::REMAINS);
 		if (a < 0) {
 			return;
@@ -670,8 +703,8 @@ private:
 			return;
 		}
 		if (!poi_ && f_.ring >= p_.paraffin_ring_min && f_.ring <= p_.paraffin_ring_max &&
-				roll(h_.seed, hd::GEN_PLACE_LOOSE, cell_, 0, p_.paraffin_ppm)) {
-			Rng r = stream(h_.seed, hd::GEN_PLACE_LOOSE, cell_, 1);
+				roll(s_, hd::GEN_PLACE_LOOSE, cell_, 0, p_.paraffin_ppm)) {
+			Rng r = stream(s_, hd::GEN_PLACE_LOOSE, cell_, 1);
 			const int32_t a = pick_free(r, AnchorType::ITEM);
 			if (a >= 0) {
 				Placement x = at_anchor(PlacedKind::ITEM, "loose", a);
@@ -742,7 +775,7 @@ private:
 			}
 			const int64_t lim_x4 = sq(2 * p_.coat_heap_near_hoard);
 			const bool near = near_x4 >= 0 && near_x4 <= lim_x4;
-			if (!roost && !roll(h_.seed, hd::GEN_PLACE_HEAP, cell_, i, near ? p_.coat_heap_near_ppm : p_.coat_heap_far_ppm)) {
+			if (!roost && !roll(s_, hd::GEN_PLACE_HEAP, cell_, i, near ? p_.coat_heap_near_ppm : p_.coat_heap_far_ppm)) {
 				continue;
 			}
 			// More nearer the hoard: the count falls from the maximum at the hoard to the minimum at
@@ -757,7 +790,7 @@ private:
 					}
 				}
 			}
-			Rng r = stream(h_.seed, hd::GEN_PLACE_HEAP, cell_, 1000 + i);
+			Rng r = stream(s_, hd::GEN_PLACE_HEAP, cell_, 1000 + i);
 			heap_chamber(i, n, r);
 		}
 	}
@@ -873,7 +906,7 @@ int64_t staged_value(const RunHeader &header, const std::vector<int64_t> &table,
 	return stage < table.size() ? table[stage] : 0;
 }
 
-std::vector<Placement> place_cell(const PlacementWorld &world, const PlacementParams &params, Coord cell) {
+std::vector<Placement> place_cell(const PlacementWorld &world, const PlacementParams &params, Coord cell, int32_t retry) {
 	if (cell == Coord{0, 0}) {
 		return {};
 	}
@@ -881,7 +914,70 @@ std::vector<Placement> place_cell(const PlacementWorld &world, const PlacementPa
 	if (!l || l->base_camp) {
 		return {};
 	}
-	return Placer(world, params, cell, *l).run();
+	return Placer(world, params, cell, *l, retry).run();
+}
+
+std::vector<Coord> phone_tiles(const PlacementWorld &world, const PlacementParams &params, Coord cell) {
+	std::vector<Coord> out;
+	const RunHeader &h = world.header();
+	if (dead_lines(h) || cell == Coord{0, 0}) {
+		return out;
+	}
+	const std::optional<Layout> l = world.layout(cell);
+	if (!l || l->base_camp) {
+		return out;
+	}
+	for (const Coord &t : read_homes(h).gate_phones) {
+		if (lb::core::world::cell_of(t) == cell) {
+			out.push_back(t);
+		}
+	}
+	const PoiRef poi = world.poi_at(cell);
+	for (const Placement &ph : own_phones(world, params, cell, *l, world.facts(cell), static_cast<bool>(poi))) {
+		out.push_back(ph.tile);
+	}
+	if (poi) {
+		for (const Coord &t : poi_phone_fixtures(*l)) {
+			out.push_back(t);
+		}
+	}
+	return out;
+}
+
+std::vector<Coord> poi_door_tiles(const PlacementWorld &world, Coord cell) {
+	const PoiRef poi = world.poi_at(cell);
+	return poi ? door_tiles(world, *poi) : std::vector<Coord>{};
+}
+
+std::vector<Coord> armed_collapse_tiles(const PlacementWorld &world, const PlacementParams &params, Coord cell) {
+	if (cell == Coord{0, 0}) {
+		return {};
+	}
+	const std::optional<Layout> l = world.layout(cell);
+	if (!l || l->base_camp) {
+		return {};
+	}
+	const std::optional<CollapseCandidate> c = armed(world, params, cell, *l, world.facts(cell), world.poi_at(cell), read_homes(world.header()));
+	return c ? c->tiles : std::vector<Coord>{};
+}
+
+std::vector<Coord> collapse_tiles(const Layout &layout, uint32_t id) {
+	std::vector<Coord> out;
+	for (const lb::core::world::Collapse &alt : layout.cell.collapses) {
+		if (alt.id != id) {
+			continue;
+		}
+		std::set<uint16_t> seen;
+		for (const auto *list : {&alt.standing, &alt.fallen}) {
+			for (const lb::core::world::TileWrite &w : *list) {
+				if (seen.insert(w.index).second) {
+					out.push_back(lb::core::world::tile_of(layout.coord, {w.index % lb::core::world::CELL_TILES, w.index / lb::core::world::CELL_TILES}));
+				}
+			}
+		}
+		break;
+	}
+	return out;
 }
 
 uint64_t placement_digest(const std::vector<Placement> &list) {

@@ -105,6 +105,10 @@ std::optional<TemplateKind> kind_from(const std::string &name);
 
 // Every rule's problems, in rule order (empty: valid).
 std::vector<Problem> validate(const Template &t, const ValidateParams &p);
+// GEN-12: one fitted cell (its tiles, anchors and collapses after stub fill) against the rules
+// that hold cell by cell, in this order: connected_floor, widths and tapper_reach. `kind` and
+// `old_fall` are its template's. The same code the editor and the exporter run.
+std::vector<Problem> validate_fitted(const lb::core::world::Cell &cell, TemplateKind kind, bool old_fall, const ValidateParams &p);
 std::string describe(const Template &t, const Problem &problem); // "template <id>: <rule>: cell (x, y) tile (x, y): ..."
 
 // GEN-07: a one-cell template turned about its main diagonal ((x, y) -> (y, x)): tiles, anchors,

@@ -9,12 +9,14 @@
 #include "core/gen/placement.h"
 #include "core/gen/plan.h"
 #include "core/gen/poi.h"
+#include "core/gen/validator.h"
 
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
 #include <godot_cpp/variant/packed_byte_array.hpp>
+#include <godot_cpp/variant/packed_int32_array.hpp>
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/vector2i.hpp>
 
@@ -58,8 +60,12 @@ public:
 	::godot::String biome_of(::godot::Vector2i cell) const;
 	// GEN-07: {main_road, crossing, shape, old_fall, transpose, dress} of a cell.
 	::godot::Dictionary road_of(::godot::Vector2i cell) const;
-	// {ok, base_camp, fallback, template, sockets: {side: {...}}, cell: LbCellData (none for base camp), digest}
+	// {ok, base_camp, fallback, template, sockets: {side: {...}}, cell: LbCellData (none for base camp), digest, reroll}
 	::godot::Dictionary derive(::godot::Vector2i cell, int64_t reroll) const;
+	// GEN-12: the cell's final layout, the one generation commits: with the validator (configure's
+	// validate), the first reroll phase 1 accepts or the plain fallback; without it, reroll 0.
+	// derive()'s dictionary plus tries: [{reroll, template, rule, check, tile, detail}], each failed try.
+	::godot::Dictionary derive_final(::godot::Vector2i cell) const;
 	void set_caching(bool on);
 	void clear_caches();
 	void set_verify(bool on);
@@ -121,7 +127,8 @@ public:
 	::godot::Dictionary homes_dict() const;
 	// What a cell holds as it generates, in pass order: [{kind, thing, source, anchor, tile, size,
 	// count, oil_milli, notches, variant, collapse, with, id (GEN-13's "p" and 16 hex digits)}];
-	// [] for base camp. Server-only, never sent.
+	// [] for base camp. With the validator, the list phase 2 passed (a retry's, or strict mode's).
+	// Server-only, never sent.
 	::godot::Array place(::godot::Vector2i cell) const;
 	// Before commit: the cell's air doors (wooden door tiles) and sump mud (the mud bit) into its
 	// data, its zones cut again when a door went in. The tiles changed.
@@ -130,6 +137,22 @@ public:
 	::godot::Dictionary find_counts(const ::godot::TypedArray<::godot::Vector2i> &cells) const;
 	// CRT-08: a region's Tapper-rich rock masses (Rect2i world tiles).
 	::godot::Array rich_rock_masses(::godot::Vector2i region) const;
+
+	// GEN-12's validator (configure with validate: {rules: {road_width_min, road_width_max,
+	// chamber_min, chamber_max, chamber_forbidden_width, tapper_reach_milli, lair_kind}, max_retries,
+	// max_replans, arch_reach: {side: tiles}}). Server-only: nothing here is ever sent.
+	// Phase 2's account of a cell: {retry, strict, dropped, failures: [{rule, check, tile, detail}]}.
+	::godot::Dictionary placement_report(::godot::Vector2i cell) const;
+	// Run start, after plan() and before make_homes(): every spine walked from its gate to its
+	// target's door with the collapse points its cells arm fallen (a failing one replanned from its
+	// next sub-seed, at most max_replans times, into the header), then base camp's gates.
+	// {ok, replans, spines: [{site, reached, replans, rule, check, tile, detail}], gates: {ok, rule, check, tile, detail}}.
+	::godot::Dictionary validate_run_start();
+	// The run's counts since the last rebuild: {totals: {key: n}, notes: [text]} (ValidatorCounters).
+	::godot::Dictionary validator_stats() const;
+	// Every socket set (each edge shut or open at each offset and width in `widths`) fitted to
+	// `biome`'s plain fallback and checked by phase 1: {checked, failures: [{sockets, rule, check, tile, detail}]}.
+	::godot::Dictionary fallback_coverage(const ::godot::String &biome, const ::godot::PackedInt32Array &widths) const;
 
 	// GEN-11's worker pool: `threads` workers derive wanted cells (0: synchronous, in take()),
 	// below normal priority if `background` (a server on a player's machine). Set the deriver up
@@ -190,6 +213,11 @@ private:
 	bool has_place_ = false;
 	lb::core::gen::PlacementParams place_params_;
 	std::unique_ptr<lb::core::gen::PlacementWorld> place_world_;
+	// GEN-12: the validator and its counts (cleared at every rebuild).
+	bool has_validator_ = false;
+	lb::core::gen::ValidatorParams validator_params_;
+	std::shared_ptr<lb::core::gen::ValidatorCounters> counters_ = std::make_shared<lb::core::gen::ValidatorCounters>();
+	std::vector<lb::core::gen::Placement> placed(lb::core::world::Coord cell) const;
 	std::unique_ptr<lb::core::gen::GenPool> pool_;
 	int64_t pool_threads_ = -1; // -1: no pool
 	bool pool_background_ = false;

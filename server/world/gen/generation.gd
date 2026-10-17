@@ -45,7 +45,8 @@ var commit_budget_usec: int = 1000
 
 ## Required cells not yet loaded: cell -> the tick they became required (the latency's start).
 var _required_since: Dictionary = {}
-## Cells no template fits (GEN-12 rerolls them): asked once each time they come into reach.
+## Cells with no layout (no template fits and their biome has no plain fallback, a gap GEN-12 counts):
+## asked once each time they come into reach.
 var _failed: Dictionary = {}
 var _gate_cells: Dictionary = {}
 ## The holders moved since evictions were last worked out.
@@ -187,7 +188,7 @@ func tick(run: RunState) -> void:
 
 ## {commits, evicted, failures, live, max_live, queued, derive_p50_ms, derive_p99_ms,
 ## commit_latency_p99_ms, commit_usec_p99, commit_usec_max, dearest_commit, evict_latency_max_s,
-## missing_sight_ticks, slowest_ticks}
+## missing_sight_ticks, slowest_ticks, validator (GEN-12's counts by rule, biome and template)}
 func stats() -> Dictionary:
 	var pool: Dictionary = layouts.pool_stats()
 	var dearest: int = 0 if _commit_usec.is_empty() else _commit_usec.max()
@@ -196,7 +197,7 @@ func stats() -> Dictionary:
 		"commit_latency_p99_ms": _p99f(_latency_ms), "commit_usec_p99": _p99i(_commit_usec), "commit_usec_max": dearest,
 		"dearest_commit": _dearest_commit.duplicate(),
 		"evict_latency_max_s": evict_latency_max_ticks / Tuning.f(&"net.tick_hz"), "missing_sight_ticks": missing_sight_ticks,
-		"slowest_ticks": _slowest.duplicate(true)}
+		"slowest_ticks": _slowest.duplicate(true), "validator": Variants.dict(layouts.validator_stats()["totals"])}
 
 
 ## Finished cells, nearest first: at least one, then while the next fits the budget. Synchronous
@@ -296,7 +297,7 @@ func _note_failure(cell: Vector2i) -> void:
 	if not _failed.has(cell):
 		_failed[cell] = true
 		failures += 1
-		Log.warn("generation: no template fits cell %s (GEN-12 rerolls)" % cell)
+		Log.warn("generation: no template or plain fallback fits cell %s" % cell)
 
 
 ## The dearest of the last 64 costs, `cost` the newest.

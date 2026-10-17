@@ -20,9 +20,13 @@ static func fix(layouts: LbLayouts, run: RunState, saved: PackedByteArray = Pack
 		run.header.plan = saved
 		return layouts.plan_dict()
 	var plan: Dictionary = layouts.plan(params(run))
-	# GEN-10: the run-start homes (the Moth's roosts and start, the near-gate phones, the electric
-	# lamp's cell, the canary region), into the header beside the plan, so a save keeps them.
 	if Variants.flag(plan.get("ok", false)):
+		# GEN-12: every spine walked to its target with its armed collapse points fallen (a failing
+		# one replanned into the header), and base camp's gates; then GEN-10's run-start homes (the
+		# Moth's roosts and start, the near-gate phones, the electric lamp's cell, the canary region),
+		# into the header beside the plan, so a save keeps them.
+		_check_start(layouts.validate_run_start())
+		plan = layouts.plan_dict()
 		layouts.make_homes()
 	run.header.plan = layouts.plan_bytes()
 	if not Variants.flag(plan.get("ok", false)):
@@ -32,6 +36,24 @@ static func fix(layouts: LbLayouts, run: RunState, saved: PackedByteArray = Pack
 		Variants.array(plan["spines"]).size(), "planned" if Variants.flag(plan["revolver"]) else "not planned",
 		Variants.array(plan["boxes"]).size()])
 	return plan
+
+
+## GEN-12's run-start report: a spine that no replan saved, or gates that fail, is a generator bug or
+## a fallback gap, logged loudly; the run still plays.
+static func _check_start(report: Dictionary) -> void:
+	if int(Variants.number(report.get("replans", 0))) > 0:
+		Log.info("run plan: the validator replanned spines %d times" % int(Variants.number(report["replans"])))
+	if Variants.flag(report.get("ok", true)):
+		return
+	for raw: Variant in Variants.array(report.get("spines", [])):
+		var spine: Dictionary = Variants.dict(raw)
+		if not Variants.flag(spine.get("reached", true)):
+			push_error("RunPlan: spine to site %d unreached: rule %d (%s) at %s: %s" % [int(Variants.number(spine["site"])),
+				int(Variants.number(spine["rule"])), str(spine["check"]), str(spine["tile"]), str(spine["detail"])])
+	var gates: Dictionary = Variants.dict(report.get("gates", {}))
+	if not Variants.flag(gates.get("ok", true)):
+		push_error("RunPlan: base camp's gates: rule %d at %s: %s" % [int(Variants.number(gates["rule"])), str(gates["tile"]),
+			str(gates["detail"])])
 
 
 ## LbLayouts.plan's inputs: the list (Night Shift's solo rule), the run conditions MOD-03 will set,

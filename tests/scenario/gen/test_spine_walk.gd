@@ -4,9 +4,9 @@ extends GutTest
 ## its target's door cell are committed into a mine. A walker goes from the tile beyond the spine's
 ## gate, through the opening into each next cell in turn, to the middle of the target's door: so
 ## the spine alone joins base camp to its target, through its forced-open sockets. (Hop by hop:
-## GEN-01's path query looks no further than about 500 tiles.) No old fall lies on a spine.
-## (Collapse points join once HAZ-03 arms them: forced fallen, the walk must still hold, GEN-12's
-## check.)
+## GEN-01's path query looks no further than about 500 tiles.) No old fall lies on a spine. GEN-12's
+## own walk at run start (LbLayouts.validate_run_start: every collapse point the spine's cells arm
+## fallen) agrees for every spine.
 
 const Specs = preload("res://tests/unit/gen/template_specs.gd")
 
@@ -79,6 +79,8 @@ func test_every_spine_joins_base_camp_to_its_target() -> void:
 			MineLayouts.configure(layouts, run_seed)
 			var plan: Dictionary = layouts.plan(_params(kind, jobs))
 			assert_true(Variants.flag(plan["ok"]), str(plan["error"]))
+			var report: Dictionary = layouts.validate_run_start()
+			assert_true(Variants.flag(report["ok"]), "seed %d list %d: %s" % [run_seed, kind, str(report)])
 			var sites: Array = Variants.array(plan["sites"])
 			for sraw: Variant in Variants.array(plan["spines"]):
 				var spine: Dictionary = sraw

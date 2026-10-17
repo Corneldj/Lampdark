@@ -1,6 +1,7 @@
 #include "core/gen/derive.h"
 
 #include "core/gen/main_roads.h"
+#include "core/gen/validator.h"
 
 #include "core/generated/hash_domains.h"
 #include "core/rng/hash.h"
@@ -130,6 +131,7 @@ void Deriver::Lru<K, V>::put(const K &k, const V &v) {
 
 Deriver::Deriver(DeriveInputs inputs, size_t layout_capacity, size_t socket_capacity) : in_(std::move(inputs)) {
 	layouts_.capacity = layout_capacity;
+	finals_.capacity = layout_capacity;
 	sockets_.capacity = socket_capacity;
 }
 
@@ -183,12 +185,44 @@ std::optional<Layout> Deriver::derive(Coord cell, int32_t reroll) const {
 	return out;
 }
 
+std::optional<Layout> Deriver::derive_final(Coord cell) const {
+	const std::pair<int64_t, int64_t> key{cell.x, cell.y};
+	std::optional<Layout> out;
+	bool hit = false;
+	if (caching_) {
+		std::lock_guard<std::mutex> lock(mutex_);
+		if (const std::optional<Layout> *l = finals_.get(key)) {
+			out = *l;
+			hit = true;
+		}
+	}
+	if (!hit) {
+		std::vector<LayoutTry> tried;
+		out = gen::derive_final(in_, cell, &tried, [&](int32_t reroll) { return derive(cell, reroll); });
+		if (in_.counters != nullptr && in_.validator != nullptr) {
+			in_.counters->count_layout(cell, in_.cells->classify(cell).biome, out, tried);
+		}
+		if (caching_) {
+			std::lock_guard<std::mutex> lock(mutex_);
+			finals_.put(key, out);
+		}
+	}
+	if (verify_) {
+		const std::optional<Layout> fresh = gen::derive_final(in_, cell);
+		if (fresh.has_value() != out.has_value() || (fresh && (fresh->digest != out->digest || fresh->reroll != out->reroll))) {
+			verify_failures_++;
+		}
+	}
+	return out;
+}
+
 void Deriver::set_caching(bool on) {
 	std::lock_guard<std::mutex> lock(mutex_);
 	caching_ = on;
 	if (!on) {
 		sockets_.clear();
 		layouts_.clear();
+		finals_.clear();
 	}
 }
 
@@ -196,6 +230,7 @@ void Deriver::clear_caches() {
 	std::lock_guard<std::mutex> lock(mutex_);
 	sockets_.clear();
 	layouts_.clear();
+	finals_.clear();
 }
 
 } // namespace lb::core::gen

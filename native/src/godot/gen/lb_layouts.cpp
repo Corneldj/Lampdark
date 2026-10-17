@@ -1,5 +1,6 @@
 #include "godot/gen/lb_layouts.h"
 
+#include "godot/gen/lb_templates.h"
 #include "godot/world/lb_mine.h"
 
 #include <godot_cpp/core/class_db.hpp>
@@ -277,50 +278,6 @@ std::vector<uint8_t> unpacked(const PackedByteArray &bytes) {
 }
 
 
-// GEN-10's view of the run: the deriver's layouts (reroll 0 until GEN-12 names another), GEN-06's
-// biomes under any main road, GEN-07's roads, GEN-08's spines and GEN-09's points of interest.
-class LayoutsWorld final : public gen::PlacementWorld {
-public:
-	LayoutsWorld(const gen::RunHeader &header, const gen::Deriver &deriver, const gen::CellClassifier &base, const gen::MainRoads *roads,
-			const gen::SpineSockets *spines, const gen::PointsOfInterest *pois, const gen::PoiContentsParams &contents, std::vector<int64_t> bounds) : header_(header), deriver_(deriver), base_(base), roads_(roads), spines_(spines), pois_(pois), contents_(contents), bounds_(std::move(bounds)) {}
-
-	const gen::RunHeader &header() const override { return header_; }
-	std::optional<gen::Layout> layout(lb::core::world::Coord cell) const override { return deriver_.derive(cell, 0); }
-	gen::CellFacts facts(lb::core::world::Coord cell) const override {
-		gen::CellFacts f;
-		f.base_camp = cell == lb::core::world::Coord{0, 0};
-		f.ring = gen::ring_of_cell(cell, bounds_);
-		f.biome = base_.classify(cell).biome;
-		if (pois_) {
-			const gen::PoiRef ref = pois_->at(cell);
-			if (ref && ref->shape != nullptr && !ref->biome.empty()) {
-				f.biome = ref->biome;
-			}
-		}
-		f.main_road = roads_ != nullptr && roads_->is_main_road_cell(cell);
-		f.spine = spines_ != nullptr && spines_->is_spine_cell(cell);
-		return f;
-	}
-	const std::vector<int64_t> &ring_bounds() const override { return bounds_; }
-	gen::PoiRef poi_at(lb::core::world::Coord cell) const override { return pois_ ? pois_->at(cell) : gen::PoiRef{}; }
-	std::vector<gen::Content> contents(const gen::Poi &poi) const override {
-		return pois_ ? gen::poi_contents(header_, contents_, poi, pois_->is_canary(poi.id)) : std::vector<gen::Content>{};
-	}
-	std::shared_ptr<const gen::RegionLayout> region(lb::core::world::Coord region) const override {
-		return pois_ ? pois_->region(region) : nullptr;
-	}
-
-private:
-	const gen::RunHeader &header_;
-	const gen::Deriver &deriver_;
-	const gen::CellClassifier &base_;
-	const gen::MainRoads *roads_;
-	const gen::SpineSockets *spines_;
-	const gen::PointsOfInterest *pois_;
-	const gen::PoiContentsParams &contents_;
-	std::vector<int64_t> bounds_;
-};
-
 int64_t ppm_of(const Dictionary &d, const char *key, int64_t fallback) {
 	return d.has(key) ? static_cast<int64_t>(std::llround(static_cast<double>(d[key]) * 1000000.0)) : fallback;
 }
@@ -448,6 +405,11 @@ void LbLayouts::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("biome_of", "cell"), &LbLayouts::biome_of);
 	ClassDB::bind_method(D_METHOD("road_of", "cell"), &LbLayouts::road_of);
 	ClassDB::bind_method(D_METHOD("derive", "cell", "reroll"), &LbLayouts::derive);
+	ClassDB::bind_method(D_METHOD("derive_final", "cell"), &LbLayouts::derive_final);
+	ClassDB::bind_method(D_METHOD("placement_report", "cell"), &LbLayouts::placement_report);
+	ClassDB::bind_method(D_METHOD("validate_run_start"), &LbLayouts::validate_run_start);
+	ClassDB::bind_method(D_METHOD("validator_stats"), &LbLayouts::validator_stats);
+	ClassDB::bind_method(D_METHOD("fallback_coverage", "biome", "widths"), &LbLayouts::fallback_coverage);
 	ClassDB::bind_method(D_METHOD("plan", "params"), &LbLayouts::plan);
 	ClassDB::bind_method(D_METHOD("load_plan", "bytes"), &LbLayouts::load_plan);
 	ClassDB::bind_method(D_METHOD("plan_bytes"), &LbLayouts::plan_bytes);
@@ -563,11 +525,15 @@ void LbLayouts::rebuild() {
 		const gen::SpineSockets *spines = spine_sockets_.get();
 		roads_->is_spine = [spines](lb::core::world::Coord c) { return spines != nullptr && spines->is_spine_cell(c); };
 	}
+	// GEN-12: each cell's final layout passes the validator's phase 1; its counts start again.
+	in.validator = has_validator_ ? &validator_params_ : nullptr;
+	in.counters = counters_.get();
+	counters_->clear();
 	deriver_ = std::make_unique<gen::Deriver>(in);
 	deriver_->set_caching(caching_);
 	deriver_->set_verify(verify_);
-	place_world_ = std::make_unique<LayoutsWorld>(header_, *deriver_, *cells_, roads_.get(), spine_sockets_.get(), pois_.get(), contents_params_,
-			ring_bounds_);
+	place_world_ = std::make_unique<gen::DerivedWorld>(header_, *deriver_, *cells_, roads_.get(), spine_sockets_.get(), pois_.get(),
+			&contents_params_, ring_bounds_);
 	if (pool_threads_ >= 0) {
 		pool_ = std::make_unique<gen::GenPool>(*deriver_, static_cast<int32_t>(pool_threads_), pool_background_);
 	}
@@ -616,6 +582,20 @@ void LbLayouts::configure(int64_t seed, const Dictionary &params) {
 	}
 	has_place_ = params.has("place");
 	place_params_ = has_place_ ? place_params(params["place"]) : gen::PlacementParams();
+	has_validator_ = params.has("validate");
+	validator_params_ = gen::ValidatorParams();
+	if (has_validator_) {
+		const Dictionary v = params["validate"];
+		if (v.has("rules")) {
+			validator_params_.rules = template_rules(v["rules"]);
+		}
+		validator_params_.max_retries = static_cast<int32_t>(int_of(v, "max_retries", validator_params_.max_retries));
+		validator_params_.max_replans = static_cast<int32_t>(int_of(v, "max_replans", validator_params_.max_replans));
+		const Dictionary arch = v.get("arch_reach", Dictionary());
+		for (int e = 0; e < 4; e++) {
+			validator_params_.arch_reach[static_cast<size_t>(e)] = static_cast<int32_t>(int_of(arch, SIDES[e], 0));
+		}
+	}
 	has_roads_ = params.has("main_roads");
 	if (has_roads_) {
 		const Dictionary r = params["main_roads"];
@@ -875,9 +855,18 @@ Dictionary LbLayouts::homes_dict() const {
 	return d;
 }
 
+std::vector<gen::Placement> LbLayouts::placed(lb::core::world::Coord cell) const {
+	if (!has_validator_) {
+		return gen::place_cell(*place_world_, place_params_, cell);
+	}
+	gen::PlacedCell p = gen::place_validated(*place_world_, place_params_, validator_params_, cell);
+	counters_->count_placement(cell, p);
+	return std::move(p.list);
+}
+
 Array LbLayouts::place(Vector2i cell) const {
 	Array out;
-	for (const gen::Placement &x : gen::place_cell(*place_world_, place_params_, {cell.x, cell.y})) {
+	for (const gen::Placement &x : placed({cell.x, cell.y})) {
 		out.append(placement_dict(x));
 	}
 	return out;
@@ -890,7 +879,7 @@ int64_t LbLayouts::dress(Vector2i cell, const Ref<LbCellData> &data) const {
 	int64_t changed = 0;
 	bool doors = false;
 	const lb::core::world::Coord at{cell.x, cell.y};
-	for (const gen::Placement &x : gen::place_cell(*place_world_, place_params_, at)) {
+	for (const gen::Placement &x : placed(at)) {
 		if (x.kind != gen::PlacedKind::AIR_DOOR && x.kind != gen::PlacedKind::SUMP_MUD) {
 			continue;
 		}
@@ -927,7 +916,7 @@ Dictionary LbLayouts::find_counts(const TypedArray<Vector2i> &cells) const {
 	std::vector<std::vector<gen::Placement>> lists;
 	for (int64_t i = 0; i < cells.size(); i++) {
 		const Vector2i c = cells[i];
-		lists.push_back(gen::place_cell(*place_world_, place_params_, {c.x, c.y}));
+		lists.push_back(placed({c.x, c.y}));
 	}
 	Dictionary d;
 	for (const auto &[key, n] : gen::find_counts(lists)) {
@@ -977,7 +966,18 @@ Dictionary layout_dict(const std::optional<gen::Layout> &layout) {
 	out["sockets"] = sockets;
 	out["cell"] = layout->base_camp ? Variant() : Variant(LbCellData::wrap(layout->cell));
 	out["digest"] = static_cast<int64_t>(layout->digest);
+	out["reroll"] = layout->reroll;
 	return out;
+}
+
+Dictionary verdict_dict(const gen::Verdict &v) {
+	Dictionary d;
+	d["ok"] = v.ok();
+	d["rule"] = v.number();
+	d["check"] = String(gen::check_name(v.check));
+	d["tile"] = Vector2i(static_cast<int32_t>(v.tile.x), static_cast<int32_t>(v.tile.y));
+	d["detail"] = String::utf8(v.detail.c_str());
+	return d;
 }
 
 std::vector<lb::core::world::Coord> coords(const Array &a) {
@@ -1006,6 +1006,139 @@ Dictionary LbLayouts::derive(Vector2i cell, int64_t reroll) const {
 		UtilityFunctions::push_error("LbLayouts: cell ", cell, " derived differently with its caches bypassed: an impure input");
 	}
 	return layout_dict(layout);
+}
+
+Dictionary LbLayouts::derive_final(Vector2i cell) const {
+	const lb::core::world::Coord at{cell.x, cell.y};
+	const uint64_t failures = deriver_->verify_failures();
+	std::vector<gen::LayoutTry> tried;
+	const std::optional<gen::Layout> layout =
+			gen::derive_final(deriver_->inputs(), at, &tried, [&](int32_t reroll) { return deriver_->derive(at, reroll); });
+	if (deriver_->verify_failures() != failures) {
+		UtilityFunctions::push_error("LbLayouts: cell ", cell, " derived differently with its caches bypassed: an impure input");
+	}
+	if (has_validator_) {
+		counters_->count_layout(at, cells_->classify(at).biome, layout, tried);
+	}
+	Dictionary out = layout_dict(layout);
+	Array tries;
+	for (const gen::LayoutTry &t : tried) {
+		Dictionary d = verdict_dict(t.verdict);
+		d["reroll"] = t.reroll;
+		d["template"] = String::utf8(t.template_id.c_str());
+		tries.push_back(d);
+	}
+	out["tries"] = tries;
+	return out;
+}
+
+Dictionary LbLayouts::placement_report(Vector2i cell) const {
+	Dictionary out;
+	const gen::PlacedCell p = has_validator_ ? gen::place_validated(*place_world_, place_params_, validator_params_, {cell.x, cell.y}) : gen::PlacedCell{};
+	out["retry"] = p.retry;
+	out["strict"] = p.strict;
+	out["dropped"] = p.dropped;
+	Array failures;
+	for (const gen::Verdict &v : p.failures) {
+		failures.push_back(verdict_dict(v));
+	}
+	out["failures"] = failures;
+	return out;
+}
+
+Dictionary LbLayouts::validate_run_start() {
+	const size_t n = header_.plan.spines.size();
+	gen::SpineCheck check;
+	check.verdicts.assign(n, gen::Verdict{});
+	check.replans.assign(n, 0);
+	if (has_validator_) {
+		std::vector<gen::Edge> gates;
+		for (int e = 0; e < 4; e++) {
+			const std::optional<gen::Socket> s = header_.forced.query(gen::edge_of({0, 0}, static_cast<gen::Edge>(e)));
+			if (!s || s->open) {
+				gates.push_back(static_cast<gen::Edge>(e));
+			}
+		}
+		check = gen::validate_spines(
+				header_.plan, header_.seed, gates, ring_bounds_, validator_params_.max_replans,
+				[this](size_t i) { return gen::walk_spine(*place_world_, place_params_, validator_params_, header_.plan, i); },
+				[this]() { rebuild(); });
+	}
+	const std::vector<gen::Spine> &spines = header_.plan.spines;
+	const std::vector<gen::Verdict> &verdicts = check.verdicts;
+	const std::vector<int32_t> &replans = check.replans;
+	const int64_t total = check.total;
+	Dictionary out;
+	bool ok = true;
+	Array list;
+	for (size_t i = 0; i < n; i++) {
+		if (has_validator_) {
+			counters_->count_spine(replans[i], verdicts[i]);
+		}
+		Dictionary d = verdict_dict(verdicts[i]);
+		d["site"] = spines[i].site;
+		d["reached"] = verdicts[i].ok();
+		d["replans"] = replans[i];
+		list.push_back(d);
+		ok = ok && verdicts[i].ok();
+	}
+	const gen::Verdict gates = has_validator_ ? gen::check_gates(*place_world_) : gen::Verdict{};
+	if (has_validator_) {
+		counters_->count_gates(gates);
+		// GEN-09: a planned site no template fits stays plain cells, its contents with no slot to lie in
+		// (GEN-16's templates close the gap).
+		for (size_t i = 0; i < header_.plan.sites.size(); i++) {
+			const gen::PlannedSite &site = header_.plan.sites[i];
+			const gen::PoiRef ref = pois_ ? pois_->at(site.door) : gen::PoiRef{};
+			if (pois_ && (!ref || ref->shape == nullptr)) {
+				counters_->count("sites_untemplated", "planned site " + std::to_string(i) + " (" + gen::poi_kind_name(site.kind) + ", " + site.need +
+								") has no template");
+			}
+		}
+	}
+	out["ok"] = ok && gates.ok();
+	out["replans"] = total;
+	out["spines"] = list;
+	out["gates"] = verdict_dict(gates);
+	return out;
+}
+
+Dictionary LbLayouts::validator_stats() const {
+	Dictionary totals;
+	for (const auto &[key, count] : counters_->totals()) {
+		totals[String::utf8(key.c_str())] = count;
+	}
+	Array notes;
+	for (const std::string &note : counters_->notes()) {
+		notes.push_back(String::utf8(note.c_str()));
+	}
+	Dictionary out;
+	out["totals"] = totals;
+	out["notes"] = notes;
+	return out;
+}
+
+Dictionary LbLayouts::fallback_coverage(const String &biome, const PackedInt32Array &widths) const {
+	std::vector<int32_t> w;
+	for (int64_t i = 0; i < widths.size(); i++) {
+		w.push_back(widths[i]);
+	}
+	size_t checked = 0;
+	const std::vector<gen::CoverageFailure> failures = gen::fallback_coverage(*set_, to_std(biome), w, header_.sockets, validator_params_, &checked);
+	Array list;
+	for (const gen::CoverageFailure &f : failures) {
+		Dictionary d = verdict_dict(f.verdict);
+		Dictionary sockets;
+		for (int e = 0; e < 4; e++) {
+			sockets[SIDES[e]] = socket_dict(f.sockets[static_cast<size_t>(e)]);
+		}
+		d["sockets"] = sockets;
+		list.push_back(d);
+	}
+	Dictionary out;
+	out["checked"] = static_cast<int64_t>(checked);
+	out["failures"] = list;
+	return out;
 }
 
 void LbLayouts::start_pool(int64_t threads, bool background) {

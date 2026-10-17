@@ -61,7 +61,11 @@ struct Layout {
 	CellSockets sockets{};
 	lb::core::world::Cell cell;
 	uint64_t digest = 0; // the sockets, the template and the fitted cell's content
+	int32_t reroll = 0; // GEN-12: the reroll the validator accepted (derive_final)
 };
+
+struct ValidatorParams;
+class ValidatorCounters;
 
 // Everything derive_layout may read.
 struct DeriveInputs {
@@ -71,6 +75,10 @@ struct DeriveInputs {
 	// Forced-socket providers after the header's own, in precedence order (points of interest,
 	// main roads, spines); the hash answers the rest.
 	std::vector<const SocketProvider *> providers;
+	// GEN-12: the validator's phase 1 for derive_final (nullptr: none, every cell at reroll 0), and
+	// the run's counts (nullptr: none kept).
+	const ValidatorParams *validator = nullptr;
+	ValidatorCounters *counters = nullptr;
 };
 
 Socket derive_socket(const DeriveInputs &in, const EdgeKey &edge);
@@ -88,6 +96,9 @@ public:
 	Socket socket(const EdgeKey &edge) const;
 	CellSockets sockets(lb::core::world::Coord cell) const;
 	std::optional<Layout> derive(lb::core::world::Coord cell, int32_t reroll) const;
+	// GEN-12's derive_final (validator.h) over the cached rerolls, itself cached and counted.
+	std::optional<Layout> derive_final(lb::core::world::Coord cell) const;
+	const DeriveInputs &inputs() const { return in_; }
 
 	void set_caching(bool on);
 	void clear_caches();
@@ -115,6 +126,7 @@ private:
 	mutable std::mutex mutex_;
 	mutable Lru<EdgeKey, Socket> sockets_;
 	mutable Lru<std::tuple<int64_t, int64_t, int32_t>, std::optional<Layout>> layouts_;
+	mutable Lru<std::pair<int64_t, int64_t>, std::optional<Layout>> finals_;
 	mutable std::atomic<uint64_t> verify_failures_{0};
 };
 

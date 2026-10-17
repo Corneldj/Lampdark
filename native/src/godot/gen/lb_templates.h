@@ -7,6 +7,8 @@
 // stubs [{cell: [x, y], edge: "north"|"east"|"south"|"west", offset, max_width, depth, door}],
 // rib [{cell: [x, y], index, milli}] and cells (an Array of LbCellData, footprint-local coords).
 
+#include "core/gen/template.h"
+
 #include <godot_cpp/classes/ref_counted.hpp>
 #include <godot_cpp/variant/array.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
@@ -14,6 +16,10 @@
 #include <godot_cpp/variant/string.hpp>
 
 namespace lb::godot {
+
+// GEN-04's validator numbers from a rules dictionary (TemplateBuild.rules' shape: ValidateParams'
+// fields by name, missing ones at their defaults), for LbTemplates.validate and GEN-12's cell checks.
+lb::core::gen::ValidateParams template_rules(const ::godot::Dictionary &params);
 
 class LbTemplates : public ::godot::RefCounted {
 	GDCLASS(LbTemplates, ::godot::RefCounted)

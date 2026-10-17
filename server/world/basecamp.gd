@@ -338,6 +338,28 @@ static func apply_gate_arches(run_seed: int, cell: Vector2i, rows: PackedStringA
 	return out
 
 
+## GEN-12: how many tiles of each gate's arch run on into the cell beyond it, by side ("north"...):
+## basecamp.arch_length_tiles less the path its road walks inside base camp's own cell (0 when the
+## arch ends inside it). The validator keeps doors off those tiles.
+static func arch_reach(run_seed: int, side: int = -1) -> Dictionary:
+	var arch: Dictionary = arch_tiles(run_seed, Vector2i.ZERO, PackedStringArray(), side)
+	var length: int = roundi(Tuning.f(&"basecamp.arch_length_tiles"))
+	var out: Dictionary = {}
+	for g: Dictionary in gate_specs(run_seed, side):
+		var outward: Vector2i = g["outward"]
+		# The shortest walk to base camp's edge on this side: the arch reaches farthest from there.
+		var nearest: int = -1
+		for raw: Variant in arch.keys():
+			var t: Vector2i = raw
+			var on_edge: bool = (outward.x > 0 and t.x == N - 1) or (outward.x < 0 and t.x == 0) \
+				or (outward.y > 0 and t.y == N - 1) or (outward.y < 0 and t.y == 0)
+			if on_edge:
+				var d: int = int(Variants.number(arch[t]))
+				nearest = d if nearest < 0 else mini(nearest, d)
+		out[str(g["side"])] = maxi(0, length - nearest) if nearest > 0 else 0
+	return out
+
+
 ## Every rock (or coal, or timber) tile in `cell` that touches an arch tile: empty when the rule holds.
 static func check_gate_arches(run_seed: int, cell: Vector2i, rows: PackedStringArray, side: int = -1) -> Array[String]:
 	var arch: Dictionary = arch_tiles(run_seed, cell, rows, side)

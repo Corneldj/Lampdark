@@ -21,8 +21,8 @@ namespace lb::core::gen {
 
 // The generator's version: bump it whenever the plan's or a layout's derivation changes, so a
 // resumed save knows which generator made its mine. 2: GEN-09's points of interest. 3: GEN-10's
-// placement.
-constexpr uint32_t GENERATOR_VERSION = 3;
+// placement. 4: GEN-12's validator (rerolls, placement retries and strict mode, spine replans).
+constexpr uint32_t GENERATOR_VERSION = 4;
 
 // Point-of-interest kinds (Gameplay §12.4), in the tuning tables' names (poi_kind_name).
 enum class PoiKind : uint8_t {

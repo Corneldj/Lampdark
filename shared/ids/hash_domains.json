@@ -439,6 +439,17 @@
 				"anchor",
 				"ordinal"
 			]
+		},
+		{
+			"name": "gen.place.retry",
+			"id": 44,
+			"owner": "GEN-12",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"attempt"
+			]
 		}
 	]
 }

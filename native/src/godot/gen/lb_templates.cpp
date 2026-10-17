@@ -203,6 +203,10 @@ gen::ValidateParams params_from(const Dictionary &d) {
 
 } // namespace
 
+gen::ValidateParams template_rules(const Dictionary &params) {
+	return params_from(params);
+}
+
 void LbTemplates::_bind_methods() {
 	ClassDB::bind_static_method("LbTemplates", D_METHOD("validate", "template_dict", "params"), &LbTemplates::validate);
 	ClassDB::bind_static_method("LbTemplates", D_METHOD("encode_pack", "set_version", "templates"), &LbTemplates::encode_pack);

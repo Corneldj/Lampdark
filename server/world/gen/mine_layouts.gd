@@ -25,7 +25,8 @@ static func for_run(run_seed: int, set_version: String = "", pack_file: String =
 	return layouts
 
 
-## Sets a deriver's numbers from tuning (sockets, rerolls, GEN-06's biomes) and base camp's gates.
+## Sets a deriver's numbers from tuning (sockets, rerolls, GEN-06's biomes, GEN-12's validator) and
+## base camp's gates.
 static func configure(layouts: LbLayouts, run_seed: int) -> void:
 	layouts.configure(run_seed, {
 		"open_probability": Tuning.f(&"mine.edge_open_probability"),
@@ -44,6 +45,7 @@ static func configure(layouts: LbLayouts, run_seed: int) -> void:
 		},
 		"poi": poi_params(),
 		"place": place_params(),
+		"validate": validate_params(run_seed),
 	})
 	var gates: Dictionary = Basecamp.gate_sockets(run_seed)
 	for side: String in Basecamp.SIDES:
@@ -153,6 +155,26 @@ static func place_params() -> Dictionary:
 	}
 
 
+## GEN-12's numbers: GEN-04's limits the cell checks share with the template validator (roads,
+## chambers, the Tapper's reach, the lair's kind), the placement retries, a spine's replans, and how
+## far each of base camp's arches runs into the cell beyond its gate (GEN-02).
+static func validate_params(run_seed: int) -> Dictionary:
+	return {
+		"rules": {
+			"road_width_min": roundi(Tuning.f(&"mine.road_width_min_tiles")),
+			"road_width_max": roundi(Tuning.f(&"mine.road_width_max_tiles")),
+			"chamber_min": roundi(Tuning.f(&"mine.chamber_min_tiles")),
+			"chamber_max": roundi(Tuning.f(&"mine.chamber_max_tiles")),
+			"chamber_forbidden_width": roundi(Tuning.f(&"mine.chamber_forbidden_width_tiles")),
+			"tapper_reach_milli": roundi(Tuning.f(&"tapper.reach_tiles") * 1000.0),
+			"lair_kind": "lair",
+		},
+		"max_retries": roundi(Tuning.f(&"mine.placement_max_retries")),
+		"max_replans": roundi(Tuning.f(&"mine.validator_max_rerolls")),
+		"arch_reach": Basecamp.arch_reach(run_seed),
+	}
+
+
 ## GEN-06's table from tuning: each ring's weights in their mapping order, each biome's socket
 ## widths, and the ring starts.
 static func biome_table() -> Dictionary:
@@ -173,11 +195,11 @@ static func biome_table() -> Dictionary:
 	return {"rings": rings, "widths": widths, "ring_bounds": Tuning.list_i(&"depth.ring_start_tiles")}
 
 
-## The cell to commit at `cell`: its layout, with GEN-02's brick arches on the cells base camp's
-## gate roads enter (GEN-06), or base camp itself at (0, 0). Null when no template fits (GEN-12
-## rerolls).
-static func cell_data(layouts: LbLayouts, run_seed: int, cell: Vector2i, reroll: int = 0) -> LbCellData:
-	var layout: Dictionary = layouts.derive(cell, reroll)
+## The cell to commit at `cell`: its final layout (GEN-12: the reroll the validator accepted, or
+## the biome's plain fallback), with GEN-02's brick arches on the cells base camp's gate roads enter
+## (GEN-06), or base camp itself at (0, 0). Null when no template and no fallback fits.
+static func cell_data(layouts: LbLayouts, run_seed: int, cell: Vector2i) -> LbCellData:
+	var layout: Dictionary = layouts.derive_final(cell)
 	if not Variants.flag(layout.get("ok", false)):
 		return null
 	if Variants.flag(layout["base_camp"]):

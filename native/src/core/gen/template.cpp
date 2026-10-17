@@ -1135,6 +1135,23 @@ std::vector<Problem> validate(const Template &t, const ValidateParams &p) {
 	return list;
 }
 
+std::vector<Problem> validate_fitted(const Cell &cell, TemplateKind kind, bool old_fall, const ValidateParams &p) {
+	Template t;
+	t.kind = kind;
+	t.old_fall = old_fall;
+	t.cells.push_back(cell);
+	t.cells.back().coord = Coord{0, 0};
+	std::vector<Problem> list;
+	Out out{list};
+	MineMap mine;
+	mine.commit(std::make_unique<Cell>(t.cells.back()));
+	const Grid g = build_grid(t, mine);
+	rule_connected(t, g, out);
+	rule_widths(t, g, p, out);
+	rule_tapper_reach(g, mine, p, out);
+	return list;
+}
+
 std::string describe(const Template &t, const Problem &problem) {
 	// No iostreams: the extension links libstdc++ statically, and its stream locale is not ours.
 	std::string s = "template " + t.id + ": " + problem.rule + ": ";
