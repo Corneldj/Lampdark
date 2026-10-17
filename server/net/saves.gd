@@ -23,6 +23,8 @@ signal voided(reason: String)
 ## Where saves go (`--save-dir`; the scenario kit gives each run its own).
 var save_dir: String = "user://saves"
 var enabled: bool = true
+## LFT-11: the run has ended with its outcome: no snapshot is written after it.
+var closed: bool = false
 var seq: int = 0
 var parent_hash: String = ""
 ## Every save written: {tick, seq, kind, bytes, sections (sizes), capture_usec, path}.
@@ -71,7 +73,7 @@ func tick(run: RunState) -> void:
 	_run = run
 	_take_acks()
 	_finish_io()
-	if not enabled:
+	if not enabled or closed:
 		return
 	var every: int = maxi(1, roundi(Tuning.f(&"net.snapshot_interval_s") * Tuning.f(&"net.tick_hz")))
 	if _next_due < 0:
@@ -121,9 +123,23 @@ func snapshot(run: RunState, kind: String = "snapshot") -> Dictionary:
 	return row
 
 
+## LFT-11: the run ended with its outcome (`why`: surfaced or wipe): the journal's last entry says
+## so on the disk and at every member, so no resume opens it, and no later snapshot or abnormal end
+## writes a finished run as one to resume.
+func close(run: RunState, why: String) -> void:
+	if closed:
+		return
+	closed = true
+	journal.write_end(run, why)
+	flush()
+	Log.info("saves: the run ended (%s); the chain is closed" % why)
+
+
 ## The server going while the run is under way (everyone gone, the host quitting): a friends or Night
 ## Shift run's last snapshot, written before the process ends; a public run voided, nothing written.
 func end_abnormally(run: RunState, why: String) -> Dictionary:
+	if closed:
+		return {}
 	if not enabled:
 		Log.info("public run voided (%s): no save, no outcomes" % why)
 		voided.emit(why)

@@ -11,8 +11,9 @@ extends RefCounted
 ## alternate, rock standing and brick fallen, swapped when the lining turns. Server-only: progress is
 ## never sent as a number; riders see only the walls and the cage's look.
 
-## Far off the plane (20,000 tiles out: well inside the wire's and float32's range) and never generated.
-const RIDE_CELL: Vector2i = Vector2i(1000, 1000)
+## Far off the plane (20,000 tiles out: well inside the wire's and float32's range) and never
+## generated. Its tiles are ring 0 (WorldCoords): the shaft over base camp, not the deep mine.
+const RIDE_CELL: Vector2i = WorldCoords.RIDE_CELL
 ## The deck copy's north-west tile within the ride cell, and the wall ring's thickness.
 const DECK_AT: Vector2i = Vector2i(8, 7)
 const RING: int = 2

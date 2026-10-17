@@ -288,6 +288,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.saves = Saves.new()
 	run.saves.bind(run, net)
 	run.add_system(run.saves)
+	# LFT-11: the wipe, the outcomes and the run's end (it closes the save chain).
+	run.outcomes = RunOutcomes.new()
+	run.outcomes.bind(run)
+	run.add_system(run.outcomes)
 	run.record = RunRecord.new()
 	run.record.bind(run, net)
 	run.add_system(run.record)

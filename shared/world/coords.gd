@@ -43,14 +43,28 @@ static func cell_manhattan(a: Vector2i, b: Vector2i) -> int:
 ## the ring-0 grey box can test deeper values (DIR-04). -1: off. Native code's own lookups (the
 ## generator's) are unaffected.
 static var ring_override: int = -1
+## LFT-10's ride zone (ShaftRide): the off-plane cell, never generated, that the cage rides up the
+## shaft in. It is the shaft over base camp, so its tiles are ring 0: a rider's Pull, lamp and
+## hearing, and the run's deepest ring, never read it as the deep mine its distance would make it.
+const RIDE_CELL: Vector2i = Vector2i(1000, 1000)
 
 
 static func ring_of_tile(tile: Vector2i) -> int:
-	return ring_override if ring_override >= 0 else LbWorld.ring_of_tile(tile)
+	if ring_override >= 0:
+		return ring_override
+	return 0 if in_ride_zone(Vector2(tile)) else LbWorld.ring_of_tile(tile)
 
 
 static func ring_of_point(position: Vector2) -> int:
-	return ring_override if ring_override >= 0 else LbWorld.ring_of_point(position.x, position.y)
+	if ring_override >= 0:
+		return ring_override
+	return 0 if in_ride_zone(position) else LbWorld.ring_of_point(position.x, position.y)
+
+
+## Whether a position (or a tile's corner) lies in the ride zone's cell.
+static func in_ride_zone(position: Vector2) -> bool:
+	var lo: Vector2 = Vector2(RIDE_CELL * WorldIds.CELL_TILES)
+	return position.x >= lo.x and position.y >= lo.y and position.x < lo.x + WorldIds.CELL_TILES and position.y < lo.y + WorldIds.CELL_TILES
 
 
 ## The shaft centre in tile units: (10.0, 10.0), the middle of cell (0,0).

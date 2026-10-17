@@ -16,6 +16,9 @@ enum Lobby { FRIENDS = 0, PUBLIC = 1, SOLO = 2 }
 var is_sealed_inside: Callable = func(_entity: int) -> bool: return false
 ## MOD-08: (entity) -> bool, a Hired Hand (a dropped player's miner included). Default: none.
 var is_hand_driven: Callable = func(_entity: int) -> bool: return false
+## MOD-08: (entity) -> bool, a Hired Hand's own miner (a dropped player's miner is not one): never
+## counted for LFT-11's wipe or crew. Default: none.
+var is_hired_hand: Callable = func(_entity: int) -> bool: return false
 ## NET-11: (entity) -> bool, an absent player's conscious miner waiting in base camp. Default: none.
 var is_absent: Callable = func(_entity: int) -> bool: return false
 ## MOD-03's lobby kind; M1 runs are friends lobbies (Night Shift is solo).

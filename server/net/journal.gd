@@ -8,7 +8,11 @@ extends SimSystem
 ## it never waits behind snapshot data (`broadcast`). A resume applies the entries after its
 ## snapshot's tick, each once: the body unconscious or dead on its tile, the belt on the body, the
 ## lamp where the cause left it. A revive is not journaled (Proposed): an abnormal end undoes it.
+## LFT-11: the run's end (the surface or a wipe) is the chain's last entry, {..., miner 0, kind
+## ended, cause surfaced | wipe} and nothing of its outcome; no resume opens a run that holds one.
 ## Public runs journal nothing. Server-only.
+
+const KIND_ENDED: String = "ended"
 
 ## Every entry of the run.
 var entries: Array[Dictionary] = []
@@ -51,17 +55,21 @@ func bind(run: RunState) -> void:
 
 func tick(run: RunState) -> void:
 	_run = run
+	_write_pending(run)
+	if run.inventory != null:
+		for raw: Variant in run.inventory.hands.keys():
+			var h: HandsAndBelt = run.inventory.hands[raw]
+			if h.lamp_hand != null:
+				_lamp_uid[raw] = h.lamp_hand.uid
+
+
+func _write_pending(run: RunState) -> void:
 	var ids: Array = _pending.keys()
 	ids.sort()
 	for raw: Variant in ids:
 		var pair: Array = _pending[raw]
 		write(run, int(Variants.number(raw)), str(pair[0]), str(pair[1]))
 	_pending.clear()
-	if run.inventory != null:
-		for raw: Variant in run.inventory.hands.keys():
-			var h: HandsAndBelt = run.inventory.hands[raw]
-			if h.lamp_hand != null:
-				_lamp_uid[raw] = h.lamp_hand.uid
 
 
 ## Writes one entry now: to the disk and to every member, the same tick.
@@ -70,10 +78,24 @@ func write(run: RunState, miner: int, kind: String, cause: String) -> Dictionary
 		return {}
 	var e: SimEntity = run.registry.get_entity(miner)
 	var m: MinerStateSystem.Miner = run.miner_state.miner(miner) if run.miner_state != null else null
-	var entry: Dictionary = {"run_uuid": run.header.run_uuid, "after_snapshot_seq": after_seq, "tick": run.tick, "miner": miner,
+	return _commit({"run_uuid": run.header.run_uuid, "after_snapshot_seq": after_seq, "tick": run.tick, "miner": miner,
 		"kind": kind, "cause": cause, "body_tile": e.tile() if e != null else Vector2i.ZERO,
-		"lamp_end": lamp_end(run, miner), "marks": m.overlays.marks.duplicate(true) if m != null else {},
-		"prev": str(entries[entries.size() - 1]["hash"]) if not entries.is_empty() else ""}
+		"lamp_end": lamp_end(run, miner), "marks": m.overlays.marks.duplicate(true) if m != null else {}})
+
+
+## LFT-11: the run has ended (`why`: surfaced or wipe). Written after this tick's falls, as the
+## chain's last entry, so every member's copy closes with the host's.
+func write_end(run: RunState, why: String) -> Dictionary:
+	if not enabled:
+		return {}
+	_write_pending(run)
+	return _commit({"run_uuid": run.header.run_uuid, "after_snapshot_seq": after_seq, "tick": run.tick, "miner": 0,
+		"kind": KIND_ENDED, "cause": why})
+
+
+## Chains an entry on (prev, hash), then seals it to the disk and every member.
+func _commit(entry: Dictionary) -> Dictionary:
+	entry["prev"] = str(entries[entries.size() - 1]["hash"]) if not entries.is_empty() else ""
 	entry["hash"] = hash_of(entry)
 	entries.append(entry)
 	var sealed: PackedByteArray = LbSeal.seal(var_to_bytes(entry))
@@ -136,7 +158,7 @@ static func _mirror(run: RunState, it: Item) -> void:
 static func apply_after(run: RunState, list: Array[Dictionary], snapshot_tick: int) -> int:
 	var applied: int = 0
 	for e: Dictionary in list:
-		if int(Variants.number(e["tick"])) <= snapshot_tick:
+		if int(Variants.number(e["tick"])) <= snapshot_tick or str(e.get("kind", "")) == KIND_ENDED:
 			continue
 		apply(run, e)
 		applied += 1

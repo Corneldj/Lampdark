@@ -16,6 +16,8 @@ func _crew(run_seed: int) -> Array:
 	var ann: MinerHandle = S.miner(s, "ann", Vector2i(3, 3))
 	var bob: MinerHandle = S.miner(s, "bob", Vector2i(8, 3))
 	var cat: MinerHandle = S.miner(s, "cat", Vector2i(10, 4))
+	# Dan stays up: with the whole crew down the run is wiped (LFT-11) and its journal closes.
+	S.miner(s, "dan", Vector2i(12, 1))
 	s.step(5)
 	return [s, ann, bob, cat]
 

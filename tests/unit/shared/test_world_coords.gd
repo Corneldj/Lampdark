@@ -73,3 +73,18 @@ func test_ring_bounds_are_tuning_data() -> void:
 	assert_eq(WorldCoords.ring_of_tile(probe), 0, "moving the data moves the boundary")
 	Tuning.clear_dev_overrides()
 	assert_eq(WorldCoords.ring_of_tile(probe), 1)
+
+
+## LFT-10's ride zone is the shaft over base camp: ring 0 at every tile of its cell, the ring the
+## native lookup (20,000 tiles out) would make the deepest; the tiles round it keep the lookup's.
+func test_the_ride_zone_is_ring_0() -> void:
+	var lo: Vector2i = WorldCoords.RIDE_CELL * WorldIds.CELL_TILES
+	assert_eq(LbWorld.ring_of_tile(lo), 4, "by distance alone, the deepest")
+	for t: Vector2i in [lo, lo + Vector2i(19, 0), lo + Vector2i(0, 19), lo + Vector2i(19, 19), lo + Vector2i(8, 7)]:
+		assert_eq(WorldCoords.ring_of_tile(t), 0, "tile %s" % t)
+		assert_eq(WorldCoords.ring_of_point(Vector2(t) + Vector2(0.5, 0.5)), 0)
+	for t: Vector2i in [lo - Vector2i(1, 0), lo + Vector2i(20, 0), lo + Vector2i(0, 20), lo - Vector2i(0, 1)]:
+		assert_eq(WorldCoords.ring_of_tile(t), 4, "outside the cell, tile %s" % t)
+	WorldCoords.ring_override = 2
+	assert_eq(WorldCoords.ring_of_tile(lo), 2, "FND-08's override still wins")
+	WorldCoords.ring_override = -1

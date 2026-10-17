@@ -84,6 +84,8 @@ var _jobs_seen: int = 0
 var _engine_seen: int = 0
 ## LFT-10: the cage's events (pulls, the bell, departure, stops, the surface) already written.
 var _cage_seen: int = 0
+## LFT-11: the run's outcome record, written on the tick it ends.
+var _ended: Dictionary = {}
 var _last_sound: int = 0
 var _last_sources: Dictionary = {}
 var _last_ids: PackedInt64Array = PackedInt64Array()
@@ -137,6 +139,8 @@ func bind(run: RunState, net: ServerNet) -> void:
 		run.voice.frame_routed.connect(_on_voice_frame)
 	if run.creatures != null:
 		run.creatures.log.logged.connect(func(entry: Dictionary) -> void: _creature_log.append(_plain(entry)))
+	if run.outcomes != null:
+		run.outcomes.run_ended.connect(func(rec: Dictionary) -> void: _ended = rec)
 	if run.falls != null:
 		run.falls.fell.connect(_on_fell)
 	if run.miner_state != null:
@@ -443,6 +447,10 @@ func _tick_entry(run: RunState) -> Dictionary:
 	if run.cage != null and run.cage.log.size() > _cage_seen:
 		e["cage"] = _plain(run.cage.log.slice(_cage_seen))
 		_cage_seen = run.cage.log.size()
+	# LFT-11: the outcome record, kept until Lamp Check ends.
+	if not _ended.is_empty():
+		e["run_ended"] = _plain(_ended)
+		_ended = {}
 	for pair: Array in [["v", _voice], ["g", _creature_log], ["lie", _lies], ["fall", _falls], ["death", _deaths]]:
 		var list: Array = pair[1]
 		if not list.is_empty():

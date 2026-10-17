@@ -13,9 +13,11 @@ const ERR_MISSING: String = "missing"
 const ERR_FORMAT: String = "format"
 const ERR_SEAL: String = "seal"
 const ERR_VERSIONS: String = "versions"
+## LFT-11: the run has ended (its journal closes with an end entry).
+const ERR_ENDED: String = "ended"
 
 
-## {ok, error ("" | missing | format | seal | versions), message (plain, for the player), header,
+## {ok, error ("" | missing | format | seal | versions | ended), message (plain, for the player), header,
 ## head (the sealed run header), sections, journal, bytes}.
 static func open_file(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
@@ -32,6 +34,9 @@ static func open_file(path: String) -> Dictionary:
 		return _refused(ERR_VERSIONS, why, header)
 	var sections: Dictionary = opened["sections"]
 	var journal: Array[Dictionary] = read_journal(path.get_base_dir().path_join(Saves.JOURNAL_FILE), str(header.get("run_uuid", "")))
+	for e: Dictionary in journal:
+		if str(e.get("kind", "")) == Journal.KIND_ENDED:
+			return _refused(ERR_ENDED, "This run has ended, so it cannot be resumed.", header)
 	return {"ok": true, "error": "", "message": "", "header": header, "head": Snapshot.run_header(sections),
 		"sections": sections, "journal": journal, "bytes": bytes}
 
