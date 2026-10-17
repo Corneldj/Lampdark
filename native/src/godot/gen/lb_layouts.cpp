@@ -408,6 +408,7 @@ void LbLayouts::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("derive_final", "cell"), &LbLayouts::derive_final);
 	ClassDB::bind_method(D_METHOD("placement_report", "cell"), &LbLayouts::placement_report);
 	ClassDB::bind_method(D_METHOD("validate_run_start"), &LbLayouts::validate_run_start);
+	ClassDB::bind_method(D_METHOD("route_home", "from", "max_cells"), &LbLayouts::route_home);
 	ClassDB::bind_method(D_METHOD("validator_stats"), &LbLayouts::validator_stats);
 	ClassDB::bind_method(D_METHOD("fallback_coverage", "biome", "widths"), &LbLayouts::fallback_coverage);
 	ClassDB::bind_method(D_METHOD("plan", "params"), &LbLayouts::plan);
@@ -1048,6 +1049,32 @@ Dictionary LbLayouts::placement_report(Vector2i cell) const {
 		failures.push_back(verdict_dict(v));
 	}
 	out["failures"] = failures;
+	return out;
+}
+
+Dictionary LbLayouts::route_home(Vector2i from, int64_t max_cells) const {
+	// A line's search, bounded: a road home a few thousand tiles long at most (Proposed).
+	constexpr int64_t MAX_EXPLORED = 400000;
+	const gen::RouteHome r = gen::route_home(*place_world_, {from.x, from.y}, static_cast<int32_t>(max_cells), MAX_EXPLORED);
+	Dictionary out;
+	out["found"] = r.found;
+	out["explored"] = r.explored;
+	PackedInt32Array xs;
+	PackedInt32Array ys;
+	for (const auto &t : r.tiles) {
+		xs.append(static_cast<int32_t>(t.x));
+		ys.append(static_cast<int32_t>(t.y));
+	}
+	out["x"] = xs;
+	out["y"] = ys;
+	Array crossings;
+	for (const auto &[c, id] : r.crossings) {
+		Array pair;
+		pair.push_back(Vector2i(static_cast<int32_t>(c.x), static_cast<int32_t>(c.y)));
+		pair.push_back(static_cast<int64_t>(id));
+		crossings.push_back(pair);
+	}
+	out["crossings"] = crossings;
 	return out;
 }
 

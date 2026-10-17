@@ -275,6 +275,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.timber_pins = TimberPins.new()
 	run.timber_pins.bind(run)
 	run.add_system(run.timber_pins)
+	# LFT-12: the pit phones and their lines (after the collapse points, whose falls cut them).
+	run.phones = PhoneLines.new()
+	run.phones.bind(run)
+	run.add_system(run.phones)
 	# GEN-13: after every owner, so a committed cell replays once their own load hooks have run.
 	if run.vision != null:
 		run.vision.trail_changed.connect(func(tile: Vector2i, direction: int) -> void:

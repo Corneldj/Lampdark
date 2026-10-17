@@ -51,6 +51,7 @@ constexpr uint64_t GEN_PLACE_RICH_ROCK = 41; // hash, GEN-10
 constexpr uint64_t GEN_PLACE_HOMES = 42; // hash, GEN-10
 constexpr uint64_t GEN_PLACE_ID = 43; // hash, GEN-10
 constexpr uint64_t GEN_PLACE_RETRY = 44; // hash, GEN-12
+constexpr uint64_t PHONES = 45; // stream, LFT-12
 
 struct Entry {
 	const char *name;
@@ -102,6 +103,7 @@ constexpr Entry ALL[] = {
 	{"gen.place.homes", 42},
 	{"gen.place.id", 43},
 	{"gen.place.retry", 44},
+	{"phones", 45},
 };
 constexpr size_t COUNT = sizeof(ALL) / sizeof(ALL[0]);
 

@@ -3,7 +3,8 @@ extends RefCounted
 ## VIS-06: identity sprites (grey-box placeholders until art), drawn only for identity records
 ## (level 2): miners with their cap badge (colour and engraved pattern), facing and what is in their
 ## hands; the faceless Stythe; the moth (asleep, a heap's shape); the tapper's arm; Bess; items,
-## traps, phones and fixtures; coat heaps; a gate's lever; a collapse point's bowed props. A token (level 1) is TokenRenderer's and never shows any
+## traps, phones (with their painted numbers) and fixtures; coat heaps; a gate's lever; a collapse
+## point's bowed props. A token (level 1) is TokenRenderer's and never shows any
 ## of this.
 
 const BODY: Color = Color(0.46, 0.42, 0.38)
@@ -50,6 +51,8 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 			draw_fixture(ci, int(Variants.number(e.get("in_hand", 0))), at_px, px, t)
 		SeenKind.Kind.COLLAPSE_POINT:
 			_collapse_tell(ci, at_px, px, t)
+		SeenKind.Kind.PHONE:
+			_phone(ci, int(Variants.number(e.get("in_hand", 0))) & SeenKind.PHONE_NUMBER_MASK, at_px, px)
 		SeenKind.Kind.ITEM:
 			# Its kind rides in the held field (replication's lying things): a grey-box shape per kind.
 			var held: int = int(Variants.number(e.get("in_hand", 0)))
@@ -61,6 +64,19 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 		_:
 			ci.draw_rect(Rect2(at_px - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 			_held_flame(ci, e, at_px, px, t)
+
+
+## LFT-12's wall telephone: its box, the crank on its side and its painted line number (the number
+## rides on the identity record, so it shows only at 0.30; 0, none: a dead, unnumbered phone).
+static func _phone(ci: CanvasItem, number: int, at: Vector2, px: float) -> void:
+	ci.draw_rect(Rect2(at - Vector2(0.22, 0.3) * px, Vector2(0.44, 0.6) * px), DARK)
+	ci.draw_rect(Rect2(at - Vector2(0.16, 0.24) * px, Vector2(0.32, 0.2) * px), BODY)
+	ci.draw_line(at + Vector2(0.22, 0.05) * px, at + Vector2(0.34, 0.05) * px, BODY, maxf(1.5, 0.05 * px))
+	ci.draw_line(at + Vector2(0.34, 0.05) * px, at + Vector2(0.34, 0.18) * px, BODY, maxf(1.5, 0.05 * px))
+	if number > 0:
+		var size: int = maxi(8, roundi(0.22 * px))
+		ci.draw_string(ThemeDB.fallback_font, at + Vector2(-0.2, 0.22) * px, str(number), HORIZONTAL_ALIGNMENT_CENTER, 0.4 * px, size,
+			Palette.CHALK_WHITE.darkened(0.2))
 
 
 ## HAZ-03's tell, seen only at 0.30: two props bowed under the roof and stone dribbling between

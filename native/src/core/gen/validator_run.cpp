@@ -1,6 +1,10 @@
 #include "core/gen/validator.h"
 
+#include <algorithm>
+#include <cstdlib>
 #include <deque>
+#include <queue>
+#include <tuple>
 
 namespace lb::core::gen {
 
@@ -89,6 +93,141 @@ struct Floor {
 };
 
 } // namespace
+
+RouteHome route_home(const PlacementWorld &world, Coord from, int32_t max_cells, int64_t max_explored) {
+	RouteHome out;
+	const RunHeader &h = world.header();
+	std::set<Coord> goals;
+	for (int32_t e = 0; e < 4; e++) {
+		const std::optional<Socket> s = h.forced.query(edge_of({0, 0}, static_cast<Edge>(e)));
+		if (!s || !s->open) {
+			continue;
+		}
+		const Coord cell = neighbour({0, 0}, static_cast<Edge>(e));
+		const std::optional<Layout> l = world.layout(cell);
+		if (!l || l->base_camp) {
+			continue;
+		}
+		const Edge in = opposite(static_cast<Edge>(e));
+		for (const Coord &t : opening_tiles(cell, l->sockets[static_cast<size_t>(in)], in)) {
+			goals.insert(t);
+		}
+	}
+	if (goals.empty()) {
+		return out;
+	}
+	std::map<Coord, std::optional<Cell>> cells;
+	const auto cell_at = [&](Coord c) -> const Cell * {
+		auto it = cells.find(c);
+		if (it == cells.end()) {
+			std::optional<Cell> got;
+			if (std::max(std::abs(c.x), std::abs(c.y)) <= max_cells) {
+				const std::optional<Layout> l = world.layout(c);
+				if (l && !l->base_camp) {
+					got = l->cell;
+				}
+			}
+			it = cells.emplace(c, std::move(got)).first;
+		}
+		return it->second ? &*it->second : nullptr;
+	};
+	const auto walkable = [&](Coord t) -> bool {
+		const Cell *cell = cell_at(lb::core::world::cell_of(t));
+		if (cell == nullptr) {
+			return false;
+		}
+		const Coord l = lb::core::world::local_of(t);
+		return passable(cell->tiles[static_cast<size_t>(Cell::index_of(l.x, l.y))].material);
+	};
+	const auto estimate = [&goals](Coord t) -> int64_t {
+		int64_t best = INT64_MAX;
+		for (const Coord &g : goals) {
+			best = std::min(best, std::abs(t.x - g.x) + std::abs(t.y - g.y));
+		}
+		return best;
+	};
+	// A*, ordered by (f, h, y, x) so ties break the same way everywhere.
+	using Key = std::tuple<int64_t, int64_t, int64_t, int64_t>;
+	std::priority_queue<Key, std::vector<Key>, std::greater<Key>> open;
+	std::map<Coord, int64_t> cost;
+	std::map<Coord, Coord> came;
+	std::vector<Coord> starts;
+	if (walkable(from)) {
+		starts.push_back(from);
+	} else {
+		for (const Coord &n : {Coord{from.x + 1, from.y}, Coord{from.x, from.y + 1}, Coord{from.x - 1, from.y}, Coord{from.x, from.y - 1}}) {
+			if (walkable(n)) {
+				starts.push_back(n);
+			}
+		}
+	}
+	for (const Coord &s : starts) {
+		cost[s] = 0;
+		const int64_t e = estimate(s);
+		open.push({e, e, s.y, s.x});
+	}
+	bool found = false;
+	Coord reached = from;
+	while (!open.empty()) {
+		const auto [f, est, y, x] = open.top();
+		open.pop();
+		const Coord t{x, y};
+		const int64_t g = cost[t];
+		if (f != g + est) {
+			continue; // a stale entry: a shorter way here was found since
+		}
+		if (goals.count(t) != 0) {
+			found = true;
+			reached = t;
+			break;
+		}
+		if (++out.explored > max_explored) {
+			break;
+		}
+		for (const Coord &n : {Coord{t.x + 1, t.y}, Coord{t.x, t.y + 1}, Coord{t.x - 1, t.y}, Coord{t.x, t.y - 1}}) {
+			if (!walkable(n)) {
+				continue;
+			}
+			const auto it = cost.find(n);
+			if (it != cost.end() && it->second <= g + 1) {
+				continue;
+			}
+			cost[n] = g + 1;
+			came[n] = t;
+			const int64_t e = estimate(n);
+			open.push({g + 1 + e, e, n.y, n.x});
+		}
+	}
+	if (!found) {
+		return out;
+	}
+	for (Coord t = reached;;) {
+		out.tiles.push_back(t);
+		const auto it = came.find(t);
+		if (it == came.end()) {
+			break;
+		}
+		t = it->second;
+	}
+	std::reverse(out.tiles.begin(), out.tiles.end());
+	out.found = true;
+	const std::set<Coord> on(out.tiles.begin(), out.tiles.end());
+	for (const auto &[c, cell] : cells) {
+		if (!cell) {
+			continue;
+		}
+		for (const lb::core::world::Collapse &alt : cell->collapses) {
+			for (const lb::core::world::TileWrite &w : alt.fallen) {
+				const Coord t = lb::core::world::tile_of(c, {w.index % CELL_TILES, w.index / CELL_TILES});
+				if (!passable(w.material) && on.count(t) != 0) {
+					out.crossings.push_back({c, alt.id});
+					break;
+				}
+			}
+		}
+	}
+	return out;
+}
 
 Verdict check_gates(const PlacementWorld &world) {
 	const RunHeader &h = world.header();

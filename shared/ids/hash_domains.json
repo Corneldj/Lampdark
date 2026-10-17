@@ -450,6 +450,15 @@
 				"cell_y",
 				"attempt"
 			]
+		},
+		{
+			"name": "phones",
+			"id": 45,
+			"owner": "LFT-12",
+			"kind": "stream",
+			"keys": [
+				"pool"
+			]
 		}
 	]
 }

@@ -19,7 +19,10 @@ static func for_seen(kind: int, cues: int = 0, item_kind: int = 0) -> String:
 		SeenKind.Kind.MINER:
 			return "verb.lift" if (cues & (MinerCues.LYING_BREATHING | MinerCues.LYING_STILL)) != 0 else "verb.ring"
 		SeenKind.Kind.PHONE:
-			return "verb.crank"
+			# LFT-12: answer a ringing phone; hang up a phone in use; else crank it.
+			if (item_kind & SeenKind.PHONE_RINGING) != 0:
+				return "verb.answer"
+			return "verb.hang_up" if (item_kind & SeenKind.PHONE_BUSY) != 0 else "verb.crank"
 		SeenKind.Kind.FIXTURE:
 			# LFT-06's tank, LFT-08's engine, LFT-10's cord, LFT-05's substation: the fixture's kind rides in the held field.
 			match FixtureKinds.kind_of(item_kind):

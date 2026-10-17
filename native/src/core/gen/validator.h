@@ -168,6 +168,21 @@ PlacedCell place_validated(const PlacementWorld &world, const PlacementParams &p
 // floor at the gate's opening that joins another of its open sockets.
 Verdict check_gates(const PlacementWorld &world);
 
+// LFT-12: a phone line's road home. The shortest 4-connected path over passable tiles (floor,
+// gates, doors) from `from` (or the floor beside it, for a phone hung on a wall) to base camp's
+// gates (the openings of the cells beyond them), through each cell's final layout with every
+// collapse standing: a pure function of the seed, so every generation order finds the same line.
+// The search stays within `max_cells` cells of base camp (Chebyshev) and gives up after
+// `max_explored` tiles. `crossings` names each collapse alternate whose fallen solid tiles the
+// route crosses, in cell order: the falls that would cut the line.
+struct RouteHome {
+	bool found = false;
+	std::vector<lb::core::world::Coord> tiles;
+	std::vector<std::pair<lb::core::world::Coord, uint32_t>> crossings;
+	int64_t explored = 0;
+};
+RouteHome route_home(const PlacementWorld &world, lb::core::world::Coord from, int32_t max_cells, int64_t max_explored);
+
 // Rule 6: a spine walked from its gate's opening to its target's door through its own cells and
 // the door cell alone, with every collapse point their validated placements arm fallen (every
 // alternate when `all_alternates`, for tests). Ok, or the walk's nearest tile to the door.

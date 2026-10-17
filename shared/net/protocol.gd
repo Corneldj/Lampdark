@@ -21,7 +21,8 @@ class_name Protocol
 ##     seated miner, badge and run UUID, and Reject.LAMP_NUMBERS.
 ## 19: MOD-05's Reject.KNOCKED_OFF.
 ## 20: HAZ-03's collapse point (SeenKind.COLLAPSE_POINT) and the collapse creak (NoiseTypes).
-const PROTOCOL_VERSION: int = 20
+## 21: LFT-12's phone record (SeenKind's phone bits: the painted number, ringing, in use).
+const PROTOCOL_VERSION: int = 21
 ## MOD-03: the most roster miners a Hello offers (a roster's three, Gameplay §13.2).
 const MAX_CANDIDATES: int = 3
 ## MOD-03: a candidate's name and each shown page are at most this long (bytes, UTF-8).

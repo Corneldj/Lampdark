@@ -46,6 +46,7 @@ const GEN_PLACE_RICH_ROCK: int = 41  # hash, GEN-10
 const GEN_PLACE_HOMES: int = 42  # hash, GEN-10
 const GEN_PLACE_ID: int = 43  # hash, GEN-10
 const GEN_PLACE_RETRY: int = 44  # hash, GEN-12
+const PHONES: int = 45  # stream, LFT-12
 
 const ALL: Dictionary = {
 	"gen.socket.open": 1,
@@ -92,4 +93,5 @@ const ALL: Dictionary = {
 	"gen.place.homes": 42,
 	"gen.place.id": 43,
 	"gen.place.retry": 44,
+	"phones": 45,
 }

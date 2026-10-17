@@ -150,6 +150,9 @@ public:
 	// next sub-seed, at most max_replans times, into the header), then base camp's gates.
 	// {ok, replans, spines: [{site, reached, replans, rule, check, tile, detail}], gates: {ok, rule, check, tile, detail}}.
 	::godot::Dictionary validate_run_start();
+	// LFT-12: a phone line's road home from `from` (gen::route_home): {found, x, y (the tiles, in
+	// order), crossings ([cell, collapse id] each), explored}.
+	::godot::Dictionary route_home(::godot::Vector2i from, int64_t max_cells) const;
 	// The run's counts since the last rebuild: {totals: {key: n}, notes: [text]} (ValidatorCounters).
 	::godot::Dictionary validator_stats() const;
 	// Every socket set (each edge shut or open at each offset and width in `widths`) fitted to

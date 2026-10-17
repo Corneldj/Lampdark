@@ -22,6 +22,8 @@ var by_cell: Dictionary = {}
 var made: Dictionary = {}
 ## cell -> the timber hook tiles it added.
 var hooks: Dictionary = {}
+## LFT-12: each loaded phone's placement id -> its PHONE entity.
+var phones: Dictionary = {}
 ## LbLayouts.homes_dict(): the Moth's roosts and start, the hoard, the near-gate phones, the
 ## electric lamp's cell and the canary region.
 var homes: Dictionary = {}
@@ -131,7 +133,9 @@ func _on_loaded(cell: Vector2i) -> void:
 					_count("item:%s" % str(p["thing"]))
 				continue
 			"phone":
-				mine_made.append(run.registry.create(WorldIds.EntityKind.PHONE, at).id)
+				var phone: int = run.registry.create(WorldIds.EntityKind.PHONE, at).id
+				mine_made.append(phone)
+				phones[str(p["id"])] = phone
 			"coat_heap":
 				mine_made.append(run.registry.create(WorldIds.EntityKind.COAT_HEAP, at).id)
 		_count(kind)
@@ -139,6 +143,8 @@ func _on_loaded(cell: Vector2i) -> void:
 
 
 func _on_unloading(cell: Vector2i) -> void:
+	for p: Dictionary in of_kind(cell, "phone"):
+		phones.erase(str(p["id"]))
 	for raw: Variant in Variants.array(made.get(cell, [])):
 		var e: int = int(Variants.number(raw))
 		if _run.registry.has(e):

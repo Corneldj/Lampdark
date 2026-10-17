@@ -158,6 +158,8 @@ var absent: AbsentMiners = null
 var collapses: CollapsePoints = null
 var timber_pins: TimberPins = null
 var trap_events: TrapEvents = null
+## LFT-12: the pit phones and their lines to the switchboard.
+var phones: PhoneLines = null
 ## NET-09: snapshots, knock-off saves and the journal.
 var saves: Saves = null
 ## RSC-09: the solo self-revive, the alone watch and the substitutions' switchboard.
