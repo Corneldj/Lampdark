@@ -74,6 +74,14 @@ static func _check_start(report: Dictionary) -> void:
 ## and the numbers.
 static func params(run: RunState) -> Dictionary:
 	var list: RepairList = run.repair.list if run.repair != null else null
+	var solo: bool = Variants.flag(run.header.rule_flags.get("solo_rules", run.header.mode == ServerConfig.Mode.NIGHTSHIFT))
+	var out: Dictionary = inputs_of(list, solo, run.header.draw, run.header.staging, run.header.options.hard_variant, run.header.tuning_hash)
+	out["tuning"] = tuning()
+	return out
+
+
+## LbLayouts.plan's inputs but the numbers, from their parts (GEN-14's harness plans every run so).
+static func inputs_of(list: RepairList, solo: bool, draw: PackedStringArray, staging: String, hard_variant: String, data_version: String) -> Dictionary:
 	var jobs: PackedStringArray = PackedStringArray()
 	if list != null:
 		for job: StringName in list.jobs:
@@ -82,12 +90,11 @@ static func params(run: RunState) -> Dictionary:
 		"list_kind": list.kind if list != null else RepairList.Kind.STANDARD,
 		"jobs": jobs,
 		"cans": list.cans_required if list != null else RepairList.cans_for(RepairList.Kind.STANDARD),
-		"solo": Variants.flag(run.header.rule_flags.get("solo_rules", run.header.mode == ServerConfig.Mode.NIGHTSHIFT)),
-		"draw": run.header.draw.duplicate(),
-		"staging": run.header.staging,
-		"hard_variant": run.header.options.hard_variant,
-		"data_version": run.header.tuning_hash,
-		"tuning": tuning(),
+		"solo": solo,
+		"draw": draw.duplicate(),
+		"staging": staging,
+		"hard_variant": hard_variant,
+		"data_version": data_version,
 	}
 
 

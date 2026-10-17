@@ -10,6 +10,7 @@
 #include "godot/voice/lb_voice_capture.h"
 #include "godot/lb_core_info.h"
 #include "godot/gen/lb_layouts.h"
+#include "godot/gen/lb_seed_harness.h"
 #include "godot/gen/lb_templates.h"
 #include "godot/light/lb_light.h"
 #include "godot/vision/lb_vision.h"
@@ -65,6 +66,7 @@ void initialize_lampblack_core(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(lb::godot::LbSheet); // LFT-14's map card and rubber
 #ifdef LB_DEBUG_TOOLS
 	GDREGISTER_CLASS(lb::godot::LbAuditReference); // NET-08's stream audit: dev and QA only
+	GDREGISTER_CLASS(lb::godot::LbSeedHarness); // GEN-14's seed harness: dev and QA only
 #endif
 	GDREGISTER_CLASS(lb::godot::LbOpusEncoder);
 	GDREGISTER_CLASS(lb::godot::LbOpusDecoder);

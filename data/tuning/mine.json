@@ -294,6 +294,26 @@
 			"kind": "param",
 			"note": "ticket GEN-14"
 		},
+		"mine.harness_explore_max_ring": {
+			"value": 1,
+			"type": "int",
+			"unit": "ring",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "the exploration model: ring 0-1 cells near a spine count as touched; ticket GEN-14"
+		},
+		"mine.harness_explore_radius_cells": {
+			"value": 3,
+			"type": "int",
+			"unit": "cells",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "the exploration model: cells within this many of a spine (Chebyshev); ticket GEN-14"
+		},
 		"mine.harness_fallback_rate_max": {
 			"value": 0.01,
 			"type": "float",
@@ -303,6 +323,16 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "unit as written: share of cells; ticket GEN-14"
+		},
+		"mine.harness_finds_warn_share": {
+			"value": 0.2,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "a finds count outside its band in more than this share of a list's seeds warns; ticket GEN-14"
 		},
 		"mine.harness_joined_min": {
 			"value": 0.85,
@@ -343,6 +373,16 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "unit as written: ratio; ticket GEN-14"
+		},
+		"mine.harness_road_ratio_share_max": {
+			"value": 0.01,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "share of planned sites over mine.harness_road_ratio_max (or with no road) that fails the build; ticket GEN-14"
 		},
 		"mine.harness_seeds": {
 			"value": 10000,

@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 # Checks the native layering rules (FND-02):
-#  - no file under native/src/core/ includes a Godot header;
+#  - no file under native/src/core/ (or GEN-14's native/src/harness/) includes a Godot header;
 #  - the godot-cpp submodule commit equals versions.json's godot_cpp.godot_cpp_ref.
 set -euo pipefail
 
 GAME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 status=0
 
-offenders="$(grep -rnE '#\s*include\s*[<"](godot_cpp/|gdextension_interface|godot/)' "$GAME_DIR/native/src/core" || true)"
+offenders="$(grep -rnE '#\s*include\s*[<"](godot_cpp/|gdextension_interface|godot/)' "$GAME_DIR/native/src/core" "$GAME_DIR/native/src/harness" || true)"
 if [ -n "$offenders" ]; then
-	echo "FAIL: src/core/ includes Godot headers:" >&2
+	echo "FAIL: src/core/ or src/harness/ includes Godot headers:" >&2
 	echo "$offenders" >&2
 	status=1
 else
-	echo "ok   src/core/ is engine-free"
+	echo "ok   src/core/ and src/harness/ are engine-free"
 fi
 
 pinned="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["godot_cpp"]["godot_cpp_ref"])' "$GAME_DIR/versions.json")"

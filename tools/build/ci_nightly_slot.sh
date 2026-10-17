@@ -8,7 +8,7 @@ cd "$GAME_DIR"
 case "${1:-}" in
 	soak) entry=(tools/bots/run_nightly_soaks.sh); owner=FND-09 ;;
 	stream_audit) entry=(tools/stream_audit/run.sh nightly); owner=NET-08 ;;
-	seed_harness) entry=(tools/seed_harness/run.sh --seeds "${LB_SEEDS:-10000}"); owner=GEN-14 ;;
+	seed_harness) entry=(tools/seed_harness/run.sh --seeds "${LB_SEEDS:-10000}" --machine ci --report build/seed_harness --gates "${LB_HARNESS_GATES:-enforce}"); owner=GEN-14 ;;
 	probes) entry=(tools/bots/run_probes.sh); owner=NET-12 ;;
 	record) entry=(tools/bots/run_soak.sh record_budget_nightly --accelerated --out build/soaks/record_budget_nightly); owner=NET-07 ;;
 	*) echo "usage: ci_nightly_slot.sh soak|stream_audit|seed_harness|probes|record" >&2; exit 2 ;;

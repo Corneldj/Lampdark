@@ -555,6 +555,11 @@ bool LbLayouts::load_pack(const PackedByteArray &bytes) {
 	return ok;
 }
 
+void LbLayouts::use_set(std::shared_ptr<gen::TemplateSet> set) {
+	set_ = std::move(set);
+	rebuild();
+}
+
 String LbLayouts::set_version() const {
 	return String::utf8(set_->set_version().c_str());
 }

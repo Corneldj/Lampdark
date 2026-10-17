@@ -164,6 +164,11 @@ PlacedCell place_validated(const PlacementWorld &world, const PlacementParams &p
 
 // ---- Run start ----
 
+// The walk's tiles: floor, steel and wooden doors (open) are passable (GEN-14's road lengths too).
+bool walk_passable(uint8_t material);
+// An open socket's opening tiles in `cell`, on its `side`, as world tiles (none for a shut one).
+std::vector<lb::core::world::Coord> socket_opening_tiles(lb::core::world::Coord cell, const Socket &s, Edge side);
+
 // Rule 3: base camp's gates. Three of its four sides open, each onto a road: the cell beyond holds
 // floor at the gate's opening that joins another of its open sockets.
 Verdict check_gates(const PlacementWorld &world);

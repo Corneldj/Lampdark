@@ -23,40 +23,11 @@ Verdict fail(Check check, Coord tile, std::string detail) {
 	return v;
 }
 
-bool passable(uint8_t material) {
-	const TileMaterial m = static_cast<TileMaterial>(material);
-	return m == TileMaterial::FLOOR || m == TileMaterial::STEEL || m == TileMaterial::WOODEN_DOOR;
-}
+bool passable(uint8_t material) { return walk_passable(material); }
 
 Coord middle_of(Coord cell) { return lb::core::world::tile_of(cell, {CELL_TILES / 2, CELL_TILES / 2}); }
 
-// An open socket's opening tiles in `cell`, on its `side`, as world tiles.
-std::vector<Coord> opening_tiles(Coord cell, const Socket &s, Edge side) {
-	std::vector<Coord> out;
-	if (!s.open) {
-		return out;
-	}
-	const int64_t first = opening_first(s.offset, s.width);
-	for (int64_t a = first; a < first + s.width; a++) {
-		Coord local;
-		switch (side) {
-			case Edge::NORTH:
-				local = {a, 0};
-				break;
-			case Edge::SOUTH:
-				local = {a, CELL_TILES - 1};
-				break;
-			case Edge::WEST:
-				local = {0, a};
-				break;
-			default:
-				local = {CELL_TILES - 1, a};
-				break;
-		}
-		out.push_back(lb::core::world::tile_of(cell, local));
-	}
-	return out;
-}
+std::vector<Coord> opening_tiles(Coord cell, const Socket &s, Edge side) { return socket_opening_tiles(cell, s, side); }
 
 // Floor over a set of cells (doors open).
 struct Floor {
@@ -93,6 +64,38 @@ struct Floor {
 };
 
 } // namespace
+
+bool walk_passable(uint8_t material) {
+	const TileMaterial m = static_cast<TileMaterial>(material);
+	return m == TileMaterial::FLOOR || m == TileMaterial::STEEL || m == TileMaterial::WOODEN_DOOR;
+}
+
+std::vector<Coord> socket_opening_tiles(Coord cell, const Socket &s, Edge side) {
+	std::vector<Coord> out;
+	if (!s.open) {
+		return out;
+	}
+	const int64_t first = opening_first(s.offset, s.width);
+	for (int64_t a = first; a < first + s.width; a++) {
+		Coord local;
+		switch (side) {
+			case Edge::NORTH:
+				local = {a, 0};
+				break;
+			case Edge::SOUTH:
+				local = {a, CELL_TILES - 1};
+				break;
+			case Edge::WEST:
+				local = {0, a};
+				break;
+			default:
+				local = {CELL_TILES - 1, a};
+				break;
+		}
+		out.push_back(lb::core::world::tile_of(cell, local));
+	}
+	return out;
+}
 
 RouteHome route_home(const PlacementWorld &world, Coord from, int32_t max_cells, int64_t max_explored) {
 	RouteHome out;

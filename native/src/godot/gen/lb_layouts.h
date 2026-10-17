@@ -37,6 +37,19 @@ protected:
 public:
 	LbLayouts();
 
+	// GEN-14's seed harness (C++ only, never bound): another deriver's parsed pack, shared rather
+	// than parsed again, and the run's generation as core objects (valid until the next rebuild).
+	void use_set(std::shared_ptr<lb::core::gen::TemplateSet> set);
+	const std::shared_ptr<lb::core::gen::TemplateSet> &template_set() const { return set_; }
+	const lb::core::gen::RunHeader &gen_header() const { return header_; }
+	const lb::core::gen::Deriver &gen_deriver() const { return *deriver_; }
+	const lb::core::gen::PlacementWorld &gen_world() const { return *place_world_; }
+	const lb::core::gen::PlacementParams &gen_place_params() const { return place_params_; }
+	const lb::core::gen::ValidatorParams &gen_validator_params() const { return validator_params_; }
+	const lb::core::gen::ValidatorCounters &gen_counters() const { return *counters_; }
+	const lb::core::gen::PointsOfInterest *gen_pois() const { return pois_.get(); }
+	const std::vector<int64_t> &gen_ring_bounds() const { return ring_bounds_; }
+
 	// GEN-04's pack. False for bytes that are not a whole pack.
 	bool load_pack(const ::godot::PackedByteArray &bytes);
 	::godot::String set_version() const;

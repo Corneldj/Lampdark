@@ -161,10 +161,13 @@ if phonon:
 godot_sources = Glob("src/godot/*.cpp") + Glob("src/godot/*/*.cpp") + ["src/register_types.cpp"]
 # NET-08's reference visibility: dev and QA libraries (and the doctests) only, never a release one.
 audit_sources = Glob("src/audit/*.cpp")
+# GEN-14's seed harness: likewise dev and QA libraries and the doctests only.
+harness_sources = Glob("src/harness/*.cpp")
+debug_sources = audit_sources + harness_sources
 
 library = env.SharedLibrary(
     "bin/liblampblack_core{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-    source=core_sources + godot_sources + (audit_sources if env["target"] == "template_debug" else [])
+    source=core_sources + godot_sources + (debug_sources if env["target"] == "template_debug" else [])
     + opus_objects(env, ".lib") + voice_objects(env, ".lib"),
 )
 env.NoCache(library)
@@ -195,11 +198,11 @@ if ARGUMENTS.get("tests", "no") in ("yes", "true", "1"):
     else:
         test_env.Append(LIBS=["winmm"])
     test_env["OBJSUFFIX"] = ".tests" + env["suffix"] + test_env["OBJSUFFIX"]
-    test_sources = [f for f in Glob("tests/*.cpp") if not f.name.endswith("digest_main.cpp")]
+    test_sources = [f for f in Glob("tests/*.cpp") if not f.name.endswith("digest_main.cpp")] + Glob("tests/harness/*.cpp")
     test_opus = opus_objects(test_env, ".tests" + env["suffix"]) + voice_objects(test_env, ".tests" + env["suffix"])
     tests = test_env.Program(
         "bin/lampblack_core_tests{}{}".format(env["suffix"], test_env["PROGSUFFIX"]),
-        source=test_sources + core_sources + [test_env.Object(f) for f in audit_sources] + test_opus,
+        source=test_sources + core_sources + [test_env.Object(f) for f in debug_sources] + test_opus,
     )
     digest = test_env.Program(
         "bin/lampblack_core_digest{}{}".format(env["suffix"], test_env["PROGSUFFIX"]),

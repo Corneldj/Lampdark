@@ -5,9 +5,10 @@
 #  - script_values: LbRng's scripted rolls (FND-09).
 #  - set_screen_up: the listener's screen-up A/B mode for criterion 5 (SND-04).
 #  - LbAuditReference: NET-08's reference visibility for the stream audit.
+#  - LbSeedHarness: GEN-14's seed harness.
 set -uo pipefail
 
-MARKERS=(script_values set_screen_up LbAuditReference)
+MARKERS=(script_values set_screen_up LbAuditReference LbSeedHarness)
 
 GAME_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$GAME_DIR/native/bin"

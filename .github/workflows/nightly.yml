@@ -73,7 +73,7 @@ jobs:
   seed_harness:
     needs: native
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/lfs-pull
@@ -84,7 +84,18 @@ jobs:
           name: native-bin
           path: native/bin
       - name: Seed harness, 10,000 seeds (GEN-14)
+        # Report-only until GEN-16's v1 template pack is the shipped set (GEN-16 removes this).
+        env:
+          LB_HARNESS_GATES: report
         run: tools/build/ci_nightly_slot.sh seed_harness
+      - name: Upload the harness report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seed-harness-report
+          path: build/seed_harness/
+          if-no-files-found: ignore
+          retention-days: 30
 
   probes:
     needs: native

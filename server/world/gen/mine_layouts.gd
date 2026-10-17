@@ -36,7 +36,16 @@ static func pack_version(pack_file: String) -> String:
 ## Sets a deriver's numbers from tuning (sockets, rerolls, GEN-06's biomes, GEN-12's validator) and
 ## base camp's gates.
 static func configure(layouts: LbLayouts, run_seed: int) -> void:
-	layouts.configure(run_seed, {
+	layouts.configure(run_seed, configure_params(run_seed))
+	var gates: Dictionary = Basecamp.gate_sockets(run_seed)
+	for side: String in Basecamp.SIDES:
+		layouts.force_socket(Vector2i.ZERO, side, Variants.dict(gates[side]))
+
+
+## The numbers configure() gives LbLayouts for a run (GEN-14's harness configures every run from
+## them, each with its own arch_reach).
+static func configure_params(run_seed: int) -> Dictionary:
+	return {
 		"open_probability": Tuning.f(&"mine.edge_open_probability"),
 		"offsets": Tuning.list_i(&"mine.socket_offsets_tiles"),
 		"widths": Tuning.list_i(&"mine.socket_widths_tiles"),
@@ -54,10 +63,37 @@ static func configure(layouts: LbLayouts, run_seed: int) -> void:
 		"poi": poi_params(),
 		"place": place_params(),
 		"validate": validate_params(run_seed),
-	})
-	var gates: Dictionary = Basecamp.gate_sockets(run_seed)
-	for side: String in Basecamp.SIDES:
-		layouts.force_socket(Vector2i.ZERO, side, Variants.dict(gates[side]))
+	}
+
+
+## GEN-14's numbers for LbSeedHarness (mine.harness_*, and what its checks share with the game).
+## `machine` picks the timing budget: "fleet" (the reference machine: mine.generation_budget_ms_server,
+## gated), "deck" (mine.generation_budget_ms_deck, reported) or any other (the server's, reported).
+static func harness_params(machine: String) -> Dictionary:
+	var range_of: Callable = func(key: StringName) -> Array:
+		var v: Vector2 = Tuning.range_f(key)
+		return [roundi(v.x), roundi(v.y)]
+	return {
+		"order_cells": Tuning.i(&"mine.harness_order_cells"),
+		"orders": roundi(Tuning.f(&"mine.harness_orders")),
+		"spine_reach_min": Tuning.f(&"mine.harness_spine_reach_min"),
+		"road_ratio_max": Tuning.f(&"mine.harness_road_ratio_max"),
+		"road_ratio_share_max": Tuning.f(&"mine.harness_road_ratio_share_max"),
+		"joined_min": Tuning.f(&"mine.harness_joined_min"),
+		"fallback_rate_max": Tuning.f(&"mine.harness_fallback_rate_max"),
+		"explore_radius": Tuning.i(&"mine.harness_explore_radius_cells"),
+		"explore_max_ring": Tuning.i(&"mine.harness_explore_max_ring"),
+		"lamps": range_of.call(&"mine.harness_target_lamps_standard"),
+		"kits": range_of.call(&"mine.harness_target_kits_standard"),
+		"flares_ring2": range_of.call(&"mine.harness_target_flares_ring2"),
+		"tools_ring2": range_of.call(&"mine.harness_target_tools_ring2"),
+		"cupboard_kits": Tuning.i(&"basecamp.medbay_cupboard_kits"),
+		"finds_warn_share": Tuning.f(&"mine.harness_finds_warn_share"),
+		"budget_ms": Tuning.f(&"mine.generation_budget_ms_deck") if machine == "deck" else Tuning.f(&"mine.generation_budget_ms_server"),
+		"timing_gate": machine == "fleet",
+		"machine": machine,
+		"lair_min_bearing_deg": Tuning.f(&"mine.lair_min_bearing_from_hoard_deg"),
+	}
 
 
 ## GEN-09's numbers from tuning: a region's count and the two kinds' rates, footprint tries, each
