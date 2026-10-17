@@ -2,8 +2,8 @@ extends GutTest
 ## GEN-16: the shipped v1 template set (data/templates/set.json, its export as the readable source of
 ## truth). At least the v1 counts of each kind, every kind of point of interest the slice's plan
 ## can call for, and the deep-biome override on. Every cell template carries what GEN-16 asks of
-## one: a landmark, one or two rubble heaps, timber hooks, remains, a wall fixture, items and a
-## collapse alternate on a road; half the Old Workings' or more hold trap sites, and a third of the
+## one: a landmark, one or two rubble heaps, timber hooks, remains, a wall fixture, items, a trap
+## site and a collapse alternate on a road (every main road a trap site too); half the Old Workings' or more hold trap sites, and a third of the
 ## Seam's chambers or more are high. Each main road's side passages are door sites; the 2x1 kinds
 ## come with the door on a long side and on a short one; the lair is Old Workings with one stub; the
 ## hoard is one high chamber; base camp matches GEN-02's fixed file in all four rotations.
@@ -96,6 +96,7 @@ func test_every_cell_template_carries_what_gen16_asks() -> void:
 		assert_gt(_anchors(t, "remains").size(), 0, "%s: remains" % id)
 		assert_gt(_anchors(t, "wall_fixture").size(), 0, "%s: a wall fixture" % id)
 		assert_gt(_anchors(t, "item").size(), 0, "%s: items" % id)
+		assert_gt(_anchors(t, "trap_site").size(), 0, "%s: a trap site on its roads" % id)
 		assert_gt(_collapses(t), 0, "%s: a collapse alternate" % id)
 	var old: Array[Dictionary] = _of("biome_cell", "old_workings")
 	var trapped: int = 0
@@ -114,6 +115,7 @@ func test_every_cell_template_carries_what_gen16_asks() -> void:
 
 func test_main_roads_points_of_interest_and_their_doors() -> void:
 	for t: Dictionary in _of("main_road"):
+		assert_gt(_anchors(t, "trap_site").size(), 0, "%s: a trap site on the road (HAZ-01)" % t["id"])
 		if str(t["shape"]) == "crossing":
 			continue
 		var sides: int = 0

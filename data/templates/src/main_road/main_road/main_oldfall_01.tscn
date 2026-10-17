@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://addons/lampblack_templates/template_stub.gd" id="4_v6d62"]
 [ext_resource type="Script" path="res://addons/lampblack_templates/template_collapse.gd" id="5_gpwvi"]
 
-[node name="main_oldfall_01" type="Node2D" unique_id=1261381354]
+[node name="main_oldfall_01" type="Node2D" unique_id=1392673498]
 script = ExtResource("1_4pbhr")
 template_id = "main_oldfall_01"
 kind = "main_road"
@@ -14,189 +14,195 @@ biome = "main_road"
 shape = "straight"
 old_fall = true
 
-[node name="Geometry" type="TileMapLayer" parent="." unique_id=242574003]
+[node name="Geometry" type="TileMapLayer" parent="." unique_id=1053678304]
 z_index = -1
 tile_map_data = PackedByteArray("AAAAAAAAAAADAAAAAAABAAAAAAADAAAAAAACAAAAAAADAAAAAAADAAAAAAADAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAADAAAAAAAIAAAAAAADAAAAAAAJAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAALAAAAAAAAAAAAAAAMAAAAAAADAAAAAAANAAAAAAADAAAAAAAOAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAARAAAAAAADAAAAAAASAAAAAAADAAAAAAATAAAAAAADAAAAAAAAAAEAAAADAAAAAAABAAEAAAADAAAAAAACAAEAAAADAAAAAAADAAEAAAADAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAAAAAAAAAAHAAEAAAADAAAAAAAIAAEAAAADAAAAAAAJAAEAAAAAAAAAAAAKAAEAAAAAAAAAAAALAAEAAAAAAAAAAAAMAAEAAAADAAAAAAANAAEAAAADAAAAAAAOAAEAAAAAAAAAAAAPAAEAAAAAAAAAAAAQAAEAAAAAAAAAAAARAAEAAAADAAAAAAASAAEAAAADAAAAAAATAAEAAAADAAAAAAAAAAIAAAADAAAAAAABAAIAAAADAAAAAAACAAIAAAADAAAAAAADAAIAAAADAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAGAAIAAAAAAAAAAAAHAAIAAAAEAAAAAAAIAAIAAAADAAAAAAAJAAIAAAAAAAAAAAAKAAIAAAAAAAAAAAALAAIAAAAAAAAAAAAMAAIAAAADAAAAAAANAAIAAAAEAAAAAAAOAAIAAAAAAAAAAAAPAAIAAAAAAAAAAAAQAAIAAAAAAAAAAAARAAIAAAADAAAAAAASAAIAAAADAAAAAAATAAIAAAADAAAAAAAAAAMAAAADAAAAAAABAAMAAAADAAAAAAACAAMAAAADAAAAAAADAAMAAAADAAAAAAAEAAMAAAAAAAAAAAAFAAMAAAAAAAAAAAAGAAMAAAAAAAAAAAAHAAMAAAAEAAAAAAAIAAMAAAADAAAAAAAJAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAALAAMAAAAAAAAAAAAMAAMAAAADAAAAAAANAAMAAAAEAAAAAAAOAAMAAAAAAAAAAAAPAAMAAAAAAAAAAAAQAAMAAAAAAAAAAAARAAMAAAADAAAAAAASAAMAAAADAAAAAAATAAMAAAADAAAAAAAAAAQAAAADAAAAAAABAAQAAAADAAAAAAACAAQAAAADAAAAAAADAAQAAAADAAAAAAAEAAQAAAAAAAAAAAAFAAQAAAAAAAAAAAAGAAQAAAAAAAAAAAAHAAQAAAAEAAAAAAAIAAQAAAADAAAAAAAJAAQAAAAAAAAAAAAKAAQAAAAAAAAAAAALAAQAAAAAAAAAAAAMAAQAAAADAAAAAAANAAQAAAAEAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAAQAAQAAAAAAAAAAAARAAQAAAADAAAAAAASAAQAAAADAAAAAAATAAQAAAADAAAAAAAAAAUAAAADAAAAAAABAAUAAAADAAAAAAACAAUAAAADAAAAAAADAAUAAAADAAAAAAAEAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAAEAAAAAAAIAAUAAAADAAAAAAAJAAUAAAAAAAAAAAAKAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAMAAUAAAADAAAAAAANAAUAAAAEAAAAAAAOAAUAAAAAAAAAAAAPAAUAAAAAAAAAAAAQAAUAAAAAAAAAAAARAAUAAAADAAAAAAASAAUAAAADAAAAAAATAAUAAAADAAAAAAAAAAYAAAADAAAAAAABAAYAAAADAAAAAAACAAYAAAADAAAAAAADAAYAAAADAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAHAAYAAAAEAAAAAAAIAAYAAAADAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAADAAAAAAANAAYAAAAEAAAAAAAOAAYAAAAAAAAAAAAPAAYAAAAAAAAAAAAQAAYAAAAAAAAAAAARAAYAAAADAAAAAAASAAYAAAADAAAAAAATAAYAAAADAAAAAAAAAAcAAAADAAAAAAABAAcAAAADAAAAAAACAAcAAAADAAAAAAADAAcAAAAEAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAADAAAAAAAIAAcAAAADAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAEAAAAAAANAAcAAAADAAAAAAAOAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAQAAcAAAAAAAAAAAARAAcAAAADAAAAAAASAAcAAAADAAAAAAATAAcAAAADAAAAAAAAAAgAAAADAAAAAAABAAgAAAADAAAAAAACAAgAAAAAAAAAAAADAAgAAAADAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAADAAAAAAAIAAgAAAADAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAEAAAAAAANAAgAAAADAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAAQAAgAAAAAAAAAAAARAAgAAAADAAAAAAASAAgAAAADAAAAAAATAAgAAAADAAAAAAAAAAkAAAAAAAAAAAABAAkAAAAAAAAAAAACAAkAAAAAAAAAAAADAAkAAAAAAAAAAAAEAAkAAAAAAAAAAAAFAAkAAAAAAAAAAAAGAAkAAAAAAAAAAAAHAAkAAAAEAAAAAAAIAAkAAAADAAAAAAAJAAkAAAAAAAAAAAAKAAkAAAAAAAAAAAALAAkAAAAAAAAAAAAMAAkAAAAAAAAAAAANAAkAAAAAAAAAAAAOAAkAAAAAAAAAAAAPAAkAAAAAAAAAAAAQAAkAAAAAAAAAAAARAAkAAAAAAAAAAAASAAkAAAAAAAAAAAATAAkAAAAAAAAAAAAAAAoAAAABAAAAAAABAAoAAAABAAAAAAACAAoAAAABAAAAAAADAAoAAAABAAAAAAAEAAoAAAABAAAAAAAFAAoAAAABAAAAAAAGAAoAAAABAAAAAAAHAAoAAAADAAAAAAAIAAoAAAAEAAAAAAAJAAoAAAABAAAAAAAKAAoAAAABAAAAAAALAAoAAAABAAAAAAAMAAoAAAABAAAAAAANAAoAAAABAAAAAAAOAAoAAAABAAAAAAAPAAoAAAABAAAAAAAQAAoAAAABAAAAAAARAAoAAAABAAAAAAASAAoAAAABAAAAAAATAAoAAAABAAAAAAAAAAsAAAAAAAAAAAABAAsAAAAAAAAAAAACAAsAAAAAAAAAAAADAAsAAAAAAAAAAAAEAAsAAAAAAAAAAAAFAAsAAAAAAAAAAAAGAAsAAAAAAAAAAAAHAAsAAAADAAAAAAAIAAsAAAADAAAAAAAJAAsAAAAAAAAAAAAKAAsAAAAAAAAAAAALAAsAAAAAAAAAAAAMAAsAAAAAAAAAAAANAAsAAAAAAAAAAAAOAAsAAAAAAAAAAAAPAAsAAAAAAAAAAAAQAAsAAAAAAAAAAAARAAsAAAAAAAAAAAASAAsAAAAAAAAAAAATAAsAAAAAAAAAAAAAAAwAAAADAAAAAAABAAwAAAADAAAAAAACAAwAAAAEAAAAAAADAAwAAAADAAAAAAAEAAwAAAAAAAAAAAAFAAwAAAAAAAAAAAAGAAwAAAAAAAAAAAAHAAwAAAADAAAAAAAIAAwAAAAEAAAAAAAJAAwAAAAAAAAAAAAKAAwAAAAAAAAAAAALAAwAAAAAAAAAAAAMAAwAAAADAAAAAAANAAwAAAADAAAAAAAOAAwAAAAAAAAAAAAPAAwAAAAAAAAAAAAQAAwAAAAAAAAAAAARAAwAAAAEAAAAAAASAAwAAAADAAAAAAATAAwAAAADAAAAAAAAAA0AAAADAAAAAAABAA0AAAADAAAAAAACAA0AAAADAAAAAAADAA0AAAADAAAAAAAEAA0AAAAAAAAAAAAFAA0AAAAAAAAAAAAGAA0AAAAAAAAAAAAHAA0AAAADAAAAAAAIAA0AAAAEAAAAAAAJAA0AAAAAAAAAAAAKAA0AAAAAAAAAAAALAA0AAAAAAAAAAAAMAA0AAAADAAAAAAANAA0AAAADAAAAAAAOAA0AAAAAAAAAAAAPAA0AAAAAAAAAAAAQAA0AAAAAAAAAAAARAA0AAAAEAAAAAAASAA0AAAADAAAAAAATAA0AAAADAAAAAAAAAA4AAAADAAAAAAABAA4AAAADAAAAAAACAA4AAAADAAAAAAADAA4AAAADAAAAAAAEAA4AAAAAAAAAAAAFAA4AAAAAAAAAAAAGAA4AAAAAAAAAAAAHAA4AAAADAAAAAAAIAA4AAAAEAAAAAAAJAA4AAAAAAAAAAAAKAA4AAAAAAAAAAAALAA4AAAAAAAAAAAAMAA4AAAADAAAAAAANAA4AAAADAAAAAAAOAA4AAAAAAAAAAAAPAA4AAAAAAAAAAAAQAA4AAAAAAAAAAAARAA4AAAAEAAAAAAASAA4AAAADAAAAAAATAA4AAAADAAAAAAAAAA8AAAADAAAAAAABAA8AAAADAAAAAAACAA8AAAADAAAAAAADAA8AAAADAAAAAAAEAA8AAAAAAAAAAAAFAA8AAAAAAAAAAAAGAA8AAAAAAAAAAAAHAA8AAAADAAAAAAAIAA8AAAAEAAAAAAAJAA8AAAAAAAAAAAAKAA8AAAAAAAAAAAALAA8AAAAAAAAAAAAMAA8AAAADAAAAAAANAA8AAAADAAAAAAAOAA8AAAAAAAAAAAAPAA8AAAAAAAAAAAAQAA8AAAAAAAAAAAARAA8AAAAEAAAAAAASAA8AAAADAAAAAAATAA8AAAADAAAAAAAAABAAAAADAAAAAAABABAAAAADAAAAAAACABAAAAADAAAAAAADABAAAAADAAAAAAAEABAAAAAAAAAAAAAFABAAAAAAAAAAAAAGABAAAAAAAAAAAAAHABAAAAADAAAAAAAIABAAAAAEAAAAAAAJABAAAAAAAAAAAAAKABAAAAAAAAAAAAALABAAAAAAAAAAAAAMABAAAAADAAAAAAANABAAAAADAAAAAAAOABAAAAAAAAAAAAAPABAAAAAAAAAAAAAQABAAAAAAAAAAAAARABAAAAAEAAAAAAASABAAAAADAAAAAAATABAAAAADAAAAAAAAABEAAAADAAAAAAABABEAAAADAAAAAAACABEAAAADAAAAAAADABEAAAADAAAAAAAEABEAAAAAAAAAAAAFABEAAAAAAAAAAAAGABEAAAAAAAAAAAAHABEAAAADAAAAAAAIABEAAAAEAAAAAAAJABEAAAAAAAAAAAAKABEAAAAAAAAAAAALABEAAAAAAAAAAAAMABEAAAADAAAAAAANABEAAAADAAAAAAAOABEAAAAAAAAAAAAPABEAAAAAAAAAAAAQABEAAAAAAAAAAAARABEAAAAEAAAAAAASABEAAAADAAAAAAATABEAAAADAAAAAAAAABIAAAADAAAAAAABABIAAAADAAAAAAACABIAAAADAAAAAAADABIAAAADAAAAAAAEABIAAAAAAAAAAAAFABIAAAAAAAAAAAAGABIAAAAAAAAAAAAHABIAAAADAAAAAAAIABIAAAADAAAAAAAJABIAAAAAAAAAAAAKABIAAAAAAAAAAAALABIAAAAAAAAAAAAMABIAAAADAAAAAAANABIAAAADAAAAAAAOABIAAAAAAAAAAAAPABIAAAAAAAAAAAAQABIAAAAAAAAAAAARABIAAAADAAAAAAASABIAAAADAAAAAAATABIAAAADAAAAAAAAABMAAAADAAAAAAABABMAAAADAAAAAAACABMAAAADAAAAAAADABMAAAADAAAAAAAEABMAAAAAAAAAAAAFABMAAAAAAAAAAAAGABMAAAAAAAAAAAAHABMAAAADAAAAAAAIABMAAAADAAAAAAAJABMAAAAAAAAAAAAKABMAAAAAAAAAAAALABMAAAAAAAAAAAAMABMAAAADAAAAAAANABMAAAADAAAAAAAOABMAAAAAAAAAAAAPABMAAAAAAAAAAAAQABMAAAAAAAAAAAARABMAAAADAAAAAAASABMAAAADAAAAAAATABMAAAADAAAAAAA=")
 tile_set = ExtResource("2_mkqce")
 
-[node name="Rib" type="TileMapLayer" parent="." unique_id=332759824]
+[node name="Rib" type="TileMapLayer" parent="." unique_id=1910705937]
 modulate = Color(1, 1, 1, 0.7)
 z_index = -1
 tile_set = ExtResource("2_mkqce")
 
-[node name="remains_2_8" type="Marker2D" parent="." unique_id=1052752757]
+[node name="remains_2_8" type="Marker2D" parent="." unique_id=1646118819]
 position = Vector2(40, 136)
 script = ExtResource("3_xkb4q")
 anchor_type = "remains"
 tags = PackedStringArray()
 
-[node name="landmark_13_9" type="Marker2D" parent="." unique_id=58309086]
+[node name="landmark_13_9" type="Marker2D" parent="." unique_id=1795752387]
 position = Vector2(216, 152)
 script = ExtResource("3_xkb4q")
 anchor_type = "landmark"
 tags = PackedStringArray()
 kind = "chalked_prop"
 
-[node name="rubble_heap_16_11" type="Marker2D" parent="." unique_id=496897354]
+[node name="rubble_heap_16_11" type="Marker2D" parent="." unique_id=744474231]
 position = Vector2(264, 184)
 script = ExtResource("3_xkb4q")
 anchor_type = "rubble_heap"
 tags = PackedStringArray()
 
-[node name="door_site_4_8" type="Marker2D" parent="." unique_id=420402447]
+[node name="trap_site_14_11" type="Marker2D" parent="." unique_id=1847918759]
+position = Vector2(232, 184)
+script = ExtResource("3_xkb4q")
+anchor_type = "trap_site"
+tags = PackedStringArray()
+
+[node name="door_site_4_8" type="Marker2D" parent="." unique_id=977783000]
 position = Vector2(72, 136)
 script = ExtResource("3_xkb4q")
 anchor_type = "door_site"
 size = Vector2i(3, 1)
 tags = PackedStringArray()
 
-[node name="door_site_4_12" type="Marker2D" parent="." unique_id=538394521]
+[node name="door_site_4_12" type="Marker2D" parent="." unique_id=1355521032]
 position = Vector2(72, 200)
 script = ExtResource("3_xkb4q")
 anchor_type = "door_site"
 size = Vector2i(3, 1)
 tags = PackedStringArray()
 
-[node name="door_site_9_8" type="Marker2D" parent="." unique_id=545980789]
+[node name="door_site_9_8" type="Marker2D" parent="." unique_id=200812727]
 position = Vector2(152, 136)
 script = ExtResource("3_xkb4q")
 anchor_type = "door_site"
 size = Vector2i(3, 1)
 tags = PackedStringArray()
 
-[node name="door_site_9_12" type="Marker2D" parent="." unique_id=351856955]
+[node name="door_site_9_12" type="Marker2D" parent="." unique_id=123851342]
 position = Vector2(152, 200)
 script = ExtResource("3_xkb4q")
 anchor_type = "door_site"
 size = Vector2i(3, 1)
 tags = PackedStringArray()
 
-[node name="door_site_14_8" type="Marker2D" parent="." unique_id=1880048669]
+[node name="door_site_14_8" type="Marker2D" parent="." unique_id=1197322022]
 position = Vector2(232, 136)
 script = ExtResource("3_xkb4q")
 anchor_type = "door_site"
 size = Vector2i(3, 1)
 tags = PackedStringArray()
 
-[node name="door_site_14_12" type="Marker2D" parent="." unique_id=1279435805]
+[node name="door_site_14_12" type="Marker2D" parent="." unique_id=1991532971]
 position = Vector2(232, 200)
 script = ExtResource("3_xkb4q")
 anchor_type = "door_site"
 size = Vector2i(3, 1)
 tags = PackedStringArray()
 
-[node name="wall_fixture_3_8" type="Marker2D" parent="." unique_id=1807930804]
+[node name="wall_fixture_3_8" type="Marker2D" parent="." unique_id=1189187593]
 position = Vector2(56, 136)
 script = ExtResource("3_xkb4q")
 anchor_type = "wall_fixture"
 tags = PackedStringArray()
 
-[node name="item_4_11" type="Marker2D" parent="." unique_id=318661420]
+[node name="item_4_11" type="Marker2D" parent="." unique_id=1553522902]
 position = Vector2(72, 184)
 script = ExtResource("3_xkb4q")
 anchor_type = "item"
 tags = PackedStringArray()
 
-[node name="item_15_9" type="Marker2D" parent="." unique_id=852406495]
+[node name="item_15_9" type="Marker2D" parent="." unique_id=1429452035]
 position = Vector2(248, 152)
 script = ExtResource("3_xkb4q")
 anchor_type = "item"
 tags = PackedStringArray()
 
-[node name="timber_hook_5_3" type="Marker2D" parent="." unique_id=1924050252]
+[node name="timber_hook_5_3" type="Marker2D" parent="." unique_id=1090347278]
 position = Vector2(88, 56)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_10_3" type="Marker2D" parent="." unique_id=1241989495]
+[node name="timber_hook_10_3" type="Marker2D" parent="." unique_id=1720685560]
 position = Vector2(168, 56)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_15_3" type="Marker2D" parent="." unique_id=800599974]
+[node name="timber_hook_15_3" type="Marker2D" parent="." unique_id=2108075851]
 position = Vector2(248, 56)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_4_10" type="Marker2D" parent="." unique_id=336365404]
+[node name="timber_hook_4_10" type="Marker2D" parent="." unique_id=1402999257]
 position = Vector2(72, 168)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_6_11" type="Marker2D" parent="." unique_id=135290584]
+[node name="timber_hook_6_11" type="Marker2D" parent="." unique_id=1540999241]
 position = Vector2(104, 184)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_10_10" type="Marker2D" parent="." unique_id=370843873]
+[node name="timber_hook_10_10" type="Marker2D" parent="." unique_id=412815046]
 position = Vector2(168, 168)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_15_10" type="Marker2D" parent="." unique_id=98676717]
+[node name="timber_hook_15_10" type="Marker2D" parent="." unique_id=1669773849]
 position = Vector2(248, 168)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_2_9" type="Marker2D" parent="." unique_id=47838804]
+[node name="timber_hook_2_9" type="Marker2D" parent="." unique_id=1001288267]
 position = Vector2(40, 152)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_16_10" type="Marker2D" parent="." unique_id=142166352]
+[node name="timber_hook_16_10" type="Marker2D" parent="." unique_id=1736101911]
 position = Vector2(264, 168)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_10_16" type="Marker2D" parent="." unique_id=792923312]
+[node name="timber_hook_10_16" type="Marker2D" parent="." unique_id=1793777408]
 position = Vector2(168, 264)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_15_16" type="Marker2D" parent="." unique_id=1309759500]
+[node name="timber_hook_15_16" type="Marker2D" parent="." unique_id=158104972]
 position = Vector2(248, 264)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="timber_hook_5_16" type="Marker2D" parent="." unique_id=1251129856]
+[node name="timber_hook_5_16" type="Marker2D" parent="." unique_id=279916167]
 position = Vector2(88, 264)
 script = ExtResource("3_xkb4q")
 tags = PackedStringArray()
 
-[node name="stub_west_10" type="Node2D" parent="." unique_id=153905219]
+[node name="stub_west_10" type="Node2D" parent="." unique_id=34198698]
 script = ExtResource("4_v6d62")
 edge = "west"
 
-[node name="stub_east_10" type="Node2D" parent="." unique_id=1564981524]
+[node name="stub_east_10" type="Node2D" parent="." unique_id=1939888384]
 script = ExtResource("4_v6d62")
 edge = "east"
 
-[node name="stub_north_5" type="Node2D" parent="." unique_id=1932189549]
+[node name="stub_north_5" type="Node2D" parent="." unique_id=357144472]
 script = ExtResource("4_v6d62")
 offset = 5
 
-[node name="stub_south_5" type="Node2D" parent="." unique_id=1167093612]
+[node name="stub_south_5" type="Node2D" parent="." unique_id=1977648108]
 script = ExtResource("4_v6d62")
 edge = "south"
 offset = 5
 
-[node name="stub_north_10" type="Node2D" parent="." unique_id=902010908]
+[node name="stub_north_10" type="Node2D" parent="." unique_id=119137142]
 script = ExtResource("4_v6d62")
 
-[node name="stub_south_10" type="Node2D" parent="." unique_id=1996551886]
+[node name="stub_south_10" type="Node2D" parent="." unique_id=486810737]
 script = ExtResource("4_v6d62")
 edge = "south"
 
-[node name="stub_north_15" type="Node2D" parent="." unique_id=401361152]
+[node name="stub_north_15" type="Node2D" parent="." unique_id=2014478744]
 script = ExtResource("4_v6d62")
 offset = 15
 
-[node name="stub_south_15" type="Node2D" parent="." unique_id=485103930]
+[node name="stub_south_15" type="Node2D" parent="." unique_id=436820450]
 script = ExtResource("4_v6d62")
 edge = "south"
 offset = 15
 
-[node name="collapse_1" type="TileMapLayer" parent="." unique_id=149356554]
+[node name="collapse_1" type="TileMapLayer" parent="." unique_id=1744660288]
 tile_map_data = PackedByteArray("AAAEAAMAAAADAAAAAAAFAAMAAAADAAAAAAAGAAMAAAADAAAAAAA=")
 tile_set = ExtResource("2_mkqce")
 script = ExtResource("5_gpwvi")

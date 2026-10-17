@@ -63,6 +63,7 @@
 		{"h":1,"kind":"","tags":[],"type":"item","w":1,"x":4,"y":14},
 		{"h":1,"kind":"","tags":[],"type":"rubble_heap","w":1,"x":10,"y":14},
 		{"h":1,"kind":"","tags":[],"type":"timber_hook","w":1,"x":14,"y":14},
+		{"h":1,"kind":"","tags":[],"type":"trap_site","w":1,"x":5,"y":15},
 		{"h":1,"kind":"","tags":[],"type":"low_road","w":5,"x":7,"y":15},
 		{"h":1,"kind":"","tags":[],"type":"timber_hook","w":1,"x":16,"y":15},
 		{"h":1,"kind":"","tags":[],"type":"remains","w":1,"x":3,"y":16},

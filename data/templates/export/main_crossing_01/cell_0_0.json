@@ -54,6 +54,7 @@
 		{"h":1,"kind":"","tags":[],"type":"timber_hook","w":1,"x":16,"y":10},
 		{"h":1,"kind":"","tags":[],"type":"item","w":1,"x":4,"y":11},
 		{"h":1,"kind":"hand_pump","tags":[],"type":"landmark","w":1,"x":6,"y":11},
+		{"h":1,"kind":"","tags":[],"type":"trap_site","w":1,"x":14,"y":11},
 		{"h":1,"kind":"","tags":[],"type":"rubble_heap","w":1,"x":16,"y":11},
 		{"h":1,"kind":"","tags":[],"type":"remains","w":1,"x":2,"y":12},
 		{"h":1,"kind":"","tags":[],"type":"timber_hook","w":1,"x":10,"y":16}

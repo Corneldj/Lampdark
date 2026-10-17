@@ -268,7 +268,7 @@ static func _anchors(c: TemplateCanvas, biome: String, width: int, lo: int, hi: 
 		var t: Vector2i = c.free_floor([p, p + Vector2i(0, 1), p + Vector2i(1, 0)])
 		if t.x >= 0:
 			c.anchor("item", t.x, t.y)
-	var traps: int = 2 if biome == "old_workings" else (1 if variant % 2 == 1 else 0)
+	var traps: int = 2 if biome == "old_workings" else 1
 	for i: int in traps:
 		var t: Vector2i = c.free_floor([Vector2i(lo + 2 + 5 * i, hi - 1), Vector2i(hi - 1, lo + 3 + 5 * i), Vector2i(lo + 1, lo + 8 + i)])
 		if t.x >= 0:
@@ -391,6 +391,10 @@ static func main_road(id: String, shape: String, old_fall: bool, dressing: Strin
 	c.anchor("landmark", mark.x, mark.y, 1, 1, [], LANDMARKS[variant % LANDMARKS.size()])
 	var heap: Vector2i = c.free_floor([Vector2i(16, 11), Vector2i(12, 9), Vector2i(3, 9)])
 	c.anchor("rubble_heap", heap.x, heap.y)
+	# A trap site on the road, off its rails (HAZ-01: the men in-bye's jaws lie on the roads).
+	var trap: Vector2i = c.free_floor([Vector2i(14, 11), Vector2i(5, 9), Vector2i(11, 11)])
+	if trap.x >= 0:
+		c.anchor("trap_site", trap.x, trap.y)
 	# Each side passage's mouth a door site; a collapse across one passage past its throat.
 	for pas: Array in passages:
 		var edge: String = str(pas[0])
