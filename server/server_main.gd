@@ -214,6 +214,10 @@ func _start_network() -> bool:
 	var placed: Dictionary = {}
 	if mine != null:
 		placed = FixedMapLoader.populate(run, config.map_name, true, not resuming, not resuming)
+	if layouts != null and not resuming:
+		# CRT-18: the creatures start at their homes (a resumed run's come from its save).
+		var starts: Dictionary = CreatureStarts.spawn(run, layouts)
+		Log.info("creatures started: %s" % str(starts))
 	if resuming:
 		var restored: Dictionary = SaveResume.apply(run, net, _resume)
 		Log.info("resumed run %s at tick %d (save %d), %d journaled falls and deaths applied" % [run.header.run_uuid,

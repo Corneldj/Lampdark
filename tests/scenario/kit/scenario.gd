@@ -92,6 +92,8 @@ var mine: Mine = null
 var fixture: FixtureMap = null
 ## GEN-11: a generated mine's lazy generation (cfg "generated"), synchronous so tests repeat.
 var generation: Generation = null
+## CRT-18: CreatureStarts.spawn's report, when a generated run asked for its creatures.
+var starts: Dictionary = {}
 var miners: Array[MinerHandle] = []
 var recorder: InputLog
 var state: StateView
@@ -109,9 +111,12 @@ var _closed: bool = false
 ## mode (ServerConfig.Mode), tuning_profile (String), overrides ({key: value}), slots (int),
 ## creatures ({kind: bool}; CRT tickets), director (bool: the Director's systems, DIR-*), systems (extra SimSystems,
 ## for test stand-ins of systems that do not exist yet), generated ({pack: PackedByteArray, workers:
-## int, centres: [Vector2i]}: a mine generated from that template pack round the seed, GEN-11,
-## instead of a fixture, with run start's windows round base camp and each of the centres' cells
-## (homes, creature starts); synchronous unless workers is above 0).
+## int, centres: [Vector2i], plan: bool, plan_overrides: {}, creatures: bool}: a mine generated from
+## that template pack round the seed, GEN-11, instead of a fixture, with run start's windows round
+## base camp and each of the centres' cells (homes, creature starts); synchronous unless workers is
+## above 0; with plan, GEN-08's plan (RunPlan.fix's inputs overridden by plan_overrides) and GEN-10's
+## homes; with creatures, CRT-18's creature starts; with home_windows (creatures' value by default),
+## the homes' windows committed at start as server_main does).
 static func create(cfg: Dictionary = {}) -> Self:
 	var s: Self = Self.new()
 	s._build(cfg)
@@ -165,7 +170,7 @@ func _build(cfg: Dictionary) -> void:
 	if layouts != null:
 		# GEN-08's plan and GEN-10's homes when asked ("plan": true); placement always.
 		if Variants.flag(generated.get("plan", false)):
-			RunPlan.fix(layouts, run)
+			RunPlan.fix(layouts, run, PackedByteArray(), Variants.dict(generated.get("plan_overrides", {})))
 		PlacementSpawner.install(run, layouts)
 		var workers: int = int(Variants.number(generated.get("workers", 0)))
 		generation = Generation.new(mine, layouts, run.header.run_seed, workers <= 0, workers)
@@ -174,7 +179,12 @@ func _build(cfg: Dictionary) -> void:
 		for raw: Variant in Variants.array(generated.get("centres", [])):
 			var c: Vector2i = raw
 			centres.append(c)
+		if Variants.flag(generated.get("home_windows", generated.get("creatures", false))):
+			centres.append_array(PlacementSpawner.start_cells(layouts)) # the homes' windows, as server_main commits them
 		generation.start(centres)
+		# CRT-18: the creatures at their homes, when asked ("creatures": true).
+		if Variants.flag(generated.get("creatures", false)):
+			starts = CreatureStarts.spawn(run, layouts)
 	# DIR-*: off unless asked, as on a fixed map (QA-01's kill test runs without).
 	if Variants.flag(cfg.get("director", false)):
 		Director.install(run)

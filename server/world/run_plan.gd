@@ -11,15 +11,18 @@ extends RefCounted
 
 
 ## The plan for `run` on `layouts` (configured for its seed): restored from `saved` (a snapshot's
-## header bytes) when given, else made. Returns LbLayouts.plan_dict(), {} if it failed.
-static func fix(layouts: LbLayouts, run: RunState, saved: PackedByteArray = PackedByteArray()) -> Dictionary:
+## header bytes) when given, else made, `overrides` replacing any of params()'s inputs (tests; MOD-03's
+## run setup will pass the staging and hard variant). Returns LbLayouts.plan_dict(), {} if it failed.
+static func fix(layouts: LbLayouts, run: RunState, saved: PackedByteArray = PackedByteArray(), overrides: Dictionary = {}) -> Dictionary:
 	if not saved.is_empty():
 		if not layouts.load_plan(saved):
 			push_error("RunPlan: the saved plan does not fit this run")
 			return {}
 		run.header.plan = saved
 		return layouts.plan_dict()
-	var plan: Dictionary = layouts.plan(params(run))
+	var inputs: Dictionary = params(run)
+	inputs.merge(overrides, true)
+	var plan: Dictionary = layouts.plan(inputs)
 	if Variants.flag(plan.get("ok", false)):
 		# GEN-12: every spine walked to its target with its armed collapse points fallen (a failing
 		# one replanned into the header), and base camp's gates; then GEN-10's run-start homes (the
