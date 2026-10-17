@@ -74,6 +74,12 @@ jobs:
     needs: native
     runs-on: ubuntu-24.04
     timeout-minutes: 180
+    # The 10,000 seeds in four ranges side by side: on one hosted runner all three lists of them take
+    # about 3 h 15 min (6,000 runs measured 39 minutes, 2026-10-18), past the job's limit.
+    strategy:
+      fail-fast: false
+      matrix:
+        seeds: ["0..2499", "2500..4999", "5000..7499", "7500..9999"]
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/lfs-pull
@@ -83,14 +89,16 @@ jobs:
         with:
           name: native-bin
           path: native/bin
-      - name: Seed harness, 10,000 seeds (GEN-14)
+      - name: Seed harness, seeds ${{ matrix.seeds }} (GEN-14)
         # Its gates hold on the shipped set (GEN-16's v1 pack): a failing gate fails the job.
+        env:
+          LB_SEEDS: ${{ matrix.seeds }}
         run: tools/build/ci_nightly_slot.sh seed_harness
       - name: Upload the harness report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: seed-harness-report
+          name: seed-harness-report-${{ strategy.job-index }}
           path: build/seed_harness/
           if-no-files-found: ignore
           retention-days: 30
