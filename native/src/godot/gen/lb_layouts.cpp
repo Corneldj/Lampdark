@@ -449,7 +449,7 @@ void LbLayouts::_bind_methods() {
 
 LbLayouts::LbLayouts() : set_(std::make_shared<gen::TemplateSet>()) {
 #ifdef DEBUG_ENABLED
-	verify_ = true; // debug builds derive every layout twice, caches bypassed, and compare (GEN-05)
+	verify_ = true; // debug builds derive every layout twice as it is cached, caches bypassed, and compare (GEN-05)
 #endif
 	cells_ = std::make_unique<gen::UniformCells>("", header_.sockets.widths);
 	rebuild();

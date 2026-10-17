@@ -175,11 +175,12 @@ std::optional<Layout> Deriver::derive(Coord cell, int32_t reroll) const {
 			std::lock_guard<std::mutex> lock(mutex_);
 			layouts_.put(key, out);
 		}
-	}
-	if (verify_) {
-		const std::optional<Layout> fresh = derive_layout(in_, cell, reroll);
-		if (fresh.has_value() != out.has_value() || (fresh && fresh->digest != out->digest)) {
-			verify_failures_++;
+		// Checked once, as it is cached: a hit returns what its miss checked.
+		if (verify_) {
+			const std::optional<Layout> fresh = derive_layout(in_, cell, reroll);
+			if (fresh.has_value() != out.has_value() || (fresh && fresh->digest != out->digest)) {
+				verify_failures_++;
+			}
 		}
 	}
 	return out;
@@ -206,11 +207,11 @@ std::optional<Layout> Deriver::derive_final(Coord cell) const {
 			std::lock_guard<std::mutex> lock(mutex_);
 			finals_.put(key, out);
 		}
-	}
-	if (verify_) {
-		const std::optional<Layout> fresh = gen::derive_final(in_, cell);
-		if (fresh.has_value() != out.has_value() || (fresh && (fresh->digest != out->digest || fresh->reroll != out->reroll))) {
-			verify_failures_++;
+		if (verify_) {
+			const std::optional<Layout> fresh = gen::derive_final(in_, cell);
+			if (fresh.has_value() != out.has_value() || (fresh && (fresh->digest != out->digest || fresh->reroll != out->reroll))) {
+				verify_failures_++;
+			}
 		}
 	}
 	return out;

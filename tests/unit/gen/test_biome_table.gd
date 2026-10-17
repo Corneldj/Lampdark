@@ -1,8 +1,9 @@
 extends GutTest
 ## GEN-06's ground-rule table from data: every biome has its socket widths and a template count;
 ## each ring's weights name only those biomes and add to 1; a run's deriver reads them, so cells
-## deepen with the rings (pit-bottom roads by the shaft, the Old Men's Workings in the Deep) and every
-## opening takes a width both of its cells allow; a template's stubs keep to its biome's widths.
+## deepen with the rings (pit-bottom roads by the shaft, the Old Men's Workings in the Deep, or the
+## biome GEN-16's v1 override folds them into) and every opening takes a width both of its cells
+## allow; a template's stubs keep to its biome's widths.
 
 const Specs = preload("res://tests/unit/gen/template_specs.gd")
 const BIOMES: Array[String] = ["pit_bottom", "seam", "old_workings", "black_seam", "old_mens"]
@@ -39,8 +40,10 @@ func test_cells_deepen_with_the_rings() -> void:
 	assert_eq(layouts.biome_of(Vector2i.ZERO), "", "base camp is no biome")
 	for c: Vector2i in [Vector2i(1, 0), Vector2i(-2, 1), Vector2i(0, 3)]:
 		assert_eq(layouts.biome_of(c), "pit_bottom", "ring 0 (%s)" % c)
+	# Until GEN-17 brings the deep biomes, mine.v1_deep_biome_override names the biome they take.
+	var deep: String = Tuning.s(&"mine.v1_deep_biome_override") if Tuning.current.has_key(&"mine.v1_deep_biome_override") else "old_mens"
 	for c: Vector2i in [Vector2i(40, 0), Vector2i(-40, 5), Vector2i(0, -45)]:
-		assert_eq(layouts.biome_of(c), "old_mens", "the Deep (%s)" % c)
+		assert_eq(layouts.biome_of(c), deep, "the Deep (%s)" % c)
 	var ring1: Dictionary = {}
 	for x: int in range(5, 9):
 		for y: int in range(-2, 3):

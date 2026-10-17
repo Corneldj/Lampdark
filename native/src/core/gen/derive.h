@@ -88,7 +88,8 @@ std::optional<Layout> derive_layout(const DeriveInputs &in, lb::core::world::Coo
 uint64_t layout_digest(const Layout &layout);
 
 // derive_layout with LRU caches of sockets and layouts that can never change a result. Thread-safe.
-// With verify on, every derive runs again with the caches bypassed and must give the same digest.
+// With verify on, every derive the caches miss runs again with them bypassed and must give the same
+// digest; a hit returns what its miss checked.
 class Deriver {
 public:
 	explicit Deriver(DeriveInputs inputs, size_t layout_capacity = 512, size_t socket_capacity = 4096);
