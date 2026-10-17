@@ -19,7 +19,7 @@ func _layouts(run_seed: int) -> LbLayouts:
 
 
 ## A deriver on GEN-07's road pack (grid cells and plain fallbacks for every biome): RunPlan.fix walks
-## every spine (GEN-12), and the shipped pack cannot build one until GEN-16's templates.
+## every spine (GEN-12), on a pack that stays put whatever the shipped set becomes.
 func _road_layouts(run_seed: int) -> LbLayouts:
 	var layouts: LbLayouts = LbLayouts.new()
 	assert_true(layouts.load_pack(Specs.road_pack()))

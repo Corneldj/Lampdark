@@ -1,0 +1,21 @@
+{
+	"format": 1,
+	"id": "seam_ring_16",
+	"kind": "biome_cell",
+	"biome": "seam",
+	"footprint": [1,1],
+	"poi_kind": "",
+	"shape": "",
+	"old_fall": false,
+	"weight": 1.0,
+	"author_version": 1,
+	"cells": [[0,0]],
+	"stubs": [
+		{"cell":[0,0],"depth":2,"door":false,"edge":"north","max_width":3,"offset":15},
+		{"cell":[0,0],"depth":2,"door":false,"edge":"east","max_width":3,"offset":10},
+		{"cell":[0,0],"depth":2,"door":false,"edge":"south","max_width":3,"offset":5},
+		{"cell":[0,0],"depth":2,"door":false,"edge":"west","max_width":3,"offset":10}
+	],
+	"rib": [
+	]
+}

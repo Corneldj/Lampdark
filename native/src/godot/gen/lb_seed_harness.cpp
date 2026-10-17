@@ -142,6 +142,37 @@ String text(const std::string &s) {
 void LbSeedHarness::_bind_methods() {
 	ClassDB::bind_static_method("LbSeedHarness", D_METHOD("run", "base", "configure", "runs", "options"), &LbSeedHarness::run);
 	ClassDB::bind_static_method("LbSeedHarness", D_METHOD("repro", "base", "configure", "run", "options", "check", "cell"), &LbSeedHarness::repro);
+	ClassDB::bind_static_method("LbSeedHarness", D_METHOD("coverage", "base", "biome", "open_probability", "offsets", "widths"),
+			&LbSeedHarness::coverage);
+}
+
+Dictionary LbSeedHarness::coverage(const Ref<LbLayouts> &base, const String &biome, double open_probability, const PackedInt32Array &offsets,
+		const PackedInt32Array &widths) {
+	Dictionary out;
+	ERR_FAIL_COND_V_MSG(base.is_null() || !base->template_set(), out, "LbSeedHarness.coverage: no template pack");
+	std::vector<int32_t> o(offsets.ptr(), offsets.ptr() + offsets.size());
+	std::vector<int32_t> w(widths.ptr(), widths.ptr() + widths.size());
+	const CharString b = biome.utf8();
+	const harness::Coverage c = harness::coverage(*base->template_set(), std::string(b.get_data(), static_cast<size_t>(b.length())),
+			static_cast<uint32_t>(std::llround(open_probability * 1000000.0)), o, w);
+	out["biome"] = biome;
+	out["templates"] = c.templates;
+	out["sets"] = c.sets;
+	out["covered"] = static_cast<double>(c.covered_ppm) / 1000000.0;
+	out["only_fallback"] = static_cast<double>(c.fallback_ppm) / 1000000.0;
+	out["uncovered"] = static_cast<double>(c.uncovered_ppm) / 1000000.0;
+	out["blind_headings"] = static_cast<double>(c.blind_milli) / 1000.0;
+	Array gaps;
+	for (const std::string &g : c.uncovered) {
+		gaps.push_back(text(g));
+	}
+	out["gaps"] = gaps;
+	Dictionary per;
+	for (const auto &[n, sets] : c.templates_per_set) {
+		per[n] = sets;
+	}
+	out["templates_per_set"] = per;
+	return out;
 }
 
 Dictionary LbSeedHarness::run(const Ref<LbLayouts> &base, const Dictionary &configure, const Array &runs, const Dictionary &options) {

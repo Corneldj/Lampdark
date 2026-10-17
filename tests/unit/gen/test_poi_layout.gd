@@ -2,8 +2,8 @@ extends GutTest
 ## GEN-09 through LbLayouts as MineLayouts sets it up from tuning: with the run's plan every planned
 ## site is a point of interest of its region, planned ones first in plan order, and holds what the
 ## plan put there with its kind's table round it; the canary home names the canary station; and no
-## point-of-interest key reaches a client's tuning. (The shipped pack holds no point-of-interest
-## template until GEN-16, so a planned site's cells stay its biome's and its door its spine's.)
+## point-of-interest key reaches a client's tuning. (A planned site no template fits keeps its
+## biome's cells and its spine's door, with no slots.)
 
 const JOBS: Array[String] = ["power", "fuel", "magneto", "drive_belt", "brake_shoes", "rope_clamps", "start"]
 

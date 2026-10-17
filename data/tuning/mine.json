@@ -284,6 +284,26 @@
 			"kind": "param",
 			"note": "ticket GEN-11: cells generated ahead of need, within the eviction radius's hysteresis, so required cells are mostly loaded before they are required"
 		},
+		"mine.harness_blind_headings_max": {
+			"value": 2,
+			"type": "float",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "GEN-16's v1 target: a cell's expected blind headings (unused stubs filled) at most this; ticket GEN-16"
+		},
+		"mine.harness_coverage_min": {
+			"value": 0.95,
+			"type": "float",
+			"unit": "share",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "GEN-16's v1 target: the weighted share of socket sets a biome's cell templates (not its fallback) cover; ticket GEN-16"
+		},
 		"mine.harness_deck_sample_seeds": {
 			"value": 500,
 			"type": "int",

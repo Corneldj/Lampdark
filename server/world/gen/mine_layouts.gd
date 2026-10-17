@@ -219,16 +219,32 @@ static func validate_params(run_seed: int) -> Dictionary:
 	}
 
 
-## GEN-06's table from tuning: each ring's weights in their mapping order, each biome's socket
-## widths, and the ring starts.
+## The biomes GEN-17 brings: until then mine.v1_deep_biome_override names the biome their cells take
+## (GEN-16, Proposed: the Old Workings), so a Standard run generates everywhere.
+const DEEP_BIOMES: Array[String] = ["black_seam", "old_mens"]
+
+
+## GEN-06's table from tuning: each ring's weights in their mapping order (GEN-16's override folding
+## the deep biomes into the one named), each biome's socket widths, and the ring starts.
 static func biome_table() -> Dictionary:
+	var override: String = Tuning.s(&"mine.v1_deep_biome_override") if Tuning.current.has_key(&"mine.v1_deep_biome_override") else ""
 	var rings: Array = []
 	var ring: int = 0
 	while Tuning.current.has_key(StringName("mine.biome_weights_ring%d" % ring)):
 		var weights: Dictionary = Tuning.table(StringName("mine.biome_weights_ring%d" % ring))
 		var pairs: Array = []
+		var folded: Dictionary = {}
 		for biome: Variant in weights.keys():
-			pairs.append([str(biome), float(Variants.number(weights[biome]))])
+			var name: String = str(biome)
+			if not override.is_empty() and DEEP_BIOMES.has(name):
+				name = override
+			if folded.has(name):
+				var at: int = int(Variants.number(folded[name]))
+				var pair: Array = pairs[at]
+				pair[1] = float(Variants.number(pair[1])) + float(Variants.number(weights[biome]))
+				continue
+			folded[name] = pairs.size()
+			pairs.append([name, float(Variants.number(weights[biome]))])
 		rings.append(pairs)
 		ring += 1
 	var widths: Dictionary = {}

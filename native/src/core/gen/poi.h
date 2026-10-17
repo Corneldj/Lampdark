@@ -12,7 +12,7 @@
 // retries from the next sub-seed of gen.poi_region (mine.poi_fit_tries), then the region holds
 // fewer. A planned site takes a template and orientation whose door stub lies on its door cell and
 // planned side, facing its spine's last cell; where none fits it stays a planned site of biome
-// cells whose door is its spine's (until GEN-16's templates).
+// cells whose door is its spine's.
 //
 // The layout is pure and cached per region. It backs poi_at, the forced sockets of GEN-05's rule 2
 // (door stubs open; other stubs hashed like any edge, shut toward a main road; edges without a

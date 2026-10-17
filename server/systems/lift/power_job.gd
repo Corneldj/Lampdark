@@ -20,9 +20,9 @@ extends SimSystem
 ##
 ## **Where.** The fixtures are the substation template's poi_slot anchors (substation.fuse_board,
 ## substation.trip_lever and substation.main_switch, as base camp's fixtures are; GEN-16 authors
-## them). Until it has a template, a stand-in round the floor nearest the middle of the plan's
-## substation site (Proposed): the board there, the trip and the switch on the nearest floor at least
-## two tiles from it and from each other. The fixtures are FIXTURE entities while their cell is
+## them). Where no template fits the site, a stand-in round the floor nearest the middle of the
+## plan's substation site (Proposed): the board there, the trip and the switch on the nearest floor
+## at least two tiles from it and from each other. The fixtures are FIXTURE entities while their cell is
 ## loaded; the job's state is the run's, kept in every snapshot (NET-09).
 ##
 ## Hired Hands never clear, fit, hold or throw. Clients learn only what they see: the fixtures'

@@ -300,6 +300,29 @@ private:
 // The list's name for reports and repro commands (0 short, 1 standard, 2 full).
 const char *list_name(int32_t list);
 
+// ---- GEN-16's coverage report ----
+
+// A biome's cell templates against every socket set a cell of it can meet: each edge shut, or open
+// at each socket offset and each width the biome allows, weighted by the socket rates (GEN-05's
+// hashes: open at open_ppm, then an offset and a width uniformly). A template covers a set when it
+// has a stub at every open socket at least as wide (GEN-05's covers); a covered cell takes one of
+// its covering templates by weight, its unused stubs filling as blind headings.
+struct Coverage {
+	std::string biome;
+	int32_t templates = 0; // the biome's cell templates (its fallback aside)
+	int64_t sets = 0;
+	int64_t covered_ppm = 0; // the weighted share a template (not the fallback) covers
+	int64_t fallback_ppm = 0; // the share only the plain fallback covers
+	int64_t uncovered_ppm = 0; // the share nothing covers
+	int64_t blind_milli = 0; // the expected blind headings a cell, in thousandths
+	// The sets only the fallback or nothing covers, likeliest first (at most 40), as "N5w3 E- S10w2 W-".
+	std::vector<std::string> uncovered;
+	// How many templates cover a set -> how many sets.
+	std::map<int32_t, int64_t> templates_per_set;
+};
+Coverage coverage(const gen::TemplateSet &set, const std::string &biome, uint32_t open_ppm, const std::vector<int32_t> &offsets,
+		const std::vector<int32_t> &widths);
+
 // The repro dump for one run: its failures for `check` (every check for ""), and for `cell` its
 // final layout as rows of tiles, its anchors, phase 1's tries, phase 2's tries and, for the order
 // check, its digest in each order.

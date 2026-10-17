@@ -112,7 +112,7 @@ func test_every_plain_fallback_covers_every_socket_set() -> void:
 		var states: int = 1 + 3 * _widths(biome).size() # shut, or open at 5, 10 or 15 at each width
 		assert_eq(int(Variants.number(coverage["checked"])), states * states * states * states, biome)
 		assert_eq(Variants.array(coverage["failures"]).size(), 0, "%s: %s" % [biome, str(Variants.array(coverage["failures"]).slice(0, 2))])
-	# The shipped pack: every fallback it carries (GEN-16 ships one for every biome).
+	# The shipped pack: every fallback it carries (GEN-16 ships the v1 biomes', GEN-17 the rest).
 	var shipped: LbLayouts = MineLayouts.for_run(1)
 	assert_not_null(shipped)
 	var current: Dictionary = Variants.dict(JSON.parse_string(FileAccess.get_file_as_string("res://data/templates/set.json")))
@@ -131,7 +131,7 @@ func test_every_plain_fallback_covers_every_socket_set() -> void:
 		var coverage: Dictionary = shipped.fallback_coverage(biome, _widths(biome))
 		assert_eq(Variants.array(coverage["failures"]).size(), 0, "shipped %s: %s" % [biome, str(Variants.array(coverage["failures"]).slice(0, 2))])
 	if not missing.is_empty():
-		gut.p("GEN-16 to come: no plain fallback yet in the shipped pack for %s" % ", ".join(missing))
+		gut.p("GEN-17 to come: no plain fallback yet in the shipped pack for %s" % ", ".join(missing))
 
 
 func test_base_camps_arches_reach_into_its_gate_cells() -> void:

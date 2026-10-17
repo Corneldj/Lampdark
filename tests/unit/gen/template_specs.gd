@@ -60,6 +60,12 @@ static func pack(specs: Array, problems: Array[String] = []) -> PackedByteArray:
 	return LbTemplates.encode_pack("fixture", templates)
 
 
+## The shipped set's pack (data/templates/set.json's current set: GEN-16's v1 and on).
+static func shipped_pack() -> PackedByteArray:
+	var current: Dictionary = Variants.dict(JSON.parse_string(FileAccess.get_file_as_string("res://data/templates/set.json")))
+	return FileAccess.get_file_as_bytes("res://data/templates/packs/%s.lbtp" % str(current["set_version"]))
+
+
 ## Grid templates and a plain fallback for every biome in GEN-06's table.
 static func every_biome_pack(problems: Array[String] = []) -> PackedByteArray:
 	var specs: Array = []

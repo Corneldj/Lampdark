@@ -298,6 +298,10 @@ bool junction(const Grid &g, int32_t x, int32_t y, int32_t road_max) {
 }
 
 void rule_widths(const Template &t, const Grid &g, const ValidateParams &p, Out &out) {
+	// GEN-02's base camp is its own room (Gameplay §3.2): no road's or chamber's width applies.
+	if (t.kind == TemplateKind::BASE_CAMP) {
+		return;
+	}
 	const auto chambers = anchors_of(t, AnchorType::CHAMBER);
 	for (const auto &[origin, a] : chambers) {
 		if (a->w < p.chamber_min || a->h < p.chamber_min || a->w > p.chamber_max || a->h > p.chamber_max) {
@@ -395,8 +399,9 @@ void rule_stubs(const Template &t, const Grid &g, const ValidateParams &p, Out &
 	// The outer edge is rock but for the stubs' throats, so the sockets alone decide what joins.
 	const std::set<size_t> throats = throat_set(t, g);
 	// A door or gate beside a throat would be stranded when the stub fills: its portal would join
-	// one zone (GEN-11's finding).
-	for (const Cell &c : t.cells) {
+	// one zone (GEN-11's finding). Base camp's gates stand in its throats, but its sockets are forced
+	// open (GEN-05): its stubs never fill.
+	for (const Cell &c : t.kind == TemplateKind::BASE_CAMP ? std::vector<Cell>{} : t.cells) {
 		for (const auto &b : c.barriers) {
 			for (uint16_t i : b.tiles) {
 				const int32_t bx = static_cast<int32_t>(c.coord.x * CELL_TILES) + i % CELL_TILES;

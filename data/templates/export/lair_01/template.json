@@ -1,0 +1,18 @@
+{
+	"format": 1,
+	"id": "lair_01",
+	"kind": "poi",
+	"biome": "old_workings",
+	"footprint": [2,2],
+	"poi_kind": "lair",
+	"shape": "",
+	"old_fall": false,
+	"weight": 1.0,
+	"author_version": 1,
+	"cells": [[0,0],[1,0],[0,1],[1,1]],
+	"stubs": [
+		{"cell":[0,1],"depth":2,"door":true,"edge":"south","max_width":2,"offset":10}
+	],
+	"rib": [
+	]
+}

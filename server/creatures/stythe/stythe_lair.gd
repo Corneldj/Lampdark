@@ -3,10 +3,13 @@ extends SimSystem
 ## CRT-15 (stage CREATURES, after the creatures; Gameplay §7.4, §8.1, §8.3): the Stythe's lair.
 ##
 ## **The layout.** An unlit dead-end chamber complex: its tiles, and the row where the Stythe lays
-## the bodies it takes, each place marked by a snuffed lamp among the men in-bye's remains. GEN-10
-## places it (with its remains, lamps and kits). Until then a fixed map's STYTHE entry may give it
-## (`set_layout`), else it is every floor tile within stythe.lair_radius_tiles by path of the
-## Stythe's lair tile, the row those tiles in row-major order (Proposed stand-in, CRT-15's notes).
+## the bodies it takes, each place marked by a snuffed lamp among the men in-bye's remains. In a
+## generated run it is the lair template's (GEN-16), read from the plan's lair site: every tile of
+## the site's cells, and the row its first slot's places past the men laid out there (GEN-10 lays a
+## line's things on its slot's tiles in order); a resumed run reads it the same. A fixed map's STYTHE
+## entry may give it (`set_layout`); else it is every floor tile within stythe.lair_radius_tiles by
+## path of the Stythe's lair tile, the row those tiles in row-major order (Proposed stand-in,
+## CRT-15's notes).
 ##
 ## **Laying.** A drag reaching the lair lays the body (unconscious by then, RSC-03's 20 s run out)
 ## straight in the next free slot of the row, kept in the lair (BodyState.kept_in_lair). The Stythe
@@ -37,6 +40,9 @@ var _row: Array[Vector2i] = []
 ## layout was given.
 var _derived_from: Vector2i = Vector2i(2147483647, 0)
 var _given: bool = false
+## The lair template's cells (GEN-16), once the run's layouts were read; empty with no template.
+var _cells: Dictionary = {}
+var _template_read: bool = false
 var _run: RunState = null
 
 
@@ -71,6 +77,7 @@ func attach(run: RunState, st: StytheCreature) -> void:
 
 ## GEN-10's lair (or a fixed map's): its tiles and its row of slots.
 func set_layout(lair_tiles: Array[Vector2i], row_slots: Array[Vector2i]) -> void:
+	_cells.clear()
 	_tiles.clear()
 	for t: Vector2i in lair_tiles:
 		_tiles[t] = true
@@ -78,11 +85,23 @@ func set_layout(lair_tiles: Array[Vector2i], row_slots: Array[Vector2i]) -> void
 	_given = true
 
 
+## The lair's floor, row by row (a template's: of its loaded cells).
 func tiles() -> Array[Vector2i]:
 	_ensure_layout()
 	var out: Array[Vector2i] = []
-	for raw: Variant in _tiles.keys():
-		out.append(raw)
+	if not _cells.is_empty():
+		for raw: Variant in _cells.keys():
+			var cell: Vector2i = raw
+			if _run.mine == null or not _run.mine.native.is_loaded(cell):
+				continue
+			for y: int in WorldIds.CELL_TILES:
+				for x: int in WorldIds.CELL_TILES:
+					var t: Vector2i = cell * WorldIds.CELL_TILES + Vector2i(x, y)
+					if _run.mine.native.is_walkable(t, true):
+						out.append(t)
+	else:
+		for raw: Variant in _tiles.keys():
+			out.append(raw)
 	out.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.y < b.y or (a.y == b.y and a.x < b.x))
 	return out
 
@@ -94,12 +113,19 @@ func row() -> Array[Vector2i]:
 
 func is_lair(tile: Vector2i) -> bool:
 	_ensure_layout()
+	if not _cells.is_empty():
+		return _cells.has(WorldCoords.cell_of(tile))
 	return _tiles.has(tile)
 
 
-## The stand-in layout: floor within stythe.lair_radius_tiles by path of the lair tile.
+## The layout: a given one, the template's, or the stand-in (floor within stythe.lair_radius_tiles by
+## path of the lair tile).
 func _ensure_layout() -> void:
-	if _given or stythe == null or _run == null or _run.mine == null or stythe.lair == _derived_from:
+	if _given:
+		return
+	if not _template_read:
+		_read_template()
+	if not _cells.is_empty() or stythe == null or _run == null or _run.mine == null or stythe.lair == _derived_from:
 		return
 	_derived_from = stythe.lair
 	_tiles.clear()
@@ -124,6 +150,41 @@ func _ensure_layout() -> void:
 				dist[n] = d + 1
 				queue.append(n)
 	_row = tiles()
+
+
+## GEN-16: the plan's lair site, when a template fits it: its cells, and the row its first slot's
+## places past the men laid out on it. Read once the run's layouts are known (a fixed map has none).
+func _read_template() -> void:
+	if _run == null or _run.placed == null:
+		return
+	_template_read = true
+	var layouts: LbLayouts = _run.placed.layouts
+	if layouts == null:
+		return
+	for raw: Variant in Variants.array(layouts.plan_dict().get("sites", [])):
+		var site: Dictionary = Variants.dict(raw)
+		if str(site.get("kind", "")) != "lair":
+			continue
+		var door: Vector2i = site["door"]
+		var poi: Dictionary = layouts.poi_at(door)
+		var rects: Array = Variants.array(poi.get("slots", []))
+		if str(poi.get("template", "")).is_empty() or rects.is_empty():
+			return
+		var region: Vector2i = poi["region"]
+		var laid_out: int = 0
+		for line: Variant in layouts.poi_contents(region, Variants.whole(poi["index"])):
+			laid_out += 1 if Variants.whole(Variants.dict(line)["line"]) == 0 else 0
+		var places: Rect2i = rects[0]
+		_row.clear()
+		var n: int = 0
+		for y: int in range(places.position.y, places.end.y):
+			for x: int in range(places.position.x, places.end.x):
+				if n >= laid_out:
+					_row.append(Vector2i(x, y))
+				n += 1
+		for c: Variant in Variants.array(poi.get("cells", [])):
+			_cells[c] = true
+		return
 
 
 ## The next free slot of the row (a slot whose body is gone is free again), or -1.

@@ -84,9 +84,7 @@ jobs:
           name: native-bin
           path: native/bin
       - name: Seed harness, 10,000 seeds (GEN-14)
-        # Report-only until GEN-16's v1 template pack is the shipped set (GEN-16 removes this).
-        env:
-          LB_HARNESS_GATES: report
+        # Its gates hold on the shipped set (GEN-16's v1 pack): a failing gate fails the job.
         run: tools/build/ci_nightly_slot.sh seed_harness
       - name: Upload the harness report
         if: always()

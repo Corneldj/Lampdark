@@ -1,0 +1,280 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://addons/lampblack_templates/template_source.gd" id="1_yu1mk"]
+[ext_resource type="TileSet" path="res://addons/lampblack_templates/palette.tres" id="2_yhvjl"]
+[ext_resource type="Script" path="res://addons/lampblack_templates/template_anchor.gd" id="3_n3pii"]
+[ext_resource type="Script" path="res://addons/lampblack_templates/template_stub.gd" id="4_5ngbn"]
+
+[node name="base_camp" type="Node2D" unique_id=416318607]
+script = ExtResource("1_yu1mk")
+template_id = "base_camp"
+kind = "base_camp"
+biome = "base_camp"
+
+[node name="Geometry" type="TileMapLayer" parent="." unique_id=1165760258]
+z_index = -1
+tile_map_data = PackedByteArray("AAAAAAAAAAADAAAAAAABAAAAAAADAAAAAAACAAAAAAADAAAAAAADAAAAAAADAAAAAAAEAAAAAAADAAAAAAAFAAAAAAADAAAAAAAGAAAAAAADAAAAAAAHAAAAAAADAAAAAAAIAAAAAAADAAAAAAAJAAAAAAADAAAAAAAKAAAAAAADAAAAAAALAAAAAAADAAAAAAAMAAAAAAADAAAAAAANAAAAAAADAAAAAAAOAAAAAAADAAAAAAAPAAAAAAADAAAAAAAQAAAAAAADAAAAAAARAAAAAAADAAAAAAASAAAAAAADAAAAAAATAAAAAAADAAAAAAAAAAEAAAADAAAAAAABAAEAAAADAAAAAAACAAEAAAADAAAAAAADAAEAAAADAAAAAAAEAAEAAAADAAAAAAAFAAEAAAADAAAAAAAGAAEAAAADAAAAAAAHAAEAAAADAAAAAAAIAAEAAAADAAAAAAAJAAEAAAADAAAAAAAKAAEAAAADAAAAAAALAAEAAAADAAAAAAAMAAEAAAADAAAAAAANAAEAAAADAAAAAAAOAAEAAAADAAAAAAAPAAEAAAADAAAAAAAQAAEAAAADAAAAAAARAAEAAAADAAAAAAASAAEAAAADAAAAAAATAAEAAAADAAAAAAAAAAIAAAADAAAAAAABAAIAAAADAAAAAAACAAIAAAADAAAAAAADAAIAAAADAAAAAAAEAAIAAAADAAAAAAAFAAIAAAADAAAAAAAGAAIAAAADAAAAAAAHAAIAAAADAAAAAAAIAAIAAAADAAAAAAAJAAIAAAADAAAAAAAKAAIAAAADAAAAAAALAAIAAAADAAAAAAAMAAIAAAADAAAAAAANAAIAAAADAAAAAAAOAAIAAAADAAAAAAAPAAIAAAADAAAAAAAQAAIAAAADAAAAAAARAAIAAAADAAAAAAASAAIAAAADAAAAAAATAAIAAAADAAAAAAAAAAMAAAADAAAAAAABAAMAAAAFAAAAAAACAAMAAAAFAAAAAAADAAMAAAAFAAAAAAAEAAMAAAAFAAAAAAAFAAMAAAAFAAAAAAAGAAMAAAAFAAAAAAAHAAMAAAAFAAAAAAAIAAMAAAAFAAAAAAAJAAMAAAAFAAAAAAAKAAMAAAAFAAAAAAALAAMAAAAFAAAAAAAMAAMAAAAFAAAAAAANAAMAAAAFAAAAAAAOAAMAAAAFAAAAAAAPAAMAAAAFAAAAAAAQAAMAAAAFAAAAAAARAAMAAAAFAAAAAAASAAMAAAAFAAAAAAATAAMAAAADAAAAAAAAAAQAAAADAAAAAAABAAQAAAAFAAAAAAACAAQAAAAAAAAAAAADAAQAAAAAAAAAAAAEAAQAAAAAAAAAAAAFAAQAAAAAAAAAAAAGAAQAAAAAAAAAAAAHAAQAAAAAAAAAAAAIAAQAAAAAAAAAAAAJAAQAAAAAAAAAAAAKAAQAAAAAAAAAAAALAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAANAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAAQAAQAAAAAAAAAAAARAAQAAAAAAAAAAAASAAQAAAAFAAAAAAATAAQAAAADAAAAAAAAAAUAAAADAAAAAAABAAUAAAAFAAAAAAACAAUAAAAAAAAAAAADAAUAAAAAAAAAAAAEAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAAAAAAAAAAIAAUAAAAAAAAAAAAJAAUAAAAAAAAAAAAKAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAMAAUAAAAAAAAAAAANAAUAAAAAAAAAAAAOAAUAAAAAAAAAAAAPAAUAAAAAAAAAAAAQAAUAAAAAAAAAAAARAAUAAAAAAAAAAAASAAUAAAAFAAAAAAATAAUAAAADAAAAAAAAAAYAAAADAAAAAAABAAYAAAAFAAAAAAACAAYAAAAAAAAAAAADAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAANAAYAAAAAAAAAAAAOAAYAAAAAAAAAAAAPAAYAAAAAAAAAAAAQAAYAAAAAAAAAAAARAAYAAAAAAAAAAAASAAYAAAAFAAAAAAATAAYAAAADAAAAAAAAAAcAAAADAAAAAAABAAcAAAAFAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAAAAAAAAANAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAQAAcAAAAAAAAAAAARAAcAAAAAAAAAAAASAAcAAAAFAAAAAAATAAcAAAADAAAAAAAAAAgAAAAFAAAAAAABAAgAAAAFAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAAQAAgAAAAAAAAAAAARAAgAAAAAAAAAAAASAAgAAAAFAAAAAAATAAgAAAAFAAAAAAAAAAkAAAAAAAAAAAABAAkAAAAIAAAAAAACAAkAAAAAAAAAAAADAAkAAAAAAAAAAAAEAAkAAAAAAAAAAAAFAAkAAAAAAAAAAAAGAAkAAAAAAAAAAAAHAAkAAAAAAAAAAAAIAAkAAAAAAAAAAAAJAAkAAAAAAAAAAAAKAAkAAAAAAAAAAAALAAkAAAAAAAAAAAAMAAkAAAAAAAAAAAANAAkAAAAAAAAAAAAOAAkAAAAAAAAAAAAPAAkAAAAAAAAAAAAQAAkAAAAAAAAAAAARAAkAAAAAAAAAAAASAAkAAAAIAAAAAAATAAkAAAAAAAAAAAAAAAoAAAAAAAAAAAABAAoAAAAIAAAAAAACAAoAAAAAAAAAAAADAAoAAAAAAAAAAAAEAAoAAAAAAAAAAAAFAAoAAAAAAAAAAAAGAAoAAAAAAAAAAAAHAAoAAAAAAAAAAAAIAAoAAAAAAAAAAAAJAAoAAAAAAAAAAAAKAAoAAAAAAAAAAAALAAoAAAAAAAAAAAAMAAoAAAAAAAAAAAANAAoAAAAAAAAAAAAOAAoAAAAAAAAAAAAPAAoAAAAAAAAAAAAQAAoAAAAAAAAAAAARAAoAAAAAAAAAAAASAAoAAAAIAAAAAAATAAoAAAAAAAAAAAAAAAsAAAAAAAAAAAABAAsAAAAIAAAAAAACAAsAAAAAAAAAAAADAAsAAAAAAAAAAAAEAAsAAAAAAAAAAAAFAAsAAAAAAAAAAAAGAAsAAAAAAAAAAAAHAAsAAAAAAAAAAAAIAAsAAAAAAAAAAAAJAAsAAAAAAAAAAAAKAAsAAAAAAAAAAAALAAsAAAAAAAAAAAAMAAsAAAAAAAAAAAANAAsAAAAAAAAAAAAOAAsAAAAAAAAAAAAPAAsAAAAAAAAAAAAQAAsAAAAAAAAAAAARAAsAAAAAAAAAAAASAAsAAAAIAAAAAAATAAsAAAAAAAAAAAAAAAwAAAAFAAAAAAABAAwAAAAFAAAAAAACAAwAAAAAAAAAAAADAAwAAAAAAAAAAAAEAAwAAAAAAAAAAAAFAAwAAAAAAAAAAAAGAAwAAAAAAAAAAAAHAAwAAAAAAAAAAAAIAAwAAAAAAAAAAAAJAAwAAAAAAAAAAAAKAAwAAAAAAAAAAAALAAwAAAAAAAAAAAAMAAwAAAAAAAAAAAANAAwAAAAAAAAAAAAOAAwAAAAAAAAAAAAPAAwAAAAAAAAAAAAQAAwAAAAAAAAAAAARAAwAAAAAAAAAAAASAAwAAAAFAAAAAAATAAwAAAAFAAAAAAAAAA0AAAADAAAAAAABAA0AAAAFAAAAAAACAA0AAAAAAAAAAAADAA0AAAAAAAAAAAAEAA0AAAAAAAAAAAAFAA0AAAAAAAAAAAAGAA0AAAAAAAAAAAAHAA0AAAAAAAAAAAAIAA0AAAAAAAAAAAAJAA0AAAAAAAAAAAAKAA0AAAAAAAAAAAALAA0AAAAAAAAAAAAMAA0AAAAAAAAAAAANAA0AAAAAAAAAAAAOAA0AAAAAAAAAAAAPAA0AAAAAAAAAAAAQAA0AAAAAAAAAAAARAA0AAAAAAAAAAAASAA0AAAAFAAAAAAATAA0AAAADAAAAAAAAAA4AAAADAAAAAAABAA4AAAAFAAAAAAACAA4AAAAAAAAAAAADAA4AAAAAAAAAAAAEAA4AAAAAAAAAAAAFAA4AAAAAAAAAAAAGAA4AAAAAAAAAAAAHAA4AAAAAAAAAAAAIAA4AAAAAAAAAAAAJAA4AAAAAAAAAAAAKAA4AAAAAAAAAAAALAA4AAAAAAAAAAAAMAA4AAAAAAAAAAAANAA4AAAAAAAAAAAAOAA4AAAAAAAAAAAAPAA4AAAAAAAAAAAAQAA4AAAAAAAAAAAARAA4AAAAAAAAAAAASAA4AAAAFAAAAAAATAA4AAAADAAAAAAAAAA8AAAADAAAAAAABAA8AAAAFAAAAAAACAA8AAAAAAAAAAAADAA8AAAAAAAAAAAAEAA8AAAAAAAAAAAAFAA8AAAAAAAAAAAAGAA8AAAAAAAAAAAAHAA8AAAAAAAAAAAAIAA8AAAAAAAAAAAAJAA8AAAAAAAAAAAAKAA8AAAAAAAAAAAALAA8AAAAAAAAAAAAMAA8AAAAAAAAAAAANAA8AAAAAAAAAAAAOAA8AAAAAAAAAAAAPAA8AAAAAAAAAAAAQAA8AAAAAAAAAAAARAA8AAAAAAAAAAAASAA8AAAAFAAAAAAATAA8AAAADAAAAAAAAABAAAAADAAAAAAABABAAAAAFAAAAAAACABAAAAAFAAAAAAADABAAAAAFAAAAAAAEABAAAAAFAAAAAAAFABAAAAAFAAAAAAAGABAAAAAFAAAAAAAHABAAAAAFAAAAAAAIABAAAAAFAAAAAAAJABAAAAAIAAAAAAAKABAAAAAIAAAAAAALABAAAAAIAAAAAAAMABAAAAAFAAAAAAANABAAAAAFAAAAAAAOABAAAAAFAAAAAAAPABAAAAAFAAAAAAAQABAAAAAFAAAAAAARABAAAAAFAAAAAAASABAAAAAFAAAAAAATABAAAAADAAAAAAAAABEAAAADAAAAAAABABEAAAADAAAAAAACABEAAAADAAAAAAADABEAAAADAAAAAAAEABEAAAADAAAAAAAFABEAAAADAAAAAAAGABEAAAADAAAAAAAHABEAAAADAAAAAAAIABEAAAAFAAAAAAAJABEAAAAAAAAAAAAKABEAAAAAAAAAAAALABEAAAAAAAAAAAAMABEAAAAFAAAAAAANABEAAAADAAAAAAAOABEAAAADAAAAAAAPABEAAAADAAAAAAAQABEAAAADAAAAAAARABEAAAADAAAAAAASABEAAAADAAAAAAATABEAAAADAAAAAAAAABIAAAADAAAAAAABABIAAAADAAAAAAACABIAAAADAAAAAAADABIAAAADAAAAAAAEABIAAAADAAAAAAAFABIAAAADAAAAAAAGABIAAAADAAAAAAAHABIAAAADAAAAAAAIABIAAAAFAAAAAAAJABIAAAAAAAAAAAAKABIAAAAAAAAAAAALABIAAAAAAAAAAAAMABIAAAAFAAAAAAANABIAAAADAAAAAAAOABIAAAADAAAAAAAPABIAAAADAAAAAAAQABIAAAADAAAAAAARABIAAAADAAAAAAASABIAAAADAAAAAAATABIAAAADAAAAAAAAABMAAAADAAAAAAABABMAAAADAAAAAAACABMAAAADAAAAAAADABMAAAADAAAAAAAEABMAAAADAAAAAAAFABMAAAADAAAAAAAGABMAAAADAAAAAAAHABMAAAADAAAAAAAIABMAAAAFAAAAAAAJABMAAAAAAAAAAAAKABMAAAAAAAAAAAALABMAAAAAAAAAAAAMABMAAAAFAAAAAAANABMAAAADAAAAAAAOABMAAAADAAAAAAAPABMAAAADAAAAAAAQABMAAAADAAAAAAARABMAAAADAAAAAAASABMAAAADAAAAAAATABMAAAADAAAAAAA=")
+tile_set = ExtResource("2_yhvjl")
+
+[node name="Rib" type="TileMapLayer" parent="." unique_id=748123475]
+modulate = Color(1, 1, 1, 0.7)
+z_index = -1
+tile_set = ExtResource("2_yhvjl")
+
+[node name="poi_slot_2_4" type="Marker2D" parent="." unique_id=2026044422]
+position = Vector2(40, 72)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.emergency_lamp"
+
+[node name="poi_slot_4_4" type="Marker2D" parent="." unique_id=1646687199]
+position = Vector2(72, 72)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.engine_prime"
+
+[node name="poi_slot_6_4" type="Marker2D" parent="." unique_id=845876044]
+position = Vector2(104, 72)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.engine_crank"
+
+[node name="poi_slot_8_4" type="Marker2D" parent="." unique_id=1364470080]
+position = Vector2(136, 72)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.engine_throttle"
+
+[node name="poi_slot_10_4" type="Marker2D" parent="." unique_id=1143205063]
+position = Vector2(168, 72)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.tank_filler"
+
+[node name="poi_slot_12_4" type="Marker2D" parent="." unique_id=1722940699]
+position = Vector2(200, 72)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.magneto_mount"
+
+[node name="poi_slot_14_4" type="Marker2D" parent="." unique_id=169503944]
+position = Vector2(232, 72)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.belt_mount"
+
+[node name="poi_slot_16_4" type="Marker2D" parent="." unique_id=121065463]
+position = Vector2(264, 72)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.brake_mount"
+
+[node name="poi_slot_17_4" type="Marker2D" parent="." unique_id=297650299]
+position = Vector2(280, 72)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.emergency_lamp"
+
+[node name="poi_slot_2_6" type="Marker2D" parent="." unique_id=912529416]
+position = Vector2(40, 104)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:W")
+kind = "basecamp.lamp_hook"
+
+[node name="poi_slot_7_6" type="Marker2D" parent="." unique_id=1299842506]
+position = Vector2(120, 104)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N", "carrier:1")
+kind = "basecamp.drum_gear_mount"
+
+[node name="poi_slot_9_6" type="Marker2D" parent="." unique_id=25283928]
+position = Vector2(152, 104)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N", "carrier:2")
+kind = "basecamp.drum_gear_mount"
+
+[node name="poi_slot_13_6" type="Marker2D" parent="." unique_id=1738624324]
+position = Vector2(216, 104)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.rope_clamp_points"
+
+[node name="poi_slot_16_6" type="Marker2D" parent="." unique_id=1899184425]
+position = Vector2(264, 104)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.bess_stall"
+
+[node name="poi_slot_2_8" type="Marker2D" parent="." unique_id=1926792968]
+position = Vector2(40, 136)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N", "gate:west", "inside")
+kind = "basecamp.gate_lever"
+
+[node name="poi_slot_8_8" type="Marker2D" parent="." unique_id=1349144974]
+position = Vector2(136, 136)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+size = Vector2i(4, 5)
+tags = PackedStringArray("facing:N")
+kind = "basecamp.cage_deck"
+
+[node name="poi_slot_15_8" type="Marker2D" parent="." unique_id=933073639]
+position = Vector2(248, 136)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:E")
+kind = "basecamp.switchboard_seat"
+
+[node name="poi_slot_17_8" type="Marker2D" parent="." unique_id=2127122194]
+position = Vector2(280, 136)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N", "gate:east", "inside")
+kind = "basecamp.gate_lever"
+
+[node name="poi_slot_0_9" type="Marker2D" parent="." unique_id=977707914]
+position = Vector2(8, 152)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N", "gate:west", "outside")
+kind = "basecamp.gate_lever"
+
+[node name="poi_slot_12_9" type="Marker2D" parent="." unique_id=1152393580]
+position = Vector2(200, 152)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:W")
+kind = "basecamp.signal_cord"
+
+[node name="poi_slot_19_9" type="Marker2D" parent="." unique_id=1838482697]
+position = Vector2(312, 152)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N", "gate:east", "outside")
+kind = "basecamp.gate_lever"
+
+[node name="poi_slot_7_10" type="Marker2D" parent="." unique_id=1118843220]
+position = Vector2(120, 168)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:E", "guide:1")
+kind = "basecamp.cage_guides"
+
+[node name="poi_slot_12_11" type="Marker2D" parent="." unique_id=116411549]
+position = Vector2(200, 184)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:W", "guide:2")
+kind = "basecamp.cage_guides"
+
+[node name="poi_slot_5_12" type="Marker2D" parent="." unique_id=742681984]
+position = Vector2(88, 200)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.map_table"
+
+[node name="poi_slot_14_12" type="Marker2D" parent="." unique_id=1901367127]
+position = Vector2(232, 200)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.manual_lectern"
+
+[node name="poi_slot_17_12" type="Marker2D" parent="." unique_id=1100294082]
+position = Vector2(280, 200)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:E")
+kind = "basecamp.relighter"
+
+[node name="poi_slot_2_13" type="Marker2D" parent="." unique_id=2074420589]
+position = Vector2(40, 216)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:W")
+kind = "basecamp.medbay_cupboard"
+
+[node name="poi_slot_17_13" type="Marker2D" parent="." unique_id=484456108]
+position = Vector2(280, 216)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:E")
+kind = "basecamp.battery_rack"
+
+[node name="poi_slot_3_14" type="Marker2D" parent="." unique_id=389752986]
+position = Vector2(56, 232)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:S")
+kind = "basecamp.medbay_table"
+
+[node name="poi_slot_5_14" type="Marker2D" parent="." unique_id=358675343]
+position = Vector2(88, 232)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:S")
+kind = "basecamp.medbay_table"
+
+[node name="poi_slot_2_15" type="Marker2D" parent="." unique_id=257005276]
+position = Vector2(40, 248)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.emergency_lamp"
+
+[node name="poi_slot_8_15" type="Marker2D" parent="." unique_id=459881392]
+position = Vector2(136, 248)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N", "gate:south", "inside")
+kind = "basecamp.gate_lever"
+
+[node name="poi_slot_14_15" type="Marker2D" parent="." unique_id=228410849]
+position = Vector2(232, 248)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:S")
+kind = "basecamp.bench"
+
+[node name="poi_slot_17_15" type="Marker2D" parent="." unique_id=1174461847]
+position = Vector2(280, 248)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N")
+kind = "basecamp.emergency_lamp"
+
+[node name="poi_slot_9_17" type="Marker2D" parent="." unique_id=518463986]
+position = Vector2(152, 280)
+script = ExtResource("3_n3pii")
+anchor_type = "poi_slot"
+tags = PackedStringArray("facing:N", "gate:south", "outside")
+kind = "basecamp.gate_lever"
+
+[node name="stub_west_10" type="Node2D" parent="." unique_id=1923102113]
+script = ExtResource("4_5ngbn")
+edge = "west"
+
+[node name="stub_east_10" type="Node2D" parent="." unique_id=1432881473]
+script = ExtResource("4_5ngbn")
+edge = "east"
+
+[node name="stub_south_10" type="Node2D" parent="." unique_id=1942180313]
+script = ExtResource("4_5ngbn")
+edge = "south"

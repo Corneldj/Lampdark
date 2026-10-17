@@ -12,6 +12,11 @@ extends RefCounted
 ##             [--machine local | ci | fleet | deck] [--pack FILE] [--hard VARIANT]
 ##             [--gates enforce | report] [--failures N]
 ##   run.gd -- --repro SEED LIST CHECK [X,Y]
+##   run.gd -- --coverage [--pack FILE] [--report DIR] [--gates enforce | report]
+## --coverage (GEN-16) reports each v1 biome's socket coverage instead: coverage.md and coverage.json,
+## failing when a biome's cell templates cover under mine.harness_coverage_min of the weighted sets,
+## a cell averages over mine.harness_blind_headings_max blind headings, or a set has no template at
+## all, its fallback included.
 ## --seeds N runs seeds 0 to N-1 (default mine.harness_seeds; mine.harness_deck_sample_seeds with
 ## --machine deck). --machine fleet gates generation time on mine.generation_budget_ms_server (the
 ## reference machine); deck reports against mine.generation_budget_ms_deck.
@@ -24,12 +29,17 @@ static func main(args: PackedStringArray) -> int:
 	var opts: Dictionary = {"seeds": "", "lists": "all", "report": "build/seed_harness", "threads": "0", "machine": "local", "pack": "", "hard": "",
 		"gates": "enforce", "failures": "40"}
 	var repro: PackedStringArray = PackedStringArray()
+	var coverage: bool = false
 	var i: int = 0
 	while i < args.size():
 		var a: String = args[i]
 		if a == "--help" or a == "-h":
 			print(_usage())
 			return 0
+		if a == "--coverage":
+			coverage = true
+			i += 1
+			continue
 		if a == "--repro":
 			repro = args.slice(i + 1)
 			break
@@ -53,6 +63,8 @@ static func main(args: PackedStringArray) -> int:
 	}
 	Variants.dict(options["params"])["failures_kept_per_check"] = int(str(opts["failures"]))
 	var configure: Dictionary = MineLayouts.configure_params(0)
+	if coverage:
+		return _coverage(base, str(opts["report"]), str(opts["gates"]) == "enforce")
 	if not repro.is_empty():
 		return _repro(base, configure, options, repro, str(opts["hard"]))
 	var seeds: Vector2i = _seed_range(str(opts["seeds"]), machine)
@@ -112,6 +124,59 @@ static func _repro(base: LbLayouts, configure: Dictionary, options: Dictionary, 
 	var run: Dictionary = _run_inputs(int(args[0]), int(Variants.number(LISTS[args[1]])), hard)
 	print(LbSeedHarness.repro(base, configure, run, options, args[2], cell))
 	return 0
+
+
+## GEN-16's coverage report over the v1 biomes, as the deriver meets them: each biome's socket widths
+## (GEN-06's table), the socket offsets and the open rate.
+static func _coverage(base: LbLayouts, dir: String, enforce: bool) -> int:
+	var table: Dictionary = MineLayouts.biome_table()
+	var widths_of: Dictionary = Variants.dict(table["widths"])
+	var offsets: PackedInt32Array = PackedInt32Array(Tuning.list_i(&"mine.socket_offsets_tiles"))
+	var socket_widths: Array[int] = Tuning.list_i(&"mine.socket_widths_tiles")
+	var open: float = Tuning.f(&"mine.edge_open_probability")
+	var min_cover: float = Tuning.f(&"mine.harness_coverage_min")
+	var max_blind: float = Tuning.f(&"mine.harness_blind_headings_max")
+	var rows: Array = []
+	var md: PackedStringArray = PackedStringArray(["# Template coverage (GEN-16)", "",
+		"Set `%s`: each biome's cell templates against every socket set a cell can meet (open at %.2f, offsets %s)." % [base.set_version(), open,
+		str(Array(offsets))], "", "| Biome | Templates | Covered | Only the fallback | Nothing | Blind headings a cell | Result |",
+		"|---|---|---|---|---|---|---|"])
+	var failed: bool = false
+	for biome: String in ["pit_bottom", "seam", "old_workings"]:
+		var span: Array = Variants.array(widths_of.get(biome, [1, 3]))
+		var widths: PackedInt32Array = PackedInt32Array()
+		for w: int in socket_widths:
+			if w >= int(Variants.number(span[0])) and w <= int(Variants.number(span[1])):
+				widths.append(w)
+		var c: Dictionary = LbSeedHarness.coverage(base, biome, open, offsets, widths)
+		var covered: float = float(Variants.number(c["covered"]))
+		var blind: float = float(Variants.number(c["blind_headings"]))
+		var nothing: float = float(Variants.number(c["uncovered"]))
+		var ok: bool = covered >= min_cover and blind <= max_blind and nothing <= 0.0
+		failed = failed or not ok
+		rows.append(c)
+		md.append("| %s | %d | %.2f%% | %.2f%% | %.2f%% | %.2f | %s |" % [biome, int(Variants.number(c["templates"])), covered * 100.0,
+			float(Variants.number(c["only_fallback"])) * 100.0, nothing * 100.0, blind, "pass" if ok else "**FAIL**"])
+		print("  %-14s covered %.2f%%, only the fallback %.2f%%, nothing %.2f%%, %.2f blind headings a cell: %s" % [biome, covered * 100.0,
+			float(Variants.number(c["only_fallback"])) * 100.0, nothing * 100.0, blind, "pass" if ok else "FAIL"])
+	md.append("")
+	md.append("Targets (Proposed, GEN-16): covered %.0f%% or more, at most %.1f blind headings a cell, no set without a template." % [min_cover * 100.0,
+		max_blind])
+	for raw: Variant in rows:
+		var c: Dictionary = raw
+		var gaps: Array = Variants.array(c["gaps"])
+		if gaps.is_empty():
+			continue
+		md.append("")
+		md.append("## %s: the likeliest sets no cell template covers" % str(c["biome"]))
+		md.append("")
+		for g: Variant in gaps.slice(0, 12):
+			md.append("- `%s`" % str(g))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(dir) if dir.contains("://") else dir)
+	_write(dir.path_join("coverage.md"), "\n".join(md) + "\n")
+	_write(dir.path_join("coverage.json"), JSON.stringify(rows, "\t", true) + "\n")
+	print("seed harness: coverage written to %s%s" % [dir, "; a target FAILED" if failed else ""])
+	return 1 if failed and enforce else 0
 
 
 static func _seed_range(text: String, machine: String) -> Vector2i:

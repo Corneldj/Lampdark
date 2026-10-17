@@ -230,3 +230,34 @@ TEST_CASE("GEN-14 the report's histograms: fixed bins, any merge order, quantile
 	CHECK(m.count == 12);
 	CHECK(m.quantile(0.5) == a.quantile(0.5));
 }
+
+TEST_CASE("GEN-16 coverage: the weighted share of socket sets a biome's templates cover, and blind headings") {
+	// One template with stubs north and south at 10: it covers the sets with east and west shut and
+	// north and south each shut or at 10.
+	Spec ns = fallback_spec();
+	ns.id = "seam_ns";
+	ns.kind = TemplateKind::BIOME_CELL;
+	ns.stubs = {stub(Edge::NORTH, 10, 3), stub(Edge::SOUTH, 10, 3)};
+	Template t = make(ns);
+	t.biome = "seam";
+	auto set = std::make_shared<TemplateSet>();
+	REQUIRE(set->load(encode_pack("coverage", {t})));
+	const h::Coverage c = h::coverage(*set, "seam", 600000, {5, 10, 15}, {3});
+	CHECK(c.templates == 1);
+	CHECK(c.sets == 256);
+	// (0.4 + 0.2)^2 for north and south, 0.4^2 for east and west.
+	CHECK(c.covered_ppm == 57600);
+	CHECK(c.fallback_ppm == 0);
+	CHECK(c.uncovered_ppm == 1000000 - 57600);
+	// Covered sets: both shut (2 blind headings), one open (1), both open (0).
+	const double blind = 0.16 * (0.16 * 2 + 2 * 0.4 * 0.2 * 1 + 0.2 * 0.2 * 0);
+	CHECK(c.blind_milli == static_cast<int64_t>(std::llround(blind * 1000.0)));
+	CHECK(c.templates_per_set.at(1) == 4);
+	REQUIRE(!c.uncovered.empty());
+	CHECK(c.uncovered.front().find("N-") != std::string::npos); // the likeliest gap: some edge open off the stubs
+	// GEN-07's road set: every biome's hub and fallback cover every set.
+	const std::shared_ptr<TemplateSet> roads = main_road_fixture::road_set();
+	const h::Coverage all = h::coverage(*roads, "seam", 600000, {5, 10, 15}, {2, 3});
+	CHECK(all.covered_ppm == 1000000);
+	CHECK(all.uncovered.empty());
+}

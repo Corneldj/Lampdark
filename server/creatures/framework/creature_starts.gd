@@ -11,7 +11,7 @@ extends RefCounted
 ##   tapper.start_rings (a staged run 1: modes.staging_tapper_start_rings), Tapper.start_tile's draw
 ##   among the loaded cells; rock 4 or more tiles thick if no mass is loaded there (Proposed);
 ## - the Stythe at its lair (the plan's lair site): the floor tile nearest the site's middle, its lair
-##   set there, and StytheLair's stand-in layout round it until GEN-16 gives the lair a template.
+##   set there; StytheLair reads the lair template's layout (GEN-16), its stand-in round it with none.
 ## A creature turned off (creatures.enabled), and the Tapper under Quiet Seam, never spawn (the
 ## spawner refuses). A resumed run takes its creatures from its save (NET-09): server_main never
 ## calls this then, and a kind already present is left alone. Server-only.

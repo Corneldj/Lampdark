@@ -1,0 +1,273 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://addons/lampblack_templates/template_source.gd" id="1_fbwrd"]
+[ext_resource type="TileSet" path="res://addons/lampblack_templates/palette.tres" id="2_lcyox"]
+[ext_resource type="Script" path="res://addons/lampblack_templates/template_anchor.gd" id="3_8hlae"]
+[ext_resource type="Script" path="res://addons/lampblack_templates/template_stub.gd" id="4_p7del"]
+[ext_resource type="Script" path="res://addons/lampblack_templates/template_collapse.gd" id="5_b3c8v"]
+
+[node name="old_workings_hub" type="Node2D" unique_id=828547334]
+script = ExtResource("1_fbwrd")
+template_id = "old_workings_hub"
+biome = "old_workings"
+weight = 0.01
+
+[node name="Geometry" type="TileMapLayer" parent="." unique_id=1257661969]
+z_index = -1
+tile_map_data = PackedByteArray("AAAAAAAAAAADAAAAAAABAAAAAAADAAAAAAACAAAAAAADAAAAAAADAAAAAAADAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAADAAAAAAAHAAAAAAADAAAAAAAIAAAAAAADAAAAAAAJAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAALAAAAAAADAAAAAAAMAAAAAAADAAAAAAANAAAAAAADAAAAAAAOAAAAAAAAAAAAAAAPAAAAAAAAAAAAAAAQAAAAAAADAAAAAAARAAAAAAADAAAAAAASAAAAAAADAAAAAAATAAAAAAADAAAAAAAAAAEAAAADAAAAAAABAAEAAAADAAAAAAACAAEAAAADAAAAAAADAAEAAAADAAAAAAAEAAEAAAAAAAAAAAAFAAEAAAAAAAAAAAAGAAEAAAADAAAAAAAHAAEAAAADAAAAAAAIAAEAAAADAAAAAAAJAAEAAAAAAAAAAAAKAAEAAAAAAAAAAAALAAEAAAADAAAAAAAMAAEAAAADAAAAAAANAAEAAAADAAAAAAAOAAEAAAAAAAAAAAAPAAEAAAAAAAAAAAAQAAEAAAADAAAAAAARAAEAAAADAAAAAAASAAEAAAADAAAAAAATAAEAAAADAAAAAAAAAAIAAAADAAAAAAABAAIAAAADAAAAAAACAAIAAAADAAAAAAADAAIAAAAGAAAAAAAEAAIAAAAAAAAAAAAFAAIAAAAAAAAAAAAGAAIAAAADAAAAAAAHAAIAAAADAAAAAAAIAAIAAAADAAAAAAAJAAIAAAAAAAAAAAAKAAIAAAAAAAAAAAALAAIAAAADAAAAAAAMAAIAAAADAAAAAAANAAIAAAAGAAAAAAAOAAIAAAAAAAAAAAAPAAIAAAAAAAAAAAAQAAIAAAADAAAAAAARAAIAAAADAAAAAAASAAIAAAADAAAAAAATAAIAAAADAAAAAAAAAAMAAAADAAAAAAABAAMAAAADAAAAAAACAAMAAAADAAAAAAADAAMAAAADAAAAAAAEAAMAAAAAAAAAAAAFAAMAAAAAAAAAAAAGAAMAAAAGAAAAAAAHAAMAAAADAAAAAAAIAAMAAAADAAAAAAAJAAMAAAAAAAAAAAAKAAMAAAAAAAAAAAALAAMAAAADAAAAAAAMAAMAAAAGAAAAAAANAAMAAAADAAAAAAAOAAMAAAAAAAAAAAAPAAMAAAAAAAAAAAAQAAMAAAADAAAAAAARAAMAAAADAAAAAAASAAMAAAADAAAAAAATAAMAAAADAAAAAAAAAAQAAAAAAAAAAAABAAQAAAAAAAAAAAACAAQAAAAAAAAAAAADAAQAAAAAAAAAAAAEAAQAAAAAAAAAAAAFAAQAAAAAAAAAAAAGAAQAAAAAAAAAAAAHAAQAAAAAAAAAAAAIAAQAAAAAAAAAAAAJAAQAAAAAAAAAAAAKAAQAAAAAAAAAAAALAAQAAAAAAAAAAAAMAAQAAAAAAAAAAAANAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAAQAAQAAAAAAAAAAAARAAQAAAAAAAAAAAASAAQAAAAAAAAAAAATAAQAAAAAAAAAAAAAAAUAAAAAAAAAAAABAAUAAAAAAAAAAAACAAUAAAAAAAAAAAADAAUAAAAAAAAAAAAEAAUAAAAAAAAAAAAFAAUAAAAAAAAAAAAGAAUAAAAAAAAAAAAHAAUAAAAAAAAAAAAIAAUAAAAAAAAAAAAJAAUAAAAAAAAAAAAKAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAMAAUAAAAAAAAAAAANAAUAAAAAAAAAAAAOAAUAAAAAAAAAAAAPAAUAAAAAAAAAAAAQAAUAAAAAAAAAAAARAAUAAAAAAAAAAAASAAUAAAAAAAAAAAATAAUAAAAAAAAAAAAAAAYAAAADAAAAAAABAAYAAAADAAAAAAACAAYAAAAGAAAAAAADAAYAAAADAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAADAAAAAAAHAAYAAAADAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAADAAAAAAAKAAYAAAADAAAAAAALAAYAAAAAAAAAAAAMAAYAAAADAAAAAAANAAYAAAADAAAAAAAOAAYAAAAAAAAAAAAPAAYAAAAAAAAAAAAQAAYAAAADAAAAAAARAAYAAAADAAAAAAASAAYAAAADAAAAAAATAAYAAAADAAAAAAAAAAcAAAADAAAAAAABAAcAAAADAAAAAAACAAcAAAADAAAAAAADAAcAAAAGAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAADAAAAAAAHAAcAAAADAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAADAAAAAAAKAAcAAAADAAAAAAALAAcAAAAAAAAAAAAMAAcAAAADAAAAAAANAAcAAAADAAAAAAAOAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAQAAcAAAADAAAAAAARAAcAAAADAAAAAAASAAcAAAADAAAAAAATAAcAAAADAAAAAAAAAAgAAAADAAAAAAABAAgAAAADAAAAAAACAAgAAAADAAAAAAADAAgAAAADAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAADAAAAAAAHAAgAAAADAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAADAAAAAAAKAAgAAAADAAAAAAALAAgAAAAAAAAAAAAMAAgAAAADAAAAAAANAAgAAAADAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAAQAAgAAAAGAAAAAAARAAgAAAADAAAAAAASAAgAAAADAAAAAAATAAgAAAADAAAAAAAAAAkAAAAAAAAAAAABAAkAAAAAAAAAAAACAAkAAAAAAAAAAAADAAkAAAAAAAAAAAAEAAkAAAAAAAAAAAAFAAkAAAAAAAAAAAAGAAkAAAADAAAAAAAHAAkAAAADAAAAAAAIAAkAAAADAAAAAAAJAAkAAAADAAAAAAAKAAkAAAADAAAAAAALAAkAAAADAAAAAAAMAAkAAAADAAAAAAANAAkAAAADAAAAAAAOAAkAAAAAAAAAAAAPAAkAAAAAAAAAAAAQAAkAAAAAAAAAAAARAAkAAAAAAAAAAAASAAkAAAAAAAAAAAATAAkAAAAAAAAAAAAAAAoAAAAAAAAAAAABAAoAAAAAAAAAAAACAAoAAAAAAAAAAAADAAoAAAAAAAAAAAAEAAoAAAAAAAAAAAAFAAoAAAAAAAAAAAAGAAoAAAAAAAAAAAAHAAoAAAAAAAAAAAAIAAoAAAAAAAAAAAAJAAoAAAADAAAAAAAKAAoAAAADAAAAAAALAAoAAAADAAAAAAAMAAoAAAADAAAAAAANAAoAAAADAAAAAAAOAAoAAAAAAAAAAAAPAAoAAAAAAAAAAAAQAAoAAAAAAAAAAAARAAoAAAAAAAAAAAASAAoAAAAAAAAAAAATAAoAAAAAAAAAAAAAAAsAAAADAAAAAAABAAsAAAADAAAAAAACAAsAAAADAAAAAAADAAsAAAADAAAAAAAEAAsAAAAAAAAAAAAFAAsAAAAAAAAAAAAGAAsAAAADAAAAAAAHAAsAAAADAAAAAAAIAAsAAAADAAAAAAAJAAsAAAADAAAAAAAKAAsAAAADAAAAAAALAAsAAAADAAAAAAAMAAsAAAADAAAAAAANAAsAAAADAAAAAAAOAAsAAAAAAAAAAAAPAAsAAAAAAAAAAAAQAAsAAAAGAAAAAAARAAsAAAADAAAAAAASAAsAAAADAAAAAAATAAsAAAADAAAAAAAAAAwAAAADAAAAAAABAAwAAAADAAAAAAACAAwAAAADAAAAAAADAAwAAAADAAAAAAAEAAwAAAAAAAAAAAAFAAwAAAAAAAAAAAAGAAwAAAADAAAAAAAHAAwAAAADAAAAAAAIAAwAAAADAAAAAAAJAAwAAAADAAAAAAAKAAwAAAADAAAAAAALAAwAAAADAAAAAAAMAAwAAAADAAAAAAANAAwAAAADAAAAAAAOAAwAAAAAAAAAAAAPAAwAAAAAAAAAAAAQAAwAAAADAAAAAAARAAwAAAADAAAAAAASAAwAAAADAAAAAAATAAwAAAADAAAAAAAAAA0AAAADAAAAAAABAA0AAAADAAAAAAACAA0AAAAGAAAAAAADAA0AAAADAAAAAAAEAA0AAAAAAAAAAAAFAA0AAAAAAAAAAAAGAA0AAAADAAAAAAAHAA0AAAADAAAAAAAIAA0AAAADAAAAAAAJAA0AAAADAAAAAAAKAA0AAAADAAAAAAALAA0AAAADAAAAAAAMAA0AAAADAAAAAAANAA0AAAADAAAAAAAOAA0AAAAAAAAAAAAPAA0AAAAAAAAAAAAQAA0AAAADAAAAAAARAA0AAAADAAAAAAASAA0AAAADAAAAAAATAA0AAAADAAAAAAAAAA4AAAAAAAAAAAABAA4AAAAAAAAAAAACAA4AAAAAAAAAAAADAA4AAAAAAAAAAAAEAA4AAAAAAAAAAAAFAA4AAAAAAAAAAAAGAA4AAAAAAAAAAAAHAA4AAAAAAAAAAAAIAA4AAAAAAAAAAAAJAA4AAAAAAAAAAAAKAA4AAAAAAAAAAAALAA4AAAAAAAAAAAAMAA4AAAAAAAAAAAANAA4AAAAAAAAAAAAOAA4AAAAAAAAAAAAPAA4AAAAAAAAAAAAQAA4AAAAAAAAAAAARAA4AAAAAAAAAAAASAA4AAAAAAAAAAAATAA4AAAAAAAAAAAAAAA8AAAAAAAAAAAABAA8AAAAAAAAAAAACAA8AAAAAAAAAAAADAA8AAAAAAAAAAAAEAA8AAAAAAAAAAAAFAA8AAAAAAAAAAAAGAA8AAAAAAAAAAAAHAA8AAAAAAAAAAAAIAA8AAAAAAAAAAAAJAA8AAAAAAAAAAAAKAA8AAAAAAAAAAAALAA8AAAAAAAAAAAAMAA8AAAAAAAAAAAANAA8AAAAAAAAAAAAOAA8AAAAAAAAAAAAPAA8AAAAAAAAAAAAQAA8AAAAAAAAAAAARAA8AAAAAAAAAAAASAA8AAAAAAAAAAAATAA8AAAAAAAAAAAAAABAAAAADAAAAAAABABAAAAADAAAAAAACABAAAAAGAAAAAAADABAAAAADAAAAAAAEABAAAAAAAAAAAAAFABAAAAAAAAAAAAAGABAAAAADAAAAAAAHABAAAAADAAAAAAAIABAAAAAGAAAAAAAJABAAAAAAAAAAAAAKABAAAAAAAAAAAAALABAAAAADAAAAAAAMABAAAAADAAAAAAANABAAAAADAAAAAAAOABAAAAAAAAAAAAAPABAAAAAAAAAAAAAQABAAAAAGAAAAAAARABAAAAADAAAAAAASABAAAAADAAAAAAATABAAAAADAAAAAAAAABEAAAADAAAAAAABABEAAAADAAAAAAACABEAAAADAAAAAAADABEAAAADAAAAAAAEABEAAAAAAAAAAAAFABEAAAAAAAAAAAAGABEAAAADAAAAAAAHABEAAAADAAAAAAAIABEAAAAGAAAAAAAJABEAAAAAAAAAAAAKABEAAAAAAAAAAAALABEAAAADAAAAAAAMABEAAAADAAAAAAANABEAAAADAAAAAAAOABEAAAAAAAAAAAAPABEAAAAAAAAAAAAQABEAAAADAAAAAAARABEAAAADAAAAAAASABEAAAADAAAAAAATABEAAAADAAAAAAAAABIAAAADAAAAAAABABIAAAADAAAAAAACABIAAAADAAAAAAADABIAAAADAAAAAAAEABIAAAAAAAAAAAAFABIAAAAAAAAAAAAGABIAAAADAAAAAAAHABIAAAADAAAAAAAIABIAAAADAAAAAAAJABIAAAAAAAAAAAAKABIAAAAAAAAAAAALABIAAAADAAAAAAAMABIAAAADAAAAAAANABIAAAADAAAAAAAOABIAAAAAAAAAAAAPABIAAAAAAAAAAAAQABIAAAADAAAAAAARABIAAAADAAAAAAASABIAAAADAAAAAAATABIAAAADAAAAAAAAABMAAAADAAAAAAABABMAAAADAAAAAAACABMAAAADAAAAAAADABMAAAADAAAAAAAEABMAAAAAAAAAAAAFABMAAAAAAAAAAAAGABMAAAADAAAAAAAHABMAAAADAAAAAAAIABMAAAADAAAAAAAJABMAAAAAAAAAAAAKABMAAAAAAAAAAAALABMAAAADAAAAAAAMABMAAAADAAAAAAANABMAAAADAAAAAAAOABMAAAAAAAAAAAAPABMAAAAAAAAAAAAQABMAAAADAAAAAAARABMAAAADAAAAAAASABMAAAADAAAAAAATABMAAAADAAAAAAA=")
+tile_set = ExtResource("2_lcyox")
+
+[node name="Rib" type="TileMapLayer" parent="." unique_id=31423538]
+modulate = Color(1, 1, 1, 0.7)
+z_index = -1
+tile_set = ExtResource("2_lcyox")
+
+[node name="landmark_8_5" type="Marker2D" parent="." unique_id=1148354467]
+position = Vector2(136, 88)
+script = ExtResource("3_8hlae")
+anchor_type = "landmark"
+tags = PackedStringArray()
+kind = "hand_pump"
+
+[node name="rubble_heap_14_12" type="Marker2D" parent="." unique_id=2027325667]
+position = Vector2(232, 200)
+script = ExtResource("3_8hlae")
+anchor_type = "rubble_heap"
+tags = PackedStringArray()
+
+[node name="rubble_heap_11_14" type="Marker2D" parent="." unique_id=1858045678]
+position = Vector2(184, 232)
+script = ExtResource("3_8hlae")
+anchor_type = "rubble_heap"
+tags = PackedStringArray()
+
+[node name="remains_8_6" type="Marker2D" parent="." unique_id=1177107948]
+position = Vector2(136, 104)
+script = ExtResource("3_8hlae")
+anchor_type = "remains"
+tags = PackedStringArray()
+
+[node name="remains_11_6" type="Marker2D" parent="." unique_id=1805684457]
+position = Vector2(184, 104)
+script = ExtResource("3_8hlae")
+anchor_type = "remains"
+tags = PackedStringArray()
+
+[node name="wall_fixture_6_6" type="Marker2D" parent="." unique_id=563977398]
+position = Vector2(104, 104)
+script = ExtResource("3_8hlae")
+anchor_type = "wall_fixture"
+tags = PackedStringArray()
+
+[node name="item_14_5" type="Marker2D" parent="." unique_id=1329331002]
+position = Vector2(232, 88)
+script = ExtResource("3_8hlae")
+anchor_type = "item"
+tags = PackedStringArray()
+
+[node name="item_5_13" type="Marker2D" parent="." unique_id=1748352892]
+position = Vector2(88, 216)
+script = ExtResource("3_8hlae")
+anchor_type = "item"
+tags = PackedStringArray()
+
+[node name="trap_site_6_14" type="Marker2D" parent="." unique_id=197845733]
+position = Vector2(104, 232)
+script = ExtResource("3_8hlae")
+anchor_type = "trap_site"
+tags = PackedStringArray()
+
+[node name="gas_dead_end_8_6" type="Marker2D" parent="." unique_id=1179471196]
+position = Vector2(136, 104)
+script = ExtResource("3_8hlae")
+anchor_type = "gas_dead_end"
+size = Vector2i(1, 3)
+tags = PackedStringArray("dead_end")
+
+[node name="low_road_8_15" type="Marker2D" parent="." unique_id=226538969]
+position = Vector2(136, 248)
+script = ExtResource("3_8hlae")
+anchor_type = "low_road"
+size = Vector2i(4, 1)
+tags = PackedStringArray()
+
+[node name="timber_hook_4_4" type="Marker2D" parent="." unique_id=142533491]
+position = Vector2(72, 72)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_5_4" type="Marker2D" parent="." unique_id=979298857]
+position = Vector2(88, 72)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_9_4" type="Marker2D" parent="." unique_id=2066886021]
+position = Vector2(152, 72)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_10_4" type="Marker2D" parent="." unique_id=770410110]
+position = Vector2(168, 72)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_14_4" type="Marker2D" parent="." unique_id=1118847832]
+position = Vector2(232, 72)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_15_4" type="Marker2D" parent="." unique_id=2073133530]
+position = Vector2(248, 72)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_4_5" type="Marker2D" parent="." unique_id=654567495]
+position = Vector2(72, 88)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_15_5" type="Marker2D" parent="." unique_id=1024150455]
+position = Vector2(248, 88)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_9_5" type="Marker2D" parent="." unique_id=1696940242]
+position = Vector2(152, 88)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_11_8" type="Marker2D" parent="." unique_id=692996047]
+position = Vector2(184, 136)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_3_10" type="Marker2D" parent="." unique_id=20193565]
+position = Vector2(56, 168)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_14_13" type="Marker2D" parent="." unique_id=1418871170]
+position = Vector2(232, 216)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_16_9" type="Marker2D" parent="." unique_id=271776016]
+position = Vector2(264, 152)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_5_11" type="Marker2D" parent="." unique_id=1387241657]
+position = Vector2(88, 184)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_4_14" type="Marker2D" parent="." unique_id=987233840]
+position = Vector2(72, 232)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_9_16" type="Marker2D" parent="." unique_id=1881759976]
+position = Vector2(152, 264)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_15_15" type="Marker2D" parent="." unique_id=2045007806]
+position = Vector2(248, 248)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_17_14" type="Marker2D" parent="." unique_id=1360463719]
+position = Vector2(280, 232)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_4_15" type="Marker2D" parent="." unique_id=1392913372]
+position = Vector2(72, 248)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_5_17" type="Marker2D" parent="." unique_id=1998810571]
+position = Vector2(88, 280)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="timber_hook_14_17" type="Marker2D" parent="." unique_id=538818880]
+position = Vector2(232, 280)
+script = ExtResource("3_8hlae")
+tags = PackedStringArray()
+
+[node name="stub_north_5" type="Node2D" parent="." unique_id=647438507]
+script = ExtResource("4_p7del")
+offset = 5
+max_width = 2
+
+[node name="stub_north_10" type="Node2D" parent="." unique_id=1260199127]
+script = ExtResource("4_p7del")
+max_width = 2
+
+[node name="stub_north_15" type="Node2D" parent="." unique_id=892223694]
+script = ExtResource("4_p7del")
+offset = 15
+max_width = 2
+
+[node name="stub_east_5" type="Node2D" parent="." unique_id=170646096]
+script = ExtResource("4_p7del")
+edge = "east"
+offset = 5
+max_width = 2
+
+[node name="stub_east_10" type="Node2D" parent="." unique_id=1967195966]
+script = ExtResource("4_p7del")
+edge = "east"
+max_width = 2
+
+[node name="stub_east_15" type="Node2D" parent="." unique_id=1425207769]
+script = ExtResource("4_p7del")
+edge = "east"
+offset = 15
+max_width = 2
+
+[node name="stub_south_5" type="Node2D" parent="." unique_id=2101850258]
+script = ExtResource("4_p7del")
+edge = "south"
+offset = 5
+max_width = 2
+
+[node name="stub_south_10" type="Node2D" parent="." unique_id=1801139714]
+script = ExtResource("4_p7del")
+edge = "south"
+max_width = 2
+
+[node name="stub_south_15" type="Node2D" parent="." unique_id=1109738931]
+script = ExtResource("4_p7del")
+edge = "south"
+offset = 15
+max_width = 2
+
+[node name="stub_west_5" type="Node2D" parent="." unique_id=1681512951]
+script = ExtResource("4_p7del")
+edge = "west"
+offset = 5
+max_width = 2
+
+[node name="stub_west_10" type="Node2D" parent="." unique_id=1263340105]
+script = ExtResource("4_p7del")
+edge = "west"
+max_width = 2
+
+[node name="stub_west_15" type="Node2D" parent="." unique_id=1444203018]
+script = ExtResource("4_p7del")
+edge = "west"
+offset = 15
+max_width = 2
+
+[node name="collapse_1" type="TileMapLayer" parent="." unique_id=2068525426]
+tile_map_data = PackedByteArray("AAAEAAIAAAADAAAAAAAFAAIAAAADAAAAAAA=")
+tile_set = ExtResource("2_lcyox")
+script = ExtResource("5_b3c8v")
+
+[node name="collapse_2" type="TileMapLayer" parent="." unique_id=319682217]
+tile_map_data = PackedByteArray("AAAJAAIAAAADAAAAAAAKAAIAAAADAAAAAAA=")
+tile_set = ExtResource("2_lcyox")
+script = ExtResource("5_b3c8v")
+collapse_id = 2

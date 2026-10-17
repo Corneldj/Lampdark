@@ -3,6 +3,8 @@
 #include "harness/harness.h"
 
 #include "core/gen/sockets.h"
+#include "core/gen/spines.h"
+#include "core/gen/template_choice.h"
 #include "core/rng/hash.h"
 #include "core/rng/rng.h"
 #include "core/world/coords.h"
@@ -22,10 +24,6 @@ constexpr const char *TOOLS[] = {"spanner", "hammer", "crowbar", "wire_cutters"}
 
 uint64_t fold(uint64_t h, uint64_t v) {
 	return lb::core::mix64(h ^ (v + 0x9E3779B97F4A7C15ULL + (h << 6) + (h >> 2)));
-}
-
-Coord shaft() {
-	return lb::core::world::tile_of({0, 0}, {CELL_TILES / 2, CELL_TILES / 2});
 }
 
 Coord middle_of(Coord cell) {
@@ -393,6 +391,95 @@ std::map<std::string, int64_t> count_finds(const gen::PlacementWorld &world, con
 	return out;
 }
 
+Coverage coverage(const gen::TemplateSet &set, const std::string &biome, uint32_t open_ppm, const std::vector<int32_t> &offsets,
+		const std::vector<int32_t> &widths) {
+	Coverage out;
+	out.biome = biome;
+	const std::vector<const gen::Template *> &cells = set.of(gen::TemplateKind::BIOME_CELL, biome);
+	out.templates = static_cast<int32_t>(cells.size());
+	const gen::Template *fallback = set.fallback(biome);
+	// Each edge: shut, or open at an offset and a width.
+	struct EdgeState {
+		gen::Socket s;
+		double p = 0.0;
+	};
+	std::vector<EdgeState> states;
+	EdgeState shut;
+	shut.p = 1.0 - static_cast<double>(open_ppm) / 1000000.0;
+	states.push_back(shut);
+	const size_t combos = std::max<size_t>(1, offsets.size() * widths.size());
+	for (int32_t o : offsets) {
+		for (int32_t w : widths) {
+			EdgeState e;
+			e.s.open = true;
+			e.s.offset = o;
+			e.s.width = w;
+			e.p = static_cast<double>(open_ppm) / 1000000.0 / static_cast<double>(combos);
+			states.push_back(e);
+		}
+	}
+	double covered = 0.0;
+	double only_fallback = 0.0;
+	double none = 0.0;
+	double blind = 0.0;
+	std::vector<std::pair<double, std::string>> gaps;
+	const char *const LETTER = "NESW";
+	const size_t n = states.size();
+	for (size_t a = 0; a < n; a++) {
+		for (size_t b = 0; b < n; b++) {
+			for (size_t c = 0; c < n; c++) {
+				for (size_t d = 0; d < n; d++) {
+					gen::CellSockets sockets{};
+					const size_t pick[4] = {a, b, c, d};
+					double p = 1.0;
+					int32_t open = 0;
+					std::string text;
+					for (int e = 0; e < 4; e++) {
+						const EdgeState &st = states[pick[e]];
+						sockets[static_cast<size_t>(e)] = st.s;
+						p *= st.p;
+						open += st.s.open ? 1 : 0;
+						text += (e == 0 ? "" : " ") + std::string(1, LETTER[e]) + (st.s.open ? std::to_string(st.s.offset) + "w" + std::to_string(st.s.width) : "-");
+					}
+					out.sets++;
+					double total = 0.0;
+					double stubs = 0.0;
+					int32_t covering = 0;
+					for (const gen::Template *t : cells) {
+						if (t->weight > 0.0 && gen::covers(*t, sockets)) {
+							covering++;
+							total += t->weight;
+							stubs += t->weight * static_cast<double>(t->stubs.size());
+						}
+					}
+					out.templates_per_set[covering]++;
+					if (covering > 0) {
+						covered += p;
+						blind += p * (stubs / total - static_cast<double>(open));
+						continue;
+					}
+					if (fallback != nullptr && gen::covers(*fallback, sockets)) {
+						only_fallback += p;
+						blind += p * (static_cast<double>(fallback->stubs.size()) - static_cast<double>(open));
+					} else {
+						none += p;
+					}
+					gaps.emplace_back(p, text);
+				}
+			}
+		}
+	}
+	std::stable_sort(gaps.begin(), gaps.end(), [](const auto &x, const auto &y) { return x.first > y.first; });
+	for (size_t i = 0; i < gaps.size() && i < 40; i++) {
+		out.uncovered.push_back(gaps[i].second);
+	}
+	out.covered_ppm = static_cast<int64_t>(std::llround(covered * 1000000.0));
+	out.fallback_ppm = static_cast<int64_t>(std::llround(only_fallback * 1000000.0));
+	out.uncovered_ppm = static_cast<int64_t>(std::llround(none * 1000000.0));
+	out.blind_milli = static_cast<int64_t>(std::llround(blind * 1000.0));
+	return out;
+}
+
 RunResult check_run(const Run &run, const RunFactory &fresh, const Params &p) {
 	RunResult r;
 	const gen::RunHeader &h = run.header();
@@ -420,6 +507,15 @@ RunResult check_run(const Run &run, const RunFactory &fresh, const Params &p) {
 			Failure f = verdict_failure("spine_reach", cell, v);
 			f.detail = "spine " + std::to_string(i) + ": " + f.detail;
 			note(r, p, std::move(f));
+		}
+	}
+	// Every planned site has a template its contents can lie in (GEN-09's sites_untemplated: a
+	// required part with no slot would never be placed).
+	for (const gen::PlannedSite &site : plan.sites) {
+		const gen::PoiRef ref = world.poi_at(site.door);
+		if (ref && ref->shape == nullptr) {
+			r.cells_invalid++;
+			note(r, p, plain_failure("validator", site.door, std::string("no template fits the planned ") + gen::poi_kind_name(site.kind) + " (" + site.need + ")"));
 		}
 	}
 	// Nothing is placed in base camp (Gameplay §12.5; LFT-01's run-start check).
@@ -457,12 +553,14 @@ RunResult check_run(const Run &run, const RunFactory &fresh, const Params &p) {
 	const Joined joined = joined_cells(socket_graph(run), p.joined_max_ring, ring_reach(world.ring_bounds(), p.joined_max_ring));
 	r.joined_cells = joined.joined;
 	r.ring_cells = joined.cells;
-	// Banded sites: each kind's door from the shaft, and the hoard-lair bearing.
-	std::optional<Coord> hoard;
-	std::optional<Coord> lair;
+	// Banded sites: each kind's door from the shaft, and the hoard-lair bearing, both at the door
+	// edge's middle, where GEN-08's planner measures its bands and bearings (door_point2).
+	std::optional<std::pair<int64_t, int64_t>> hoard;
+	std::optional<std::pair<int64_t, int64_t>> lair;
 	for (const gen::PlannedSite &site : plan.sites) {
-		const Coord door = middle_of(site.door);
-		r.sites.emplace_back(gen::poi_kind_name(site.kind), static_cast<int64_t>(std::llround(distance(shaft(), door))));
+		const std::pair<int64_t, int64_t> door = gen::door_point2(site);
+		const double d2 = static_cast<double>(door.first * door.first + door.second * door.second);
+		r.sites.emplace_back(gen::poi_kind_name(site.kind), static_cast<int64_t>(std::llround(std::sqrt(d2) / 2.0)));
 		if (site.kind == gen::PoiKind::HOARD && !hoard) {
 			hoard = door;
 		} else if (site.kind == gen::PoiKind::LAIR && !lair) {
@@ -474,9 +572,8 @@ RunResult check_run(const Run &run, const RunFactory &fresh, const Params &p) {
 		r.roosts_min = static_cast<int32_t>(pp.roosts_min);
 	}
 	if (hoard && lair) {
-		const Coord s = shaft();
-		const double a = std::atan2(static_cast<double>(hoard->y - s.y), static_cast<double>(hoard->x - s.x));
-		const double b = std::atan2(static_cast<double>(lair->y - s.y), static_cast<double>(lair->x - s.x));
+		const double a = std::atan2(static_cast<double>(hoard->second), static_cast<double>(hoard->first));
+		const double b = std::atan2(static_cast<double>(lair->second), static_cast<double>(lair->first));
 		double d = std::fabs(a - b) * 180.0 / 3.14159265358979323846;
 		if (d > 180.0) {
 			d = 360.0 - d;

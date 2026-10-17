@@ -38,6 +38,11 @@ public:
 	// null).
 	static ::godot::String repro(const ::godot::Ref<LbLayouts> &base, const ::godot::Dictionary &configure, const ::godot::Dictionary &run,
 			const ::godot::Dictionary &options, const ::godot::String &check, const ::godot::Variant &cell);
+	// GEN-16's coverage of `biome` by `base`'s pack (harness::coverage): {biome, templates, sets,
+	// covered, only_fallback, uncovered (shares), blind_headings (a cell's expected), gaps: [set text],
+	// templates_per_set: {n: sets}}.
+	static ::godot::Dictionary coverage(const ::godot::Ref<LbLayouts> &base, const ::godot::String &biome, double open_probability,
+			const ::godot::PackedInt32Array &offsets, const ::godot::PackedInt32Array &widths);
 };
 
 } // namespace lb::godot

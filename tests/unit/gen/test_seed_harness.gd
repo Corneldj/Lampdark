@@ -1,13 +1,16 @@
 extends GutTest
-## GEN-14: the seed harness's command line end to end on the fixture road pack (GEN-07's roads, a
-## hub and a plain fallback per biome): every run planned as a server plans it, the gates, the
-## report's three files, the same canonical bytes on one thread or many, a gate's failure in the
-## exit code (and only reported with --gates report), and a run's repro dump.
+## GEN-14: the seed harness's command line end to end: on the shipped set (GEN-16's v1) every run
+## planned as a server plans it passes every gate, with the report's three files; on the fixture
+## road pack (GEN-07's roads, a hub and a plain fallback per biome) the same canonical bytes on one
+## thread or many, and a run's repro dump; on a bare pack a gate's failure in the exit code (and
+## only reported with --gates report).
 
 const Specs = preload("res://tests/unit/gen/template_specs.gd")
 const Main = preload("res://tools/seed_harness/harness_main.gd")
 
 const PACK: String = "user://gen14_road_pack.lbtp"
+## The Seam's grid alone: no other biome has a template, so no mine generates.
+const BARE: String = "user://gen14_bare_pack.lbtp"
 const OUT: String = "user://gen14_harness"
 
 
@@ -16,6 +19,9 @@ func before_all() -> void:
 	var problems: Array[String] = []
 	var f: FileAccess = FileAccess.open(PACK, FileAccess.WRITE)
 	f.store_buffer(Specs.road_pack(problems))
+	f.close()
+	f = FileAccess.open(BARE, FileAccess.WRITE)
+	f.store_buffer(Specs.pack([Specs.grid_spec("seam_grid", "biome_cell", "seam", 1.0)], problems))
 	f.close()
 	assert_eq(problems, [] as Array[String])
 
@@ -28,8 +34,8 @@ func _gates(report: Dictionary) -> Dictionary:
 	return out
 
 
-func test_the_command_line_reports_and_passes_on_the_road_pack() -> void:
-	var code: int = Main.main(PackedStringArray(["--seeds", "3", "--lists", "short,standard", "--pack", PACK, "--report", OUT, "--threads", "2"]))
+func test_the_command_line_reports_and_passes_on_the_shipped_set() -> void:
+	var code: int = Main.main(PackedStringArray(["--seeds", "3", "--lists", "short,standard", "--report", OUT, "--threads", "2"]))
 	var text: String = FileAccess.get_file_as_string(OUT.path_join("report.json"))
 	var report: Dictionary = Variants.dict(JSON.parse_string(text))
 	assert_false(report.is_empty(), "report.json written")
@@ -37,7 +43,7 @@ func test_the_command_line_reports_and_passes_on_the_road_pack() -> void:
 	var gates: Dictionary = _gates(report)
 	for name: String in ["plan", "spine_reach", "order", "validator", "fallback_rate", "road_ratio", "joined"]:
 		assert_true(gates.has(name), "the %s gate" % name)
-		assert_false(Variants.flag(gates.get(name, true)), "%s passes on the road pack" % name)
+		assert_false(Variants.flag(gates.get(name, true)), "%s passes on the shipped set" % name)
 	assert_eq(code, 0, "no gate failed: exit 0")
 	assert_true(FileAccess.file_exists(OUT.path_join("timing.json")), "timing.json written")
 	assert_true(FileAccess.get_file_as_string(OUT.path_join("report.md")).begins_with("# Seed harness report"), "report.md written")
@@ -64,8 +70,7 @@ func test_one_thread_or_many_give_the_same_canonical_bytes() -> void:
 
 
 func test_a_failed_gate_fails_the_exit_code_unless_only_reported() -> void:
-	# The shipped set (one template, no fallback) cannot generate a mine yet: GEN-16's content.
-	var failing: PackedStringArray = PackedStringArray(["--seeds", "1", "--lists", "standard", "--report", OUT.path_join("shipped")])
+	var failing: PackedStringArray = PackedStringArray(["--seeds", "1", "--lists", "standard", "--pack", BARE, "--report", OUT.path_join("bare")])
 	assert_eq(Main.main(failing), 1, "a gate failed")
 	failing.append_array(["--gates", "report"])
 	assert_eq(Main.main(failing), 0, "reported, not enforced")

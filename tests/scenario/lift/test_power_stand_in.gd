@@ -1,8 +1,9 @@
 extends "res://tests/scenario/kit/scenario_test.gd"
-## LFT-05's stand-in substation (until GEN-16 gives the substation its template): in a generated
-## run, once the plan's substation site's door cell is loaded the fuse board, the trip lever and the
-## main switch stand on its floor (the board nearest the site's middle, the others at least two tiles
-## from it and from each other). They go with the cell and come back with it, in the same places.
+## LFT-05's stand-in substation, for a site no substation template fits (GEN-07's road pack has
+## none): in a generated run, once the plan's substation site's door cell is loaded the fuse board,
+## the trip lever and the main switch stand on its floor (the board nearest the site's middle, the
+## others at least two tiles from it and from each other). They go with the cell and come back with
+## it, in the same places.
 
 const Specs = preload("res://tests/unit/gen/template_specs.gd")
 
