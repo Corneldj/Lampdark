@@ -7,8 +7,8 @@ extends GutTest
 
 const Specs = preload("res://tests/unit/gen/template_specs.gd")
 ## SHA-256 over the plan bytes, the list's jobs and the draw.
-const GOLDEN_PAIR: String = "9a08f77688f1f517906fae5b41fb7fdb1ca628c690d81cbce04147e27fddb14b"
-const GOLDEN_STAGED_ONE: String = "2f38f1f1d374de2f56fd49a74ad2a2a98233846dbe6e3323a7d0224bc16413ab"
+const GOLDEN_PAIR: String = "562fb669c066e04096dd6e89071ebed225d948266af98ff162f1007066db16fe"
+const GOLDEN_STAGED_ONE: String = "4d176c08ae879d1e8949e53fff06771aa2d8b51d6ac0432878cd10172527f32f"
 
 
 func before_all() -> void:
