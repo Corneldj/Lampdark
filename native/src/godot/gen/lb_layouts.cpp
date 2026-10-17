@@ -338,6 +338,10 @@ gen::PlacementParams place_params(const Dictionary &d) {
 	p.blackdamp_ppm = ppm_of(d, "blackdamp_probability", p.blackdamp_ppm);
 	p.man_trap_ppm = ppm_of(d, "man_trap_probability", p.man_trap_ppm);
 	p.man_trap_min_ring = int_of(d, "man_trap_min_ring", p.man_trap_min_ring);
+	pair_of(d, "approach_traps", p.approach_traps_min, p.approach_traps_max);
+	pair_of(d, "approach_path", p.approach_path_min, p.approach_path_max);
+	p.approach_inside_max = int_of(d, "approach_inside_max", p.approach_inside_max);
+	p.approach_spacing = int_of(d, "approach_spacing", p.approach_spacing);
 	p.staple_pit_ppm = ppm_of(d, "staple_pit_probability", p.staple_pit_ppm);
 	p.staple_pit_min_ring = int_of(d, "staple_pit_min_ring", p.staple_pit_min_ring);
 	p.sump_mud_ppm = ppm_of(d, "sump_mud_probability", p.sump_mud_ppm);
@@ -863,6 +867,14 @@ Dictionary LbLayouts::homes_dict() const {
 	d["gate_phones"] = phones;
 	d["electric_lamp"] = h.electric_lamp ? Variant(Vector2i(static_cast<int32_t>(h.electric_lamp->x), static_cast<int32_t>(h.electric_lamp->y))) : Variant();
 	d["canary"] = h.canary ? Variant(Vector2i(static_cast<int32_t>(h.canary->x), static_cast<int32_t>(h.canary->y))) : Variant();
+	Array traps;
+	for (const gen::ApproachTrap &t : h.lair_traps) {
+		Dictionary x;
+		x["tile"] = Vector2i(static_cast<int32_t>(t.tile.x), static_cast<int32_t>(t.tile.y));
+		x["path"] = t.path;
+		traps.append(x);
+	}
+	d["lair_traps"] = traps;
 	return d;
 }
 

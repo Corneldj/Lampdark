@@ -620,25 +620,38 @@ private:
 		}
 	}
 
-	// 6. Traps (none in ring 0, nor below traps_min_ring in a staged run 1): man-traps at trap sites
-	// from ring 2 and HAZ-01's on the lair's approaches; staple pits in the Old Workings; sump mud
-	// on low roads.
+	// 6. Traps (none in ring 0, nor below traps_min_ring in a staged run 1): HAZ-01's on the lair's
+	// approaches (the homes', each on its trap site or the road's floor), else a man-trap at a trap
+	// site from ring 2; staple pits in the Old Workings; sump mud on low roads.
 	void traps() {
 		const int64_t floor_ring = std::max<int64_t>(1, staged_value(h_, p_.staged_traps_min_ring, p_.traps_min_ring));
 		if (f_.base_camp || f_.ring < floor_ring) {
 			return;
 		}
-		if (f_.ring >= p_.man_trap_min_ring && roll(s_, hd::GEN_PLACE_TRAP, cell_, 0, p_.man_trap_ppm)) {
+		bool approach = false;
+		for (const ApproachTrap &t : homes_.lair_traps) {
+			if (lb::core::world::cell_of(t.tile) != cell_) {
+				continue;
+			}
+			int32_t at = -1;
+			for (int32_t i : anchors_of(l_, AnchorType::TRAP_SITE)) {
+				if (!used_.count(i) && anchor_tile(l_, l_.cell.anchors[static_cast<size_t>(i)]) == t.tile) {
+					at = i;
+					break;
+				}
+			}
+			if (at >= 0) {
+				used_.insert(at);
+			}
+			// On its trap site, or on the road's floor where the band had too few of them.
+			out_.push_back(at >= 0 ? at_anchor(PlacedKind::MAN_TRAP, "trap", at) : make(PlacedKind::MAN_TRAP, "trap", -1, t.tile));
+			approach = true;
+		}
+		if (!approach && f_.ring >= p_.man_trap_min_ring && roll(s_, hd::GEN_PLACE_TRAP, cell_, 0, p_.man_trap_ppm)) {
 			Rng r = stream(s_, hd::GEN_PLACE_TRAP, cell_, 1);
 			const int32_t a = pick_free(r, AnchorType::TRAP_SITE);
 			if (a >= 0) {
 				out_.push_back(at_anchor(PlacedKind::MAN_TRAP, "trap", a));
-			}
-		}
-		if (p_.lair_traps) {
-			for (Placement x : p_.lair_traps(w_, cell_)) {
-				x.source = "trap";
-				out_.push_back(x);
 			}
 		}
 		if (f_.biome == "old_workings" && f_.ring >= p_.staple_pit_min_ring && roll(s_, hd::GEN_PLACE_TRAP, cell_, 2, p_.staple_pit_ppm)) {

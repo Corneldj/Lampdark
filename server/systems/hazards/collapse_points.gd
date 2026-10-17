@@ -99,6 +99,11 @@ func bind(run: RunState) -> void:
 			if not _pending.has(cell):
 				_pending.append(cell))
 		run.mine.native.cell_unloading.connect(func(cell: Vector2i) -> void: _on_unloading(run, cell))
+		# NET-09: a resume's swap of the registry, each loaded cell's points armed again after it.
+		run.cell_released.connect(func(cell: Vector2i) -> void: _on_unloading(run, cell))
+		run.cell_remade.connect(func(cell: Vector2i) -> void:
+			if not _pending.has(cell):
+				_pending.append(cell))
 	if run.diff_log != null:
 		run.diff_log.register(DiffLog.Kind.FALL, _replay, Callable(), Callable(), KEY_PREFIX)
 

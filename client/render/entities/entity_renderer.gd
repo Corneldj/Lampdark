@@ -3,8 +3,8 @@ extends RefCounted
 ## VIS-06: identity sprites (grey-box placeholders until art), drawn only for identity records
 ## (level 2): miners with their cap badge (colour and engraved pattern), facing and what is in their
 ## hands; the faceless Stythe; the moth (asleep, a heap's shape); the tapper's arm; Bess; items,
-## traps, phones (with their painted numbers) and fixtures; coat heaps; a gate's lever; a collapse
-## point's bowed props. A token (level 1) is TokenRenderer's and never shows any
+## traps (a man-trap's jaws set or sprung), phones (with their painted numbers) and fixtures; coat
+## heaps; a gate's lever; a collapse point's bowed props. A token (level 1) is TokenRenderer's and never shows any
 ## of this.
 
 const BODY: Color = Color(0.46, 0.42, 0.38)
@@ -51,6 +51,8 @@ static func draw(ci: CanvasItem, e: Dictionary, at_px: Vector2, px: float, t: fl
 			draw_fixture(ci, int(Variants.number(e.get("in_hand", 0))), at_px, px, t)
 		SeenKind.Kind.COLLAPSE_POINT:
 			_collapse_tell(ci, at_px, px, t)
+		SeenKind.Kind.TRAP:
+			_jaws(ci, (int(Variants.number(e.get("in_hand", 0))) & SeenKind.TRAP_SPRUNG) != 0, at_px, px)
 		SeenKind.Kind.PHONE:
 			_phone(ci, int(Variants.number(e.get("in_hand", 0))) & SeenKind.PHONE_NUMBER_MASK, at_px, px)
 		SeenKind.Kind.ITEM:
@@ -77,6 +79,25 @@ static func _phone(ci: CanvasItem, number: int, at: Vector2, px: float) -> void:
 		var size: int = maxi(8, roundi(0.22 * px))
 		ci.draw_string(ThemeDB.fallback_font, at + Vector2(-0.2, 0.22) * px, str(number), HORIZONTAL_ALIGNMENT_CENTER, 0.4 * px, size,
 			Palette.CHALK_WHITE.darkened(0.2))
+
+
+## HAZ-01's man-trap, seen only at 0.30: its plate and spring, and its iron jaws, open with their teeth
+## up when set, shut when sprung (grey box until art).
+static func _jaws(ci: CanvasItem, sprung: bool, at: Vector2, px: float) -> void:
+	var iron: Color = DARK.lightened(0.18)
+	var w: float = maxf(1.5, 0.06 * px)
+	ci.draw_rect(Rect2(at - Vector2(0.12, 0.12) * px, Vector2(0.24, 0.24) * px), DARK)
+	ci.draw_line(at + Vector2(-0.42, 0.0) * px, at + Vector2(-0.24, 0.0) * px, iron, w)
+	if sprung:
+		ci.draw_line(at + Vector2(-0.3, -0.05) * px, at + Vector2(0.3, -0.05) * px, iron, w * 1.4)
+		ci.draw_line(at + Vector2(-0.3, 0.05) * px, at + Vector2(0.3, 0.05) * px, iron, w * 1.4)
+		return
+	for side: float in [-1.0, 1.0]:
+		ci.draw_arc(at, 0.3 * px, PI * 0.5 + side * PI * 0.5 - 1.1, PI * 0.5 + side * PI * 0.5 + 1.1, 9, iron, w)
+		for i: int in 4:
+			var a: float = PI * 0.5 + side * PI * 0.5 + (i - 1.5) * 0.55
+			var base: Vector2 = at + Vector2(cos(a), sin(a)) * 0.3 * px
+			ci.draw_line(base, base + (at - base).normalized() * 0.09 * px, BODY.lightened(0.2), maxf(1.0, 0.03 * px))
 
 
 ## HAZ-03's tell, seen only at 0.30: two props bowed under the roof and stone dribbling between

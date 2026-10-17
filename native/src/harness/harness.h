@@ -98,6 +98,12 @@ struct Params {
 	double lair_min_bearing_deg = 90.0; // mine.lair_min_bearing_from_hoard_deg
 	int64_t route_max_explored = 400000;
 	int32_t failures_kept_per_check = 40;
+	// HAZ-01's man-traps beyond the order cells: cells drawn in rings deep_ring_min and the next
+	// (each run's own draw), their density against 1 per traps.man_trap_cells_per within
+	// deep_density_tolerance.
+	int32_t deep_sample_cells = 16;
+	int64_t deep_ring_min = 2; // traps.man_trap_min_ring
+	double deep_density_tolerance = 0.1;
 };
 
 // One failure: what broke, where, and the command that repeats it.
@@ -148,6 +154,20 @@ struct RunResult {
 	// The Moth's roosts the homes pass found (GEN-10), when the plan has a hoard (-1 without one).
 	int32_t roosts = -1;
 	int32_t roosts_min = 2; // mine.roosts_min
+	// HAZ-01: the lair's approach traps (-1 without a lair): how many, how many within the
+	// territory, how many outside the band, how many their cells place; short when fewer than
+	// traps.man_trap_approach_min or under half (rounded up) within the territory.
+	int32_t approach_traps = -1;
+	int32_t approach_inside = 0;
+	int32_t approach_out_of_band = 0;
+	int32_t approach_placed = 0;
+	bool approach_short = false;
+	// The deep sample's road cells (no point of interest's rooms, no approach trap: neither holds a
+	// man-trap of the ring's roll) and the man-traps placed there, against the target density (ppm,
+	// 1 / traps.man_trap_cells_per).
+	int32_t deep_cells = 0;
+	int32_t deep_man_traps = 0;
+	int64_t man_trap_ppm = 100000;
 	// Timing, machine-dependent: each order cell's derive and placement (microseconds), by biome.
 	std::map<std::string, std::vector<int64_t>> cell_us;
 	// The failures, at most Params::failures_kept_per_check of each check, and how many there were.
@@ -163,6 +183,8 @@ RunResult check_run(const Run &run, const RunFactory &fresh, const Params &p);
 // The `n` cells nearest the shaft, base camp's cell excluded: by squared distance from (0, 0),
 // then y, then x.
 std::vector<Coord> nearest_cells(int32_t n);
+// HAZ-01's deep sample: up to `n` distinct cells drawn by the seed in rings `ring_min` and the next.
+std::vector<Coord> deep_cells(uint64_t seed, const std::vector<int64_t> &bounds, int64_t ring_min, int32_t n);
 // The k-th seeded random order of `cells` for a seed.
 std::vector<Coord> shuffled(std::vector<Coord> cells, uint64_t seed, int32_t k);
 // A cell's whole outcome: its final layout (sockets, template, fitted content, reroll, fallback),
@@ -271,6 +293,13 @@ private:
 		int64_t hoard_lair_under = 0;
 		Histogram roosts{1, 21};
 		int64_t roosts_short = 0;
+		Histogram approach{1, 17};
+		int64_t approach_short = 0;
+		int64_t approach_out_of_band = 0;
+		int64_t approach_unplaced = 0;
+		int64_t deep_cells = 0;
+		int64_t deep_man_traps = 0;
+		int64_t man_trap_ppm = 100000;
 	};
 	Params p_;
 	std::string pack_;

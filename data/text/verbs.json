@@ -29,6 +29,7 @@
 		"ring.cure": "Cure",
 		"ring.revive": "Revive",
 		"ring.lever_prop": "Lever the prop off",
-		"ring.lift_prop": "Lift the prop"
+		"ring.lift_prop": "Lift the prop",
+		"ring.free": "Free"
 	}
 }

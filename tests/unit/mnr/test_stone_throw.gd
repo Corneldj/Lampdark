@@ -94,14 +94,13 @@ func test_a_set_man_trap_springs_under_it() -> void:
 	var s: Scenario = got[0]
 	var ann: MinerHandle = got[1]
 	var me: Vector2i = s.run.registry.get_entity(ann.entity_id).tile()
-	var traps: Dictionary = {me + Vector2i(5, 0): "set"}
-	s.run.stones.landed.connect(func(tile: Vector2i) -> void:
-		if traps.get(tile, "") == "set":
-			traps[tile] = "sprung")
+	# HAZ-01's jaws, five tiles along the road.
+	var trap: int = s.run.man_traps.place(s.run, me + Vector2i(5, 0))
 	_throw(s, ann, 3.0)
-	assert_eq(str(traps[me + Vector2i(5, 0)]), "set", "not under a stone at 3")
+	assert_true(s.run.man_traps.is_set(trap), "not under a stone at 3")
 	_throw(s, ann, 5.0)
-	assert_eq(str(traps[me + Vector2i(5, 0)]), "sprung", "sprung by a stone at 5")
+	assert_false(s.run.man_traps.is_set(trap), "sprung by a stone at 5")
+	assert_null(s.run.holds.caught_in(ann.entity_id), "catching nobody")
 
 
 func test_restrictions() -> void:

@@ -7,8 +7,9 @@ extends RefCounted
 ## arm), "state" (each system's save_state(), by name), "diff_log" (GEN-13's, with the map table and
 ## the Pocket Books, compacted at each snapshot) and "windows" (NET-07's fall and death windows).
 ##
-## A resume restores the registry, the log (replaying every loaded cell), then each system in stage
-## order, the seats held for their players, and lets journaled falls and deaths after the snapshot
+## A resume lets each loaded cell's owners go of what its load made (RunState.cell_released), restores
+## the registry and the log, has the owners make it again (cell_remade) and the log replay every
+## loaded cell, then each system in stage order, the seats held for their players, and lets journaled falls and deaths after the snapshot
 ## stand (Journal.apply_after). Lamps and flames adopt their items again; transient state (actions,
 ## wind-ups, a creature's hunt) starts afresh, each creature calm where it stood (Proposed). A
 ## snapshot waits for a tick with no grab under way (Proposed: a drag in flight cannot be resumed).
@@ -69,8 +70,9 @@ static func capture(run: RunState, net: ServerNet) -> Dictionary:
 static func registry_bytes(run: RunState) -> PackedByteArray:
 	var w: SimStateWriter = SimStateWriter.new()
 	var kept: Array[int] = []
+	var remade: Dictionary = remade_entities(run)
 	for id: int in run.registry.ids():
-		if not NOT_KEPT.has(run.registry.get_entity(id).kind):
+		if not NOT_KEPT.has(run.registry.get_entity(id).kind) and not remade.has(id):
 			kept.append(id)
 	w.put_i64(run.registry.next_id())
 	w.put_i64(kept.size())
@@ -82,6 +84,20 @@ static func registry_bytes(run: RunState) -> PackedByteArray:
 		w.put_f64(e.position.y)
 		w.put_i32(e.flags)
 	return w.bytes()
+
+
+## The entities their cells' loads make again (GEN-10's phones and coat heaps, HAZ-01's traps): a
+## resume makes them anew (RunState.cell_remade), so a snapshot keeps none of them.
+static func remade_entities(run: RunState) -> Dictionary:
+	var out: Dictionary = {}
+	if run.placed != null:
+		for raw: Variant in run.placed.made.values():
+			for e: Variant in Variants.array(raw):
+				out[Variants.whole(e)] = true
+	if run.man_traps != null:
+		for e: Variant in run.man_traps.traps.keys():
+			out[Variants.whole(e)] = true
+	return out
 
 
 ## A section's plain bytes (an empty dictionary's when absent).
@@ -121,13 +137,24 @@ static func restore(run: RunState, net: ServerNet, sections: Dictionary, journal
 		run.header.rule_flags = Variants.dict(head.get("rule_flags", {}))
 	if net != null and head.has("crew"):
 		net.crew.from_dict(Variants.dict(head["crew"]))
+	# The fresh run's loaded cells let go of what they made, the save's registry comes in, then they
+	# make it again from the save's log, as a cell coming back does.
+	var loaded: Array[Vector2i] = []
+	if run.mine != null:
+		for raw: Variant in run.mine.native.loaded_cells():
+			loaded.append(raw)
+		loaded.sort()
+	for c: Vector2i in loaded:
+		run.cell_released.emit(c)
 	var reader: SimStateReader = SimStateReader.new(section(sections, SECTION_REGISTRY))
 	run.registry.read_state(reader)
 	if run.diff_log != null and sections.has(SECTION_DIFF_LOG):
 		run.diff_log.deserialise(section(sections, SECTION_DIFF_LOG))
-		if run.mine != null:
-			for c: Vector2i in run.mine.native.loaded_cells():
-				run.diff_log.replay(run, c)
+	for c: Vector2i in loaded:
+		run.cell_remade.emit(c)
+	if run.diff_log != null and sections.has(SECTION_DIFF_LOG):
+		for c: Vector2i in loaded:
+			run.diff_log.replay(run, c)
 	var state: Dictionary = Variants.dict(bytes_to_var(section(sections, SECTION_STATE)))
 	for sys: SimSystem in run.stages.all_systems():
 		if state.has(sys.system_name()):

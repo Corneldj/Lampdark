@@ -23,7 +23,8 @@ class_name Protocol
 ## 20: HAZ-03's collapse point (SeenKind.COLLAPSE_POINT) and the collapse creak (NoiseTypes).
 ## 21: LFT-12's phone record (SeenKind's phone bits: the painted number, ringing, in use).
 ## 22: LFT-13's switchboard: Msg.BOARD, ActionRecord.Kind.BOARD, the board fixture and the line's hiss.
-const PROTOCOL_VERSION: int = 22
+## 23: HAZ-01's man-trap record (SeenKind.TRAP_SPRUNG: its jaws set or sprung).
+const PROTOCOL_VERSION: int = 23
 ## MOD-03: the most roster miners a Hello offers (a roster's three, Gameplay §13.2).
 const MAX_CANDIDATES: int = 3
 ## MOD-03: a candidate's name and each shown page are at most this long (bytes, UTF-8).

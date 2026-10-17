@@ -49,6 +49,8 @@ func bind(run: RunState, layouts_in: LbLayouts) -> void:
 		return
 	run.mine.native.cell_loaded.connect(func(cell: Vector2i) -> void: _on_loaded(cell))
 	run.mine.native.cell_unloading.connect(func(cell: Vector2i) -> void: _on_unloading(cell))
+	run.cell_released.connect(func(cell: Vector2i) -> void: _on_unloading(cell))
+	run.cell_remade.connect(func(cell: Vector2i) -> void: _on_loaded(cell))
 	for cell: Vector2i in run.mine.native.loaded_cells():
 		_on_loaded(cell)
 

@@ -283,6 +283,15 @@ void Report::add(const RunResult &r) {
 		l.roosts.add(r.roosts);
 		l.roosts_short += r.roosts < r.roosts_min ? 1 : 0;
 	}
+	if (r.approach_traps >= 0) {
+		l.approach.add(r.approach_traps);
+		l.approach_short += r.approach_short ? 1 : 0;
+		l.approach_out_of_band += r.approach_out_of_band > 0 ? 1 : 0;
+		l.approach_unplaced += r.approach_placed < r.approach_traps ? 1 : 0;
+	}
+	l.deep_cells += r.deep_cells;
+	l.deep_man_traps += r.deep_man_traps;
+	l.man_trap_ppm = r.man_trap_ppm;
 	if (r.hoard_lair_bearing >= 0) {
 		l.hoard_lair.add(r.hoard_lair_bearing);
 		l.hoard_lair_under += r.hoard_lair_bearing < static_cast<int64_t>(std::llround(p_.lair_min_bearing_deg)) ? 1 : 0;
@@ -441,6 +450,19 @@ std::vector<std::string> Report::warnings() const {
 			out.push_back(std::string(list_name(list)) + ": fewer roosts than mine.roosts_min in " + percent(l.roosts_short, l.roosts.count) +
 					" of runs with a hoard (95% should have them)");
 		}
+		// HAZ-01: every run's approach traps, in the band and placed; the deep man-traps' density.
+		if (l.approach_short > 0 || l.approach_out_of_band > 0 || l.approach_unplaced > 0) {
+			out.push_back(std::string(list_name(list)) + ": the lair's approach traps short in " + std::to_string(l.approach_short) + " runs, out of the band in " +
+					std::to_string(l.approach_out_of_band) + ", not placed in " + std::to_string(l.approach_unplaced));
+		}
+		if (l.deep_cells > 0 && l.man_trap_ppm > 0) {
+			const int64_t density = l.deep_man_traps * 1000000 / l.deep_cells;
+			const int64_t slack = static_cast<int64_t>(std::llround(static_cast<double>(l.man_trap_ppm) * p_.deep_density_tolerance));
+			if (density < l.man_trap_ppm - slack || density > l.man_trap_ppm + slack) {
+				out.push_back(std::string(list_name(list)) + ": man-traps in ring " + std::to_string(p_.deep_ring_min) + " and deeper at " +
+						decimal(density, 10000, 2) + "% of cells, not " + decimal(l.man_trap_ppm, 10000, 2) + "%");
+			}
+		}
 	}
 	return out;
 }
@@ -535,6 +557,12 @@ std::string Report::json(bool timing) const {
 		j.field("roads_over", l.roads_over);
 		histogram_json(j, "roosts", l.roosts);
 		j.field("roosts_short", l.roosts_short);
+		histogram_json(j, "approach_traps", l.approach);
+		j.field("approach_short", l.approach_short);
+		j.field("approach_out_of_band", l.approach_out_of_band);
+		j.field("approach_unplaced", l.approach_unplaced);
+		j.field("deep_cells", l.deep_cells);
+		j.field("deep_man_traps", l.deep_man_traps);
 		j.field("runs", l.runs);
 		j.field("runs_joined_under", l.runs_joined_under);
 		j.key("sites");
@@ -640,6 +668,15 @@ std::string Report::markdown() const {
 		if (l.hoard_lair.count > 0) {
 			md << "- The hoard and the lair seen from the shaft: min " << l.hoard_lair.min << " degrees apart, p50 " << l.hoard_lair.quantile(0.5) << "; "
 			   << l.hoard_lair_under << " runs under " << std::llround(p_.lair_min_bearing_deg) << ".\n";
+		}
+		if (l.approach.count > 0) {
+			md << "- The lair's approach traps: min " << l.approach.min << ", p50 " << l.approach.quantile(0.5) << ", max " << l.approach.max << "; "
+			   << l.approach_short << " runs short (too few, or under half within the territory), " << l.approach_out_of_band << " with one out of the band, "
+			   << l.approach_unplaced << " with one not placed.\n";
+		}
+		if (l.deep_cells > 0) {
+			md << "- Man-traps in ring " << p_.deep_ring_min << " and deeper: " << l.deep_man_traps << " in " << l.deep_cells << " sampled cells ("
+			   << decimal(l.deep_man_traps * 1000000 / l.deep_cells, 10000, 2) << "%, against " << decimal(l.man_trap_ppm, 10000, 2) << "%).\n";
 		}
 		md << "\n| Site | Count | Door from the shaft (tiles): min | p50 | p90 | max |\n|---|---|---|---|---|---|\n";
 		for (const auto &[kind, h] : l.sites) {

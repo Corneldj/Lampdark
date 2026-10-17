@@ -9,7 +9,10 @@
 #include "core/world/materials.h"
 
 #include <algorithm>
+#include <cstdlib>
 #include <deque>
+#include <functional>
+#include <map>
 #include <set>
 
 namespace lb::core::gen {
@@ -191,7 +194,254 @@ std::optional<Coord> gate_phone(const PlacementWorld &world, const PlacementPara
 	return sites[static_cast<size_t>(*r.range(0, static_cast<int64_t>(sites.size()) - 1))];
 }
 
+// The first tile `from` floods to within `steps` of, by path over `floor`, to `near`.
+void mark_near(Coord from, int64_t steps, const std::function<bool(Coord)> &floor, std::set<Coord> &near) {
+	std::map<Coord, int64_t> dist{{from, 0}};
+	std::deque<Coord> queue{from};
+	near.insert(from);
+	while (!queue.empty()) {
+		const Coord t = queue.front();
+		queue.pop_front();
+		const int64_t d = dist[t];
+		if (d >= steps) {
+			continue;
+		}
+		for (const Coord step : {Coord{1, 0}, Coord{-1, 0}, Coord{0, 1}, Coord{0, -1}}) {
+			const Coord n{t.x + step.x, t.y + step.y};
+			if (floor(n) && !dist.count(n)) {
+				dist[n] = d + 1;
+				near.insert(n);
+				queue.push_back(n);
+			}
+		}
+	}
+}
+
 } // namespace
+
+std::vector<ApproachTrap> approach_traps(const PlacementWorld &world, const PlacementParams &p) {
+	std::vector<ApproachTrap> out;
+	const RunHeader &h = world.header();
+	const PlannedSite *lair = nullptr;
+	for (const PlannedSite &s : h.plan.sites) {
+		if (s.kind == PoiKind::LAIR) {
+			lair = &s;
+			break;
+		}
+	}
+	if (lair == nullptr || p.approach_traps_max <= 0) {
+		return out;
+	}
+	const std::set<Coord> lair_cells(lair->cells.begin(), lair->cells.end());
+	std::map<Coord, std::optional<Layout>> layouts;
+	auto layout_of = [&](Coord c) -> const std::optional<Layout> & {
+		auto it = layouts.find(c);
+		if (it == layouts.end()) {
+			std::optional<Layout> l = c == Coord{0, 0} ? std::nullopt : world.layout(c);
+			if (l && l->base_camp) {
+				l.reset();
+			}
+			it = layouts.emplace(c, std::move(l)).first;
+		}
+		return it->second;
+	};
+	const std::function<bool(Coord)> floor = [&](Coord t) {
+		const Coord c = lb::core::world::cell_of(t);
+		if (lair_cells.count(c)) {
+			return false;
+		}
+		const std::optional<Layout> &l = layout_of(c);
+		return l.has_value() && is_floor_at(*l, lb::core::world::local_of(t));
+	};
+	// From the floor of the lair's door edge, one step out of it.
+	const std::optional<Layout> door_cell = world.layout(lair->door);
+	Coord out_step{1, 0};
+	switch (lair->door_side) {
+		case Edge::NORTH:
+			out_step = {0, -1};
+			break;
+		case Edge::SOUTH:
+			out_step = {0, 1};
+			break;
+		case Edge::WEST:
+			out_step = {-1, 0};
+			break;
+		default:
+			break;
+	}
+	std::map<Coord, int64_t> dist;
+	std::deque<Coord> queue;
+	if (door_cell) {
+		const int64_t last = lb::core::world::CELL_TILES - 1;
+		for (int64_t i = 0; i < lb::core::world::CELL_TILES; i++) {
+			Coord local;
+			switch (lair->door_side) {
+				case Edge::NORTH:
+					local = {i, 0};
+					break;
+				case Edge::SOUTH:
+					local = {i, last};
+					break;
+				case Edge::WEST:
+					local = {0, i};
+					break;
+				default:
+					local = {last, i};
+					break;
+			}
+			if (!is_floor_at(*door_cell, local)) {
+				continue;
+			}
+			const Coord edge = lb::core::world::tile_of(lair->door, local);
+			const Coord out_tile{edge.x + out_step.x, edge.y + out_step.y};
+			if (floor(out_tile) && !dist.count(out_tile)) {
+				dist[out_tile] = 1;
+				queue.push_back(out_tile);
+			}
+		}
+	}
+	while (!queue.empty()) {
+		const Coord t = queue.front();
+		queue.pop_front();
+		const int64_t d = dist[t];
+		if (d >= p.approach_path_max) {
+			continue;
+		}
+		for (const Coord step : {Coord{1, 0}, Coord{-1, 0}, Coord{0, 1}, Coord{0, -1}}) {
+			const Coord n{t.x + step.x, t.y + step.y};
+			if (floor(n) && !dist.count(n)) {
+				dist[n] = d + 1;
+				queue.push_back(n);
+			}
+		}
+	}
+	// The candidates: each reached cell's trap sites in the band and clear of what rules them out.
+	const int64_t floor_ring = std::max<int64_t>(1, staged_value(h, p.staged_traps_min_ring, p.traps_min_ring));
+	std::set<Coord> reached;
+	for (const auto &[t, d] : dist) {
+		reached.insert(lb::core::world::cell_of(t));
+	}
+	std::map<Coord, std::vector<Coord>> doors_of;
+	auto poi_doors = [&](Coord c) -> const std::vector<Coord> & {
+		auto it = doors_of.find(c);
+		if (it == doors_of.end()) {
+			it = doors_of.emplace(c, poi_door_tiles(world, c)).first;
+		}
+		return it->second;
+	};
+	struct Candidate {
+		uint64_t key;
+		ApproachTrap trap;
+	};
+	// Each band's trap sites first; then, should they run short, the road's floor there (never in a
+	// chamber, a point of interest or on any anchor's tile).
+	std::vector<Candidate> inside;
+	std::vector<Candidate> beyond;
+	std::vector<Candidate> inside_road;
+	std::vector<Candidate> beyond_road;
+	for (const Coord &c : reached) {
+		const std::optional<Layout> &l = layout_of(c);
+		const CellFacts f = world.facts(c);
+		if (!l || f.base_camp || f.ring < floor_ring) {
+			continue;
+		}
+		const PoiRef poi = world.poi_at(c);
+		const bool in_poi = poi && poi->shape != nullptr;
+		const std::vector<Coord> collapse = armed_collapse_tiles(world, p, c);
+		auto clear = [&](Coord t) {
+			if (std::find(collapse.begin(), collapse.end(), t) != collapse.end()) {
+				return false;
+			}
+			const Coord local = lb::core::world::local_of(t);
+			for (const Anchor &b : l->cell.anchors) {
+				if (b.type == AnchorType::DOOR_SITE && local.x >= b.x && local.y >= b.y && local.x < b.x + b.w && local.y < b.y + b.h) {
+					return false;
+				}
+			}
+			for (int64_t dy = -1; dy <= 1; dy++) {
+				for (int64_t dx = -1; dx <= 1; dx++) {
+					for (const Coord &door : poi_doors({c.x + dx, c.y + dy})) {
+						if (std::max(std::abs(door.x - t.x), std::abs(door.y - t.y)) <= 1) {
+							return false;
+						}
+					}
+				}
+			}
+			return true;
+		};
+		auto candidate = [&](Coord t, int64_t d, std::vector<Candidate> &in, std::vector<Candidate> &out_band) {
+			const int64_t keys[3] = {t.x, t.y, 6};
+			const Candidate k{hash_u64(h.seed, hd::GEN_PLACE_HOMES, keys, 3), ApproachTrap{t, d}};
+			(d <= p.approach_inside_max ? in : out_band).push_back(k);
+		};
+		std::set<Coord> anchored;
+		for (const Anchor &a : l->cell.anchors) {
+			for (int32_t j = 0; j < a.h; j++) {
+				for (int32_t i = 0; i < a.w; i++) {
+					if (a.type != AnchorType::CHAMBER) {
+						anchored.insert({a.x + i, a.y + j});
+					}
+				}
+			}
+			if (a.type != AnchorType::TRAP_SITE) {
+				continue;
+			}
+			const Coord t = lb::core::world::tile_of(c, {a.x, a.y});
+			const auto d = dist.find(t);
+			if (d != dist.end() && d->second >= p.approach_path_min && d->second <= p.approach_path_max && clear(t)) {
+				candidate(t, d->second, inside, beyond);
+			}
+		}
+		if (in_poi) {
+			continue;
+		}
+		for (int64_t y = 0; y < lb::core::world::CELL_TILES; y++) {
+			for (int64_t x = 0; x < lb::core::world::CELL_TILES; x++) {
+				const Coord t = lb::core::world::tile_of(c, {x, y});
+				const auto d = dist.find(t);
+				if (d == dist.end() || d->second < p.approach_path_min || d->second > p.approach_path_max || anchored.count({x, y})) {
+					continue;
+				}
+				bool chamber = false;
+				for (const Anchor &a : l->cell.anchors) {
+					chamber = chamber || (a.type == AnchorType::CHAMBER && x >= a.x && y >= a.y && x < a.x + a.w && y < a.y + a.h);
+				}
+				if (!chamber && clear(t)) {
+					candidate(t, d->second, inside_road, beyond_road);
+				}
+			}
+		}
+	}
+	const auto by_key = [](const Candidate &a, const Candidate &b) {
+		return a.key != b.key ? a.key < b.key : std::tie(a.trap.tile.y, a.trap.tile.x) < std::tie(b.trap.tile.y, b.trap.tile.x);
+	};
+	for (std::vector<Candidate> *v : {&inside, &beyond, &inside_road, &beyond_road}) {
+		std::sort(v->begin(), v->end(), by_key);
+	}
+	inside.insert(inside.end(), inside_road.begin(), inside_road.end());
+	beyond.insert(beyond.end(), beyond_road.begin(), beyond_road.end());
+	Rng r(homes_hash(h.seed, 6));
+	const int64_t n = *r.range(std::min(p.approach_traps_min, p.approach_traps_max), std::max(p.approach_traps_min, p.approach_traps_max));
+	const int64_t want_inside = (n + 1) / 2;
+	std::set<Coord> near;
+	auto take = [&](const std::vector<Candidate> &from, int64_t want) {
+		int64_t taken = 0;
+		for (const Candidate &k : from) {
+			if (taken >= want) {
+				break;
+			}
+			if (near.count(k.trap.tile)) {
+				continue;
+			}
+			out.push_back(k.trap);
+			mark_near(k.trap.tile, p.approach_spacing - 1, floor, near);
+			taken++;
+		}
+	};
+	take(inside, want_inside);
+	take(beyond, n - want_inside);
+	return out;
+}
 
 Homes make_homes(const PlacementWorld &world, const PlacementParams &p) {
 	Homes out;
@@ -327,6 +577,8 @@ Homes make_homes(const PlacementWorld &world, const PlacementParams &p) {
 			out.canary = found[0].second;
 		}
 	}
+	// HAZ-01: the man-traps on the lair's approaches.
+	out.lair_traps = approach_traps(world, p);
 	return out;
 }
 
@@ -361,6 +613,14 @@ void write_homes(const Homes &x, RunHeader &h) {
 	if (x.canary) {
 		h.homes["canary"] = canary_home(*x.canary);
 	}
+	std::vector<uint8_t> traps;
+	traps.push_back(static_cast<uint8_t>(std::min<size_t>(x.lair_traps.size(), 255)));
+	for (size_t i = 0; i < x.lair_traps.size() && i < 255; i++) {
+		put_i64(traps, x.lair_traps[i].tile.x);
+		put_i64(traps, x.lair_traps[i].tile.y);
+		put_i32(traps, static_cast<int32_t>(x.lair_traps[i].path));
+	}
+	h.homes["traps"] = traps;
 }
 
 Homes read_homes(const RunHeader &h) {
@@ -400,6 +660,19 @@ Homes read_homes(const RunHeader &h) {
 		}
 	}
 	x.canary = canary_region(h);
+	if (const auto it = h.homes.find("traps"); it != h.homes.end() && !it->second.empty()) {
+		const std::vector<uint8_t> &b = it->second;
+		size_t at = 1;
+		for (uint8_t i = 0; i < b[0]; i++) {
+			ApproachTrap t;
+			int32_t path = 0;
+			if (!get_i64(b, at, t.tile.x) || !get_i64(b, at, t.tile.y) || !get_i32(b, at, path)) {
+				break;
+			}
+			t.path = path;
+			x.lair_traps.push_back(t);
+		}
+	}
 	return x;
 }
 

@@ -128,17 +128,20 @@ public:
 	// air_door_probability, collapse_probability, collapse_min_from_basecamp, collapse_min_spacing,
 	// collapse_min_from_sites, firedamp_ring2_probability, firedamp_beyond_probability,
 	// firedamp_black_seam_probability, blackdamp_probability, man_trap_probability,
-	// man_trap_min_ring, staple_pit_probability, staple_pit_min_ring, sump_mud_probability,
+	// man_trap_min_ring, approach_traps: [min, max], approach_path: [lo, hi], approach_inside_max,
+	// approach_spacing (HAZ-01), staple_pit_probability, staple_pit_min_ring, sump_mud_probability,
 	// sump_mud_min_ring, staged_traps_min_ring and staged_roost_min_from_shaft (by stage),
 	// traps_min_ring, roost_min_from_shaft, roosts: [min, max],
 	// roost_max_from_hoard, coat_heap_near_hoard, coat_heap_near_probability,
 	// coat_heap_far_probability, coat_heaps: [min, max], rich_rock_per_region,
 	// rich_rock_min_thickness, landmark_no_repeat_cells, landmark_palette, canary_max}).
 	// The run-start homes pass, after plan(): the roosts, the start roost, the near-gate phones,
-	// the electric lamp's cell and the canary region, into the header's homes. Returns homes_dict().
+	// the electric lamp's cell, the canary region and the lair's approach traps (HAZ-01), into the
+	// header's homes. Returns homes_dict().
 	::godot::Dictionary make_homes();
 	// {roosts: [Rect2i world tiles], start_roost (-1: the hoard), hoard (Vector2i tile, or null),
-	// gate_phones: [Vector2i], electric_lamp (cell, or null), canary (region, or null)}.
+	// gate_phones: [Vector2i], electric_lamp (cell, or null), canary (region, or null), lair_traps:
+	// [{tile: Vector2i, path: tiles from the lair's door}]}.
 	::godot::Dictionary homes_dict() const;
 	// What a cell holds as it generates, in pass order: [{kind, thing, source, anchor, tile, size,
 	// count, oil_milli, notches, variant, collapse, with, id (GEN-13's "p" and 16 hex digits)}];

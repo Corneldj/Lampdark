@@ -2,6 +2,7 @@
 
 #include "harness/harness.h"
 
+#include "core/gen/biomes.h"
 #include "core/gen/sockets.h"
 #include "core/gen/spines.h"
 #include "core/gen/template_choice.h"
@@ -184,6 +185,26 @@ std::vector<Coord> nearest_cells(int32_t n) {
 			return out;
 		}
 	}
+}
+
+std::vector<Coord> deep_cells(uint64_t seed, const std::vector<int64_t> &bounds, int64_t ring_min, int32_t n) {
+	std::vector<Coord> out;
+	if (bounds.size() < static_cast<size_t>(std::max<int64_t>(1, ring_min + 1)) || n <= 0) {
+		return out;
+	}
+	const int64_t hi = ring_min + 1;
+	const int64_t edge = static_cast<int64_t>(bounds.size()) > hi ? bounds[static_cast<size_t>(hi)] : bounds.back() + 200;
+	const int64_t reach = edge / lb::core::world::CELL_TILES + 1;
+	lb::core::Rng rng(lb::core::mix64(seed ^ 0xDEE9C311ULL));
+	std::set<Coord> seen;
+	for (int32_t attempt = 0; attempt < 64 * n && static_cast<int32_t>(out.size()) < n; attempt++) {
+		const Coord c{*rng.range(-reach, reach), *rng.range(-reach, reach)};
+		const int64_t ring = gen::ring_of_cell(c, bounds);
+		if (ring >= ring_min && ring <= hi && seen.insert(c).second) {
+			out.push_back(c);
+		}
+	}
+	return out;
 }
 
 std::vector<Coord> shuffled(std::vector<Coord> cells, uint64_t seed, int32_t k) {
@@ -567,10 +588,20 @@ RunResult check_run(const Run &run, const RunFactory &fresh, const Params &p) {
 			lair = door;
 		}
 	}
+	const gen::Homes homes = gen::read_homes(h);
 	if (hoard) {
-		r.roosts = static_cast<int32_t>(gen::read_homes(h).roosts.size());
+		r.roosts = static_cast<int32_t>(homes.roosts.size());
 		r.roosts_min = static_cast<int32_t>(pp.roosts_min);
 	}
+	if (lair) {
+		r.approach_traps = static_cast<int32_t>(homes.lair_traps.size());
+		for (const gen::ApproachTrap &t : homes.lair_traps) {
+			r.approach_inside += t.path <= pp.approach_inside_max ? 1 : 0;
+			r.approach_out_of_band += t.path < pp.approach_path_min || t.path > pp.approach_path_max ? 1 : 0;
+		}
+		r.approach_short = r.approach_traps < pp.approach_traps_min || r.approach_inside < (r.approach_traps + 1) / 2;
+	}
+	r.man_trap_ppm = pp.man_trap_ppm;
 	if (hoard && lair) {
 		const double a = std::atan2(static_cast<double>(hoard->second), static_cast<double>(hoard->first));
 		const double b = std::atan2(static_cast<double>(lair->second), static_cast<double>(lair->first));
@@ -631,6 +662,28 @@ RunResult check_run(const Run &run, const RunFactory &fresh, const Params &p) {
 			}
 		}
 		if (k == 0) {
+			// HAZ-01: each approach trap placed in its cell; man-traps over the deep sample.
+			std::set<Coord> approach_cells;
+			for (const gen::ApproachTrap &t : homes.lair_traps) {
+				const Coord c = lb::core::world::cell_of(t.tile);
+				approach_cells.insert(c);
+				for (const gen::Placement &x : gen::place_validated(ww, wpp, wvp, c).list) {
+					if (x.kind == gen::PlacedKind::MAN_TRAP && x.tile == t.tile) {
+						r.approach_placed++;
+						break;
+					}
+				}
+			}
+			for (const Coord &c : deep_cells(r.seed, ww.ring_bounds(), p.deep_ring_min, p.deep_sample_cells)) {
+				const gen::PoiRef poi = ww.poi_at(c);
+				if (approach_cells.count(c) || (poi && poi->shape != nullptr) || !ww.layout(c)) {
+					continue;
+				}
+				r.deep_cells++;
+				for (const gen::Placement &x : gen::place_validated(ww, wpp, wvp, c).list) {
+					r.deep_man_traps += x.kind == gen::PlacedKind::MAN_TRAP ? 1 : 0;
+				}
+			}
 			first = digests;
 			r.order_cells = static_cast<int32_t>(cells.size());
 			r.finds = count_finds(ww, wpp, wvp, explored_cells(plan, ww, p.explore_radius, p.explore_max_ring), p.cupboard_kits);

@@ -26,6 +26,9 @@ func bind(run: RunState) -> void:
 	run.inventory.world.logged.connect(func(op: StringName, it: Item, entity: int) -> void: _on_logged(run, op, it, entity))
 	diff.register(DiffLog.Kind.ITEM, _replay, _advance, _is_default)
 	diff.on_evict(_evict)
+	# NET-09: a resume's swap of the registry: the fresh run's floor items go, the save's log puts
+	# its own back.
+	run.cell_released.connect(func(cell: Vector2i) -> void: _evict(run, cell))
 	diff.on_refresh(_refresh)
 	if run.lamps != null:
 		run.lamps.lamp_changed.connect(func(l: GauzeLamp, _what: StringName, _cause: String) -> void: _lamp_changed(run, l))

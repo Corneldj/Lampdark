@@ -16,7 +16,6 @@
 #include "core/gen/derive.h"
 #include "core/gen/poi.h"
 
-#include <functional>
 #include <map>
 #include <optional>
 #include <string>
@@ -134,9 +133,16 @@ struct PlacementParams {
 	int64_t firedamp_beyond_ppm = 500000; // 1 / mine.firedamp_cells_per_beyond
 	int64_t firedamp_black_seam_ppm = 1000000; // 1 / mine.firedamp_cells_per_black_seam
 	int64_t blackdamp_ppm = 333333; // 1 / mine.blackdamp_old_workings_cells_per
-	// Traps (HAZ-01's lair approaches come through lair_traps).
+	// Traps. A cell holding one of the homes' approach traps (HAZ-01) rolls no other man-trap.
 	int64_t man_trap_ppm = 100000; // 1 / traps.man_trap_cells_per
 	int64_t man_trap_min_ring = 2; // traps.man_trap_min_ring
+	// HAZ-01: the man-traps on the lair's approaches (the homes pass), by path from its door.
+	int64_t approach_traps_min = 4; // traps.man_trap_approach_min
+	int64_t approach_traps_max = 8; // traps.man_trap_approach_max
+	int64_t approach_path_min = 30; // traps.man_trap_approach_path_min_tiles
+	int64_t approach_path_max = 70; // traps.man_trap_approach_path_max_tiles
+	int64_t approach_inside_max = 50; // stythe.territory_tiles: half of them (rounded up) within it
+	int64_t approach_spacing = 6; // traps.man_trap_approach_spacing_tiles, by path
 	int64_t staple_pit_ppm = 166667; // 1 / mine.staple_pit_old_workings_cells_per
 	int64_t staple_pit_min_ring = 2; // mine.staple_pit_min_ring
 	int64_t sump_mud_ppm = 200000; // 1 / mine.sump_mud_low_road_cells_per
@@ -166,8 +172,6 @@ struct PlacementParams {
 	int64_t landmark_palette = 25; // mine.landmark_palette_min
 	// GEN-09's canary: mine.canary_max_per_run (0: no canary region named).
 	int64_t canary_max = 1;
-	// HAZ-01: the man-traps on the lair's approaches, for a cell (none until HAZ-01 registers it).
-	std::function<std::vector<Placement>(const PlacementWorld &, lb::core::world::Coord)> lair_traps;
 };
 
 // The run-start homes (written to the header's homes, so a resume keeps them): the Moth's roosts
@@ -181,6 +185,13 @@ struct TileBox {
 	bool operator==(const TileBox &o) const { return x == o.x && y == o.y && w == o.w && h == o.h; }
 };
 
+// HAZ-01: a man-trap on the lair's approaches and its path from the lair's door, in tiles.
+struct ApproachTrap {
+	lb::core::world::Coord tile;
+	int64_t path = 0;
+	bool operator==(const ApproachTrap &o) const { return tile == o.tile && path == o.path; }
+};
+
 struct Homes {
 	std::vector<TileBox> roosts;
 	int32_t start_roost = -1;
@@ -191,11 +202,25 @@ struct Homes {
 	std::optional<lb::core::world::Coord> canary; // its region
 	// Fewer roosts than mine.roosts_min found candidates (reported, never invented).
 	bool roosts_short = false;
+	// HAZ-01's approach traps, in the order they were taken (those within the territory first).
+	std::vector<ApproachTrap> lair_traps;
 };
 
 // The homes pass (after the plan, before any cell commits): pure in the header's seed and plan.
 Homes make_homes(const PlacementWorld &world, const PlacementParams &params);
-// Into the header's homes ("roosts", "start_roost", "gate_phones", "electric_lamp", "canary") and back.
+// HAZ-01's part of it (Gameplay §8.1, §8.2): the man-traps on the roads into the Stythe's
+// territory. A flood by path from the lair's door, over the floor round it (air doors open: they
+// are floor in a layout) and never into the lair, finds the trap_site anchors approach_path_min to
+// approach_path_max tiles away, and the road's floor there for when they run short (never in a
+// chamber or a point of interest, nor on another anchor's tile). None is taken on a door site,
+// within a tile of a point of interest's door, on an armed collapse's tiles, in base camp, or in a
+// cell below the traps' floor ring (a staged run 1's included). Of N in approach_traps_min to
+// approach_traps_max (the homes hash), half rounded up lie within approach_inside_max, the rest
+// beyond it, each at least approach_spacing tiles by path from those taken, trap sites before the
+// road's floor. Too short a flood gives fewer (never invented).
+std::vector<ApproachTrap> approach_traps(const PlacementWorld &world, const PlacementParams &params);
+// Into the header's homes ("roosts", "start_roost", "gate_phones", "electric_lamp", "canary",
+// "traps") and back.
 void write_homes(const Homes &homes, RunHeader &header);
 Homes read_homes(const RunHeader &header);
 

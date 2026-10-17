@@ -73,6 +73,11 @@ func bind(run: RunState) -> void:
 			if not _pending.has(cell):
 				_pending.append(cell))
 		run.mine.native.cell_unloading.connect(func(cell: Vector2i) -> void: _on_unloading(run, cell))
+		# NET-09: a resume's swap of the registry, each loaded cell's phones found again after it.
+		run.cell_released.connect(func(cell: Vector2i) -> void: _on_unloading(run, cell))
+		run.cell_remade.connect(func(cell: Vector2i) -> void:
+			if not _pending.has(cell):
+				_pending.append(cell))
 	if run.collapses != null:
 		run.collapses.fell.connect(func(pid: int, cell: Vector2i, tiles: Array[Vector2i]) -> void:
 			on_tiles_fallen(run, cell, tiles, pid & 0xFFFF))

@@ -275,6 +275,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.timber_pins = TimberPins.new()
 	run.timber_pins.bind(run)
 	run.add_system(run.timber_pins)
+	# HAZ-01: the men in-bye's jaws (GEN-10's placements, sprung ones GEN-13's records).
+	run.man_traps = ManTraps.new()
+	run.man_traps.bind(run)
+	run.add_system(run.man_traps)
 	# LFT-12: the pit phones and their lines (after the collapse points, whose falls cut them).
 	run.phones = PhoneLines.new()
 	run.phones.bind(run)

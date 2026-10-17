@@ -10,6 +10,13 @@ extends RefCounted
 enum Phase { PLAYING, LAMP_CHECK, ENDED, PITHEAD }
 
 signal phase_changed(phase: Phase)
+## NET-09: a resume swaps the save's registry in under the loaded cells. The owners that make
+## entities as a cell loads (GEN-10's spawner, HAZ-01's traps, HAZ-03's collapse points, MNR-04's
+## items, LFT-12's phones) let each loaded cell's go before the swap (`cell_released`), and make them
+## again after it, the save's diff log in, as a returning cell does (`cell_remade`). A snapshot keeps
+## none of what they remake (Snapshot.remade_entities).
+signal cell_released(cell: Vector2i)
+signal cell_remade(cell: Vector2i)
 
 
 class Header:
@@ -154,9 +161,11 @@ var hands: HandController = null
 ## MOD-05: knocking off, and an absent player's miner waiting off the map.
 var knock_off: KnockOff = null
 var absent: AbsentMiners = null
-## HAZ-03: collapse points and the timber pins they drop; HAZ-01 to HAZ-03's trap events.
+## HAZ-03: collapse points and the timber pins they drop; HAZ-01's man-traps; HAZ-01 to HAZ-03's
+## trap events.
 var collapses: CollapsePoints = null
 var timber_pins: TimberPins = null
+var man_traps: ManTraps = null
 var trap_events: TrapEvents = null
 ## LFT-12: the pit phones and their lines to the switchboard.
 var phones: PhoneLines = null

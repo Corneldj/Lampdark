@@ -11,6 +11,8 @@ enum Kind { UNKNOWN = 0, MINER = 1, STYTHE = 2, MOTH = 3, BESS = 4, TAPPER = 5, 
 const PHONE_NUMBER_MASK: int = 0x7F
 const PHONE_RINGING: int = 0x80
 const PHONE_BUSY: int = 0x100
+## HAZ-01: a trap's identity record says whether its jaws are sprung (set or spent: never whose).
+const TRAP_SPRUNG: int = 0x1
 
 ## The size classes of anonymous fringe tokens (VIS-03's): a token never says more than this.
 enum Size { NONE = 0, MINER = 1, LARGE = 2, LARGE_MOTIONLESS = 3, SMALL = 4 }
