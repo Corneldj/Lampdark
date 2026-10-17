@@ -109,7 +109,7 @@ func _sound(miner: int, fall_id: int, scream: int, tile: Vector2i) -> void:
 	if slot >= 0 and _run.movement != null:
 		_run.movement.set_breath_hold(slot, false)  # a held breath ends with the fall, no gasp
 	if scream != FallCause.Scream.NONE:
-		var opts: Dictionary = {"source": miner, "players": false, "mode": RoadGraphService.MODE_VOICE}
+		var opts: Dictionary = {"source": miner, "players": false, "mode": RoadGraphService.MODE_VOICE_EVENT}
 		if slot >= 0:
 			opts["voice_id"] = _voice(slot)
 		_run.noise.emit(NoiseTypes.Type.FALL_SCREAM, tile, opts)  # the rock hears one scream

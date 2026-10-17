@@ -36,5 +36,8 @@ static func of(run: RunState, miner: int) -> Dictionary:
 		flags |= StatusWire.AT_JOB
 	if run.timber_pins != null and TimberPins.may_struggle(run, miner):
 		flags |= StatusWire.TRAP_STRUGGLE
+	# LFT-13: hiss in the ear, held on a line or the operator's cord in a quiet one.
+	if (run.phones != null and run.phones.held_caller(miner)) or (run.switchboard != null and run.switchboard.hiss_for(run, miner)):
+		flags |= StatusWire.LINE_HISS
 	out["flags"] = flags
 	return out

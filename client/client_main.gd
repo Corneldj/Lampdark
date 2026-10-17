@@ -90,6 +90,9 @@ var knock_off_available: bool = false
 var resume_path: String = ""
 ## LFT-03: the Manual at its lectern.
 var manual_closeup: ManualCloseup = null
+## LFT-13: the switchboard's close-up, and line hiss in the ear while the status says so.
+var switchboard_closeup: SwitchboardCloseup = null
+var _line_hiss: AudioStreamPlayer = null
 var _closeup_messages_seen: int = 0
 var _ui_violations_seen: Dictionary = {}
 var drawn: DrawnSet = DrawnSet.new()
@@ -238,6 +241,7 @@ func _process(delta: float) -> void:
 		_play_audio()
 		_keep_map_card()
 		_keep_lamp_check()
+		_keep_board()
 		if voice_capture != null:
 			voice_capture.voice_live = connection.state == ClientConnection.State.CONNECTED
 			voice_capture.tick(Time.get_ticks_usec())
@@ -315,6 +319,9 @@ func _start_input() -> void:
 	manual_closeup.pad_state = map_table.pad_state
 	manual_closeup.show_keyboard = map_table.show_keyboard
 	closeups.register(CloseupKind.Kind.MANUAL, manual_closeup)
+	switchboard_closeup = SwitchboardCloseup.new()
+	switchboard_closeup.name = "SwitchboardCloseup"
+	closeups.register(CloseupKind.Kind.SWITCHBOARD, switchboard_closeup)
 	AudioBuses.install()
 	events_player = EventPlayer.new()
 	events_player.name = "EventPlayer"
@@ -397,6 +404,23 @@ func _input(event: InputEvent) -> void:
 	source.push_event(event, bindings)
 
 
+## LFT-13: the board as the operator sees it, and line hiss in the ear (a held call, a quiet cord).
+func _keep_board() -> void:
+	if switchboard_closeup != null:
+		switchboard_closeup.set_board(connection.board)
+		switchboard_closeup.set_dust(connection.view != null and connection.view.dust)
+	var hiss: bool = (int(Variants.number(connection.status.get("flags", 0))) & StatusWire.LINE_HISS) != 0
+	if hiss and _line_hiss == null:
+		_line_hiss = AudioStreamPlayer.new()
+		_line_hiss.stream = SampleBank.line_hiss()
+		_line_hiss.bus = &"Voice"
+		add_child(_line_hiss)
+		_line_hiss.play()
+	elif not hiss and _line_hiss != null:
+		_line_hiss.queue_free()
+		_line_hiss = null
+
+
 func _sample_input(shown_tick: int) -> InputRecord:
 	router.know_inventory(connection.inventory)
 	router.know_ring(connection.ring)
@@ -413,6 +437,10 @@ func _sample_input(shown_tick: int) -> InputRecord:
 			int(Variants.number(action[2])))
 	for ask: int in closeups.process_input(router):
 		connection.inputs.queue_action(ActionRecord.Kind.CLOSE_UP, ask, shown_tick, 0)
+	if switchboard_closeup != null:
+		for ask: int in switchboard_closeup.asks:
+			connection.inputs.queue_action(ActionRecord.Kind.BOARD, ask, shown_tick, 0)
+		switchboard_closeup.asks.clear()
 	router.coming_round = DarkView.in_window(connection.view)
 	for ask: int in dark.asks(router, connection.view):
 		connection.inputs.queue_action(ActionRecord.Kind.WATCH, ask, shown_tick, 0)

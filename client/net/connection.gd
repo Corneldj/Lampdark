@@ -59,6 +59,9 @@ var callouts: Array[CalloutRecord] = []
 ## UI-02: the own close-up and the board's seat as last received (CloseupKind.decode); {} before any.
 var closeup: Dictionary = {}
 var closeup_messages: int = 0
+## LFT-13: the switchboard as this operator last saw it (BoardWire.decode), and how many were told.
+var board: Dictionary = {}
+var board_messages: int = 0
 ## LFT-14: this client's copy of the map table's sheet (shown only in its close-up), and LFT-03's
 ## of the Manual's pencil layer: SheetKind -> ClientSheet.
 var sheet: ClientSheet = ClientSheet.new(SheetKind.Kind.MAP_TABLE)
@@ -297,6 +300,11 @@ func _on_message(event: TransportEvent, now: int) -> void:
 			if not c.is_empty():
 				closeup = c
 				closeup_messages += 1
+		Protocol.Msg.BOARD:
+			var b: Dictionary = BoardWire.decode(payload)
+			if not b.is_empty():
+				board = b
+				board_messages += 1
 		Protocol.Msg.DEAFENED:
 			var d: Dictionary = DeafenedMessages.decode(payload)
 			if not d.is_empty():

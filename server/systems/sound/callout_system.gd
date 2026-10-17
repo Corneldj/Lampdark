@@ -225,7 +225,7 @@ func _sound_on(run: RunState) -> void:
 			continue
 		if run.tick >= next and run.noise != null:
 			run.noise.emit(NoiseTypes.Type.CALLOUT, run.registry.get_entity(entity).tile(), {"level_np": s[2], "source": entity,
-				"mode": RoadGraphService.MODE_VOICE, "players": false})
+				"mode": RoadGraphService.MODE_VOICE_EVENT, "players": false})
 			s[3] = next + every
 		keep.append(s)
 	_sounding = keep

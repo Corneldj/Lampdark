@@ -22,7 +22,8 @@ class_name Protocol
 ## 19: MOD-05's Reject.KNOCKED_OFF.
 ## 20: HAZ-03's collapse point (SeenKind.COLLAPSE_POINT) and the collapse creak (NoiseTypes).
 ## 21: LFT-12's phone record (SeenKind's phone bits: the painted number, ringing, in use).
-const PROTOCOL_VERSION: int = 21
+## 22: LFT-13's switchboard: Msg.BOARD, ActionRecord.Kind.BOARD, the board fixture and the line's hiss.
+const PROTOCOL_VERSION: int = 22
 ## MOD-03: the most roster miners a Hello offers (a roster's three, Gameplay §13.2).
 const MAX_CANDIDATES: int = 3
 ## MOD-03: a candidate's name and each shown page are at most this long (bytes, UTF-8).
@@ -61,6 +62,7 @@ enum Msg {
 	SHEET = 30,  ## LFT-14: sheet ops (SheetCodec), both ways: commits and sync on the bulk lane, strokes as made on inputs (up) and frames (down)
 	MANUAL = 31,  ## LFT-03: the run's repair list as the Manual prints it (RepairJobs), control lane, once, to a client whose miner opens the Manual
 	LAMP_CHECK = 32,  ## RSC-06: Lamp Check (LampCheckWire), control lane: its opening and its end, to every member; Ready, client to server
+	BOARD = 33,  ## LFT-13: the switchboard as its operator sees it (BoardWire), control lane, to the seated operator only
 }
 
 enum Reject {

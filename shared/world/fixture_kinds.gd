@@ -10,10 +10,12 @@ extends RefCounted
 ## and its throttle. LFT-10's cage (bits 4-5 its look: standing askew, wedged fast, riding, stopped
 ## in the dark), its signal cord, and the open shaft it leaves. LFT-05's substation: the fuse board
 ## (bit 4 the burnt links cleared, bits 5-6 the fuses in, bit 7 every fuse way filled), the trip
-## lever (bit 4 held) and the main switch (bit 4 closed).
+## lever (bit 4 held) and the main switch (bit 4 closed). LFT-13's switchboard, as anyone in base
+## camp sees it (bit 4 awake, bits 5-11 how many real flaps are down: never which, and never a drop
+## only the operator is shown).
 
 enum Kind { NONE = 0, TANK_GLASS = 1, ENGINE_PRIME = 2, ENGINE_CRANK = 3, ENGINE_THROTTLE = 4, CAGE = 5, CAGE_CORD = 6, OPEN_SHAFT = 7,
-	FUSE_BOARD = 8, TRIP_LEVER = 9, MAIN_SWITCH = 10 }
+	FUSE_BOARD = 8, TRIP_LEVER = 9, MAIN_SWITCH = 10, SWITCHBOARD = 11 }
 enum Look { COLD = 0, SHUDDER = 1, RUNNING = 2 }
 enum CageLook { STANDING = 0, WEDGED = 1, RIDING = 2, STOPPED = 3 }
 
@@ -51,6 +53,16 @@ static func cage(look: int) -> int:
 ## LFT-05's fuse board: its links cleared, how many fuses are in (0-3), and every way filled.
 static func fuse_board(cleared: bool, fuses: int, full: bool) -> int:
 	return Kind.FUSE_BOARD | ((1 if cleared else 0) << 4) | (clampi(fuses, 0, 3) << 5) | ((1 if full else 0) << 7)
+
+
+## LFT-13's board: awake, and how many of its flaps are really down (0-99).
+static func switchboard(awake: bool, down: int) -> int:
+	return Kind.SWITCHBOARD | ((1 if awake else 0) << 4) | (clampi(down, 0, 127) << 5)
+
+
+## {awake, down} of the board's bits.
+static func read_switchboard(bits: int) -> Dictionary:
+	return {"awake": ((bits >> 4) & 1) == 1, "down": (bits >> 5) & 0x7F}
 
 
 ## {cleared, fuses, full} of a fuse board's bits.

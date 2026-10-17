@@ -76,6 +76,19 @@ static func bed(layer: String) -> AudioStreamWAV:
 	return s
 
 
+## LFT-13's line hiss: a quiet looped hiss in the earpiece (a held call, a cord in a quiet line).
+static func line_hiss() -> AudioStreamWAV:
+	if _cache.has("line_hiss"):
+		var cached: AudioStreamWAV = _cache["line_hiss"]
+		return cached
+	var seconds: float = 2.0
+	var s: AudioStreamWAV = make("hiss", seconds, 4113, 0.25)
+	s.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	s.loop_end = int(seconds * RATE)
+	_cache["line_hiss"] = s
+	return s
+
+
 ## RSC-06's placeholder brass band at the pithead: a slow hymn of four held chords, looped (the
 ## recorded band replaces it).
 static func band() -> AudioStreamWAV:

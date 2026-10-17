@@ -38,6 +38,7 @@ const MESSAGES: Dictionary = {
 	"SHEET": "sheet",  # LFT-14: a sheet's sync; strokes as made only to its readers; never to the fallen
 	"MANUAL": "manual",  # LFT-03: the repair list's kind, cans and jobs, only to a reader of the Manual
 	"LAMP_CHECK": "lamp_check",  # RSC-06: after the run's end only: its opening (own outcome only) and its end
+	"BOARD": "board",  # LFT-13: the switchboard as it stands, to its seated operator only
 }
 
 ## Each record a frame carries -> its rule (client_view's layout, FrameDecoder's fields).

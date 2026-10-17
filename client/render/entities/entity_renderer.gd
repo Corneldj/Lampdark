@@ -100,7 +100,8 @@ static func _collapse_tell(ci: CanvasItem, at: Vector2, px: float, t: float) -> 
 ## the prime's pump, the throttle's lever, and the crank's wheel on the engine block, still when
 ## cold, shuddering at the top of a stroke, its flywheel turning when it runs; LFT-10's cage, its
 ## cord and the open shaft it leaves; LFT-05's fuse board (its burnt links until cleared, a cartridge
-## in each filled way), its trip lever (up, or down when held) and its main switch (open or closed).
+## in each filled way), its trip lever (up, or down when held) and its main switch (open or closed);
+## LFT-13's switchboard (how many flaps are really down).
 static func draw_fixture(ci: CanvasItem, held: int, at: Vector2, px: float, t: float = 0.0) -> void:
 	var w: float = maxf(1.5, 0.05 * px)
 	match FixtureKinds.kind_of(held):
@@ -172,6 +173,17 @@ static func draw_fixture(ci: CanvasItem, held: int, at: Vector2, px: float, t: f
 			ci.draw_rect(Rect2(at - Vector2(0.3, 0.35) * px, Vector2(0.6, 0.7) * px), DARK)
 			var arm: Vector2 = Vector2(0.0, -0.28) if FixtureKinds.flag_of(held) else Vector2(0.22, -0.18)
 			ci.draw_line(at + Vector2(0.0, 0.2) * px, at + arm * px, BODY, w * 2.0)
+		FixtureKinds.Kind.SWITCHBOARD:
+			# LFT-13's cabinet as anyone in base camp sees it: its rows of flaps, the ones really down
+			# lit (an illusion's drop never shows here), dull without power.
+			var board: Dictionary = FixtureKinds.read_switchboard(held)
+			ci.draw_rect(Rect2(at - Vector2(0.42, 0.42) * px, Vector2(0.84, 0.84) * px), DARK)
+			var down: int = int(Variants.number(board["down"]))
+			var plate: Color = BODY if Variants.flag(board["awake"]) else BODY.darkened(0.5)
+			for i: int in 12:
+				var cell: Vector2 = at + Vector2(-0.3 + (i % 4) * 0.2, -0.3 + (i / 4) * 0.2) * px
+				var lit: bool = i < down
+				ci.draw_rect(Rect2(cell, Vector2(0.14, 0.14) * px), Palette.CHALK_WHITE.darkened(0.15) if lit else plate)
 		_:
 			ci.draw_rect(Rect2(at - Vector2(0.15, 0.15) * px, Vector2(0.3, 0.3) * px), BODY)
 

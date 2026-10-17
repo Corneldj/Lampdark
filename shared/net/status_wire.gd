@@ -17,6 +17,9 @@ const AT_JOB: int = 2
 const REVIVE_COUNTING: int = 4
 ## RSC-09: a self-revive is pending but waits (a drag holds the body).
 const REVIVE_WAITING: int = 8
+## LFT-13: line hiss in the ear: a caller held at the board, or the operator's cord in a line whose
+## caller has gone.
+const LINE_HISS: int = 64
 ## HAZ-03: Caught under a timber pin, holding interact struggles free (nobody's lift to hold for).
 const TRAP_STRUGGLE: int = 128
 const SIZE: int = 25

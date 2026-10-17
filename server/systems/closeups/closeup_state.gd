@@ -158,7 +158,8 @@ func _fixture_interact(run: RunState, slot: int, entity: int, c: InputBuffer.Con
 	if kind != CloseupKind.Kind.SWITCHBOARD:
 		open_for(run, entity, kind, "fixture")
 		return
-	if operator() != 0:
+	# LFT-13: no board under Dead Lines, and a Hired Hand never sits.
+	if operator() != 0 or not Switchboard.exists(run) or (run.crew != null and Variants.flag(run.crew.is_hand_driven.call(entity))):
 		return
 	var sit: TimedAction = TimedAction.make(entity, &"sit_at_board", Tuning.f(&"phones.seat_s"), InputRecord.HOLD_INTERACT)
 	sit.needs_still = true
@@ -181,7 +182,8 @@ func _stand_still(entity: int, c: InputBuffer.Consumed) -> void:
 	c.record = r
 	var kept: Array[ActionRecord] = []
 	for a: ActionRecord in c.actions:
-		if a.kind == ActionRecord.Kind.CLOSE_UP:
+		# LFT-13: the operator works the board from its close-up.
+		if a.kind == ActionRecord.Kind.CLOSE_UP or (a.kind == ActionRecord.Kind.BOARD and kind_of(entity) == CloseupKind.Kind.SWITCHBOARD):
 			kept.append(a)
 	c.actions = kept
 
@@ -230,6 +232,9 @@ func _fixture_targets(run: RunState, _actor: int, at: Vector2, reach: float) -> 
 			_fixtures[name] = tiles
 	for raw: Variant in FIXTURES.keys():
 		var name: StringName = raw
+		# LFT-13: under Dead Lines the alcove is an empty cabinet: no seat to offer.
+		if name == &"switchboard_seat" and not Switchboard.exists(run):
+			continue
 		var tiles: Array[Vector2i] = _fixtures[name]
 		for i: int in tiles.size():
 			var centre: Vector2 = Vector2(tiles[i]) + Vector2(0.5, 0.5)

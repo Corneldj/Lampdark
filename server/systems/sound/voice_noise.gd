@@ -6,8 +6,9 @@ extends RefCounted
 ## rock hears every word a teammate misses (§7.3). Events go by route: NORMAL and DRAGGED at the
 ## band's np (a dragged voice is muffled only for listeners); ASIDE and COMING_ROUND at whisper
 ## np while the band is above silent; FALL_SCREAM (SND-15 emits its one scream) and CUT none. They
-## travel in SND-01's voice mode (no shut door or gate passes them), as voice, not a struck sound,
-## and reach creatures and the collapse hook only: no client is sent a record of anyone's band.
+## travel as any sound does, a closed air door or a shut gate taking 12 np off them (Gameplay §6.2:
+## only the voice itself is cut there, by SND-07), as voice, not a struck sound, and reach creatures
+## and the collapse hook only: no client is sent a record of anyone's band.
 ## The dead (a channel replaces proximity) make none. Voice arrives between ticks, so each event
 ## is a voice fact (VoiceFacts): applied on the next tick, at the miner's tile then, and logged.
 
@@ -64,7 +65,7 @@ func emit_band(slot: int, np: float) -> void:
 	if m == null or not _run.registry.has(m.entity_id):
 		return
 	_run.noise.emit(NoiseTypes.Type.VOICE, _run.registry.get_entity(m.entity_id).tile(), {"level_np": np, "source": m.entity_id,
-		"mode": RoadGraphService.MODE_VOICE, "players": false})
+		"mode": RoadGraphService.MODE_VOICE_EVENT, "players": false})
 
 
 func _on_closed(slot: int, _frames: int, _delivered: Dictionary, _band: int, ended: bool) -> void:

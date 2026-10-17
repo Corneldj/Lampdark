@@ -4,7 +4,9 @@ extends RefCounted
 ## first generates (kept through eviction, saves and resumes); the cut is for the run; the call is
 ## who is on it now. Server-only: no route, cut or crossing ever leaves the server.
 
-enum State { IDLE = 0, CALLING = 1, ON_CALL = 2 }
+## CALLING: on the line, the flap down; ON_CALL: the operator plugged in; HELD: the operator holds it
+## (LFT-13), the caller on the line in hiss.
+enum State { IDLE = 0, CALLING = 1, ON_CALL = 2, HELD = 3 }
 
 ## GEN-10's placement id ("p" + 16 hex digits), or a test's own.
 var id: String = ""

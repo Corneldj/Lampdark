@@ -486,6 +486,18 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 				_fail(slot, "CLOSE_UP", "closeup", "not exactly {kind, seat}")
 			elif run.closeups == null or int(Variants.number(c["kind"])) != run.closeups.kind_of(reader):
 				_fail(slot, "CLOSE_UP", "closeup", "a close-up this client's miner is not reading")
+		"board":
+			# LFT-13: exactly the board as it stands (flaps, cord, awake: never a place, a caller or a
+			# cause), to the client whose miner sits at it, and no one else.
+			_lane(slot, lane, Lane.Id.CONTROL, type)
+			var board: Dictionary = BoardWire.decode(payload)
+			var me: MovementSystem.Miner = run.movement.miner(slot) if run.movement != null else null
+			if board.is_empty():
+				_fail(slot, "BOARD", "board", "malformed")
+			elif me == null or run.closeups == null or run.closeups.operator() != me.entity_id:
+				_fail(slot, "BOARD", "board", "the board to a client whose miner is not its operator")
+			elif run.switchboard == null or run.switchboard.view(run) != payload:
+				_fail(slot, "BOARD", "board", "not exactly the board as it stands")
 		"knocks":
 			_lane(slot, lane, Lane.Id.CONTROL, type)
 			if not payload.is_empty():

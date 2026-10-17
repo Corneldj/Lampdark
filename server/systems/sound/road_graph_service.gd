@@ -6,6 +6,10 @@ extends RefCounted
 
 const MODE_AIR: int = 0
 const MODE_VOICE: int = 1
+## Gameplay §6.2, §3.2, §4.10: a voice's own Road Graph event (SND-09's bands, SND-11's callouts,
+## SND-15's scream, all to creatures only) passes a closed air door or a shut gate at -12 np like any
+## sound; only the voice itself (SND-07's delivery, MODE_VOICE) is cut there.
+const MODE_VOICE_EVENT: int = MODE_AIR
 
 var graph: LbRoadGraph = LbRoadGraph.new()
 var mine: Mine

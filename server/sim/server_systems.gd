@@ -279,6 +279,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.phones = PhoneLines.new()
 	run.phones.bind(run)
 	run.add_system(run.phones)
+	# LFT-13: the switchboard, the other end of every line.
+	run.switchboard = Switchboard.new()
+	run.switchboard.bind(run, net)
+	run.add_system(run.switchboard)
 	# GEN-13: after every owner, so a committed cell replays once their own load hooks have run.
 	if run.vision != null:
 		run.vision.trail_changed.connect(func(tile: Vector2i, direction: int) -> void:

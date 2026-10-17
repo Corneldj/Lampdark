@@ -43,8 +43,9 @@ func test_three_cans_balance_exactly() -> void:
 	var glass: Dictionary = {}
 	for raw: Variant in ann.connection.view.entities.values():
 		var e: Dictionary = raw
-		if int(Variants.number(e.get("size_or_kind", 0))) == SeenKind.Kind.FIXTURE:
-			glass = FixtureKinds.read_tank_glass(int(Variants.number(e.get("in_hand", 0))))
+		var bits: int = int(Variants.number(e.get("in_hand", 0)))
+		if int(Variants.number(e.get("size_or_kind", 0))) == SeenKind.Kind.FIXTURE and FixtureKinds.kind_of(bits) == FixtureKinds.Kind.TANK_GLASS:
+			glass = FixtureKinds.read_tank_glass(bits)
 	assert_eq(glass, {"cans": 2, "fills": 8}, "the glass: two marks, full")
 
 

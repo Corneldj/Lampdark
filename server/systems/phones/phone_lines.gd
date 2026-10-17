@@ -28,6 +28,8 @@ extends SimSystem
 ## on its identity record (seen at 0.30), never below.
 
 signal calling(number: int, miner: int)
+## LFT-13: a rung phone answered at the wall, onto the operator who rang it.
+signal answered(number: int, operator: int)
 signal ended(number: int, why: String)
 signal line_cut(number: int)
 
@@ -280,6 +282,44 @@ func ring(run: RunState, number: int, operator: int) -> bool:
 	return true
 
 
+## LFT-13: the seat changed hands: no bell still ringing answers onto whoever rang it.
+func forget_rings() -> void:
+	for raw: Variant in phones.keys():
+		var p: PitPhone = phones[raw]
+		p.ringing_by = -1
+
+
+## LFT-13: the operator holds a call: the line goes quiet both ways, the caller stays on it in hiss.
+func hold(run: RunState, number: int) -> bool:
+	var p: PitPhone = of_number(number)
+	if p == null or p.state != PitPhone.State.ON_CALL:
+		return false
+	var slot: int = _slot_of(run, p.caller)
+	if run.voice != null and slot >= 0 and p.operator >= 0:
+		run.voice.close_direct(slot, p.operator)
+	p.state = PitPhone.State.HELD
+	p.operator = -1
+	history.append({"tick": run.tick, "id": p.id, "number": number, "what": "held"})
+	return true
+
+
+## LFT-13: back to a held call.
+func resume(run: RunState, number: int, operator: int) -> bool:
+	var p: PitPhone = of_number(number)
+	if p == null or p.state != PitPhone.State.HELD or not live(run, p):
+		return false
+	return _connect(run, p, operator)
+
+
+## Whether `miner` waits on a held line (its earpiece hisses).
+func held_caller(miner: int) -> bool:
+	for raw: Variant in phones.keys():
+		var p: PitPhone = phones[raw]
+		if p.caller == miner and p.state == PitPhone.State.HELD:
+			return true
+	return false
+
+
 ## LFT-13: the operator pulls the plug.
 func hang_up(run: RunState, number: int) -> bool:
 	var p: PitPhone = of_number(number)
@@ -300,10 +340,19 @@ func interact(run: RunState, miner: int, entity: int) -> bool:
 		return true
 	if p.caller != 0:
 		return false
-	if p.ringing_until >= run.tick and p.ringing_by >= 0 and live(run, p):
+	if p.ringing_until >= run.tick and live(run, p):
 		p.caller = miner
 		history.append({"tick": run.tick, "id": p.id, "number": p.number, "what": "answered", "by": miner})
-		return _connect(run, p, p.ringing_by)
+		var operator: int = p.ringing_by
+		if operator >= 0 and _connect(run, p, operator):
+			answered.emit(p.number, operator)
+			return true
+		# LFT-13: whoever rang has left the board: the call waits there, its flap down (Proposed).
+		p.state = PitPhone.State.CALLING
+		p.ringing_until = -1
+		_show(run, p)
+		calling.emit(p.number, miner)
+		return true
 	if run.inventory == null or run.inventory.actions.has(miner) or run.inventory.free_hand_blocked(miner, &"phone"):
 		return false
 	return run.inventory.start_action(run, _crank(run, miner, p))
@@ -335,6 +384,12 @@ func _connect(run: RunState, p: PitPhone, operator: int) -> bool:
 	var slot: int = _slot_of(run, p.caller)
 	if slot < 0 or operator < 0:
 		return false
+	# LFT-13: the board never patches: a line joins a phone to the headset, never to another phone.
+	for raw: Variant in phones.keys():
+		var other: PitPhone = phones[raw]
+		if other.caller != 0 and _slot_of(run, other.caller) == operator:
+			push_error("PhoneLines: line %d would be patched to line %d's caller" % [p.number, other.number])
+			return false
 	if run.voice != null:
 		run.voice.open_direct(slot, operator)
 	p.operator = operator
