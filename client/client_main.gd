@@ -84,6 +84,10 @@ var profile_store: ProfileStore = null
 ## MOD-03: the run the seated miner went Below for ("" until the run's first frame, and after Lamp
 ## Check); a connection lost before Lamp Check ends it abnormally on the roster (RSC-06).
 var _seated_run: String = ""
+## MOD-05: the host may knock off now (UI-05's "Knock off" shows only then); and the save a host's
+## server resumes when the crew opens ("" for a new run; UI-04's resume list sets it).
+var knock_off_available: bool = false
+var resume_path: String = ""
 ## LFT-03: the Manual at its lectern.
 var manual_closeup: ManualCloseup = null
 var _closeup_messages_seen: int = 0
@@ -610,8 +614,10 @@ func _start_hosting() -> void:
 	local_server.start_refused.connect(func(reason: String) -> void:
 		Log.warn("the run did not start: %s" % reason)
 		lobby.failed.emit("lobby.start_refused"))
+	local_server.knock_off_available.connect(func(on: bool) -> void: knock_off_available = on)
+	local_server.knock_off_refused.connect(func(reason: String) -> void: Log.warn("knock off refused: %s" % reason))
 	if not local_server.reattach():
-		if not local_server.start(LocalServerHost.default_path(config.host_relay)):
+		if not local_server.start(LocalServerHost.default_path(config.host_relay), resume_path):
 			lobby.failed.emit("lobby.run_ended")
 			return
 	lobby.failed.emit("lobby.hosting")
@@ -712,7 +718,11 @@ func _report_connection() -> void:
 				_send_mic_label(mic_mode.show_mute_label())
 		ClientConnection.State.REJECTED:
 			Log.warn("refused by the server: %s" % RejectText.text(connection.reject_reason))
-			_end_seated_run()
+			if connection.reject_reason == Protocol.Reject.KNOCKED_OFF:
+				# MOD-05: the run is saved, unfinished: the miner stays Below for it until it resumes.
+				_seated_run = ""
+			else:
+				_end_seated_run()
 			_lobby_again()
 		ClientConnection.State.DROPPED:
 			Log.warn("connection lost: %s" % connection.drop_reason)
@@ -782,6 +792,12 @@ func _end_seated_run() -> void:
 		profile_store.save(profile)
 	Log.info("profile: the run ended without Lamp Check (%s)" % ("voided" if public else "unfinished"))
 	_seated_run = ""
+
+
+## MOD-05: the host's "Knock off" (UI-05's settings overlay calls it while knock_off_available).
+func knock_off() -> void:
+	if local_server != null and knock_off_available:
+		local_server.send_knock_off()
 
 
 ## MOD-03: Go down: the host's own server creates the run from the lobby's options and the crew seated.
@@ -924,6 +940,9 @@ func _open_lamp_check(opening: Dictionary) -> void:
 ## goes nowhere (MOD-03 seats one).
 func _apply_outcome(opening: Dictionary) -> void:
 	_seated_run = ""
+	# MOD-05: the run is over: its saves are never offered for a resume again.
+	if connection != null:
+		connection.saves.mark_ended(str(opening.get("run_uuid", "")))
 	if profile == null:
 		Log.info("lamp check: no profile seated, so no roster takes the outcome")
 		return

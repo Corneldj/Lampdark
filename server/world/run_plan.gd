@@ -20,7 +20,9 @@ static func fix(layouts: LbLayouts, run: RunState, saved: PackedByteArray = Pack
 			push_error("RunPlan: the saved plan does not fit this run")
 			return {}
 		run.header.plan = saved
-		return layouts.plan_dict()
+		var loaded: Dictionary = layouts.plan_dict()
+		_record_versions(run, layouts, loaded)
+		return loaded
 	var inputs: Dictionary = params(run)
 	inputs.merge(overrides, true)
 	var plan: Dictionary = layouts.plan(inputs)
@@ -36,10 +38,17 @@ static func fix(layouts: LbLayouts, run: RunState, saved: PackedByteArray = Pack
 	if not Variants.flag(plan.get("ok", false)):
 		push_error("RunPlan: %s" % str(plan.get("error", "")))
 		return {}
+	_record_versions(run, layouts, plan)
 	Log.info("run plan: %d sites, %d spines, the revolver %s, %d boxes" % [Variants.array(plan["sites"]).size(),
 		Variants.array(plan["spines"]).size(), "planned" if Variants.flag(plan["revolver"]) else "not planned",
 		Variants.array(plan["boxes"]).size()])
 	return plan
+
+
+## MOD-05: the generator and template set this run's mine comes from, for its saves.
+static func _record_versions(run: RunState, layouts: LbLayouts, plan: Dictionary) -> void:
+	run.header.generator = "gen:%d" % int(Variants.number(plan.get("generator_version", 0)))
+	run.header.templates = layouts.set_version()
 
 
 ## GEN-12's run-start report: a spine that no replan saved, or gates that fail, is a generator bug or

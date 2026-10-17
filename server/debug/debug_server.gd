@@ -113,6 +113,14 @@ func _run_command(run: RunState, name: String, a: Dictionary, issuer: int) -> Di
 				return _no("no creature system")
 			run.creatures.set_frozen(run, Variants.flag(a["on"]))
 			return _ok("AI %s (creatures and Hired Hands; Bess arrives with MOD-07)" % ("frozen" if Variants.flag(a["on"]) else "running"))
+		"knock_off":
+			if run.knock_off == null:
+				return _no("no knock-off (MOD-05)")
+			var why: String = KnockOff.refusal(run)
+			if not why.is_empty():
+				return _no(why)
+			run.knock_off.deferred_by = "console"
+			return _ok("knocking off at this tick's end: the save goes to every member, then the session ends")
 		"apex":
 			if run.apex == null:
 				return _no("no apex (LFT-09)")

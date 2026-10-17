@@ -6,7 +6,10 @@ extends GutTest
 ## test_hosting profile: 2 s); a restarted client reattaches through the lock; Night Shift's offline
 ## spawn has no Steam identity. MOD-03: the hosted run waits at the Pithead, seating its crew and
 ## sending no game data, until the host's start creates it (a refused start says why, and the crew
-## stays at the Pithead).
+## stays at the Pithead). MOD-05: the host knocks off over its link (offered only while the crew may),
+## the client is sent to the Pithead holding the server's save byte for byte, and a server spawned to
+## resume it waits at the Pithead too, then goes on from where it stopped; a newcomer joins it in
+## progress, on base camp's floor.
 
 var _hosts: Array[LocalServerHost] = []
 
@@ -40,9 +43,9 @@ func _wait(cond: Callable, seconds: float) -> bool:
 	return Variants.flag(cond.call())
 
 
-func _join(h: LocalServerHost) -> ClientConnection:
+func _join(h: LocalServerHost, identity: String = "76561198030964382") -> ClientConnection:
 	var c: ClientConnection = ClientConnection.new(EnetTransport.new())
-	c.identity = "76561198030964382"
+	c.identity = identity
 	assert_true(c.start("127.0.0.1", Variants.whole(h.info["game"])))
 	await _wait(func() -> bool:
 		c.poll()
@@ -115,6 +118,68 @@ func test_the_run_begins_at_the_hosts_start() -> void:
 		if line.contains("hands") or line.contains("arrival") or line.contains("run created"):
 			gut.p(line)
 	assert_true(server_log.contains("hands: 4 Hired Hands fill the empty places"), "Hands in the empty places")
+
+
+func test_the_host_knocks_off_and_the_run_resumes() -> void:
+	var h: LocalServerHost = _host()
+	assert_true(await _wait(func() -> bool: return h.state == LocalServerHost.State.READY, Tuning.f(&"net.local_server_ready_timeout_s")))
+	var c: ClientConnection = await _join(h)
+	c.saves.root = "user://test_knock_off_copies"
+	var offered: Array[bool] = []
+	h.knock_off_available.connect(func(on: bool) -> void: offered.append(on))
+	var starts: Array[bool] = []
+	h.run_started.connect(func() -> void: starts.append(true))
+	h.send_start(RunOptions.defaults(ServerConfig.Mode.FRIENDS).to_dict(), false)
+	assert_true(await _wait(func() -> bool:
+		c.poll()
+		return not offered.is_empty() and offered[offered.size() - 1], 20.0), "the host is offered the knock-off (inside, gates shut)")
+	var uuid: String = c.welcome.run_uuid
+	h.send_knock_off()
+	assert_true(await _wait(func() -> bool:
+		c.poll()
+		return c.state == ClientConnection.State.REJECTED, 20.0), "the crew knocked off")
+	assert_eq(c.reject_reason, Protocol.Reject.KNOCKED_OFF, "to the Pithead")
+	assert_true(c.lamp_check.is_empty(), "no Lamp Check")
+	assert_true(await _wait(func() -> bool: return h.state == LocalServerHost.State.ENDED, 15.0), "the server goes")
+	var served: String = "user://saves".path_join(uuid.validate_filename()).path_join(Saves.KNOCKOFF_FILE)
+	var copy: String = c.saves.root.path_join(uuid.validate_filename()).path_join(SaveStore.KNOCKOFF_FILE)
+	assert_true(FileAccess.file_exists(served) and FileAccess.file_exists(copy))
+	assert_eq(SaveContainer.hash_of(FileAccess.get_file_as_bytes(copy)), SaveContainer.hash_of(FileAccess.get_file_as_bytes(served)),
+		"the member holds the host's save, byte for byte")
+	c.close()
+	# Another evening: the host's client resumes it from its copy.
+	var r: LocalServerHost = LocalServerHost.new()
+	r.extra_args = PackedStringArray(["--tuning-profile", "test_hosting"])
+	add_child_autofree(r)
+	_hosts.append(r)
+	assert_true(r.start(LocalServerHost.Path.B, ProjectSettings.globalize_path(copy)))
+	assert_true(await _wait(func() -> bool: return r.state == LocalServerHost.State.READY, Tuning.f(&"net.local_server_ready_timeout_s")))
+	var back: ClientConnection = await _join(r)
+	assert_eq(back.state, ClientConnection.State.CONNECTED, "the player comes back")
+	await _wait(func() -> bool:
+		back.poll()
+		return false, 1.0)
+	assert_eq(back.frames_received, 0, "the resumed run waits at the Pithead")
+	var resumed: Array[bool] = []
+	r.run_started.connect(func() -> void: resumed.append(true))
+	r.send_start(RunOptions.defaults(ServerConfig.Mode.FRIENDS).to_dict(), false)
+	assert_true(await _wait(func() -> bool:
+		back.poll()
+		return not resumed.is_empty() and back.frames_received > 5, 20.0), "it goes on at the host's start")
+	var newcomer: ClientConnection = await _join(r, "76561198030964399")
+	assert_eq(newcomer.state, ClientConnection.State.CONNECTED, "a newcomer takes an empty place")
+	assert_true(await _wait(func() -> bool:
+		back.poll()
+		newcomer.poll()
+		return newcomer.frames_received > 5, 20.0), "and plays")
+	newcomer.close()
+	r.stop()
+	assert_true(await _wait(func() -> bool: return r.state == LocalServerHost.State.ENDED, 10.0))
+	back.close()
+	var log_text: String = FileAccess.get_file_as_string(r.log_path)
+	assert_true(log_text.contains("the run resumes at the host's start"), "resumed, not created")
+	assert_false(log_text.contains("run created in"), "no new run")
+	assert_true(log_text.contains("(joining in progress)"), "the newcomer comes to on base camp's floor, in progress")
 
 
 func test_a_killed_server_is_noticed_within_a_second() -> void:

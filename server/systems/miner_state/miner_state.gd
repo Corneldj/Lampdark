@@ -102,6 +102,33 @@ func add_miner(entity: int, slot: int = -1) -> Miner:
 	return m
 
 
+## MOD-05: a miner leaves the world (an absent player's, waiting off the map); `export_overlays`
+## first keeps what returns with them.
+func remove_miner(entity: int) -> void:
+	_miners.erase(entity)
+
+
+## MOD-05: a miner's overlays with each timer as the ticks it has left (frozen while they wait).
+func export_overlays(entity: int, now: int) -> Dictionary:
+	var m: Miner = miner(entity)
+	if m == null:
+		return {}
+	return {"marks": m.overlays.marks.duplicate(true), "hurt_left": maxi(m.overlays.hurt_until - now, -1) if m.overlays.hurt_until >= 0 else -1,
+		"rock_touched_left": maxi(m.overlays.rock_touched_until - now, -1) if m.overlays.rock_touched_until >= 0 else -1}
+
+
+## MOD-05: the overlays back, each timer resuming with the ticks it had left.
+func import_overlays(entity: int, d: Dictionary, now: int) -> void:
+	var m: Miner = miner(entity)
+	if m == null or d.is_empty():
+		return
+	m.overlays.marks = Variants.dict(d.get("marks", {})).duplicate(true)
+	var hurt_left: int = int(Variants.number(d.get("hurt_left", -1)))
+	m.overlays.hurt_until = now + hurt_left if hurt_left >= 0 else -1
+	var rock_left: int = int(Variants.number(d.get("rock_touched_left", -1)))
+	m.overlays.rock_touched_until = now + rock_left if rock_left >= 0 else -1
+
+
 func miner(entity: int) -> Miner:
 	if not _miners.has(entity):
 		return null

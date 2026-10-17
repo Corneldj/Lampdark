@@ -19,7 +19,8 @@ class_name Protocol
 ## 17: RSC-06's LAMP_CHECK (LampCheckWire).
 ## 18: MOD-03's seating: Hello's candidate miners, preferred badge and New Brigade runs, Welcome's
 ##     seated miner, badge and run UUID, and Reject.LAMP_NUMBERS.
-const PROTOCOL_VERSION: int = 18
+## 19: MOD-05's Reject.KNOCKED_OFF.
+const PROTOCOL_VERSION: int = 19
 ## MOD-03: the most roster miners a Hello offers (a roster's three, Gameplay §13.2).
 const MAX_CANDIDATES: int = 3
 ## MOD-03: a candidate's name and each shown page are at most this long (bytes, UTF-8).
@@ -70,6 +71,7 @@ enum Reject {
 	FLAVOUR_MISMATCH = 7,  ## FND-08: a release build never meets a dev or QA one
 	SEAT_KEPT = 8,  ## NET-11: past the public retake window, a Hired Hand keeps the place
 	LAMP_NUMBERS = 9,  ## MOD-03: every miner the joiner offered holds a lamp number already seated
+	KNOCKED_OFF = 10,  ## MOD-05: the crew knocked off; the run is saved to be resumed (no Lamp Check)
 }
 
 enum Seat { PLAYER = 0, BOT = 1 }

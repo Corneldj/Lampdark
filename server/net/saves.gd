@@ -25,6 +25,9 @@ var save_dir: String = "user://saves"
 var enabled: bool = true
 ## LFT-11: the run has ended with its outcome: no snapshot is written after it.
 var closed: bool = false
+## MOD-05: the crew knocked off: the knock-off save is the run's last until it resumes (the server's
+## end writes nothing after it).
+var knocked_off: bool = false
 var seq: int = 0
 var parent_hash: String = ""
 ## Every save written: {tick, seq, kind, bytes, sections (sizes), capture_usec, path}.
@@ -138,7 +141,7 @@ func close(run: RunState, why: String) -> void:
 ## The server going while the run is under way (everyone gone, the host quitting): a friends or Night
 ## Shift run's last snapshot, written before the process ends; a public run voided, nothing written.
 func end_abnormally(run: RunState, why: String) -> Dictionary:
-	if closed:
+	if closed or knocked_off:
 		return {}
 	if not enabled:
 		Log.info("public run voided (%s): no save, no outcomes" % why)
@@ -151,19 +154,40 @@ func end_abnormally(run: RunState, why: String) -> Dictionary:
 
 ## MOD-05: the knock-off save, every timer frozen (the caller freezes the run first).
 func knockoff(run: RunState) -> Dictionary:
-	return snapshot(run, "knockoff")
+	var row: Dictionary = snapshot(run, "knockoff")
+	knocked_off = not row.is_empty()
+	flush()
+	return row
 
 
-## The plain header: what a resume checks before opening anything (no seed, no state).
+## MOD-05: this tick's acknowledgements, taken at once (a frozen run's systems do not tick).
+func take_acks() -> void:
+	_take_acks()
+
+
+## The plain header: what a resume checks before opening anything, and what the Pithead's resume
+## list shows (MOD-05: the list, the run time, the deepest ring reached). No seed, no state.
 func plain_header(run: RunState, kind: String) -> Dictionary:
+	var list_kind: int = run.repair.list.kind if run.repair != null and run.repair.list != null else -1
 	return {"run_uuid": run.header.run_uuid, "seq": seq, "parent_hash": parent_hash, "kind": kind,
-		"build": _net.build_id if _net != null else "", "generator": generator_version(run), "templates": "none",
-		"bundle": Tuning.content_hash("server") if Tuning.current.entries.size() > 0 else "", "mode": run.header.mode}
+		"build": _net.build_id if _net != null else "", "generator": generator_version(run), "templates": templates_version(run),
+		"bundle": Tuning.content_hash("server") if Tuning.current.entries.size() > 0 else "", "mode": run.header.mode,
+		"list": RunOptions.LIST_NAMES[list_kind] if list_kind >= 0 else "", "run_time_s": run.tick / Tuning.f(&"net.tick_hz"),
+		"deepest": run.outcomes.deepest_ring if run.outcomes != null else 0}
 
 
-## The generator a run's mine comes from (GEN-04 versions templates; a fixed map is its own).
+## The generator a run's mine comes from: a fixed map is its own; a generated mine's is GEN-08's
+## version, as its plan records it (MOD-05: a resume needs this build to make it).
 static func generator_version(run: RunState) -> String:
-	return "fixed:" + run.header.map_name if not run.header.map_name.is_empty() else "none"
+	if not run.header.map_name.is_empty():
+		return "fixed:" + run.header.map_name
+	return run.header.generator if not run.header.generator.is_empty() else "none"
+
+
+## The template set a generated mine's cells come from (GEN-04's versions; a resume loads that set,
+## not the build's newest), "none" for a fixed map.
+static func templates_version(run: RunState) -> String:
+	return run.header.templates if not run.header.templates.is_empty() else "none"
 
 
 func _check_budgets(run: RunState, sections: Dictionary, sizes: Dictionary) -> void:

@@ -122,13 +122,13 @@ func test_seeds_and_streams_stay_inside_the_sealed_sections() -> void:
 	for raw: Variant in streams.values():
 		var b: PackedByteArray = PackedByteArray()
 		b.resize(8)
-		b.encode_s64(0, int(Variants.number(raw)))
+		b.encode_s64(0, Variants.whole(raw))
 		secrets.append(b)
 	var header: Dictionary = SaveContainer.read_header(FileAccess.get_file_as_bytes(S.snapshot_path(s)))
 	var keys: Array = header.keys()
 	keys.sort()
-	assert_eq(keys, ["build", "bundle", "generator", "kind", "mode", "parent_hash", "run_uuid", "seq", "templates"],
-		"the plain header holds versions and chain fields only")
+	assert_eq(keys, ["build", "bundle", "deepest", "generator", "kind", "list", "mode", "parent_hash", "run_time_s", "run_uuid", "seq", "templates"],
+		"the plain header holds versions and chain fields only, and MOD-05's resume line")
 	var blobs: Array[PackedByteArray] = [FileAccess.get_file_as_bytes(S.snapshot_path(s)),
 		FileAccess.get_file_as_bytes(s.run.saves.run_dir().path_join(Saves.JOURNAL_FILE))]
 	for h: MinerHandle in s.miners:

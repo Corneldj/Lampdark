@@ -25,6 +25,14 @@ static func for_run(run_seed: int, set_version: String = "", pack_file: String =
 	return layouts
 
 
+## The template set a pack file carries ("" when it is none): a dev server's --template-pack, for
+## a resume (MOD-05).
+static func pack_version(pack_file: String) -> String:
+	if pack_file.is_empty() or not FileAccess.file_exists(pack_file):
+		return ""
+	return str(LbTemplates.decode_pack(FileAccess.get_file_as_bytes(pack_file)).get("set_version", ""))
+
+
 ## Sets a deriver's numbers from tuning (sockets, rerolls, GEN-06's biomes, GEN-12's validator) and
 ## base camp's gates.
 static func configure(layouts: LbLayouts, run_seed: int) -> void:

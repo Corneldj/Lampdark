@@ -439,7 +439,7 @@ func load_state(run: RunState, state: Dictionary) -> void:
 		c.system = self
 		c.rng = run.stream(int(Variants.number(DOMAINS[c.kind])), PackedInt64Array([0]))
 		if Variants.flag(d.get("has_rng", false)):
-			c.rng.set_state(int(Variants.number(d["rng"])))
+			c.rng.set_state(Variants.whole(d["rng"]))
 		c.states.clear()
 		for s: CreatureState in c.define_states():
 			c.states[s.name] = s

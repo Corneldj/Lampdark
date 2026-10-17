@@ -27,6 +27,9 @@ signal link_status(status: Dictionary)
 ## MOD-03: the run began at the host's start, or the start was refused (the server's plain words).
 signal run_started
 signal start_refused(reason: String)
+## MOD-05: whether the crew may knock off now (UI-05's "Knock off" shows only then), and a refusal.
+signal knock_off_available(on: bool)
+signal knock_off_refused(reason: String)
 
 var state: State = State.OFF
 var path: Path = Path.A
@@ -216,6 +219,10 @@ func _poll_link() -> void:
 						run_started.emit()
 					"start_refused":
 						start_refused.emit(str(m.get("reason", "")))
+					"knock_off_available":
+						knock_off_available.emit(Variants.flag(m.get("on", false)))
+					"knock_off_refused":
+						knock_off_refused.emit(str(m.get("reason", "")))
 			TransportEvent.Kind.DROPPED:
 				_link_up = false
 	link.flush()
@@ -242,6 +249,11 @@ func send_options(options: Dictionary) -> void:
 ## crew seated now. `unlocked`: the host has unlocked the hard variants (MOD-01).
 func send_start(options: Dictionary, unlocked: bool) -> void:
 	_send({"t": "start", "options": options, "unlocked": unlocked})
+
+
+## MOD-05: "Knock off": the server saves the run and ends the session if the crew may knock off.
+func send_knock_off() -> void:
+	_send({"t": "knock_off"})
 
 
 ## A clean stop: the server snapshots, says bye and exits 0; killed if it lingers.

@@ -103,6 +103,7 @@ static func restore(run: RunState, net: ServerNet, sections: Dictionary, journal
 	run.phase = int(Variants.number(head.get("phase", 0))) as RunState.Phase
 	run.header.run_uuid = str(head.get("run_uuid", ""))
 	run.header.map_name = str(head.get("map_name", ""))
+	run.header.resumed = true
 	# GEN-08: the plan the mine was generated with (server_main loads it before any derive).
 	var plan: Variant = head.get("plan", PackedByteArray())
 	if plan is PackedByteArray:

@@ -187,8 +187,9 @@ func test_a_resumed_run_spawns_nothing_new() -> void:
 		saved[c.kind] = c.tile(s.run)
 	assert_eq(saved.size(), 3)
 	var path: String = S.snapshot_path(s)
+	var carried: PackedStringArray = PackedStringArray([s.generation.layouts.set_version()])  # this test's own pack
 	S.kill(s)
-	var opened: Dictionary = SaveResume.open_file(path)
+	var opened: Dictionary = SaveResume.open_file(path, carried)
 	assert_true(Variants.flag(opened["ok"]), str(opened["message"]))
 	# As server_main resumes: no creature starts, the save's creatures restored.
 	var b: Scenario = _make(5119, {"creatures": false, "home_windows": true}, {"saves": true})

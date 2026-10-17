@@ -7,7 +7,11 @@ extends RefCounted
 ## entry: it stores bytes and assembles the file from the parts it was given.
 
 const SNAPSHOT_FILE: String = "snapshot.lmpb"
+## MOD-05: a knock-off save is kept under its own name too (the host's file is called so).
+const KNOCKOFF_FILE: String = "knockoff.lmpb"
 const JOURNAL_FILE: String = "journal.bin"
+## MOD-05: written when the run ends at Lamp Check, so the resume list leaves it out.
+const ENDED_FILE: String = "ended"
 
 var root: String = "user://saves"
 ## The last snapshot stored: run UUID -> {seq, header, order, sections (name -> sealed bytes)}.
@@ -37,8 +41,18 @@ func on_save_data(payload: PackedByteArray) -> int:
 		if not sections.has(n):
 			return -1  # a section never sent: not a whole copy yet
 	var header: Dictionary = r["header"]
-	_write_atomic(_dir(uuid).path_join(SNAPSHOT_FILE), SaveContainer.assemble(header, sections, order))
+	var bytes: PackedByteArray = SaveContainer.assemble(header, sections, order)
+	_write_atomic(_dir(uuid).path_join(SNAPSHOT_FILE), bytes)
+	if str(header.get("kind", "")) == "knockoff":
+		_write_atomic(_dir(uuid).path_join(KNOCKOFF_FILE), bytes)
 	return int(Variants.number(d["seq"]))
+
+
+## MOD-05: the run ended (Lamp Check): never offered for a resume again.
+func mark_ended(uuid: String) -> void:
+	if uuid.is_empty():
+		return
+	_write_atomic(_dir(uuid).path_join(ENDED_FILE), "ended".to_utf8_buffer())
 
 
 ## A JOURNAL payload: appended to the copy's journal at once.

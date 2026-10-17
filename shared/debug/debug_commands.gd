@@ -39,6 +39,8 @@ const SPEC: Dictionary = {
 		"help": "creatures, Hands and Bess stop deciding and moving; their timers pause"},
 	"apex": {"usage": "apex <on|off>", "where": Where.SERVER, "taints": true,
 		"help": "LFT-09's apex: the pit wakes (or sleeps again) whatever the engine"},
+	"knock_off": {"usage": "knock_off", "where": Where.SERVER, "taints": false,
+		"help": "MOD-05: save the run and end the session, if every conscious miner is in base camp with every gate shut"},
 	"truth": {"usage": "truth <on|off> [entities|creatures|light|vision|sound|director|lies ...]", "where": Where.BOTH, "taints": false,
 		"help": "the truth view on this client"},
 	"overlay": {"usage": "overlay <on|off>", "where": Where.BOTH, "taints": false, "help": "the magenta illusion tags (QA servers)"},
@@ -72,6 +74,9 @@ static func parse(line: String) -> Dictionary:
 			if a.size() > 1:
 				return _usage(name)
 			args["topic"] = a[0].to_lower() if a.size() == 1 else ""
+		"knock_off":
+			if not a.is_empty():
+				return _usage(name)
 		"spawn":
 			if a.is_empty():
 				return _usage(name)

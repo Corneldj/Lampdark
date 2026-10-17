@@ -19,7 +19,7 @@ const ERR_ENDED: String = "ended"
 
 ## {ok, error ("" | missing | format | seal | versions | ended), message (plain, for the player), header,
 ## head (the sealed run header), sections, journal, bytes}.
-static func open_file(path: String) -> Dictionary:
+static func open_file(path: String, carried: PackedStringArray = PackedStringArray()) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return _refused(ERR_MISSING, "There is no save at %s." % path)
 	var bytes: PackedByteArray = FileAccess.get_file_as_bytes(path)
@@ -29,7 +29,7 @@ static func open_file(path: String) -> Dictionary:
 			return _refused(ERR_SEAL, "This save has been changed or damaged, and cannot be resumed.")
 		return _refused(ERR_FORMAT, "This is not a LAMPBLACK save.")
 	var header: Dictionary = opened["header"]
-	var why: String = refusal(header)
+	var why: String = refusal(header, carried)
 	if not why.is_empty():
 		return _refused(ERR_VERSIONS, why, header)
 	var sections: Dictionary = opened["sections"]
@@ -42,9 +42,11 @@ static func open_file(path: String) -> Dictionary:
 
 
 ## Why a save cannot resume in this build ("" when it can). A run resumes in the mine it began in:
-## its generator and templates must be ones this build carries (GEN-04 carries the previous
-## update's; until then, the fixed maps and no templates). A public run is never resumed.
-static func refusal(header: Dictionary) -> String:
+## its generator and templates must be ones this build carries (a fixed map; a generated mine's
+## generator, GEN-08's version; GEN-04's template sets, the previous update's among them: MOD-05 then
+## loads the save's set, never the build's newest). `carried`: the sets this process holds besides
+## the build's packs (a dev server's --template-pack, a test's own pack). A public run is never resumed.
+static func refusal(header: Dictionary, carried: PackedStringArray = PackedStringArray()) -> String:
 	if int(Variants.number(header.get("mode", -1))) == ServerConfig.Mode.PUBLIC:
 		return "A public run is never saved, so it cannot be resumed."
 	var generator: String = str(header.get("generator", ""))
@@ -52,10 +54,14 @@ static func refusal(header: Dictionary) -> String:
 		var map_name: String = generator.trim_prefix("fixed:")
 		if FixedMapLoader.manifest(map_name).is_empty():
 			return "This run began in a mine (%s) that this version of the game no longer has." % map_name
+	elif generator.begins_with("gen:"):
+		if generator != "gen:%d" % LbLayouts.generator_version():
+			return "This run began in a mine this version of the game cannot make (generator %s)." % generator
 	elif generator != "none":
 		return "This run began in a mine this version of the game cannot make (generator %s)." % generator
-	if str(header.get("templates", "")) != "none":
-		return "This run began with rooms this version of the game no longer has (templates %s)." % str(header.get("templates", ""))
+	var templates: String = str(header.get("templates", ""))
+	if templates != "none" and not carried.has(templates) and not FileAccess.file_exists(MineLayouts.TEMPLATES.path_join("packs/%s.lbtp" % templates)):
+		return "This run began with rooms this version of the game no longer has (templates %s)." % templates
 	return ""
 
 

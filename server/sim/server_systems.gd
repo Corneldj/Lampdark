@@ -309,6 +309,12 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.hands = HandController.new()
 	run.hands.bind(run, net)
 	run.add_system(run.hands)
+	# MOD-05: knocking off, and the absent miners of a resumed run.
+	run.knock_off = KnockOff.new()
+	run.add_system(run.knock_off)
+	run.absent = AbsentMiners.new()
+	run.absent.bind(run, net)
+	run.add_system(run.absent)
 	# FND-08: dev and QA servers only; server/debug/ is not in a release pack.
 	if net.flavour != BuildInfo.Flavour.RELEASE and ResourceLoader.exists(DEBUG_INSTALL):
 		var installer: GDScript = load(DEBUG_INSTALL)

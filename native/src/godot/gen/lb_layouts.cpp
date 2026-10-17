@@ -421,6 +421,7 @@ void LbLayouts::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("poi_region", "region"), &LbLayouts::poi_region);
 	ClassDB::bind_method(D_METHOD("poi_contents", "region", "index"), &LbLayouts::poi_contents);
 	ClassDB::bind_static_method("LbLayouts", D_METHOD("canary_home", "region"), &LbLayouts::canary_home);
+	ClassDB::bind_static_method("LbLayouts", D_METHOD("generator_version"), &LbLayouts::generator_version);
 	ClassDB::bind_method(D_METHOD("make_homes"), &LbLayouts::make_homes);
 	ClassDB::bind_method(D_METHOD("homes_dict"), &LbLayouts::homes_dict);
 	ClassDB::bind_method(D_METHOD("place", "cell"), &LbLayouts::place);
@@ -824,6 +825,10 @@ Array LbLayouts::poi_contents(Vector2i region, int64_t index) const {
 		out.append(d);
 	}
 	return out;
+}
+
+int64_t LbLayouts::generator_version() {
+	return static_cast<int64_t>(gen::GENERATOR_VERSION);
 }
 
 PackedByteArray LbLayouts::canary_home(Vector2i region) {

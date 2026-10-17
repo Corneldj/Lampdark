@@ -373,8 +373,10 @@ func _check_lamp_check(slot: int, lane: int, payload: PackedByteArray) -> void:
 
 
 ## NET-09: saves reach members as opaque sealed bytes. Never in a public run; a snapshot's data on
-## bulk with a plain header of versions and chain fields only, a journal entry on control.
-const SAVE_HEADER_KEYS: Array[String] = ["build", "bundle", "generator", "kind", "mode", "parent_hash", "run_uuid", "seq", "templates"]
+## bulk with a plain header of versions and chain fields only (and MOD-05's resume line: the list,
+## the run time and the deepest ring, all of them things the crew has seen), a journal entry on control.
+const SAVE_HEADER_KEYS: Array[String] = ["build", "bundle", "deepest", "generator", "kind", "list", "mode", "parent_hash", "run_time_s",
+	"run_uuid", "seq", "templates"]
 
 
 func _check_save(slot: int, lane: int, type: int, payload: PackedByteArray) -> void:

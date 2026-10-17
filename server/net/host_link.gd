@@ -11,6 +11,8 @@ signal members_changed
 ## MOD-03: the host's Go down, with the lobby's options (RunOptions as a dictionary) and whether the
 ## host has unlocked the hard variants.
 signal start_requested(options: Dictionary, unlocked: bool)
+## MOD-05: the host chose "Knock off".
+signal knock_off_requested
 
 var transport: EnetTransport = null
 var token: String = ""
@@ -94,6 +96,8 @@ func _handle(peer: int, m: Dictionary) -> void:
 		"start":
 			options = Variants.dict(m.get("options", options))
 			start_requested.emit(options, Variants.flag(m.get("unlocked", false)))
+		"knock_off":
+			knock_off_requested.emit()
 		"status":
 			_send(peer, {"t": "status"}.merged(Variants.dict(status_of.call())))
 		"shutdown":
@@ -108,6 +112,16 @@ func say_started() -> void:
 
 func say_start_refused(reason: String) -> void:
 	_send_all({"t": "start_refused", "reason": reason})
+
+
+## MOD-05: whether the crew may knock off now (the host's "Knock off" shows only then), and a
+## refused knock-off's plain words.
+func say_knock_off_available(on: bool) -> void:
+	_send_all({"t": "knock_off_available", "on": on})
+
+
+func say_knock_off_refused(reason: String) -> void:
+	_send_all({"t": "knock_off_refused", "reason": reason})
 
 
 func _send_all(m: Dictionary) -> void:

@@ -104,6 +104,8 @@ public:
 	::godot::Array poi_contents(::godot::Vector2i region, int64_t index) const;
 	// The header's "canary" home (GEN-10 names the canary region): its bytes for set_home.
 	static ::godot::PackedByteArray canary_home(::godot::Vector2i region);
+	// MOD-05: the generator this build makes mines with (a save names the one it began in).
+	static int64_t generator_version();
 
 	// GEN-10 (configure with place: {remains_probability, remains_rings, remains_items: {name:
 	// probability}, remains_items_max, found_oil: [lo, hi], found_notches: [lo, hi],

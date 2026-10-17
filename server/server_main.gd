@@ -46,6 +46,10 @@ var _mine: Mine = null
 var _layouts: LbLayouts = null
 ## MOD-03: at the Pithead, the next network pump (µs).
 var _pithead_next_usec: int = 0
+## MOD-05: a resumed hosted run's phase, kept while it waits at the Pithead for its crew; and when
+## the knock-off's end went out to every client (µs), so the server goes once it has reached them.
+var _resumed_phase: RunState.Phase = RunState.Phase.PLAYING
+var _knocked_off_usec: int = -1
 
 
 func start(server_config: ServerConfig) -> void:
@@ -65,7 +69,10 @@ func start(server_config: ServerConfig) -> void:
 		get_tree().quit(ExitCode.BAD_ARGUMENTS)
 		return
 	if not config.resume_path.is_empty():
-		_resume = SaveResume.open_file(config.resume_path)
+		var carried: PackedStringArray = PackedStringArray()
+		if not config.template_pack.is_empty():
+			carried.append(MineLayouts.pack_version(config.template_pack))
+		_resume = SaveResume.open_file(config.resume_path, carried)
 		if not Variants.flag(_resume["ok"]):
 			Log.error("cannot resume %s: %s" % [config.resume_path, str(_resume["message"])])
 			get_tree().quit(ExitCode.VERSION_MISMATCH if str(_resume["error"]) == SaveResume.ERR_VERSIONS else ExitCode.BAD_ARGUMENTS)
@@ -74,7 +81,10 @@ func start(server_config: ServerConfig) -> void:
 		config.mode = int(Variants.number(head["mode"])) as ServerConfig.Mode
 		config.offline = Variants.flag(head.get("offline", false))
 		config.map_name = str(head.get("map_name", ""))
-		run = RunState.create(int(Variants.number(head["run_seed"])), config.mode, config.offline)
+		# MOD-05: a generated run's save makes its mine again, whatever the launch said.
+		if str(Variants.dict(_resume["header"]).get("generator", "")).begins_with("gen:"):
+			config.generated = true
+		run = RunState.create(Variants.whole(head["run_seed"]), config.mode, config.offline)
 	else:
 		run = RunState.create(_run_seed(), config.mode, config.offline)
 		if run != null:
@@ -107,9 +117,17 @@ func start(server_config: ServerConfig) -> void:
 		ServerConfig.Mode.keys()[config.mode], ServerConfig.TransportKind.keys()[config.transport],
 		config.port, run.header.offline, loop.tick_usec])
 	_started_usec = TickTimer.now_usec()
+	# MOD-05: a resumed hosted run waits at the Pithead too, restored, while its crew comes back; the
+	# host's Go down sets it going, with whoever is not back absent.
+	if config.parent_pid > 0 and not _resume.is_empty():
+		_resumed_phase = run.phase
+		run.set_phase(RunState.Phase.PITHEAD)
+	if host_link != null:
+		host_link.knock_off_requested.connect(_on_knock_off_requested)
+		run.knock_off.availability_changed.connect(func(on: bool) -> void: host_link.say_knock_off_available(on))
 	if run.phase == RunState.Phase.PITHEAD:
 		host_link.start_requested.connect(_on_start_requested)
-		Log.info("at the Pithead: the run begins when the host starts it")
+		Log.info("at the Pithead: the run %s when the host starts it" % ("resumes" if not _resume.is_empty() else "begins"))
 	else:
 		loop.start(_started_usec)
 	set_process(true)
@@ -131,6 +149,13 @@ func _process(_delta: float) -> void:
 	loop.pump(TickTimer.now_usec())
 	if rendezvous != null:
 		rendezvous.poll()
+	# MOD-05: knocking off: frozen, the save out; the session ends once every member holds it.
+	if run.knock_off != null and run.knock_off.flowing and _knocked_off_usec < 0:
+		if run.knock_off.poll(run, _member_slots(), TickTimer.now_usec()):
+			_end_knocked_off()
+	if _knocked_off_usec >= 0 and TickTimer.now_usec() - _knocked_off_usec >= LAMP_CHECK_GRACE_USEC:
+		_finish(ExitCode.OK, "the crew knocked off")
+		return
 	if run.tick - _last_stats_tick >= STATS_EVERY_TICKS:
 		_last_stats_tick = run.tick
 		_log_stats()
@@ -195,7 +220,9 @@ func _start_network() -> bool:
 		Log.info("map %s: %d cells in %.1f ms" % [config.map_name, cells, (TickTimer.now_usec() - started) / 1000.0])
 	if config.generated and config.map_name.is_empty():
 		_mine = Mine.new()
-		_layouts = MineLayouts.for_run(run.header.run_seed, "", config.template_pack)
+		# MOD-05: a resumed run loads the template set its save began with, never the build's newest.
+		var templates: String = str(Variants.dict(_resume.get("header", {})).get("templates", "none"))
+		_layouts = MineLayouts.for_run(run.header.run_seed, templates if templates != "none" else "", config.template_pack)
 		if _layouts == null:
 			Log.error("the generated mine has no template pack")
 			get_tree().quit(ExitCode.FATAL)
@@ -319,6 +346,9 @@ func _begin_run(options: RunOptions, humans: int, brigade_runs: Array[int], host
 func _on_start_requested(raw: Dictionary, host_unlocked: bool) -> void:
 	if run.phase != RunState.Phase.PITHEAD:
 		return
+	if not _resume.is_empty():
+		_resume_begins()
+		return
 	var options: RunOptions = RunOptions.from_dict(raw)
 	options.mode = config.mode  # the server's mode is its launch's
 	var crew: Array[Sessions.Session] = net.sessions.welcomed()
@@ -337,6 +367,42 @@ func _on_start_requested(raw: Dictionary, host_unlocked: bool) -> void:
 	loop.start(TickTimer.now_usec())
 	host_link.say_started()
 	Log.info("the run begins at the host's start")
+
+
+## MOD-05: a resumed hosted run goes on at the host's start, from the moment it was saved: after a
+## knock-off, every conscious miner whose player is not back waits off the map (AbsentMiners); after
+## an abnormal end, NET-11's Hands hold them where they stand.
+func _resume_begins() -> void:
+	if str(Variants.dict(_resume.get("header", {})).get("kind", "")) == "knockoff" and run.absent != null:
+		Log.info("resumed: %d absent miners wait in base camp" % run.absent.park_absent(run))
+	run.set_phase(_resumed_phase)
+	loop.start(TickTimer.now_usec())
+	host_link.say_started()
+	Log.info("the run resumes at the host's start (tick %d)" % run.tick)
+
+
+## MOD-05: the host's "Knock off": the run saved and the session ended, if the crew may.
+func _on_knock_off_requested() -> void:
+	var why: String = run.knock_off.request(run, "host", TickTimer.now_usec())
+	if not why.is_empty():
+		host_link.say_knock_off_refused(why)
+
+
+## The welcomed sessions' slots (a knock-off waits for each to hold the save).
+func _member_slots() -> Array[int]:
+	var out: Array[int] = []
+	for session: Sessions.Session in net.sessions.welcomed():
+		out.append(session.slot)
+	return out
+
+
+## Everyone to the Pithead with no Lamp Check (it waits for the run's end); the server goes once
+## that has reached them.
+func _end_knocked_off() -> void:
+	for slot: int in _member_slots():
+		net.remove(slot, Protocol.Reject.KNOCKED_OFF)
+	net.transport.flush()
+	_knocked_off_usec = TickTimer.now_usec()
 
 
 ## MOD-03: at the Pithead nothing ticks; the network seats the crew a tick's worth at a time, and a

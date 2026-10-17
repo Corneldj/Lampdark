@@ -27,6 +27,12 @@ class Header:
 	var map_name: String = ""
 	## GEN-08: a generated run's header and plan, as LbLayouts serialises it (RunPlan).
 	var plan: PackedByteArray = PackedByteArray()
+	## MOD-05: the generator and template set a generated mine comes from (RunPlan records them),
+	## which a resume must load again; and whether this run was resumed from a save (MOD-04's cold
+	## open plays only for a new run).
+	var generator: String = ""
+	var templates: String = ""
+	var resumed: bool = false
 	## MOD-03: the lobby's options, the humans seated at the start (RSC-09's "began with exactly
 	## two", DIR-05's lobby kind), the staging (DIR-06's stage, "" unstaged), the draw (HAZ-07's run
 	## conditions) and the rule flags {public, saved, solo_rules, hands_fill}, fixed at creation and
@@ -145,6 +151,9 @@ var revolver: Revolver = null
 var drops: DropHandler = null
 ## MOD-08's Hired Hands: the miners a Hand drives (server-only).
 var hands: HandController = null
+## MOD-05: knocking off, and an absent player's miner waiting off the map.
+var knock_off: KnockOff = null
+var absent: AbsentMiners = null
 ## NET-09: snapshots, knock-off saves and the journal.
 var saves: Saves = null
 ## RSC-09: the solo self-revive, the alone watch and the substitutions' switchboard.
@@ -238,7 +247,7 @@ func stream(domain: int, keys: PackedInt64Array) -> LbRng:
 	_streams[key] = rng
 	# NET-09: a resumed run's stream picks up where it was.
 	if _restored_streams.has(key):
-		rng.set_state(int(Variants.number(_restored_streams[key])))
+		rng.set_state(Variants.whole(_restored_streams[key]))
 		_restored_streams.erase(key)
 	if _scripted.has(key):
 		var values: PackedInt64Array = _scripted[key]
@@ -262,7 +271,7 @@ func restore_streams(states: Dictionary) -> void:
 	for raw: Variant in states.keys():
 		if _streams.has(raw):
 			var rng: LbRng = _streams[raw]
-			rng.set_state(int(Variants.number(states[raw])))
+			rng.set_state(Variants.whole(states[raw]))
 		else:
 			_restored_streams[raw] = states[raw]
 
