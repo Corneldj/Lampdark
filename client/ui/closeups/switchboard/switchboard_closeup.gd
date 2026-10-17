@@ -7,7 +7,7 @@ extends CloseupBase
 ## flaps (Protocol.Msg.BOARD, BoardWire), and a drop the rock fakes for this operator alone (CRT-11's
 ## illusion) is laid over them here, never on anyone else's screen. While the operator's own frame
 ## carries VIS-09's dust flag, dust sifts over the brass, evenly over the whole face and never from a
-## side, so it says only that the Moth is near, never where.
+## side, so it says only that the moth is near, never where.
 ##
 ## Input (UI-02's close-up actions): the mouse or the right stick picks a drop; left mouse or A
 ## plugs into it (or pulls the cord from the line it is in); right mouse or X holds the call; R or Y
