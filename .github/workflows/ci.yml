@@ -55,10 +55,18 @@ jobs:
       - name: Static checks, tuning, generated files, voices
         run: tools/build/ci_checks.sh
 
+  # GUT in four balanced shards (tools/build/gut_shard.py): one process over the whole suite
+  # outgrew a runner's time and memory.
   gut-linux:
     needs: native
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    env:
+      GUT_SHARD: ${{ matrix.shard }}/4
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/lfs-pull
@@ -68,19 +76,19 @@ jobs:
         with:
           name: native-bin
           path: native/bin
-      - name: GUT unit and scenario tests
+      - name: GUT unit and scenario tests, shard ${{ matrix.shard }} of 4
         run: tools/build/ci_tests.sh gut
       - name: Test report
         if: always()
         uses: mikepenz/action-junit-report@v5
         with:
-          report_paths: tests/reports/unit.xml
-          check_name: GUT (Linux)
+          report_paths: tests/reports/unit.${{ matrix.shard }}.xml
+          check_name: GUT (Linux) ${{ matrix.shard }}
       - name: Keep the log
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: gut-linux-log
+          name: gut-linux-log-${{ matrix.shard }}
           path: build/ci/
           retention-days: 14
 
@@ -142,7 +150,7 @@ jobs:
   windows:
     needs: native
     runs-on: windows-2022
-    timeout-minutes: 40
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/lfs-pull
@@ -151,9 +159,9 @@ jobs:
         with:
           name: native-bin
           path: native/bin
-      - name: Doctest, GUT unit and scenario tests
+      - name: Doctest
         shell: pwsh
-        run: tools/build/ci_windows.ps1
+        run: tools/build/ci_windows.ps1 -Only doctest
       - name: Debug-tool and bot-path checks, determinism digest
         shell: bash
         run: |
@@ -165,7 +173,7 @@ jobs:
         uses: mikepenz/action-junit-report@v5
         with:
           report_paths: tests/reports/*.xml
-          check_name: doctest and GUT (Windows)
+          check_name: doctest (Windows)
       - name: Upload the Windows digest
         uses: actions/upload-artifact@v4
         with:
@@ -177,6 +185,40 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-logs
+          path: tests/reports/
+          retention-days: 14
+
+  # GUT on Windows, sharded as on Linux.
+  windows-gut:
+    needs: native
+    runs-on: windows-2022
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/lfs-pull
+      - uses: ./.github/actions/setup-godot
+      - uses: actions/download-artifact@v4
+        with:
+          name: native-bin
+          path: native/bin
+      - name: GUT unit and scenario tests, shard ${{ matrix.shard }} of 4
+        shell: pwsh
+        run: tools/build/ci_windows.ps1 -Only gut -Shard "${{ matrix.shard }}/4"
+      - name: Test report
+        if: always()
+        uses: mikepenz/action-junit-report@v5
+        with:
+          report_paths: tests/reports/unit.windows.${{ matrix.shard }}.xml
+          check_name: GUT (Windows) ${{ matrix.shard }}
+      - name: Keep the logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-gut-logs-${{ matrix.shard }}
           path: tests/reports/
           retention-days: 14
 
@@ -210,7 +252,7 @@ jobs:
 
   ci-ok:
     if: always()
-    needs: [lint, native, checks, gut-linux, selftest-render, exports, windows, windows-smoke, determinism]
+    needs: [lint, native, checks, gut-linux, selftest-render, exports, windows, windows-gut, windows-smoke, determinism]
     runs-on: ubuntu-24.04
     steps:
       - name: Every stage passed
