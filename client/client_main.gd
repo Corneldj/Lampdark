@@ -71,6 +71,15 @@ var callout_wheel: CalloutWheel = null
 ## LFT-14: the map table's close-up, and the map card once the sheet freezes (RSC-06 shows it).
 var map_table: MapTableCloseup = null
 var map_card: Image = null
+## RSC-06: Lamp Check's screen while it is open, on its own layer under the captions (12).
+const LAMP_CHECK_LAYER: int = 11
+var lamp_check: LampCheckView = null
+var _lamp_check_layer: CanvasLayer = null
+var _lamp_check_seen: int = 0
+## MOD-01's profile and its store, as MOD-03 seats them with the miner sent below (UI-04's miner
+## choice at the Pithead): Lamp Check puts the run's outcome on that roster. Null until then.
+var profile: Profile = null
+var profile_store: ProfileStore = null
 ## LFT-03: the Manual at its lectern.
 var manual_closeup: ManualCloseup = null
 var _closeup_messages_seen: int = 0
@@ -215,6 +224,7 @@ func _process(delta: float) -> void:
 		_follow_camera(delta)
 		_play_audio()
 		_keep_map_card()
+		_keep_lamp_check()
 		if voice_capture != null:
 			voice_capture.voice_live = connection.state == ClientConnection.State.CONNECTED
 			voice_capture.tick(Time.get_ticks_usec())
@@ -437,8 +447,9 @@ func _follow_camera(delta: float) -> void:
 	if connection.closeup_messages != _closeup_messages_seen:
 		_closeup_messages_seen = connection.closeup_messages
 		closeups.apply(connection.closeup)
-	# UI-02: under a close-up that covers the screen nothing of the mine is drawn.
-	if closeups.covers_world():
+	# UI-02: under a close-up that covers the screen nothing of the mine is drawn; nor at Lamp Check
+	# (RSC-06), up on the surface.
+	if closeups.covers_world() or lamp_check != null:
 		if world_view.visible:
 			world_view.set_shown(false)
 		return
@@ -782,3 +793,81 @@ func _show_dev_lobby() -> void:
 			_connect(address))
 	_menus().add_child(screen)
 	Log.info("dev lobby shown: %s" % screen.who.text.replace("\n", " | "))
+
+
+## RSC-06: Lamp Check opens on the server's word: the screen over the mine, the mine's beds stopped,
+## held inputs let go, and the player's own outcome put on their roster. Its end closes the run.
+func _keep_lamp_check() -> void:
+	if connection.lamp_check_messages != _lamp_check_seen:
+		_lamp_check_seen = connection.lamp_check_messages
+		if not connection.lamp_check_end.is_empty():
+			_end_lamp_check()
+			return
+		if lamp_check == null and not connection.lamp_check.is_empty():
+			_open_lamp_check(connection.lamp_check)
+	if lamp_check != null:
+		lamp_check.step(Time.get_ticks_msec() / 1000.0)
+
+
+func _open_lamp_check(opening: Dictionary) -> void:
+	_lamp_check_layer = CanvasLayer.new()
+	_lamp_check_layer.name = "LampCheckScreen"
+	_lamp_check_layer.layer = LAMP_CHECK_LAYER
+	add_child(_lamp_check_layer)
+	lamp_check = LampCheckView.new()
+	if captions != null:
+		lamp_check.subtitle = captions.system.subtitle
+	lamp_check.map_card = func() -> Image: return map_card
+	lamp_check.ready_pressed.connect(func() -> void:
+		if connection != null:
+			connection.send_lamp_check_ready())
+	lamp_check.card_saved.connect(func(path: String, image: Image) -> void:
+		if steam != null and steam.mode == SteamService.Mode.STEAM:
+			LampCheckCardImage.to_steam_library(steam.api, path, image))
+	_lamp_check_layer.add_child(lamp_check)
+	lamp_check.open(opening, Time.get_ticks_msec() / 1000.0)
+	if beds != null:
+		beds.stop_all()
+	if in_play != null:
+		in_play.visible = false
+	if router != null:
+		router.release_all()
+	_apply_outcome(opening)
+	Log.info("lamp check: open (%d hooks, %s)" % [Variants.array(opening.get("hooks", [])).size(),
+		"in public, %.0f s" % Variants.number(opening.get("public_s", 0.0)) if not lamp_check.is_friends() else "until everyone is ready"])
+
+
+## MOD-01: the own outcome onto the seated profile's roster, saved; without a seated profile it
+## goes nowhere (MOD-03 seats one).
+func _apply_outcome(opening: Dictionary) -> void:
+	if profile == null:
+		Log.info("lamp check: no profile seated, so no roster takes the outcome")
+		return
+	var at: int = int(Time.get_unix_time_from_system())
+	if LampCheckRoster.apply(profile, str(opening.get("run_uuid", "")), str(opening.get("own", "")), Variants.flag(opening.get("wipe", false)), at):
+		if profile_store != null:
+			profile_store.save(profile)
+		Log.info("lamp check: the roster took the outcome (%s)" % str(opening.get("own", "")))
+
+
+## The end: the screen goes, and once this frame is done the run's connection closes and the lobby
+## returns (the server goes too).
+func _end_lamp_check() -> void:
+	if _lamp_check_layer != null:
+		_lamp_check_layer.queue_free()
+	_lamp_check_layer = null
+	lamp_check = null
+	Log.info("lamp check: over")
+	_leave_run.call_deferred()
+
+
+func _leave_run() -> void:
+	if connection != null:
+		connection.close()
+	connection = null
+	_lamp_check_seen = 0
+	# LFT-14's card belonged to that run.
+	map_card = null
+	if in_play != null:
+		in_play.visible = true
+	_lobby_again()

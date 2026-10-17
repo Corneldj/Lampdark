@@ -5,6 +5,8 @@ extends Node
 
 ## Log tick-rate statistics this often, in ticks (60 s at 20 Hz).
 const STATS_EVERY_TICKS: int = 1200
+## RSC-06: how long the server stays after Lamp Check ends, for its end to reach every client.
+const LAMP_CHECK_GRACE_USEC: int = 1000000
 ## NET-08: the stream audit, loaded by path in dev and QA servers only (tools/ is not in a pack).
 const STREAM_AUDIT: String = "res://tools/stream_audit/stream_audit.gd"
 
@@ -24,6 +26,8 @@ var _ready_printed: bool = false
 var _had_client: bool = false
 var _empty_since_usec: int = -1
 var _finishing: bool = false
+## RSC-06: when Lamp Check ended (µs), so the server goes once its end has reached every client.
+var _lamp_check_over_usec: int = -1
 var config: ServerConfig = null
 var run: RunState = null
 var loop: SimLoop = null
@@ -105,6 +109,10 @@ func _process(_delta: float) -> void:
 	if run.tick - _last_stats_tick >= STATS_EVERY_TICKS:
 		_last_stats_tick = run.tick
 		_log_stats()
+	# RSC-06: the run is over once Lamp Check ends; the clients go back to the Pithead.
+	if _lamp_check_over_usec >= 0 and TickTimer.now_usec() - _lamp_check_over_usec >= LAMP_CHECK_GRACE_USEC:
+		_finish(ExitCode.OK, "Lamp Check is over")
+		return
 	if loop.is_done():
 		Log.info("exit after %d ticks" % loop.ticks_run)
 		_log_stats()
@@ -169,6 +177,8 @@ func _start_network() -> bool:
 			get_tree().quit(ExitCode.FATAL)
 			return false
 	ServerSystems.install(run, net, mine)
+	if run.lamp_check != null:
+		run.lamp_check.ended.connect(func(_why: String) -> void: _lamp_check_over_usec = TickTimer.now_usec())
 	if layouts != null:
 		# GEN-08: the plan from the seed and the list (or the save's), before any cell is derived.
 		var saved: PackedByteArray = PackedByteArray()

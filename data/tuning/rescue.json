@@ -106,9 +106,9 @@
 			"unit": "px",
 			"source": "Proposed",
 			"starting": true,
-			"visibility": "server",
+			"visibility": "client",
 			"kind": "param",
-			"note": "ticket RSC-06"
+			"note": "ticket RSC-06: the PNG card is rendered on the client"
 		},
 		"rescue.lamp_check_public_s": {
 			"value": 120,
@@ -119,6 +119,76 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "ticket RSC-06"
+		},
+		"rescue.lamp_check_lead_s": {
+			"value": 2.0,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-06: the band alone before the lampman reads"
+		},
+		"rescue.lamp_check_hang_s": {
+			"value": 0.6,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-06: hanging a check before its number is read"
+		},
+		"rescue.lamp_check_digit_gap_s": {
+			"value": 0.3,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-06: between the digits of a number"
+		},
+		"rescue.lamp_check_hook_gap_s": {
+			"value": 0.8,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-06: after each hook"
+		},
+		"rescue.lamp_check_silence_s": {
+			"value": 3.0,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-06: his silence at an empty hook"
+		},
+		"rescue.lamp_check_remark_gap_s": {
+			"value": 1.5,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-06: before his remark"
+		},
+		"rescue.lamp_check_band_db": {
+			"value": -14.0,
+			"type": "float",
+			"unit": "dB",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "client",
+			"kind": "param",
+			"note": "ticket RSC-06: the band's level while he is quiet (silent while he reads)"
 		},
 		"rescue.lone_heard_hand_tiles": {
 			"value": 4,

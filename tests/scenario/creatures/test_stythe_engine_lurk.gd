@@ -10,7 +10,10 @@ func before_all() -> void:
 
 
 func test_lurks_near_the_gates_unless_it_keeps() -> void:
-	var s: Scenario = make({"seed": 1481, "fixture": H.road(150), "overrides": H.W.ON.merged({"stythe.lurk_move_s": [1.0, 2.0]})})
+	# Bob lies in the lair for the whole test: alone, his self-revive (RSC-09) would bring him round
+	# and a second fall would wipe the run (LFT-11), whose Lamp Check freezes the mine.
+	var s: Scenario = make({"seed": 1481, "fixture": H.road(150),
+		"overrides": H.W.ON.merged({"stythe.lurk_move_s": [1.0, 2.0], "rescue.self_revive_delay_s": 600.0})})
 	var st: StytheCreature = H.W.stythe(s, Vector2i(140, 2), Vector2i(140, 2))
 	var gates: Vector2 = Vector2(5.5, 2.5)
 	st.apex_point = func() -> Variant: return gates
@@ -23,6 +26,7 @@ func test_lurks_near_the_gates_unless_it_keeps() -> void:
 	assert_lte(st.position(s.run).distance_to(gates), 40.0 + 1e-3, "within 40 tiles")
 	# A body laid in its lair (CRT-15): it keeps while the body lies there.
 	var bob: MinerHandle = H.W.miner(s, "bob", Vector2i(139, 2))
+	s.step(1)  # DIR-05's census counts him first: the run's one human, alone, his self-revive waits
 	assert_true(s.run.falls.fall_unconscious(s.run, bob.entity_id, FallCause.Cause.MOTH_SMOTHER))
 	assert_true(s.run_until(func(sc: Scenario) -> bool: return sc.run.falls.bodies.has(bob.entity_id), 40))
 	st.home.lay(s.run, st, bob.entity_id, 0)

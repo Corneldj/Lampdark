@@ -60,6 +60,11 @@ var sheet: ClientSheet = ClientSheet.new(SheetKind.Kind.MAP_TABLE)
 var sheets: Dictionary = {}
 ## LFT-03: the run's repair list as the Manual prints it ({kind, cans, jobs}), {} until first shown.
 var manual: Dictionary = {}
+## RSC-06: Lamp Check's opening and its end as received (LampCheckWire.read), {} before each; the
+## count of both, so the client sees each once.
+var lamp_check: Dictionary = {}
+var lamp_check_end: Dictionary = {}
+var lamp_check_messages: int = 0
 ## SND-07: voice packets from the server in arrival order, [packet, arrival usec]; VoicePlayback
 ## drains them (a bounded queue: older ones go first if nobody does).
 var voice_in: Array[Array] = []
@@ -158,6 +163,11 @@ func send_voice(packet: PackedByteArray) -> Error:
 
 
 ## SND-10: the crew-list label flag, on joining and whenever it changes.
+## RSC-06: this player is ready to leave Lamp Check.
+func send_lamp_check_ready() -> Error:
+	return send(Lane.Id.CONTROL, LampCheckWire.ready(), Protocol.Msg.LAMP_CHECK)
+
+
 func send_mic_label(muted: bool) -> Error:
 	return send_raw(Lane.Id.CONTROL, Protocol.mic_label(muted))
 
@@ -266,6 +276,14 @@ func _on_message(event: TransportEvent, now: int) -> void:
 			var list: Dictionary = RepairJobs.decode(payload)
 			if not list.is_empty():
 				manual = list
+		Protocol.Msg.LAMP_CHECK:
+			var lc: Dictionary = LampCheckWire.read(payload)
+			if str(lc.get("kind", "")) == LampCheckWire.OPEN:
+				lamp_check = lc
+				lamp_check_messages += 1
+			elif str(lc.get("kind", "")) == LampCheckWire.END:
+				lamp_check_end = lc
+				lamp_check_messages += 1
 		Protocol.Msg.CLOSE_UP:
 			var c: Dictionary = CloseupKind.decode(payload)
 			if not c.is_empty():

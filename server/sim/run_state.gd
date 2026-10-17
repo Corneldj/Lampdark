@@ -153,6 +153,8 @@ var apex: ApexController = null
 var cage: Cage = null
 ## LFT-11: the wipe, each miner's outcome and the run's end.
 var outcomes: RunOutcomes = null
+## RSC-06: Lamp Check at the pithead, after the run's end.
+var lamp_check: LampCheck = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

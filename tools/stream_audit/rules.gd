@@ -37,6 +37,7 @@ const MESSAGES: Dictionary = {
 	"STATUS": "status",  # the own miner's status, to its owner only: exactly its own cues and offers
 	"SHEET": "sheet",  # LFT-14: a sheet's sync; strokes as made only to its readers; never to the fallen
 	"MANUAL": "manual",  # LFT-03: the repair list's kind, cans and jobs, only to a reader of the Manual
+	"LAMP_CHECK": "lamp_check",  # RSC-06: after the run's end only: its opening (own outcome only) and its end
 }
 
 ## Each record a frame carries -> its rule (client_view's layout, FrameDecoder's fields).

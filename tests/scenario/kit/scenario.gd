@@ -336,7 +336,11 @@ func _step_once() -> void:
 	if _replaying:
 		for op: Variant in Variants.array(_replay_log.ops_by_tick.get(t, [])):
 			_apply_op(Variants.dict(op))
-	run.run_tick()
+	# As SimLoop does: a frozen run (Lamp Check, a knock-off) pumps only the network stage.
+	if run.frozen:
+		run.run_frozen_pump()
+	else:
+		run.run_tick()
 	if on_tick.is_valid():
 		on_tick.call(self)
 

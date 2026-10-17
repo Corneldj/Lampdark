@@ -47,12 +47,16 @@ func test_a_drag_home_lays_the_body_in_the_row() -> void:
 
 
 func test_a_collected_body_goes_in_the_next_slot() -> void:
-	# Ann falls alone here: RSC-09's self-revive would bring her round in the lair; this is the row.
+	# No self-revive brings Ann round in the lair (RSC-09): this is the row.
 	var overrides: Dictionary = H.W.ON.duplicate()
 	overrides["rescue.self_revives_per_run"] = 0
 	var s: Scenario = make({"seed": 1502, "fixture": H.road(), "overrides": overrides})
 	var h: H = H.new()
 	h.build(s, 40, 37, 95)
+	# Cat stands at the far west end, never hunted: with Ann down and nobody else the run would be
+	# wiped (LFT-11), and its Lamp Check would freeze the mine before Bob is collected.
+	var cat: MinerHandle = H.W.miner(s, "cat", Vector2i(1, 2), 180.0)
+	h.pulls[cat.entity_id] = 0.0
 	assert_true(h.until_state(&"keep", 1900))
 	var lair: StytheLair = h.st.home
 	var bob: MinerHandle = H.W.miner(s, "bob", Vector2i(80, 2), 0.0)

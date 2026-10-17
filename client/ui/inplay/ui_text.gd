@@ -7,7 +7,8 @@ extends RefCounted
 const FILES: Array[String] = ["res://data/text/ui_inplay.json", "res://data/text/verbs.json", "res://data/text/items.json",
 	"res://data/text/captions_feel.json", "res://data/text/callouts/en.json", "res://data/text/steam.json",
 	"res://data/text/lobby.json", "res://data/text/closeups.json", "res://data/text/captions.json",
-	"res://data/text/manual/en.json"]
+	"res://data/text/manual/en.json", "res://data/text/lampman/lines.json", "res://data/text/lampman/remarks.json",
+	"res://data/text/lamp_check.json"]
 
 static var _strings: Dictionary = {}
 

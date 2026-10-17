@@ -292,6 +292,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.outcomes = RunOutcomes.new()
 	run.outcomes.bind(run)
 	run.add_system(run.outcomes)
+	# RSC-06: Lamp Check, from the run's end (it runs on while the mine is frozen).
+	run.lamp_check = LampCheck.new()
+	run.lamp_check.bind(run, net)
+	run.add_system(run.lamp_check)
 	run.record = RunRecord.new()
 	run.record.bind(run, net)
 	run.add_system(run.record)

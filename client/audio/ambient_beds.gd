@@ -52,6 +52,13 @@ func _start(layer: StringName, _cued: bool) -> void:
 	players[layer] = p
 
 
+## RSC-06: on the surface at Lamp Check every bed of the mine stops.
+func stop_all() -> void:
+	var layers: Array = players.keys()
+	for raw: Variant in layers:
+		_stop(StringName(str(raw)))
+
+
 ## SND-04: dips every bed (deafened), or lifts the dip (0).
 func set_dip_db(db: float) -> void:
 	dip_db = db

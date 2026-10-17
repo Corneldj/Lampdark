@@ -346,6 +346,29 @@ func _check_manual(slot: int, lane: int, payload: PackedByteArray) -> void:
 		_fail(slot, "MANUAL", "manual", "to a client whose miner is not reading the Manual")
 
 
+## RSC-06: Lamp Check's opening only once the run has ended, exactly as Lamp Check made it for this
+## client (its own miner's outcome, nobody else's), and its end only once it has ended. Never a
+## Ready (the client's own message). No outcome, nor who is below, travels before the run's end.
+func _check_lamp_check(slot: int, lane: int, payload: PackedByteArray) -> void:
+	_lane(slot, lane, Lane.Id.CONTROL, Protocol.Msg.LAMP_CHECK)
+	var d: Dictionary = LampCheckWire.read(payload)
+	var lc: LampCheck = run.lamp_check
+	if d.is_empty() or lc == null:
+		_fail(slot, "LAMP_CHECK", "lamp_check", "malformed, or no Lamp Check")
+		return
+	match str(d["kind"]):
+		LampCheckWire.OPEN:
+			if lc.state != LampCheck.State.OPEN and lc.state != LampCheck.State.ENDED:
+				_fail(slot, "LAMP_CHECK", "lamp_check", "an opening before the run's end")
+			elif payload != lc.opening_for(run, slot):
+				_fail(slot, "LAMP_CHECK", "lamp_check", "not exactly Lamp Check's opening for this client")
+		LampCheckWire.END:
+			if lc.state != LampCheck.State.ENDED:
+				_fail(slot, "LAMP_CHECK", "lamp_check", "an end before Lamp Check ended")
+		_:
+			_fail(slot, "LAMP_CHECK", "lamp_check", "a Ready sent to a client")
+
+
 ## NET-09: saves reach members as opaque sealed bytes. Never in a public run; a snapshot's data on
 ## bulk with a plain header of versions and chain fields only, a journal entry on control.
 const SAVE_HEADER_KEYS: Array[String] = ["build", "bundle", "generator", "kind", "mode", "parent_hash", "run_uuid", "seq", "templates"]
@@ -439,6 +462,8 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 			_check_sheet(slot, lane, payload)
 		"manual":
 			_check_manual(slot, lane, payload)
+		"lamp_check":
+			_check_lamp_check(slot, lane, payload)
 		"callout":
 			_lane(slot, lane, Lane.Id.CONTROL, type)
 			var r: CalloutRecord = CalloutRecord.decode(payload)

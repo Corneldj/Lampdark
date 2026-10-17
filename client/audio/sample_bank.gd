@@ -71,6 +71,20 @@ static func bed(layer: String) -> AudioStreamWAV:
 	return s
 
 
+## RSC-06's placeholder brass band at the pithead: a slow hymn of four held chords, looped (the
+## recorded band replaces it).
+static func band() -> AudioStreamWAV:
+	if _cache.has("band"):
+		var cached: AudioStreamWAV = _cache["band"]
+		return cached
+	var seconds: float = 8.0
+	var s: AudioStreamWAV = make("band", seconds, 1919, 0.5)
+	s.loop_mode = AudioStreamWAV.LOOP_FORWARD
+	s.loop_end = int(seconds * RATE)
+	_cache["band"] = s
+	return s
+
+
 ## A 16-bit sample as mono floats in -1..1 (cached): what SpatialMixer plays.
 static func pcm(wav: AudioStreamWAV) -> PackedFloat32Array:
 	var key: int = wav.get_instance_id()
@@ -114,8 +128,10 @@ static func make(kind: String, seconds: float, seed_value: int, level: float = 1
 			_rumble(samples, rng)
 		"ticks":
 			_ticks(samples, rng)
+		"band":
+			_band(samples)
 	for i: int in n:
-		if kind == "drips" or kind == "creak" or kind == "rumble" or kind == "ticks":
+		if kind == "drips" or kind == "creak" or kind == "rumble" or kind == "ticks" or kind == "band":
 			peak = maxf(peak, absf(samples[i]))
 			continue
 		var t: float = float(i) / RATE
@@ -153,6 +169,24 @@ static func make(kind: String, seconds: float, seed_value: int, level: float = 1
 	wav.mix_rate = RATE
 	wav.data = data
 	return wav
+
+
+## Four chords of two seconds (C, F, G, C), three voices each with two brass-like partials, each
+## swelling in and easing off so the loop's seam is soft.
+static func _band(out: PackedFloat32Array) -> void:
+	var chords: Array = [[261.6, 329.6, 392.0], [174.6, 349.2, 440.0], [196.0, 392.0, 493.9], [261.6, 329.6, 392.0]]
+	var per: int = out.size() / chords.size()
+	for c: int in chords.size():
+		var voices: Array = chords[c]
+		for j: int in per:
+			var t: float = float(j) / RATE
+			var u: float = float(j) / per
+			var env: float = minf(1.0, u * 6.0) * (1.0 - 0.6 * u)
+			var v: float = 0.0
+			for raw: Variant in voices:
+				var f: float = float(Variants.number(raw))
+				v += sin(TAU * f * t) + 0.45 * sin(TAU * 2.0 * f * t)
+			out[c * per + j] = v * env
 
 
 ## Three to five water drips over the loop: a short falling blip and a fainter echo, silence between.

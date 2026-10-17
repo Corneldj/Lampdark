@@ -5,7 +5,8 @@ extends RefCounted
 ## debt and logs one overrun. Tests drive it with any clock, or step(n) with none.
 ##
 ## pause() works only offline (Night Shift, MOD-06); online, timers run on. freeze() works in
-## any run (knock-off MOD-05, migration NET-10): ticks stop, the network stage keeps pumping.
+## any run (knock-off MOD-05, migration NET-10): ticks stop, the network stage keeps pumping. A
+## system may freeze the run itself through run.frozen (RSC-06's Lamp Check, after the run's end).
 
 signal overrun(late_ticks: int, dropped_ticks: int, worst_lateness_usec: int, worst_stage: String)
 
@@ -40,7 +41,7 @@ func pump(now_usec: int) -> int:
 		start(now_usec)
 	if paused:
 		return 0
-	if frozen:
+	if frozen or run.frozen:
 		while now_usec >= _next_deadline:
 			run.run_frozen_pump()
 			_next_deadline += tick_usec

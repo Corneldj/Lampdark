@@ -1,0 +1,23 @@
+{
+	"note": "RSC-06: the Lamp Check card in Company print (Gameplay §11.9, GDD §14.3), and the Lamp Check screen's few words. The card fills {up}, {crew}, {miners}, {miner}, {name}, {lamp}, {level}, {h} and {m}. UI-07 localises these.",
+	"strings": {
+		"card.heading": "Morrow Main, first shift.",
+		"card.up": "Up {up} of {crew}.",
+		"card.up_none": "Up none of {crew}.",
+		"card.left_below": "Left Below: {miners}.",
+		"card.dead": "Dead: {miner}, brought home.",
+		"card.miner": "{name}, Lamp {lamp}",
+		"card.miner_unnamed": "Lamp {lamp}",
+		"card.miners_joiner": "; ",
+		"card.deepest": "Deepest: {level}.",
+		"card.below_hours": "Below {h} h {m} min.",
+		"card.below_minutes": "Below {m} min.",
+		"lamp_check.title": "Lamp Check",
+		"lamp_check.ready": "Ready",
+		"lamp_check.waiting": "Waiting for the others",
+		"lamp_check.closing": "The pithead empties in {s} s",
+		"lamp_check.save_card": "Save card",
+		"lamp_check.saved": "Card saved",
+		"lamp_check.map_card": "The map card"
+	}
+}
