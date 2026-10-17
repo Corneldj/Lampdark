@@ -163,6 +163,10 @@ func _build(cfg: Dictionary) -> void:
 		MineLayouts.configure(layouts, run.header.run_seed)
 	ServerSystems.install(run, net, mine, LbHash.sub_seed(_seed, HashDomain.NET_TOKEN, PackedInt64Array([-1]), 0) | 1)
 	if layouts != null:
+		# GEN-08's plan and GEN-10's homes when asked ("plan": true); placement always.
+		if Variants.flag(generated.get("plan", false)):
+			RunPlan.fix(layouts, run)
+		PlacementSpawner.install(run, layouts)
 		var workers: int = int(Variants.number(generated.get("workers", 0)))
 		generation = Generation.new(mine, layouts, run.header.run_seed, workers <= 0, workers)
 		run.add_system(generation)

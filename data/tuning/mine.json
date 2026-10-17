@@ -910,16 +910,6 @@
 			"kind": "param",
 			"note": "ticket GEN-04"
 		},
-		"mine.roost_min_from_shaft_staged_tiles": {
-			"value": 100,
-			"type": "float",
-			"unit": "tiles",
-			"source": "Gameplay §10.10",
-			"starting": false,
-			"visibility": "server",
-			"kind": "param",
-			"note": "ticket GEN-10"
-		},
 		"mine.sheet_label_max_chars": {
 			"value": 40,
 			"type": "int",
@@ -2191,6 +2181,56 @@
 			"visibility": "server",
 			"kind": "param",
 			"note": "the men laid out, lamps snuffed in rows, brass checks, tools, healing kits; ticket GEN-09 (mine.poi_contents_<kind>)"
+		},
+		"mine.electric_lamp_probability": {
+			"value": 0.5,
+			"type": "float",
+			"unit": "probability",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "the chance a run has its electric hand lamp (at most mine.electric_lamp_per_run's top); ticket GEN-10"
+		},
+		"mine.coat_heaps_per_chamber_min": {
+			"value": 3,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "coat heaps in a coat-heap chamber far from the hoard; ticket GEN-10"
+		},
+		"mine.coat_heaps_per_chamber_max": {
+			"value": 6,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "coat heaps in a chamber at the hoard, falling to the minimum at mine.coat_heap_near_hoard_tiles; ticket GEN-10"
+		},
+		"mine.landmark_palette_min": {
+			"value": 25,
+			"type": "int",
+			"unit": "count",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "landmark variants (kinds x variants, such as chalked dates) a run's lattice colouring draws on; at least (2n+1)^2 for mine.landmark_no_repeat_cells n; ticket GEN-10"
+		},
+		"mine.phones_near_gates_min_path_tiles": {
+			"value": 11,
+			"type": "float",
+			"unit": "tiles",
+			"source": "Proposed",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "the near-gate phones lie past the arches, at least this far by path from their gates; ticket GEN-10"
 		}
 	}
 }

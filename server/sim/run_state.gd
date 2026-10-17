@@ -151,6 +151,8 @@ var engine: WinderEngine = null
 var apex: ApexController = null
 ## LFT-10: the cage, the signal cord and the ride.
 var cage: Cage = null
+## GEN-10: a generated mine's placements, spawned cell by cell, and the run-start homes.
+var placed: PlacementSpawner = null
 ## LFT-11: the wipe, each miner's outcome and the run's end.
 var outcomes: RunOutcomes = null
 ## RSC-06: Lamp Check at the pithead, after the run's end.

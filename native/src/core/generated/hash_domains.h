@@ -37,6 +37,19 @@ constexpr uint64_t DIRECTOR_FAN_ROLL = 27; // stream, DIR-02
 constexpr uint64_t GEN_PLAN = 28; // hash, GEN-08
 constexpr uint64_t GEN_POI_REGION = 29; // hash, GEN-09
 constexpr uint64_t GEN_POI_CONTENTS = 30; // hash, GEN-09
+constexpr uint64_t GEN_PLACE_CONTENTS = 31; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_LANDMARK = 32; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_PHONE = 33; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_DOOR = 34; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_COLLAPSE = 35; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_GAS = 36; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_TRAP = 37; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_REMAINS = 38; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_LOOSE = 39; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_HEAP = 40; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_RICH_ROCK = 41; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_HOMES = 42; // hash, GEN-10
+constexpr uint64_t GEN_PLACE_ID = 43; // hash, GEN-10
 
 struct Entry {
 	const char *name;
@@ -74,6 +87,19 @@ constexpr Entry ALL[] = {
 	{"gen.plan", 28},
 	{"gen.poi_region", 29},
 	{"gen.poi_contents", 30},
+	{"gen.place.contents", 31},
+	{"gen.place.landmark", 32},
+	{"gen.place.phone", 33},
+	{"gen.place.door", 34},
+	{"gen.place.collapse", 35},
+	{"gen.place.gas", 36},
+	{"gen.place.trap", 37},
+	{"gen.place.remains", 38},
+	{"gen.place.loose", 39},
+	{"gen.place.heap", 40},
+	{"gen.place.rich_rock", 41},
+	{"gen.place.homes", 42},
+	{"gen.place.id", 43},
 };
 constexpr size_t COUNT = sizeof(ALL) / sizeof(ALL[0]);
 

@@ -276,6 +276,167 @@ std::vector<uint8_t> unpacked(const PackedByteArray &bytes) {
 	return std::vector<uint8_t>(bytes.ptr(), bytes.ptr() + bytes.size());
 }
 
+
+// GEN-10's view of the run: the deriver's layouts (reroll 0 until GEN-12 names another), GEN-06's
+// biomes under any main road, GEN-07's roads, GEN-08's spines and GEN-09's points of interest.
+class LayoutsWorld final : public gen::PlacementWorld {
+public:
+	LayoutsWorld(const gen::RunHeader &header, const gen::Deriver &deriver, const gen::CellClassifier &base, const gen::MainRoads *roads,
+			const gen::SpineSockets *spines, const gen::PointsOfInterest *pois, const gen::PoiContentsParams &contents, std::vector<int64_t> bounds) : header_(header), deriver_(deriver), base_(base), roads_(roads), spines_(spines), pois_(pois), contents_(contents), bounds_(std::move(bounds)) {}
+
+	const gen::RunHeader &header() const override { return header_; }
+	std::optional<gen::Layout> layout(lb::core::world::Coord cell) const override { return deriver_.derive(cell, 0); }
+	gen::CellFacts facts(lb::core::world::Coord cell) const override {
+		gen::CellFacts f;
+		f.base_camp = cell == lb::core::world::Coord{0, 0};
+		f.ring = gen::ring_of_cell(cell, bounds_);
+		f.biome = base_.classify(cell).biome;
+		if (pois_) {
+			const gen::PoiRef ref = pois_->at(cell);
+			if (ref && ref->shape != nullptr && !ref->biome.empty()) {
+				f.biome = ref->biome;
+			}
+		}
+		f.main_road = roads_ != nullptr && roads_->is_main_road_cell(cell);
+		f.spine = spines_ != nullptr && spines_->is_spine_cell(cell);
+		return f;
+	}
+	const std::vector<int64_t> &ring_bounds() const override { return bounds_; }
+	gen::PoiRef poi_at(lb::core::world::Coord cell) const override { return pois_ ? pois_->at(cell) : gen::PoiRef{}; }
+	std::vector<gen::Content> contents(const gen::Poi &poi) const override {
+		return pois_ ? gen::poi_contents(header_, contents_, poi, pois_->is_canary(poi.id)) : std::vector<gen::Content>{};
+	}
+	std::shared_ptr<const gen::RegionLayout> region(lb::core::world::Coord region) const override {
+		return pois_ ? pois_->region(region) : nullptr;
+	}
+
+private:
+	const gen::RunHeader &header_;
+	const gen::Deriver &deriver_;
+	const gen::CellClassifier &base_;
+	const gen::MainRoads *roads_;
+	const gen::SpineSockets *spines_;
+	const gen::PointsOfInterest *pois_;
+	const gen::PoiContentsParams &contents_;
+	std::vector<int64_t> bounds_;
+};
+
+int64_t ppm_of(const Dictionary &d, const char *key, int64_t fallback) {
+	return d.has(key) ? static_cast<int64_t>(std::llround(static_cast<double>(d[key]) * 1000000.0)) : fallback;
+}
+
+int64_t int_of(const Dictionary &d, const char *key, int64_t fallback) {
+	return d.has(key) ? static_cast<int64_t>(std::llround(static_cast<double>(d[key]))) : fallback;
+}
+
+void pair_of(const Dictionary &d, const char *key, int64_t &lo, int64_t &hi, double scale = 1.0) {
+	if (!d.has(key)) {
+		return;
+	}
+	const Array a = d[key];
+	if (a.size() == 2) {
+		lo = static_cast<int64_t>(std::llround(static_cast<double>(a[0]) * scale));
+		hi = static_cast<int64_t>(std::llround(static_cast<double>(a[1]) * scale));
+	}
+}
+
+// GEN-10's numbers (MineLayouts.place_params builds them from tuning).
+gen::PlacementParams place_params(const Dictionary &d) {
+	gen::PlacementParams p;
+	p.remains_ppm = ppm_of(d, "remains_probability", p.remains_ppm);
+	pair_of(d, "remains_rings", p.remains_ring_min, p.remains_ring_max);
+	if (d.has("remains_items")) {
+		// The table's order: lamp, flare, kit, tool, note (the first two kept).
+		const Dictionary items = d["remains_items"];
+		std::vector<std::pair<std::string, int64_t>> list;
+		for (const char *name : {"lamp", "flare", "kit", "tool", "note"}) {
+			if (items.has(name)) {
+				list.emplace_back(name, static_cast<int64_t>(std::llround(static_cast<double>(items[name]) * 1000000.0)));
+			}
+		}
+		p.remains_items = list;
+	}
+	p.remains_items_max = int_of(d, "remains_items_max", p.remains_items_max);
+	pair_of(d, "found_oil", p.found_oil_min_milli, p.found_oil_max_milli, 1000.0);
+	pair_of(d, "found_notches", p.found_notches_min, p.found_notches_max);
+	p.paraffin_ppm = ppm_of(d, "paraffin_probability", p.paraffin_ppm);
+	pair_of(d, "paraffin_rings", p.paraffin_ring_min, p.paraffin_ring_max);
+	p.electric_lamp_ppm = ppm_of(d, "electric_lamp_probability", p.electric_lamp_ppm);
+	p.electric_lamp_max = int_of(d, "electric_lamp_max", p.electric_lamp_max);
+	p.electric_lamp_min_ring = int_of(d, "electric_lamp_min_ring", p.electric_lamp_min_ring);
+	p.revolver_rounds = int_of(d, "revolver_rounds", p.revolver_rounds);
+	p.box_rounds = int_of(d, "box_rounds", p.box_rounds);
+	p.phone_ring12_ppm = ppm_of(d, "phone_ring12_probability", p.phone_ring12_ppm);
+	p.phone_beyond_ppm = ppm_of(d, "phone_beyond_probability", p.phone_beyond_ppm);
+	p.phones_near_gates = int_of(d, "phones_near_gates", p.phones_near_gates);
+	pair_of(d, "phones_near_gates_path", p.phones_near_gates_min_path, p.phones_near_gates_max_path);
+	p.air_door_ppm = ppm_of(d, "air_door_probability", p.air_door_ppm);
+	p.collapse_ppm = ppm_of(d, "collapse_probability", p.collapse_ppm);
+	p.collapse_min_from_basecamp = int_of(d, "collapse_min_from_basecamp", p.collapse_min_from_basecamp);
+	p.collapse_min_spacing = int_of(d, "collapse_min_spacing", p.collapse_min_spacing);
+	p.collapse_min_from_sites = int_of(d, "collapse_min_from_sites", p.collapse_min_from_sites);
+	p.firedamp_ring2_ppm = ppm_of(d, "firedamp_ring2_probability", p.firedamp_ring2_ppm);
+	p.firedamp_beyond_ppm = ppm_of(d, "firedamp_beyond_probability", p.firedamp_beyond_ppm);
+	p.firedamp_black_seam_ppm = ppm_of(d, "firedamp_black_seam_probability", p.firedamp_black_seam_ppm);
+	p.blackdamp_ppm = ppm_of(d, "blackdamp_probability", p.blackdamp_ppm);
+	p.man_trap_ppm = ppm_of(d, "man_trap_probability", p.man_trap_ppm);
+	p.man_trap_min_ring = int_of(d, "man_trap_min_ring", p.man_trap_min_ring);
+	p.staple_pit_ppm = ppm_of(d, "staple_pit_probability", p.staple_pit_ppm);
+	p.staple_pit_min_ring = int_of(d, "staple_pit_min_ring", p.staple_pit_min_ring);
+	p.sump_mud_ppm = ppm_of(d, "sump_mud_probability", p.sump_mud_ppm);
+	p.sump_mud_min_ring = int_of(d, "sump_mud_min_ring", p.sump_mud_min_ring);
+	p.traps_min_ring = int_of(d, "traps_min_ring", p.traps_min_ring);
+	for (const auto &[key, table] : {std::pair<const char *, std::vector<int64_t> *>{"staged_traps_min_ring", &p.staged_traps_min_ring},
+				 std::pair<const char *, std::vector<int64_t> *>{"staged_roost_min_from_shaft", &p.staged_roost_min_from_shaft}}) {
+		if (d.has(key)) {
+			const Array a = d[key];
+			table->clear();
+			for (int64_t i = 0; i < a.size(); i++) {
+				table->push_back(static_cast<int64_t>(std::llround(static_cast<double>(a[i]))));
+			}
+		}
+	}
+	p.roost_min_from_shaft = int_of(d, "roost_min_from_shaft", p.roost_min_from_shaft);
+	pair_of(d, "roosts", p.roosts_min, p.roosts_max);
+	p.roost_max_from_hoard = int_of(d, "roost_max_from_hoard", p.roost_max_from_hoard);
+	p.coat_heap_near_hoard = int_of(d, "coat_heap_near_hoard", p.coat_heap_near_hoard);
+	p.coat_heap_near_ppm = ppm_of(d, "coat_heap_near_probability", p.coat_heap_near_ppm);
+	p.coat_heap_far_ppm = ppm_of(d, "coat_heap_far_probability", p.coat_heap_far_ppm);
+	pair_of(d, "coat_heaps", p.coat_heaps_min, p.coat_heaps_max);
+	p.rich_rock_per_region = int_of(d, "rich_rock_per_region", p.rich_rock_per_region);
+	p.rich_rock_min_thickness = int_of(d, "rich_rock_min_thickness", p.rich_rock_min_thickness);
+	p.landmark_no_repeat_cells = int_of(d, "landmark_no_repeat_cells", p.landmark_no_repeat_cells);
+	p.landmark_palette = int_of(d, "landmark_palette", p.landmark_palette);
+	p.canary_max = int_of(d, "canary_max", p.canary_max);
+	return p;
+}
+
+String placement_id(uint64_t id) {
+	return String("p") + String::num_uint64(id, 16).lpad(16, "0");
+}
+
+Dictionary placement_dict(const gen::Placement &x) {
+	Dictionary d;
+	d["kind"] = String(gen::placed_kind_name(x.kind));
+	d["thing"] = String::utf8(x.thing.c_str());
+	d["source"] = String::utf8(x.source.c_str());
+	d["anchor"] = x.anchor;
+	d["tile"] = Vector2i(static_cast<int32_t>(x.tile.x), static_cast<int32_t>(x.tile.y));
+	d["size"] = Vector2i(x.w, x.h);
+	d["count"] = x.count;
+	d["oil_milli"] = x.oil_milli;
+	d["notches"] = x.notches;
+	d["variant"] = x.variant;
+	d["collapse"] = static_cast<int64_t>(x.collapse);
+	d["with"] = x.with;
+	d["id"] = placement_id(x.id);
+	return d;
+}
+
+Rect2i box_rect(const gen::TileBox &b) {
+	return Rect2i(static_cast<int32_t>(b.x), static_cast<int32_t>(b.y), b.w, b.h);
+}
+
 } // namespace
 
 void LbLayouts::_bind_methods() {
@@ -298,6 +459,12 @@ void LbLayouts::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("poi_region", "region"), &LbLayouts::poi_region);
 	ClassDB::bind_method(D_METHOD("poi_contents", "region", "index"), &LbLayouts::poi_contents);
 	ClassDB::bind_static_method("LbLayouts", D_METHOD("canary_home", "region"), &LbLayouts::canary_home);
+	ClassDB::bind_method(D_METHOD("make_homes"), &LbLayouts::make_homes);
+	ClassDB::bind_method(D_METHOD("homes_dict"), &LbLayouts::homes_dict);
+	ClassDB::bind_method(D_METHOD("place", "cell"), &LbLayouts::place);
+	ClassDB::bind_method(D_METHOD("dress", "cell", "data"), &LbLayouts::dress);
+	ClassDB::bind_method(D_METHOD("find_counts", "cells"), &LbLayouts::find_counts);
+	ClassDB::bind_method(D_METHOD("rich_rock_masses", "region"), &LbLayouts::rich_rock_masses);
 	ClassDB::bind_method(D_METHOD("set_caching", "on"), &LbLayouts::set_caching);
 	ClassDB::bind_method(D_METHOD("clear_caches"), &LbLayouts::clear_caches);
 	ClassDB::bind_method(D_METHOD("set_verify", "on"), &LbLayouts::set_verify);
@@ -399,6 +566,8 @@ void LbLayouts::rebuild() {
 	deriver_ = std::make_unique<gen::Deriver>(in);
 	deriver_->set_caching(caching_);
 	deriver_->set_verify(verify_);
+	place_world_ = std::make_unique<LayoutsWorld>(header_, *deriver_, *cells_, roads_.get(), spine_sockets_.get(), pois_.get(), contents_params_,
+			ring_bounds_);
 	if (pool_threads_ >= 0) {
 		pool_ = std::make_unique<gen::GenPool>(*deriver_, static_cast<int32_t>(pool_threads_), pool_background_);
 	}
@@ -445,6 +614,8 @@ void LbLayouts::configure(int64_t seed, const Dictionary &params) {
 		contents_params_ = gen::PoiContentsParams();
 		poi_params(params["poi"], ring_bounds_, poi_params_, contents_params_);
 	}
+	has_place_ = params.has("place");
+	place_params_ = has_place_ ? place_params(params["place"]) : gen::PlacementParams();
 	has_roads_ = params.has("main_roads");
 	if (has_roads_) {
 		const Dictionary r = params["main_roads"];
@@ -677,6 +848,100 @@ Array LbLayouts::poi_contents(Vector2i region, int64_t index) const {
 
 PackedByteArray LbLayouts::canary_home(Vector2i region) {
 	return packed(gen::canary_home({region.x, region.y}));
+}
+
+Dictionary LbLayouts::make_homes() {
+	gen::write_homes(gen::make_homes(*place_world_, place_params_), header_);
+	return homes_dict();
+}
+
+Dictionary LbLayouts::homes_dict() const {
+	const gen::Homes h = gen::read_homes(header_);
+	Dictionary d;
+	Array roosts;
+	for (const gen::TileBox &b : h.roosts) {
+		roosts.append(box_rect(b));
+	}
+	d["roosts"] = roosts;
+	d["start_roost"] = h.start_roost;
+	d["hoard"] = h.hoard ? Variant(Vector2i(static_cast<int32_t>(h.hoard->x), static_cast<int32_t>(h.hoard->y))) : Variant();
+	Array phones;
+	for (const lb::core::world::Coord &t : h.gate_phones) {
+		phones.append(Vector2i(static_cast<int32_t>(t.x), static_cast<int32_t>(t.y)));
+	}
+	d["gate_phones"] = phones;
+	d["electric_lamp"] = h.electric_lamp ? Variant(Vector2i(static_cast<int32_t>(h.electric_lamp->x), static_cast<int32_t>(h.electric_lamp->y))) : Variant();
+	d["canary"] = h.canary ? Variant(Vector2i(static_cast<int32_t>(h.canary->x), static_cast<int32_t>(h.canary->y))) : Variant();
+	return d;
+}
+
+Array LbLayouts::place(Vector2i cell) const {
+	Array out;
+	for (const gen::Placement &x : gen::place_cell(*place_world_, place_params_, {cell.x, cell.y})) {
+		out.append(placement_dict(x));
+	}
+	return out;
+}
+
+int64_t LbLayouts::dress(Vector2i cell, const Ref<LbCellData> &data) const {
+	ERR_FAIL_COND_V(data.is_null(), 0);
+	lb::core::world::Cell *c = data->edit();
+	ERR_FAIL_NULL_V(c, 0);
+	int64_t changed = 0;
+	bool doors = false;
+	const lb::core::world::Coord at{cell.x, cell.y};
+	for (const gen::Placement &x : gen::place_cell(*place_world_, place_params_, at)) {
+		if (x.kind != gen::PlacedKind::AIR_DOOR && x.kind != gen::PlacedKind::SUMP_MUD) {
+			continue;
+		}
+		for (int32_t j = 0; j < x.h; j++) {
+			for (int32_t i = 0; i < x.w; i++) {
+				const lb::core::world::Coord t{x.tile.x + i, x.tile.y + j};
+				if (lb::core::world::cell_of(t) != at) {
+					continue;
+				}
+				const lb::core::world::Coord local = lb::core::world::local_of(t);
+				lb::core::world::Tile &tile = c->tiles[static_cast<size_t>(lb::core::world::Cell::index_of(local.x, local.y))];
+				if (tile.material != static_cast<uint8_t>(lb::core::world::TileMaterial::FLOOR)) {
+					continue;
+				}
+				if (x.kind == gen::PlacedKind::AIR_DOOR) {
+					tile.material = static_cast<uint8_t>(lb::core::world::TileMaterial::WOODEN_DOOR);
+					doors = true;
+					changed++;
+				} else if ((tile.state & lb::core::world::STATE_MUD) == 0) {
+					tile.state = static_cast<uint8_t>(tile.state | lb::core::world::STATE_MUD);
+					changed++;
+				}
+			}
+		}
+	}
+	if (doors) {
+		const bool poi = pois_ && pois_->at(at);
+		data->cut_zones(poi ? "poi" : "chamber");
+	}
+	return changed;
+}
+
+Dictionary LbLayouts::find_counts(const TypedArray<Vector2i> &cells) const {
+	std::vector<std::vector<gen::Placement>> lists;
+	for (int64_t i = 0; i < cells.size(); i++) {
+		const Vector2i c = cells[i];
+		lists.push_back(gen::place_cell(*place_world_, place_params_, {c.x, c.y}));
+	}
+	Dictionary d;
+	for (const auto &[key, n] : gen::find_counts(lists)) {
+		d[String::utf8(key.c_str())] = n;
+	}
+	return d;
+}
+
+Array LbLayouts::rich_rock_masses(Vector2i region) const {
+	Array out;
+	for (const gen::TileBox &b : gen::rich_rock_masses(*place_world_, place_params_, {region.x, region.y})) {
+		out.append(box_rect(b));
+	}
+	return out;
 }
 
 Dictionary LbLayouts::road_of(Vector2i cell) const {

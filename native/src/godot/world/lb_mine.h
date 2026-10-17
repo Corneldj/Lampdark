@@ -58,6 +58,8 @@ public:
 	std::unique_ptr<lb::core::world::Cell> take();
 	bool is_taken() const { return cell_ == nullptr; }
 	const lb::core::world::Cell *peek() const { return cell_.get(); }
+	// GEN-10's dressing before commit (native only): the cell to change, null once taken.
+	lb::core::world::Cell *edit() { return cell_.get(); }
 	static ::godot::Ref<LbCellData> wrap(const lb::core::world::Cell &cell);
 
 private:

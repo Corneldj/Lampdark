@@ -295,6 +295,150 @@
 				"index",
 				"line"
 			]
+		},
+		{
+			"name": "gen.place.contents",
+			"id": 31,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"what",
+				"index"
+			]
+		},
+		{
+			"name": "gen.place.landmark",
+			"id": 32,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"entry"
+			]
+		},
+		{
+			"name": "gen.place.phone",
+			"id": 33,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"what"
+			]
+		},
+		{
+			"name": "gen.place.door",
+			"id": 34,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"anchor"
+			]
+		},
+		{
+			"name": "gen.place.collapse",
+			"id": 35,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"what"
+			]
+		},
+		{
+			"name": "gen.place.gas",
+			"id": 36,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"what"
+			]
+		},
+		{
+			"name": "gen.place.trap",
+			"id": 37,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"what"
+			]
+		},
+		{
+			"name": "gen.place.remains",
+			"id": 38,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"what"
+			]
+		},
+		{
+			"name": "gen.place.loose",
+			"id": 39,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"what"
+			]
+		},
+		{
+			"name": "gen.place.heap",
+			"id": 40,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"anchor",
+				"what"
+			]
+		},
+		{
+			"name": "gen.place.rich_rock",
+			"id": 41,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"region_x",
+				"region_y",
+				"pick"
+			]
+		},
+		{
+			"name": "gen.place.homes",
+			"id": 42,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"what",
+				"index"
+			]
+		},
+		{
+			"name": "gen.place.id",
+			"id": 43,
+			"owner": "GEN-10",
+			"kind": "hash",
+			"keys": [
+				"cell_x",
+				"cell_y",
+				"kind",
+				"anchor",
+				"ordinal"
+			]
 		}
 	]
 }

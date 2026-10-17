@@ -43,6 +43,7 @@ static func configure(layouts: LbLayouts, run_seed: int) -> void:
 			"old_fall_probability": Tuning.f(&"mine.old_fall_probability"),
 		},
 		"poi": poi_params(),
+		"place": place_params(),
 	})
 	var gates: Dictionary = Basecamp.gate_sockets(run_seed)
 	for side: String in Basecamp.SIDES:
@@ -92,6 +93,66 @@ static func poi_params() -> Dictionary:
 	}
 
 
+## GEN-10's numbers from tuning (mine.*, traps.*, lamp.*, revolver.*), and DIR-06's staged-run
+## tables by stage (the header's staging picks the row).
+static func place_params() -> Dictionary:
+	var per: Callable = func(key: StringName) -> float: return 1.0 / maxf(1.0, Tuning.f(key))
+	var remains_rings: Vector2 = Tuning.range_f(&"mine.remains_rings")
+	var oil: Vector2 = Tuning.range_f(&"lamp.found_oil_range")
+	var notches: Vector2 = Tuning.range_f(&"lamp.found_notches_range")
+	var lamp_per_run: Vector2 = Tuning.range_f(&"mine.electric_lamp_per_run")
+	var staged_traps: Array = []
+	for v: int in Tuning.list_i(&"modes.staging_no_man_traps_rings_0_1"):
+		staged_traps.append(2 if v == 1 else 0)
+	return {
+		"remains_probability": per.call(&"mine.remains_cells_per"),
+		"remains_rings": [remains_rings.x, remains_rings.y],
+		"remains_items": Tuning.table(&"mine.remains_item_chances"),
+		"remains_items_max": Tuning.i(&"mine.remains_items_max"),
+		"found_oil": [oil.x, oil.y],
+		"found_notches": [notches.x, notches.y],
+		"paraffin_probability": per.call(&"mine.paraffin_single_cells_per"),
+		"paraffin_rings": [1, 2],
+		"electric_lamp_probability": Tuning.f(&"mine.electric_lamp_probability"),
+		"electric_lamp_max": roundi(lamp_per_run.y),
+		"electric_lamp_min_ring": Tuning.i(&"mine.electric_lamp_min_ring"),
+		"revolver_rounds": Tuning.i(&"revolver.cylinder_rounds"),
+		"box_rounds": Tuning.i(&"revolver.box_rounds"),
+		"phone_ring12_probability": per.call(&"mine.phone_cells_per_ring12"),
+		"phone_beyond_probability": per.call(&"mine.phone_cells_per_beyond"),
+		"phones_near_gates": Tuning.i(&"mine.phones_near_gates"),
+		"phones_near_gates_path": [Tuning.f(&"mine.phones_near_gates_min_path_tiles"), Tuning.f(&"mine.phones_near_gates_path_tiles")],
+		"air_door_probability": Tuning.f(&"mine.air_door_side_passage_probability"),
+		"collapse_probability": per.call(&"mine.collapse_cells_per"),
+		"collapse_min_from_basecamp": Tuning.f(&"mine.collapse_min_from_basecamp_tiles"),
+		"collapse_min_spacing": Tuning.f(&"mine.collapse_min_spacing_tiles"),
+		"collapse_min_from_sites": Tuning.f(&"mine.collapse_min_path_from_sites_tiles"),
+		"firedamp_ring2_probability": per.call(&"mine.firedamp_cells_per_ring2"),
+		"firedamp_beyond_probability": per.call(&"mine.firedamp_cells_per_beyond"),
+		"firedamp_black_seam_probability": per.call(&"mine.firedamp_cells_per_black_seam"),
+		"blackdamp_probability": per.call(&"mine.blackdamp_old_workings_cells_per"),
+		"man_trap_probability": per.call(&"traps.man_trap_cells_per"),
+		"man_trap_min_ring": Tuning.i(&"traps.man_trap_min_ring"),
+		"staple_pit_probability": per.call(&"mine.staple_pit_old_workings_cells_per"),
+		"staple_pit_min_ring": Tuning.i(&"mine.staple_pit_min_ring"),
+		"sump_mud_probability": per.call(&"mine.sump_mud_low_road_cells_per"),
+		"sump_mud_min_ring": Tuning.i(&"mine.sump_mud_min_ring"),
+		"staged_traps_min_ring": staged_traps,
+		"staged_roost_min_from_shaft": Tuning.list_i(&"modes.staging_roost_min_tiles"),
+		"roosts": [Tuning.i(&"mine.roosts_min"), Tuning.i(&"mine.roosts_max")],
+		"roost_max_from_hoard": Tuning.f(&"mine.roost_max_from_hoard_tiles"),
+		"coat_heap_near_hoard": Tuning.f(&"mine.coat_heap_near_hoard_tiles"),
+		"coat_heap_near_probability": Tuning.f(&"mine.coat_heap_chamber_probability_near"),
+		"coat_heap_far_probability": Tuning.f(&"mine.coat_heap_chamber_probability_far"),
+		"coat_heaps": [Tuning.i(&"mine.coat_heaps_per_chamber_min"), Tuning.i(&"mine.coat_heaps_per_chamber_max")],
+		"rich_rock_per_region": Tuning.i(&"mine.rich_rock_per_region"),
+		"rich_rock_min_thickness": roundi(Tuning.f(&"mine.rich_rock_min_thickness_tiles")),
+		"landmark_no_repeat_cells": Tuning.i(&"mine.landmark_no_repeat_cells"),
+		"landmark_palette": Tuning.i(&"mine.landmark_palette_min"),
+		"canary_max": Tuning.i(&"mine.canary_max_per_run"),
+	}
+
+
 ## GEN-06's table from tuning: each ring's weights in their mapping order, each biome's socket
 ## widths, and the ring starts.
 static func biome_table() -> Dictionary:
@@ -122,9 +183,16 @@ static func cell_data(layouts: LbLayouts, run_seed: int, cell: Vector2i, reroll:
 	if Variants.flag(layout["base_camp"]):
 		return Basecamp.cell_data(run_seed)
 	var data: LbCellData = layout["cell"]
+	dress(layouts, cell, data)
 	if gate_cells(run_seed).has(cell):
 		arch(data, run_seed, cell)
 	return data
+
+
+## GEN-10's geometry before commit: the cell's air doors and sump mud (LbLayouts.dress).
+static func dress(layouts: LbLayouts, cell: Vector2i, data: LbCellData) -> void:
+	if cell != Vector2i.ZERO and data != null:
+		layouts.dress(cell, data)
 
 
 ## The cells base camp's three gate roads run into.

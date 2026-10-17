@@ -32,6 +32,19 @@ const DIRECTOR_FAN_ROLL: int = 27  # stream, DIR-02
 const GEN_PLAN: int = 28  # hash, GEN-08
 const GEN_POI_REGION: int = 29  # hash, GEN-09
 const GEN_POI_CONTENTS: int = 30  # hash, GEN-09
+const GEN_PLACE_CONTENTS: int = 31  # hash, GEN-10
+const GEN_PLACE_LANDMARK: int = 32  # hash, GEN-10
+const GEN_PLACE_PHONE: int = 33  # hash, GEN-10
+const GEN_PLACE_DOOR: int = 34  # hash, GEN-10
+const GEN_PLACE_COLLAPSE: int = 35  # hash, GEN-10
+const GEN_PLACE_GAS: int = 36  # hash, GEN-10
+const GEN_PLACE_TRAP: int = 37  # hash, GEN-10
+const GEN_PLACE_REMAINS: int = 38  # hash, GEN-10
+const GEN_PLACE_LOOSE: int = 39  # hash, GEN-10
+const GEN_PLACE_HEAP: int = 40  # hash, GEN-10
+const GEN_PLACE_RICH_ROCK: int = 41  # hash, GEN-10
+const GEN_PLACE_HOMES: int = 42  # hash, GEN-10
+const GEN_PLACE_ID: int = 43  # hash, GEN-10
 
 const ALL: Dictionary = {
 	"gen.socket.open": 1,
@@ -64,4 +77,17 @@ const ALL: Dictionary = {
 	"gen.plan": 28,
 	"gen.poi_region": 29,
 	"gen.poi_contents": 30,
+	"gen.place.contents": 31,
+	"gen.place.landmark": 32,
+	"gen.place.phone": 33,
+	"gen.place.door": 34,
+	"gen.place.collapse": 35,
+	"gen.place.gas": 36,
+	"gen.place.trap": 37,
+	"gen.place.remains": 38,
+	"gen.place.loose": 39,
+	"gen.place.heap": 40,
+	"gen.place.rich_rock": 41,
+	"gen.place.homes": 42,
+	"gen.place.id": 43,
 }

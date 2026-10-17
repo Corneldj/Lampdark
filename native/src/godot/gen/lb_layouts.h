@@ -6,6 +6,7 @@
 
 #include "core/gen/gen_pool.h"
 #include "core/gen/main_roads.h"
+#include "core/gen/placement.h"
 #include "core/gen/plan.h"
 #include "core/gen/poi.h"
 
@@ -23,6 +24,7 @@
 namespace lb::godot {
 
 class LbMine;
+class LbCellData;
 
 class LbLayouts : public ::godot::RefCounted {
 	GDCLASS(LbLayouts, ::godot::RefCounted)
@@ -97,6 +99,38 @@ public:
 	// The header's "canary" home (GEN-10 names the canary region): its bytes for set_home.
 	static ::godot::PackedByteArray canary_home(::godot::Vector2i region);
 
+	// GEN-10 (configure with place: {remains_probability, remains_rings, remains_items: {name:
+	// probability}, remains_items_max, found_oil: [lo, hi], found_notches: [lo, hi],
+	// paraffin_probability, paraffin_rings, electric_lamp_probability, electric_lamp_max,
+	// electric_lamp_min_ring, revolver_rounds, box_rounds, phone_ring12_probability,
+	// phone_beyond_probability, phones_near_gates, phones_near_gates_path: [lo, hi],
+	// air_door_probability, collapse_probability, collapse_min_from_basecamp, collapse_min_spacing,
+	// collapse_min_from_sites, firedamp_ring2_probability, firedamp_beyond_probability,
+	// firedamp_black_seam_probability, blackdamp_probability, man_trap_probability,
+	// man_trap_min_ring, staple_pit_probability, staple_pit_min_ring, sump_mud_probability,
+	// sump_mud_min_ring, staged_traps_min_ring and staged_roost_min_from_shaft (by stage),
+	// traps_min_ring, roost_min_from_shaft, roosts: [min, max],
+	// roost_max_from_hoard, coat_heap_near_hoard, coat_heap_near_probability,
+	// coat_heap_far_probability, coat_heaps: [min, max], rich_rock_per_region,
+	// rich_rock_min_thickness, landmark_no_repeat_cells, landmark_palette, canary_max}).
+	// The run-start homes pass, after plan(): the roosts, the start roost, the near-gate phones,
+	// the electric lamp's cell and the canary region, into the header's homes. Returns homes_dict().
+	::godot::Dictionary make_homes();
+	// {roosts: [Rect2i world tiles], start_roost (-1: the hoard), hoard (Vector2i tile, or null),
+	// gate_phones: [Vector2i], electric_lamp (cell, or null), canary (region, or null)}.
+	::godot::Dictionary homes_dict() const;
+	// What a cell holds as it generates, in pass order: [{kind, thing, source, anchor, tile, size,
+	// count, oil_milli, notches, variant, collapse, with, id (GEN-13's "p" and 16 hex digits)}];
+	// [] for base camp. Server-only, never sent.
+	::godot::Array place(::godot::Vector2i cell) const;
+	// Before commit: the cell's air doors (wooden door tiles) and sump mud (the mud bit) into its
+	// data, its zones cut again when a door went in. The tiles changed.
+	int64_t dress(::godot::Vector2i cell, const ::godot::Ref<LbCellData> &data) const;
+	// GEN-14: what the cells hold, {"item:gauze_lamp": n, "remains": n, ...}.
+	::godot::Dictionary find_counts(const ::godot::TypedArray<::godot::Vector2i> &cells) const;
+	// CRT-08: a region's Tapper-rich rock masses (Rect2i world tiles).
+	::godot::Array rich_rock_masses(::godot::Vector2i region) const;
+
 	// GEN-11's worker pool: `threads` workers derive wanted cells (0: synchronous, in take()),
 	// below normal priority if `background` (a server on a player's machine). Set the deriver up
 	// first; reconfiguring restarts the pool and forgets every job.
@@ -152,6 +186,10 @@ private:
 	std::unique_ptr<lb::core::gen::PoiCells> poi_cells_;
 	std::unique_ptr<lb::core::gen::PoiSockets> poi_sockets_;
 	std::unique_ptr<lb::core::gen::Deriver> deriver_;
+	// GEN-10: placement over this deriver, its classes and points of interest.
+	bool has_place_ = false;
+	lb::core::gen::PlacementParams place_params_;
+	std::unique_ptr<lb::core::gen::PlacementWorld> place_world_;
 	std::unique_ptr<lb::core::gen::GenPool> pool_;
 	int64_t pool_threads_ = -1; // -1: no pool
 	bool pool_background_ = false;

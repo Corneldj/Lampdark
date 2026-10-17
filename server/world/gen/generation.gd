@@ -217,6 +217,8 @@ func _commit(run: RunState, started: int, budget: int) -> int:
 			_note_failure(cell)
 			continue
 		var data: LbCellData = Basecamp.cell_data(run_seed) if Variants.flag(r["base_camp"]) else r["cell"]
+		if not Variants.flag(r["base_camp"]):
+			MineLayouts.dress(layouts, cell, data)
 		if _gate_cells.has(cell):
 			MineLayouts.arch(data, run_seed, cell)
 		if mine.native.loaded_count() >= max_live:

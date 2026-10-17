@@ -20,6 +20,10 @@ static func fix(layouts: LbLayouts, run: RunState, saved: PackedByteArray = Pack
 		run.header.plan = saved
 		return layouts.plan_dict()
 	var plan: Dictionary = layouts.plan(params(run))
+	# GEN-10: the run-start homes (the Moth's roosts and start, the near-gate phones, the electric
+	# lamp's cell, the canary region), into the header beside the plan, so a save keeps them.
+	if Variants.flag(plan.get("ok", false)):
+		layouts.make_homes()
 	run.header.plan = layouts.plan_bytes()
 	if not Variants.flag(plan.get("ok", false)):
 		push_error("RunPlan: %s" % str(plan.get("error", "")))

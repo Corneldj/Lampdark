@@ -661,7 +661,6 @@
 			"mine.roosts_min",
 			"mine.roosts_max",
 			"mine.roost_max_from_hoard_tiles",
-			"mine.roost_min_from_shaft_staged_tiles",
 			"modes.staging_roost_min_tiles"
 		],
 		"A.4/The Moth/Coat heaps": [
@@ -1133,7 +1132,6 @@
 			"modes.staging_stythe_confined",
 			"modes.staging_illusions_from_s",
 			"modes.staging_roost_min_tiles",
-			"mine.roost_min_from_shaft_staged_tiles",
 			"modes.staging_no_man_traps_rings_0_1",
 			"traps.staged_run1_min_ring",
 			"modes.staging_tapper_hunt_from_s",

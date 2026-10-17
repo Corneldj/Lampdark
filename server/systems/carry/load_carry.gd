@@ -101,12 +101,15 @@ func bind(run: RunState) -> void:
 
 ## A load laid in the mine (GEN-10's placement, tests): its entity, or 0 when that pose would
 ## overlap rock.
-func place(run: RunState, kind: ItemKinds.Kind, at: Vector2, heading: int = 0) -> int:
+func place(run: RunState, kind: ItemKinds.Kind, at: Vector2, heading: int = 0, placement: String = "") -> int:
 	var seg: LoadSegment = LoadSegment.make(kind, at, heading)
 	if seg.collides(seg.x, seg.y, seg.heading, _solid):
 		push_error("LoadCarry.place: a %s at %s overlaps rock" % [ItemKinds.text_key(kind), at])
 		return 0
-	return run.inventory.world.put(run, run.inventory.world.make(kind, 1, {"heading": seg.heading}), at)
+	var it: Item = run.inventory.world.make(kind, 1, {"heading": seg.heading})
+	# GEN-10: a generated load keeps its placement ID, so GEN-13 keys its record on it.
+	it.placement = placement
+	return run.inventory.world.put(run, it, at)
 
 
 ## The load whose end `carrier` holds, or null.

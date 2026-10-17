@@ -189,6 +189,8 @@ func _start_network() -> bool:
 			Log.error("the run's plan failed")
 			get_tree().quit(ExitCode.FATAL)
 			return false
+		# GEN-10: placement spawns each cell's finds and fixtures as it commits.
+		PlacementSpawner.install(run, layouts)
 		var started_gen: int = TickTimer.now_usec()
 		# A fleet server, or one on a player's machine (hosted: a private host or Night Shift;
 		# Steam sets SteamDeck=1 on a Deck), whose workers yield to the game's frame.
@@ -199,7 +201,8 @@ func _start_network() -> bool:
 			workers = Tuning.i(&"mine.generation_workers_host")
 		generation = Generation.new(mine, layouts, run.header.run_seed, false, workers, hosted)
 		run.add_system(generation)
-		generation.start()
+		# GEN-11: the homes' windows (the Moth's start, the Stythe's lair) commit with base camp's.
+		generation.start(PlacementSpawner.start_cells(layouts))
 		Log.info("generated mine: set %s, %d cells round base camp in %.1f ms, %d workers" % [layouts.set_version(),
 			mine.native.loaded_cells().size(), (TickTimer.now_usec() - started_gen) / 1000.0, workers])
 	# DIR-*: the Director paces the creatures of every generated run, and of a fixed map if asked.
