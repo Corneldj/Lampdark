@@ -147,6 +147,8 @@ var repair: RepairListState = null
 var fuel: FuelTank = null
 ## LFT-08: the winder's paraffin engine.
 var engine: WinderEngine = null
+## LFT-09: the pit wakes, from the engine's catch until the cage leaves.
+var apex: ApexController = null
 ## SND-11's callouts.
 var callouts: CalloutSystem = null
 ## UI-02's close-ups: who reads which, and the board's seat.

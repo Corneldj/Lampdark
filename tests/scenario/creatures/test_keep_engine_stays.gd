@@ -19,5 +19,5 @@ func test_a_keeping_stythe_stays_home_at_the_engine() -> void:
 	for _i: int in 1200:
 		s.step(1)
 		assert_true(h.st.senses.in_territory(s.run, h.st, h.st.tile(s.run)), "home, in its territory")
-		assert_gt(h.st.position(s.run).distance_to(gates), Tuning.f(&"stythe.apex_lurk_tiles"), "never by the gates")
+		assert_gt(h.st.position(s.run).distance_to(gates), Tuning.f(&"stythe.apex_lurk_gate_tiles"), "never by the gates")
 	assert_true(h.st.keeps())

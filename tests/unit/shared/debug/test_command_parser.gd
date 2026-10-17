@@ -53,6 +53,7 @@ func test_clamping() -> void:
 
 func test_switches() -> void:
 	assert_eq(_args("freeze_ai on"), {"on": true})
+	assert_eq(_args("apex off"), {"on": false})
 	assert_eq(_args("creatures off tapper"), {"on": false, "kind": "tapper"})
 	assert_eq(_args("creatures on"), {"on": true, "kind": ""})
 	var some: PackedStringArray = _arg("truth on light vision", "layers")

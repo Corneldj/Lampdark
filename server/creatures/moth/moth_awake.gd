@@ -165,7 +165,13 @@ func _prowl(run: RunState, m: Moth) -> void:
 	if relaxed:
 		_go(run, m, m.roost, NavModes.Mode.CRAWLER)
 	elif m.rose_for == "engine":
-		_go(run, m, _base_camp(run), NavModes.Mode.CRAWLER)
+		# LFT-09: to the gates (base camp's deck when none is given).
+		var at: Variant = m.apex_point.call()
+		var goal: Vector2i = _base_camp(run)
+		if at != null:
+			var p: Vector2 = at
+			goal = Vector2i(floori(p.x), floori(p.y))
+		_go(run, m, goal, NavModes.Mode.CRAWLER)
 	else:
 		var marked: int = _marked_miner(run, m)
 		if marked != 0:
@@ -515,6 +521,11 @@ func _marked_miner(run: RunState, m: Moth) -> int:
 			best = e.id
 			best_pull = pull
 	return best
+
+
+## Base camp's deck centre as a point (LFT-09's wake).
+func base_camp_point(run: RunState) -> Vector2:
+	return Vector2(_base_camp(run)) + Vector2(0.5, 0.5)
 
 
 func _base_camp(run: RunState) -> Vector2i:

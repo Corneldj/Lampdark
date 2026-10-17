@@ -17,6 +17,9 @@ var roost: Vector2i = Vector2i.ZERO
 var waker: Dictionary = {}
 ## Why Prowl was entered without a frenzy: "hunger", "marked" or "engine".
 var rose_for: String = ""
+## LFT-09: () -> Variant, the point at the gates its engine prowl drifts to (outside a shut gate),
+## or null for base camp's deck.
+var apex_point: Callable = func() -> Variant: return null
 var stir_tell: Tell = null
 var settle_tell: Tell = null
 ## CRT-04: everything it does awake.
@@ -118,6 +121,27 @@ func wake(run: RunState, why: MothSleep.Cause, waker_position: Vector2) -> bool:
 	return true
 
 
+## LFT-09: the engine caught. Asleep (or settling), it stirs and wakes to Prowl toward base camp;
+## awake, it prowls toward base camp from now on, a frenzy, hunt or preen under way finishing first
+## (Proposed); retreating, it joins when its retreat ends. The apex's end leaves it to go home.
+func on_apex_started(run: RunState) -> void:
+	if is_retreating():
+		return
+	if not wake(run, MothSleep.Cause.ENGINE, awake.base_camp_point(run)):
+		rose_for = "engine"
+		awake.heading_home = false
+
+
+func on_apex_ended(_run: RunState) -> void:
+	if rose_for == "engine":
+		rose_for = ""
+
+
+func on_retreat_ended(run: RunState, toward_base: bool) -> void:
+	if toward_base:
+		on_apex_started(run)
+
+
 ## CRT-04 calls this at the roost it reached: preen moth.preen_s, awake and seeing, then sleep.
 func begin_preen(run: RunState) -> void:
 	enter(run, &"preening", "preen")
@@ -168,7 +192,12 @@ func think(run: RunState) -> void:
 		&"preening":
 			sleep.pending.clear()
 			if run.tick >= sleep.state_until:
-				fall_asleep(run)
+				if rose_for == "engine":
+					# The engine caught while it preened (LFT-09): it prowls toward base camp instead.
+					enter(run, &"prowl", "engine")
+					awake.begin(run, self, false)
+				else:
+					fall_asleep(run)
 		_:
 			sleep.pending.clear()
 			awake.tick(run, self)

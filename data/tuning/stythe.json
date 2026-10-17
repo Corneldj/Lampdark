@@ -11,16 +11,6 @@
 			"kind": "param",
 			"note": "unit as written: tiles by path; ticket LFT-09"
 		},
-		"stythe.apex_lurk_tiles": {
-			"value": 40,
-			"type": "float",
-			"unit": "tiles",
-			"source": "Gameplay §7.4, §3.6, A.4",
-			"starting": false,
-			"visibility": "server",
-			"kind": "param",
-			"note": "ticket CRT-14"
-		},
 		"stythe.backbiter_cover_level": {
 			"value": 0.3,
 			"type": "float",

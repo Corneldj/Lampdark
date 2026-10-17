@@ -11,6 +11,7 @@ extends RefCounted
 ##   teleport <me|slot> <x> <y>
 ##   set_pull <all|slot> <0-100>                        set_intensity <all|slot> <0-100>
 ##   creatures <on|off> [moth|tapper|stythe]            freeze_ai <on|off>
+##   apex <on|off>
 ##   truth <on|off> [layers...]                         overlay <on|off>
 ##   tuning set <key> <value>                           tuning reload
 ##   ring_override <0-4|off>                            seed
@@ -36,6 +37,8 @@ const SPEC: Dictionary = {
 		"help": "takes creatures out of the simulation and every perception, or puts them back"},
 	"freeze_ai": {"usage": "freeze_ai <on|off>", "where": Where.SERVER, "taints": true,
 		"help": "creatures, Hands and Bess stop deciding and moving; their timers pause"},
+	"apex": {"usage": "apex <on|off>", "where": Where.SERVER, "taints": true,
+		"help": "LFT-09's apex: the pit wakes (or sleeps again) whatever the engine"},
 	"truth": {"usage": "truth <on|off> [entities|creatures|light|vision|sound|director|lies ...]", "where": Where.BOTH, "taints": false,
 		"help": "the truth view on this client"},
 	"overlay": {"usage": "overlay <on|off>", "where": Where.BOTH, "taints": false, "help": "the magenta illusion tags (QA servers)"},
@@ -113,7 +116,7 @@ static func parse(line: String) -> Dictionary:
 			var clamped_v: float = clampf(v, 0.0, 100.0)
 			args["value"] = clamped_v
 			out["clamped"] = v != clamped_v
-		"creatures", "freeze_ai", "truth", "overlay":
+		"creatures", "freeze_ai", "apex", "truth", "overlay":
 			if a.is_empty() or not ["on", "off"].has(a[0].to_lower()):
 				return _usage(name)
 			args["on"] = a[0].to_lower() == "on"

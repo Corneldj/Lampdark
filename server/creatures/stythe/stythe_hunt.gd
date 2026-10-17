@@ -11,7 +11,8 @@ extends RefCounted
 ## range: stythe.collect_s of breath, no wind-up, no hunt (no cap place, no relax). Flee drops any
 ## victim and goes stythe.flee_tiles from the light, then circles for stythe.circle_s; Retreat
 ## (CRT-01, the revolver) drops it and goes home. While the engine runs (LFT-09's apex) it lurks
-## within stythe.apex_lurk_tiles of the gates unless it keeps a body or retreats. Server-only.
+## in the dark roads within stythe.apex_lurk_gate_tiles of the gates unless it keeps a body or
+## retreats. Server-only.
 
 ## The miner hunted (0: none) and whether the hunt was chosen.
 var target: int = 0

@@ -113,6 +113,11 @@ func _run_command(run: RunState, name: String, a: Dictionary, issuer: int) -> Di
 				return _no("no creature system")
 			run.creatures.set_frozen(run, Variants.flag(a["on"]))
 			return _ok("AI %s (creatures; Hired Hands and Bess arrive with MOD-08)" % ("frozen" if Variants.flag(a["on"]) else "running"))
+		"apex":
+			if run.apex == null:
+				return _no("no apex (LFT-09)")
+			run.apex.force(run, Variants.flag(a["on"]))
+			return _ok("apex %s" % ("on: the pit wakes" if run.apex.active else "off"))
 		"truth", "overlay":
 			if issuer < 0:
 				return _no("a client view (use the client console)")

@@ -121,6 +121,16 @@ func on_retreat_ended(_run: RunState, _toward_base: bool) -> void:
 	pass
 
 
+## LFT-09: the engine caught (the apex began; never for a creature retreating then, which joins when
+## its retreat ends) and the cage left (it ended). The Tapper and the Stythe read their apex_point.
+func on_apex_started(_run: RunState) -> void:
+	pass
+
+
+func on_apex_ended(_run: RunState) -> void:
+	pass
+
+
 func on_grab_dropped(_run: RunState) -> void:
 	pass
 

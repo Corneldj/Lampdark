@@ -248,6 +248,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.engine = WinderEngine.new()
 	run.engine.bind(run)
 	run.add_system(run.engine)
+	# LFT-09: the pit wakes on the engine's first catch, until the cage leaves (LFT-10).
+	run.apex = ApexController.new()
+	run.apex.bind(run)
+	run.add_system(run.apex)
 	run.tells = OverheadTells.new()
 	run.tells.bind(run)
 	if mine != null:

@@ -24,6 +24,9 @@ var thin: bool = false
 var staged: Callable = func() -> bool: return false
 ## LFT-09's apex: () -> Variant, the point at the gates to lurk near while the engine runs, or null.
 var apex_point: Callable = func() -> Variant: return null
+## LFT-09's lurk region while the engine runs: (tile: Vector2i) -> bool, a road tile within
+## stythe.apex_lurk_gate_tiles of a gate by path. Without one, a straight line from apex_point.
+var apex_region: Callable = Callable()
 ## CRT-15: the bodies it keeps (entity ids): laid in its row and still lying on the lair's tiles.
 var kept: Array[int] = []
 ## CRT-15: its lair (the layout, the row, the trail, the air); ServerSystems sets it at spawn.
@@ -248,11 +251,11 @@ func best_target(run: RunState) -> int:
 ## Lurk: a dark dead end or side road within its hunting range (its territory when staged), moved
 ## on every stythe.lurk_move_s: toward the newest remembered place, else the highest marked Pull.
 func _lurk(run: RunState) -> void:
-	# The engine (LFT-09): within stythe.apex_lurk_tiles of the gates, unless it keeps or retreats.
+	# The engine (LFT-09): in the dark roads by the gates, unless it keeps or retreats.
 	var apex: Variant = apex_point.call()
 	if apex != null and not keeps() and not is_retreating():
 		var at: Vector2 = apex
-		if position(run).distance_to(at) > Tuning.f(&"stythe.apex_lurk_tiles"):
+		if not in_apex_region(tile(run), at):
 			var near: Variant = system.nav.native.reachable_dark_tile_nearest(Vector2i(floori(at.x), floori(at.y)), tile(run), move.params(self))
 			if near != null:
 				var n: Vector2i = near
@@ -328,10 +331,18 @@ func lurk_spots(run: RunState) -> Array[Vector2i]:
 			var ok: bool = senses.in_territory(run, self, t) if staged_now else senses.in_hunting_range(run, self, t)
 			if apex != null:
 				var ap: Vector2 = apex
-				ok = ok and (Vector2(t) + Vector2(0.5, 0.5)).distance_to(ap) <= Tuning.f(&"stythe.apex_lurk_tiles")
+				ok = ok and in_apex_region(t, ap)
 			if ok:
 				out.append(t)
 	return out
+
+
+## Whether a tile lies in the apex's lurk region: LFT-09's, else within stythe.apex_lurk_gate_tiles
+## of `at` in a straight line.
+func in_apex_region(t: Vector2i, at: Vector2) -> bool:
+	if apex_region.is_valid():
+		return Variants.flag(apex_region.call(t))
+	return (Vector2(t) + Vector2(0.5, 0.5)).distance_to(at) <= Tuning.f(&"stythe.apex_lurk_gate_tiles")
 
 
 func _highest_marked(run: RunState) -> int:
