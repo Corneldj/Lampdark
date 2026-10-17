@@ -268,6 +268,10 @@ func _begin_run(options: RunOptions, humans: int, brigade_runs: Array[int], host
 		generation.start(PlacementSpawner.start_cells(_layouts))
 		Log.info("generated mine: set %s, %d cells round base camp in %.1f ms, %d workers" % [_layouts.set_version(),
 			_mine.native.loaded_cells().size(), (TickTimer.now_usec() - started_gen) / 1000.0, workers])
+		# LFT-01: base camp's state (its gates, lamps, medbay and cage) on the generated cell, as a fixed
+		# map's loader attaches it, so the crew has somewhere to arrive.
+		if run.base_camp == null and _mine.native.is_loaded(Vector2i.ZERO):
+			BaseCampState.attach(run, run.header.run_seed, Basecamp.blind_side(run.header.run_seed), not resuming)
 	# DIR-*: the Director paces the creatures of every generated run, and of a fixed map if asked.
 	if config.generated or config.director:
 		Director.install(run)
@@ -293,6 +297,7 @@ func _begin_run(options: RunOptions, humans: int, brigade_runs: Array[int], host
 	if _mine != null:
 		# QA-01's minimal M1 arrival: a welcomed player's miner on base camp's cage deck (MOD-04 replaces it).
 		arrival = M1Arrival.new(run, _mine, net.crew)
+		arrival.hand_leaves = func(e: int) -> void: run.hands.release(e)
 		arrival.adopt(net.seats)
 		net.welcomed.connect(arrival.on_welcomed)
 		Log.info("map %s placed: %d coat heaps, %d creatures, %d items, %d hooks" % [config.map_name,
@@ -303,6 +308,9 @@ func _begin_run(options: RunOptions, humans: int, brigade_runs: Array[int], host
 		# and arrives as the crew (on the cage deck).
 		if humans >= 0 or resuming:
 			arrival.arrive_crew(net.sessions.welcomed())
+		# MOD-08: Hired Hands in the empty places when the host chose them (public's are MOD-09's, at 45 s).
+		if humans >= 0 and Variants.flag(run.header.rule_flags.get("hands_fill", false)) and config.mode == ServerConfig.Mode.FRIENDS:
+			Log.info("hands: %d Hired Hands fill the empty places" % arrival.arrive_hands(run.hands, RunSetup.places(config.mode)))
 	return ""
 
 

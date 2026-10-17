@@ -117,6 +117,21 @@ func arrive_crew(sessions: Array[Sessions.Session]) -> void:
 	begun = true
 
 
+## MOD-08: Hired Hands in the empty places (MOD-03's hands_fill, as the run begins): each place with
+## no miner gets a filler Hand on a free tile of the cage deck, beside the crew. Returns how many.
+func arrive_hands(hands: HandController, places: int) -> int:
+	var n: int = 0
+	for slot: int in places:
+		if run.movement == null or run.movement.miner(slot) != null:
+			continue
+		var tile: Vector2i = _free_tile(_tiles)
+		if tile == NONE:
+			break
+		if hands.fill_place(run, slot, Vector2(tile) + Vector2(0.5, 0.5)) != 0:
+			n += 1
+	return n
+
+
 ## A filler Hired Hand holding `slot`'s place (MOD-08's Hand in that place, not a dropped player's
 ## miner), or 0.
 func filler_hand_in(slot: int) -> int:

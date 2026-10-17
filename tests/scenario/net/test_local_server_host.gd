@@ -96,7 +96,9 @@ func test_the_run_begins_at_the_hosts_start() -> void:
 	assert_false(refusals[0].is_empty(), "in plain words")
 	assert_true(starts.is_empty())
 	assert_eq(c.frames_received, 0, "still at the Pithead")
-	h.send_start(RunOptions.defaults(ServerConfig.Mode.FRIENDS).to_dict(), false)
+	var with_hands: RunOptions = RunOptions.defaults(ServerConfig.Mode.FRIENDS)
+	with_hands.hands_in_empty_places = true
+	h.send_start(with_hands.to_dict(), false)
 	assert_true(await _wait(func() -> bool:
 		c.poll()
 		return not starts.is_empty(), 20.0), "the run begins")
@@ -107,6 +109,12 @@ func test_the_run_begins_at_the_hosts_start() -> void:
 	h.stop()
 	assert_true(await _wait(func() -> bool: return h.state == LocalServerHost.State.ENDED, 10.0))
 	c.close()
+	# MOD-08: the host chose Hands, so Hired Hands filled the four empty places at the start.
+	var server_log: String = FileAccess.get_file_as_string(h.log_path)
+	for line: String in server_log.split("\n"):
+		if line.contains("hands") or line.contains("arrival") or line.contains("run created"):
+			gut.p(line)
+	assert_true(server_log.contains("hands: 4 Hired Hands fill the empty places"), "Hands in the empty places")
 
 
 func test_a_killed_server_is_noticed_within_a_second() -> void:

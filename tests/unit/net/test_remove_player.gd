@@ -19,7 +19,7 @@ func test_a_removed_player_stays_removed() -> void:
 	s.step(10)
 	assert_eq(ann.connection.reject_reason, Protocol.Reject.REMOVED, "sent to the Pithead: removed")
 	assert_false(ann.is_connected_now())
-	assert_true(s.run.drops.hand_driven.has(miner), "a Hand takes the miner")
+	assert_true(s.run.hands.hands.has(miner), "a Hand takes the miner")
 	ann.at(s.run.tick).reconnect_at()
 	s.step(20)
 	assert_false(ann.is_connected_now(), "never back")

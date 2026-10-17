@@ -95,6 +95,6 @@ func test_a_dropped_players_hand_driven_miner_never_takes_a_place() -> void:
 	s.step(10)
 	assert_true(s.run.drops.remove_player(s.run, "bob", "kicked", DropHandler.Takeover.KICKED))
 	s.step(5)
-	assert_true(s.run.drops.hand_driven.has(bob.entity_id), "a Hand drives Bob's miner")
+	assert_true(s.run.hands.hands.has(bob.entity_id), "a Hand drives Bob's miner")
 	assert_false(s.run.two_miner.take(s.run, job.place_b, bob.entity_id))
 	assert_true(_whys(s).has("a hand"), "refused and logged")

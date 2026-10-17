@@ -30,14 +30,16 @@ jobs:
           name: native-bin
           path: native/bin
       - run: chmod +x native/bin/* || true
-      - name: Bot soak (FND-09)
+      - name: Bot soaks (FND-09's M1 soak, MOD-08's Hands never list)
         run: tools/build/ci_nightly_slot.sh soak
       - name: Upload the soak
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: nightly-soak
-          path: build/soaks/nightly_m1/
+          path: |
+            build/soaks/nightly_m1/
+            build/soaks/hands_never_list/
           if-no-files-found: ignore
           retention-days: 30
 

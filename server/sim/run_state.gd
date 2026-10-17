@@ -143,6 +143,8 @@ var chalk: Chalk = null
 var revolver: Revolver = null
 ## NET-11: drops, seats held and retaken.
 var drops: DropHandler = null
+## MOD-08's Hired Hands: the miners a Hand drives (server-only).
+var hands: HandController = null
 ## NET-09: snapshots, knock-off saves and the journal.
 var saves: Saves = null
 ## RSC-09: the solo self-revive, the alone watch and the substitutions' switchboard.

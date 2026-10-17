@@ -41,6 +41,16 @@
 			"kind": "param",
 			"note": "unit as written: tiles by path; ticket MOD-08"
 		},
+		"hands.free_s": {
+			"value": 3,
+			"type": "float",
+			"unit": "s",
+			"source": "Proposed (MOD-08: a man-trap 3 s with both hands; a staple pit 3 s from the edge; a timber pin 3 s as the second miner)",
+			"starting": true,
+			"visibility": "server",
+			"kind": "param",
+			"note": "ticket MOD-08"
+		},
 		"hands.grab_freeze_range_tiles": {
 			"value": 12,
 			"type": "float",

@@ -37,13 +37,16 @@ func test_a_conscious_miner_is_taken_by_a_hand() -> void:
 	var l: GauzeLamp = L.lit_in_hand(s, ann, LampRules.WICK_UP)
 	s.step(2)
 	var at: Vector2 = s.run.registry.get_entity(ann.entity_id).position
+	var dropped_at: int = s.run.tick
 	var row: Dictionary = _drop(s, ann)
 	s.step(10)
-	assert_true(s.run.drops.hand_driven.has(ann.entity_id), "a Hand takes it")
+	assert_true(s.run.hands.hands.has(ann.entity_id), "a Hand takes it")
 	assert_eq(l.place, LampRules.Place.HOOK, "its lamp on the belt")
 	assert_eq(l.wick, LampRules.WICK_DOWN, "turned down")
 	assert_true(l.burning(), "still lit")
-	assert_true(s.run.registry.get_entity(ann.entity_id).position.distance_to(at) < 0.2, "where it stands")
+	# Taken where it stands, then a Hand walks it after the nearest human (MOD-08): never a teleport.
+	var walked: float = MinerMotion.Params.from_tuning().walk_speed * (s.run.tick - dropped_at) / Tuning.f(&"net.tick_hz")
+	assert_lte(s.run.registry.get_entity(ann.entity_id).position.distance_to(at), walked + 0.05, "where it stood, no teleport")
 	assert_eq(s.net.seats.seat_of("ann").state, SeatTable.State.RESERVED, "the seat held")
 	assert_string_contains(str(row["what"]), "a Hand takes it")
 
@@ -60,7 +63,7 @@ func test_unconscious_and_dead_change_nothing() -> void:
 	_drop(s, bob)
 	assert_eq(s.run.miner_state.life(ann.entity_id), MinerTransitions.Life.UNCONSCIOUS)
 	assert_eq(s.run.miner_state.life(bob.entity_id), MinerTransitions.Life.DEAD)
-	assert_true(s.run.drops.hand_driven.is_empty(), "no Hand for the fallen")
+	assert_true(s.run.hands.hands.is_empty(), "no Hand for the fallen")
 
 
 func test_the_operator_stands_up() -> void:
@@ -133,7 +136,7 @@ func test_caught_and_grabbed_holds_run_on() -> void:
 	_drop(s, bob)
 	assert_eq(s.run.miner_state.life(ann.entity_id), MinerTransitions.Life.CAUGHT, "still Caught")
 	assert_eq(s.run.miner_state.life(bob.entity_id), MinerTransitions.Life.GRABBED, "still Grabbed")
-	assert_true(s.run.drops.hand_driven.is_empty(), "the Hand never self-rescues")
+	assert_true(s.run.hands.hands.is_empty(), "the Hand never self-rescues")
 
 
 func test_a_timed_action_is_cancelled_and_an_outcome_stays() -> void:

@@ -305,6 +305,10 @@ static func install(run: RunState, net: ServerNet, mine: Mine = null, secret: in
 	run.add_system(run.record)
 	# MOD-03: each place's seated miner: its badge, voice, name and lamp number.
 	net.crew.bind(run)
+	# MOD-08: Hired Hands, driving miners through the same input a client sends (after the callouts).
+	run.hands = HandController.new()
+	run.hands.bind(run, net)
+	run.add_system(run.hands)
 	# FND-08: dev and QA servers only; server/debug/ is not in a release pack.
 	if net.flavour != BuildInfo.Flavour.RELEASE and ResourceLoader.exists(DEBUG_INSTALL):
 		var installer: GDScript = load(DEBUG_INSTALL)

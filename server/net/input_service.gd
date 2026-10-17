@@ -49,6 +49,12 @@ func buffer_for(slot: int) -> InputBuffer:
 	return buffer
 
 
+## MOD-08: a Hired Hand's input for this tick, written after the clients' (HandController, stage
+## INPUTS): every system reads it as it reads a client's.
+func drive(slot: int, consumed: InputBuffer.Consumed) -> void:
+	_current[slot] = consumed
+
+
 ## What this tick consumed for a slot; null before its first input.
 func input_for(slot: int) -> InputBuffer.Consumed:
 	if not _current.has(slot):

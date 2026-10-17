@@ -32,11 +32,11 @@ func test_only_some_of_the_crew_come_back() -> void:
 	assert_eq(back.entity_id, ann.entity_id, "Ann has her miner")
 	assert_eq(back.slot, ann.slot, "and her seat")
 	assert_eq(b.net.seats.seat_of("ann").state, SeatTable.State.SEATED)
-	assert_false(b.run.drops.hand_driven.has(ann.entity_id), "handed back to her")
+	assert_false(b.run.hands.hands.has(ann.entity_id), "handed back to her")
 	assert_true(dan.slot != bob.slot and dan.slot != cat.slot, "a newcomer never takes a held seat")
 	for h: MinerHandle in [bob, cat]:
 		assert_eq(b.net.seats.seat_of(h.name).state, SeatTable.State.RESERVED, "%s's seat held" % h.name)
-		assert_true(b.run.drops.hand_driven.has(h.entity_id), "a Hand keeps %s's miner" % h.name)
+		assert_true(b.run.hands.hands.has(h.entity_id), "a Hand keeps %s's miner" % h.name)
 	b.step(100)
 	assert_eq(b.run.miner_state.life(bob.entity_id), MinerTransitions.Life.UPRIGHT, "the run goes on")
 

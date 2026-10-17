@@ -51,4 +51,4 @@ func test_outages_leave_no_stuck_miner_and_no_lost_seat() -> void:
 		assert_eq(h.slot, int(Variants.number(want[0])), "%s in its own seat" % h.name)
 		assert_eq(s.run.movement.miner(h.slot).entity_id, int(Variants.number(want[1])), "%s driving its own miner" % h.name)
 		assert_eq(s.net.seats.seat_of(h.name).state, SeatTable.State.SEATED, "%s's seat is its own" % h.name)
-	assert_true(s.run.drops.hand_driven.is_empty(), "no Hand left holding a place")
+	assert_true(s.run.hands.hands.is_empty(), "no Hand left holding a place")

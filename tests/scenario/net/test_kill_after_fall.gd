@@ -55,7 +55,7 @@ func test_kill_after_fall() -> void:
 	assert_false(Variants.flag(got_lamp.get("lit", true)), "snuffed")
 	assert_null(b.run.inventory.hands_of(ann.entity_id).lamp_hand, "not in her hand")
 	assert_eq(b.run.miner_state.life(bob.entity_id), MinerTransitions.Life.UPRIGHT, "Bob as he was")
-	assert_true(b.run.drops.hand_driven.has(bob.entity_id), "a Hand holds him until he is back")
+	assert_true(b.run.hands.hands.has(bob.entity_id), "a Hand holds him until he is back")
 	b.step(5)
 	var adopted: GauzeLamp = b.run.lamps.lamps.get(lamp.uid, null)
 	assert_not_null(adopted, "the lamp system has the lamp again")
@@ -64,7 +64,7 @@ func test_kill_after_fall() -> void:
 	var bob2: MinerHandle = b.rejoin("bob")
 	b.step(3)
 	assert_eq(bob2.entity_id, bob.entity_id, "his miner")
-	assert_false(b.run.drops.hand_driven.has(bob.entity_id), "handed back")
+	assert_false(b.run.hands.hands.has(bob.entity_id), "handed back")
 	assert_eq(b.run.miner_state.life(ann.entity_id), MinerTransitions.Life.UNCONSCIOUS, "still down")
 
 

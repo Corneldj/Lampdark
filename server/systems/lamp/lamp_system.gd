@@ -92,6 +92,12 @@ func lamp_of_item(item: Item) -> GauzeLamp:
 	return lamps.get(item.uid, null) if item != null else null
 
 
+## The lamp bits of `miner`'s last input (InputRecord.desired's), so a driver that writes them again
+## presses nothing (MOD-08's Hands); the normal wick, shutter open, before any.
+func last_bits(miner: int) -> int:
+	return int(Variants.number(_last_bits.get(miner, 2)))
+
+
 ## The lamp in a miner's lamp hand (or on its hook), or null.
 func lamp_in_hand(miner: int) -> GauzeLamp:
 	if _run == null or _run.inventory == null or not _run.inventory.hands.has(miner):

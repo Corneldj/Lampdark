@@ -36,7 +36,7 @@ func test_among_friends_after_twenty_minutes() -> void:
 	assert_true(ann.is_connected_now(), "back in")
 	assert_eq(ann.slot, slot, "her own seat")
 	assert_eq(s.run.movement.miner(ann.slot).entity_id, miner, "driving her own miner")
-	assert_false(s.run.drops.hand_driven.has(miner), "handed back")
+	assert_false(s.run.hands.hands.has(miner), "handed back")
 	assert_eq(s.run.drops.retakes.size(), 1)
 
 
@@ -50,4 +50,4 @@ func test_public_at_two_fifty_nine_and_three_oh_one() -> void:
 	assert_false(ann2.is_connected_now(), "3:01: refused")
 	assert_eq(ann2.connection.reject_reason, Protocol.Reject.SEAT_KEPT, "the Hand keeps the place")
 	var kept: int = late[2]
-	assert_true(s2.run.drops.hand_driven.has(kept), "still Hand-driven")
+	assert_true(s2.run.hands.hands.has(kept), "still Hand-driven")
