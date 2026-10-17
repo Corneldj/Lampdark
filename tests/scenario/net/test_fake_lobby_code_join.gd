@@ -63,7 +63,8 @@ func test_the_server_seats_no_more_than_the_lobby_holds() -> void:
 	# NET-02's test_full_server_refuses proves a full server refuses the next HELLO with FULL; the
 	# game server's slots are the lobby's limit, so a sixth player is refused there too.
 	var src: String = FileAccess.get_file_as_string("res://server/server_main.gd")
-	assert_true(src.contains("var slots: int = Tuning.i(&\"modes.friends_lobby_max\")"))
+	assert_true(src.contains("var slots: int = RunSetup.places(config.mode)"), "MOD-03: the mode's places")
 	assert_true(src.contains("net = ServerNet.new(game_transport, slots)"))
+	assert_eq(RunSetup.places(ServerConfig.Mode.FRIENDS), Tuning.i(&"modes.friends_lobby_max"), "a friends server's places")
 	assert_eq(Tuning.i(&"modes.friends_lobby_max"), 5)
 	assert_eq(LobbyService.limit(), 5, "the lobby and the server agree")

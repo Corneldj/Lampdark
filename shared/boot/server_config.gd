@@ -18,6 +18,13 @@ var control_port: int = 0
 var resume_path: String = ""
 ## NET-09: where saves are written, one folder per run UUID (STM-05 points it at the Cloud-synced folder).
 var save_dir: String = "user://saves"
+## MOD-03: the lobby's options (RunOptions; a hosted run's arrive with the host's start instead):
+## the repair list ("" for the mode's default), a hard variant, Hired Hands in empty places, and
+## whether the host has unlocked the hard variants (MOD-01's first escape). The server validates them.
+var list_name: String = ""
+var hard_variant: String = ""
+var hands: bool = false
+var variants_unlocked: bool = false
 ## A fixed run seed (dev and QA only). Unsigned 64-bit, held in an int's bits.
 var has_seed: bool = false
 var run_seed: int = 0

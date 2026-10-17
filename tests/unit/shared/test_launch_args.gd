@@ -47,6 +47,24 @@ func test_server_arguments() -> void:
 	assert_eq(parsed.server.exit_after_ticks, 40)
 
 
+## MOD-03: the lobby's options, which a release host's client passes on (never refused in release).
+func test_run_options_reach_the_server_config_in_release() -> void:
+	var parsed: LaunchArgs = _parse_user(["--server", "--list", "full", "--hard", "dead_lines", "--hands", "--unlocked"],
+		_build(PackedStringArray(["lb_server", "lb_release"])))
+	assert_true(parsed.ok, parsed.error)
+	assert_eq(parsed.warnings.size(), 0, "nothing refused in release")
+	assert_eq(parsed.server.list_name, "full")
+	assert_eq(parsed.server.hard_variant, "dead_lines")
+	assert_true(parsed.server.hands)
+	assert_true(parsed.server.variants_unlocked)
+	var o: RunOptions = RunSetup.options_of(parsed.server)
+	assert_eq(o.to_dict(), {"mode": "friends", "list": "full", "hard": "dead_lines", "hands": true})
+	assert_false(_parse_user(["--list", "huge"], _dev()).ok, "a list that is none of the three")
+	var plain: LaunchArgs = _parse_user(["--server"], _dev())
+	assert_eq(RunSetup.options_of(plain.server).to_dict(), RunOptions.defaults(ServerConfig.Mode.FRIENDS).to_dict(),
+		"no options: the mode's defaults")
+
+
 func test_director_on_a_fixed_map_only_when_asked() -> void:
 	var plain: LaunchArgs = _parse_user(["--server", "--map", "m1_greybox"], _dev())
 	assert_true(plain.ok, plain.error)

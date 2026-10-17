@@ -24,6 +24,8 @@
 		"lobby.gone": "That crew has gone",
 		"lobby.create_failed": "Could not open a crew",
 		"lobby.run_ended": "The run has ended. It can be resumed.",
-		"lobby.hosting": "Starting the crew's server..."
+		"lobby.hosting": "Starting the crew's server...",
+		"lobby.start_refused": "The run could not start with these options",
+		"lobby.going_down": "Going down..."
 	}
 }

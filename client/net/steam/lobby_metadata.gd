@@ -15,8 +15,9 @@ const LOBBY_KEYS: Array[String] = ["lb_game", "lb_build", "lb_proto", "lb_mode",
 const MEMBER_KEYS: Array[String] = ["lb_ready", "lb_name", "lb_lamp", "lb_badge", "lb_muted"]
 ## STM-04: how a member came in ("code" or "invite"), for the host's admission lists.
 const MEMBER_VIA: String = "lb_via"
-## MOD-03's RunOptions until it exists: the Escape, the Standard list, no hard variant, no Hands.
-const DEFAULT_OPTIONS: Dictionary = {"mode": "escape", "list": "standard", "hard": "", "hands": false}
+## MOD-03's RunOptions as a dictionary, when the lobby has set none: the Escape (a friends lobby), the
+## Standard list, no hard variant, no Hands.
+const DEFAULT_OPTIONS: Dictionary = {"mode": "friends", "list": "standard", "hard": "", "hands": false}
 
 
 ## Every lobby key. `options`: RunOptions as a dictionary; `server`: STM-04's identity (M2+).

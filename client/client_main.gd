@@ -76,10 +76,14 @@ const LAMP_CHECK_LAYER: int = 11
 var lamp_check: LampCheckView = null
 var _lamp_check_layer: CanvasLayer = null
 var _lamp_check_seen: int = 0
-## MOD-01's profile and its store, as MOD-03 seats them with the miner sent below (UI-04's miner
-## choice at the Pithead): Lamp Check puts the run's outcome on that roster. Null until then.
+## MOD-01's profile and its store, loaded at start (MOD-03): the hello offers its Available miners,
+## and the one seated goes Below once the run begins; Lamp Check puts the run's outcome on that
+## roster. Null for a bot.
 var profile: Profile = null
 var profile_store: ProfileStore = null
+## MOD-03: the run the seated miner went Below for ("" until the run's first frame, and after Lamp
+## Check); a connection lost before Lamp Check ends it abnormally on the roster (RSC-06).
+var _seated_run: String = ""
 ## LFT-03: the Manual at its lectern.
 var manual_closeup: ManualCloseup = null
 var _closeup_messages_seen: int = 0
@@ -107,6 +111,7 @@ func start(client_config: ClientConfig) -> void:
 	if not config.bot_script.is_empty():
 		_start_bot()
 		return
+	_load_profile()
 	_start_lobby()
 	if not config.connect_target.is_empty():
 		_connect(config.connect_target)
@@ -169,6 +174,9 @@ func _start_lobby() -> void:
 		fake.aim(host, LobbyRendezvousWire.port_for(port))
 		backend = fake
 	lobby = LobbyService.new(backend, steam, config.build.is_release())
+	# MOD-03: the lobby's options (UI-04's option screens change them); Go down starts the run.
+	lobby.options = RunOptions.defaults(ServerConfig.Mode.FRIENDS).to_dict()
+	lobby.start_pressed.connect(_on_go_down)
 	# A typed or launch server address takes M1's path (lb_dev_addr: the kill test's studio server, a
 	# dev server); without one, a host with Steam runs its own server (STM-04).
 	if config.build.is_release():
@@ -221,6 +229,7 @@ func _process(delta: float) -> void:
 	if connection != null:
 		connection.poll()
 		_report_connection()
+		_on_run_begun()
 		_follow_camera(delta)
 		_play_audio()
 		_keep_map_card()
@@ -598,6 +607,9 @@ func _start_hosting() -> void:
 	add_child(local_server)
 	local_server.server_ready.connect(_on_server_ready)
 	local_server.ended.connect(_on_server_ended)
+	local_server.start_refused.connect(func(reason: String) -> void:
+		Log.warn("the run did not start: %s" % reason)
+		lobby.failed.emit("lobby.start_refused"))
 	if not local_server.reattach():
 		if not local_server.start(LocalServerHost.default_path(config.host_relay)):
 			lobby.failed.emit("lobby.run_ended")
@@ -664,6 +676,7 @@ func _connect_sdr(identity: int, vport: int) -> void:
 	connection = ClientConnection.new(SdrTransport.new(steam.api))
 	connection.identity = str(steam.steam_id)
 	connection.qa_token = config.qa_token
+	_offer_miners(connection)
 	if connection.start(str(identity), vport):
 		Log.info("connecting over SDR to %d (virtual port %d)" % [identity, vport])
 	else:
@@ -678,6 +691,7 @@ func _connect(target: String) -> void:
 	connection.identity = str(steam.steam_id) if steam.available() else steam.persona_name()
 	connection.qa_token = config.qa_token
 	connection.seat_request = Protocol.Seat.BOT if not config.bot_script.is_empty() else Protocol.Seat.PLAYER
+	_offer_miners(connection)
 	if connection.start(host, port):
 		Log.info("connecting to %s" % target)
 	else:
@@ -690,16 +704,19 @@ func _report_connection() -> void:
 	_reported_state = connection.state
 	match connection.state:
 		ClientConnection.State.CONNECTED:
-			Log.info("welcomed: slot %d, server tick %d, %d Hz" % [connection.welcome.slot,
-				connection.welcome.server_tick, connection.welcome.tick_hz])
-			_hide_dev_lobby()
+			Log.info("welcomed: slot %d, server tick %d, %d Hz%s" % [connection.welcome.slot,
+				connection.welcome.server_tick, connection.welcome.tick_hz,
+				", seated as roster miner %d with badge %d" % [connection.welcome.seated_miner, connection.welcome.badge]
+				if connection.welcome.seated_miner >= 0 else ""])
 			if mic_mode != null:
 				_send_mic_label(mic_mode.show_mute_label())
 		ClientConnection.State.REJECTED:
 			Log.warn("refused by the server: %s" % RejectText.text(connection.reject_reason))
+			_end_seated_run()
 			_lobby_again()
 		ClientConnection.State.DROPPED:
 			Log.warn("connection lost: %s" % connection.drop_reason)
+			_end_seated_run()
 			_lobby_again()
 
 
@@ -707,6 +724,72 @@ func _report_connection() -> void:
 func _may_connect() -> bool:
 	return connection == null or connection.state == ClientConnection.State.REJECTED \
 		or connection.state == ClientConnection.State.DROPPED
+
+
+## MOD-01's profile on this PC for this player (STM-01's SteamID, or the dev persona's).
+func _load_profile() -> void:
+	profile_store = ProfileStore.new()
+	profile = profile_store.load_or_create(steam.steam_id)
+	var st: Profile.State = profile.state()
+	Log.info("profile: %d on the roster, %d Available, New Brigade runs %d" % [st.roster.size(),
+		st.roster.filter(func(m: RosterMiner) -> bool: return m.available()).size(), st.new_brigade_runs])
+
+
+## MOD-03: the hello offers up to three Available roster miners (UI-04's choice first; until then the
+## roster's order), the preferred badge and the New Brigade runs. With every miner Below in an
+## unfinished run, the player joins with none.
+func _offer_miners(c: ClientConnection) -> void:
+	if profile == null:
+		return
+	var st: Profile.State = profile.state()
+	var offered: Array[Dictionary] = []
+	for m: RosterMiner in st.roster:
+		if m.available() and offered.size() < Protocol.MAX_CANDIDATES:
+			offered.append({"id": m.id, "name": m.full_name(), "lamp_number": m.lamp_number, "voice_id": m.voice_id,
+				"book_pages": m.book_pages.duplicate()})
+	if offered.is_empty():
+		Log.warn("profile: every miner is Below in an unfinished run; joining without a roster miner")
+	c.candidates = offered
+	c.preferred_badge = profile.preferred_badge
+	c.new_brigade_runs = st.new_brigade_runs
+
+
+## MOD-03: the run's first frame: the lobby gives way, and the seated miner goes Below for this run.
+func _on_run_begun() -> void:
+	if connection.state != ClientConnection.State.CONNECTED or connection.frames_received == 0:
+		return
+	if _menus().get_node_or_null("DevLobby") != null:
+		_hide_dev_lobby()
+	var w: Protocol.Welcome = connection.welcome
+	if not _seated_run.is_empty() or profile == null or w.seated_miner < 0 or w.run_uuid.is_empty():
+		return
+	_seated_run = w.run_uuid
+	if profile.send_below(w.run_uuid, w.seated_miner, int(Time.get_unix_time_from_system())):
+		if profile_store != null:
+			profile_store.save(profile)
+		Log.info("profile: miner %d is Below in this run" % w.seated_miner)
+
+
+## RSC-06: the connection went before Lamp Check: the run ends abnormally on the roster (voided in
+## public, which gives the miner back; else Below until it resumes and ends).
+func _end_seated_run() -> void:
+	if _seated_run.is_empty() or profile == null:
+		return
+	var public: bool = RunOptions.mode_from(str(lobby.options.get("mode", "friends")) if lobby != null else "friends") == ServerConfig.Mode.PUBLIC
+	profile.end_without_lamp_check(_seated_run, OutcomeEvent.End.VOIDED if public else OutcomeEvent.End.ABNORMAL,
+		int(Time.get_unix_time_from_system()))
+	if profile_store != null:
+		profile_store.save(profile)
+	Log.info("profile: the run ended without Lamp Check (%s)" % ("voided" if public else "unfinished"))
+	_seated_run = ""
+
+
+## MOD-03: Go down: the host's own server creates the run from the lobby's options and the crew seated.
+func _on_go_down() -> void:
+	if local_server == null:
+		return
+	local_server.send_start(lobby.options, profile != null and profile.state().unlocked_variants)
+	lobby.failed.emit("lobby.going_down")
 
 
 ## In play the lobby gives way to the mine (it would cover it and take the mouse).
@@ -840,6 +923,7 @@ func _open_lamp_check(opening: Dictionary) -> void:
 ## MOD-01: the own outcome onto the seated profile's roster, saved; without a seated profile it
 ## goes nowhere (MOD-03 seats one).
 func _apply_outcome(opening: Dictionary) -> void:
+	_seated_run = ""
 	if profile == null:
 		Log.info("lamp check: no profile seated, so no roster takes the outcome")
 		return

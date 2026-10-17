@@ -23,7 +23,8 @@ var is_hired_hand: Callable = func(_entity: int) -> bool: return false
 var is_absent: Callable = func(_entity: int) -> bool: return false
 ## MOD-03's lobby kind; M1 runs are friends lobbies (Night Shift is solo).
 var lobby: Lobby = Lobby.FRIENDS
-## Humans at the start of the run (MOD-03's header; in M1 the most humans seen).
+## Humans at the start of the run: MOD-03's header, sealed when the run is created; for a run whose
+## crew joined after it (a dev or fleet server), the most humans seen.
 var humans_at_start: int = 0
 var count: int = 0
 ## Per-miner seconds inside a sealed base camp (GDD §15.12), for telemetry.
@@ -50,7 +51,10 @@ func bind(run: RunState) -> void:
 
 
 func tick(run: RunState) -> void:
-	humans_at_start = maxi(humans_at_start, humans(run).size())
+	if run.header.humans_at_start > 0:
+		humans_at_start = run.header.humans_at_start
+	else:
+		humans_at_start = maxi(humans_at_start, humans(run).size())
 	for e: int in miners(run):
 		if Variants.flag(is_sealed_inside.call(e)):
 			sealed_ticks[e] = int(Variants.number(sealed_ticks.get(e, 0))) + 1

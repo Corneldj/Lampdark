@@ -4,7 +4,7 @@ extends GutTest
 ## loads GodotSteam Server at run time, logs on as an anonymous unlisted game server and listens on SDR
 ## under its own SteamID; the client, admitted as the lobby's owner, completes NET-02's handshake over a
 ## relayed connection; the server binds nothing beyond loopback but Steam's own sockets; a clean stop
-## exits 0.
+## exits 0. MOD-03: the run begins at the host's Go down (frames follow it).
 
 const EXPORT: String = "res://build/linux-server-qa/lampblack_server.x86_64"
 
@@ -70,6 +70,7 @@ func test_path_a_over_steam() -> void:
 		if (Variants.whole(info.get("info_flags", 0)) & SteamApi.SNS_INFO_RELAYED) != 0:
 			relayed += 1
 	assert_eq(relayed, SdrTransport.GROUPS, "all three connections relayed")
+	host.send_start(RunOptions.defaults(ServerConfig.Mode.FRIENDS).to_dict(), false)  # MOD-03: Go down
 	await _wait(func() -> bool:
 		client.poll()
 		return client.frames_received > 20, 10.0)
@@ -122,6 +123,7 @@ func test_path_b_over_steam() -> void:
 		direct.poll()
 		return friend.state == ClientConnection.State.CONNECTED and direct.state == ClientConnection.State.CONNECTED, 30.0))
 	assert_eq(friend.state, ClientConnection.State.CONNECTED, "through the relay, the tag matching the Hello")
+	host.send_start(RunOptions.defaults(ServerConfig.Mode.FRIENDS).to_dict(), false)  # MOD-03: Go down
 	await _wait(func() -> bool:
 		relay.poll()
 		friend.poll()

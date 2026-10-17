@@ -4,7 +4,9 @@ extends GutTest
 ## client completes NET-02's handshake over loopback; a clean stop exits 0 with no process left; a
 ## killed server is noticed within 1 s; a server whose last client left goes after the linger (the
 ## test_hosting profile: 2 s); a restarted client reattaches through the lock; Night Shift's offline
-## spawn has no Steam identity.
+## spawn has no Steam identity. MOD-03: the hosted run waits at the Pithead, seating its crew and
+## sending no game data, until the host's start creates it (a refused start says why, and the crew
+## stays at the Pithead).
 
 var _hosts: Array[LocalServerHost] = []
 
@@ -70,6 +72,40 @@ func test_ready_join_and_a_clean_stop() -> void:
 	assert_eq(ends[0], [0, false], "exit 0, no crash")
 	assert_false(Variants.flag(ClassDB.class_call_static(&"LbCoreInfo", &"process_alive", pid)), "no process left")
 	assert_false(FileAccess.file_exists(LocalServerHost.LOCK_PATH))
+	c.close()
+
+
+func test_the_run_begins_at_the_hosts_start() -> void:
+	var h: LocalServerHost = _host()
+	assert_true(await _wait(func() -> bool: return h.state == LocalServerHost.State.READY, Tuning.f(&"net.local_server_ready_timeout_s")))
+	var c: ClientConnection = await _join(h)
+	assert_eq(c.state, ClientConnection.State.CONNECTED, "seated at the Pithead")
+	await _wait(func() -> bool:
+		c.poll()
+		return false, 1.0)
+	assert_eq(c.frames_received, 0, "at the Pithead nothing ticks and nothing is sent")
+	var refusals: Array[String] = []
+	var starts: Array[bool] = []
+	h.start_refused.connect(func(reason: String) -> void: refusals.append(reason))
+	h.run_started.connect(func() -> void: starts.append(true))
+	h.send_start({"mode": "friends", "list": "standard", "hard": "one_lamp", "hands": false}, false)
+	assert_true(await _wait(func() -> bool:
+		c.poll()
+		return not refusals.is_empty(), 10.0), "a variant the host has not unlocked is refused")
+	gut.p("refused: %s" % refusals)
+	assert_false(refusals[0].is_empty(), "in plain words")
+	assert_true(starts.is_empty())
+	assert_eq(c.frames_received, 0, "still at the Pithead")
+	h.send_start(RunOptions.defaults(ServerConfig.Mode.FRIENDS).to_dict(), false)
+	assert_true(await _wait(func() -> bool:
+		c.poll()
+		return not starts.is_empty(), 20.0), "the run begins")
+	assert_true(await _wait(func() -> bool:
+		c.poll()
+		return c.frames_received > 10, 10.0), "frames once it has begun")
+	gut.p("frames %d after the start" % c.frames_received)
+	h.stop()
+	assert_true(await _wait(func() -> bool: return h.state == LocalServerHost.State.ENDED, 10.0))
 	c.close()
 
 

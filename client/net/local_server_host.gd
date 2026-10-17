@@ -3,8 +3,9 @@ extends Node
 ## STM-04 (GDD §15.1, §15.10): a private host's client runs the headless server as a separate process
 ## and connects to it like any client, so even the host gets a filtered stream. It spawns the server
 ## (an export's lampblack_server beside the client; a source run's own engine with --server), reads
-## its ready line, opens the token-authenticated control link, sends the lobby's members and the
-## run options, watches the process every frame, shuts it down cleanly, and never leaves an orphan.
+## its ready line, opens the token-authenticated control link, sends the lobby's members, and at Go
+## down the run options (MOD-03: the run is created then, from the crew seated), watches the process
+## every frame, shuts it down cleanly, and never leaves an orphan.
 ## A restarted client reattaches through user://local_server.lock.
 ##
 ## Paths: A, the server logs on to Steam as an anonymous game server and listens on SDR itself
@@ -23,6 +24,9 @@ signal server_ready(info: Dictionary)
 ## The process ended; `crashed` unless the host asked it to stop.
 signal ended(code: int, crashed: bool)
 signal link_status(status: Dictionary)
+## MOD-03: the run began at the host's start, or the start was refused (the server's plain words).
+signal run_started
+signal start_refused(reason: String)
 
 var state: State = State.OFF
 var path: Path = Path.A
@@ -55,7 +59,8 @@ func _init() -> void:
 
 ## The executable and arguments for this build: {path, args}.
 static func command(which: Path, log_file: String, resume_path: String = "") -> Dictionary:
-	var args: PackedStringArray = PackedStringArray(["--server", "--parent-pid", str(OS.get_process_id()), "--log", log_file])
+	# MOD-03: a hosted run is a generated mine, created at the host's start.
+	var args: PackedStringArray = PackedStringArray(["--server", "--parent-pid", str(OS.get_process_id()), "--log", log_file, "--generate"])
 	match which:
 		Path.A:
 			args.append_array(["--mode", "friends", "--transport", "sdr"])
@@ -207,6 +212,10 @@ func _poll_link() -> void:
 						link_status.emit(m)
 					"bye":
 						_bye = true
+					"started":
+						run_started.emit()
+					"start_refused":
+						start_refused.emit(str(m.get("reason", "")))
 			TransportEvent.Kind.DROPPED:
 				_link_up = false
 	link.flush()
@@ -227,6 +236,12 @@ func send_members(owner: int, ids: PackedInt64Array, code_users: PackedInt64Arra
 
 func send_options(options: Dictionary) -> void:
 	_send({"t": "options", "options": options})
+
+
+## MOD-03: Go down: the server creates the run from these options (RunOptions.to_dict()) and the
+## crew seated now. `unlocked`: the host has unlocked the hard variants (MOD-01).
+func send_start(options: Dictionary, unlocked: bool) -> void:
+	_send({"t": "start", "options": options, "unlocked": unlocked})
 
 
 ## A clean stop: the server snapshots, says bye and exits 0; killed if it lingers.

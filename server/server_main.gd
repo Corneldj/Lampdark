@@ -39,6 +39,13 @@ var _console_thread: Thread = null
 var _audit: RefCounted = null
 ## NET-09: the save this server resumes (`--resume`), opened; empty for a new run.
 var _resume: Dictionary = {}
+## MOD-03: the launch's options (a hosted run's arrive with the host's start), and the world the run
+## begins in: a fixed map's or a generated mine (its layouts), made before the start.
+var _options: RunOptions = null
+var _mine: Mine = null
+var _layouts: LbLayouts = null
+## MOD-03: at the Pithead, the next network pump (µs).
+var _pithead_next_usec: int = 0
 
 
 func start(server_config: ServerConfig) -> void:
@@ -78,18 +85,33 @@ func start(server_config: ServerConfig) -> void:
 		Log.error("the run could not be created")
 		get_tree().quit(ExitCode.FATAL)
 		return
-	Log.dev("run seed %s" % LbHash.to_hex(run.header.run_seed))
-	if not _start_network():
+	# MOD-03: the lobby's options are validated before anything listens (a hosted run's again at its
+	# start, with the crew).
+	_options = RunSetup.options_of(config)
+	var refused: String = RunSetup.refusal(_options, RunSetup.unlocked_variants(config.variants_unlocked))
+	if _resume.is_empty() and not refused.is_empty():
+		Log.error("the run's options are refused: %s" % refused)
+		get_tree().quit(ExitCode.BAD_ARGUMENTS)
 		return
+	Log.dev("run seed %s" % LbHash.to_hex(run.header.run_seed))
 	loop = SimLoop.new(run)
 	loop.stop_after_ticks = config.exit_after_ticks
+	# MOD-03: a hosted new run waits at the Pithead, seating its crew, until the host starts it.
+	if config.parent_pid > 0 and _resume.is_empty():
+		run.set_phase(RunState.Phase.PITHEAD)
+	if not _start_network():
+		return
 	if ClassDB.class_exists(&"LbCoreInfo"):
 		ClassDB.class_call_static(&"LbCoreInfo", &"request_timer_resolution_1ms")
 	Log.info("server starting: mode=%s transport=%s port=%d offline=%s tick=%d us" % [
 		ServerConfig.Mode.keys()[config.mode], ServerConfig.TransportKind.keys()[config.transport],
 		config.port, run.header.offline, loop.tick_usec])
 	_started_usec = TickTimer.now_usec()
-	loop.start(_started_usec)
+	if run.phase == RunState.Phase.PITHEAD:
+		host_link.start_requested.connect(_on_start_requested)
+		Log.info("at the Pithead: the run begins when the host starts it")
+	else:
+		loop.start(_started_usec)
 	set_process(true)
 
 
@@ -103,6 +125,9 @@ func _process(_delta: float) -> void:
 	if host_link != null:
 		host_link.poll()
 		_linger()
+	if run.phase == RunState.Phase.PITHEAD:
+		_pithead()
+		return
 	loop.pump(TickTimer.now_usec())
 	if rendezvous != null:
 		rendezvous.poll()
@@ -154,82 +179,37 @@ func _start_network() -> bool:
 			return false
 		var both: Array[Transport] = [transport, sdr]
 		game_transport = MultiTransport.new(both)
-	var slots: int = Tuning.i(&"modes.friends_lobby_max") if Tuning.current.has_key(&"modes.friends_lobby_max") else 5
+	# MOD-03: the places the mode holds (friends 1-5, public 4, Night Shift 1).
+	var slots: int = RunSetup.places(config.mode)
 	net = ServerNet.new(game_transport, slots)
 	net.flavour = config.build.flavour
 	net.qa_token = "" if config.build.is_release() else config.qa_token
-	var mine: Mine = null
 	if not config.map_name.is_empty():
-		mine = Mine.new()
+		_mine = Mine.new()
 		var started: int = TickTimer.now_usec()
-		var cells: int = FixedMapLoader.load_cells(mine, config.map_name)
+		var cells: int = FixedMapLoader.load_cells(_mine, config.map_name)
 		if cells < 0:
 			Log.error("the map %s did not load" % config.map_name)
 			get_tree().quit(ExitCode.FATAL)
 			return false
 		Log.info("map %s: %d cells in %.1f ms" % [config.map_name, cells, (TickTimer.now_usec() - started) / 1000.0])
-	var layouts: LbLayouts = null
 	if config.generated and config.map_name.is_empty():
-		mine = Mine.new()
-		layouts = MineLayouts.for_run(run.header.run_seed, "", config.template_pack)
-		if layouts == null:
+		_mine = Mine.new()
+		_layouts = MineLayouts.for_run(run.header.run_seed, "", config.template_pack)
+		if _layouts == null:
 			Log.error("the generated mine has no template pack")
 			get_tree().quit(ExitCode.FATAL)
 			return false
-	ServerSystems.install(run, net, mine)
+	ServerSystems.install(run, net, _mine)
 	if run.lamp_check != null:
 		run.lamp_check.ended.connect(func(_why: String) -> void: _lamp_check_over_usec = TickTimer.now_usec())
-	if layouts != null:
-		# GEN-08: the plan from the seed and the list (or the save's), before any cell is derived.
-		var saved: PackedByteArray = PackedByteArray()
-		var raw: Variant = Variants.dict(_resume.get("head", {})).get("plan", null)
-		if raw is PackedByteArray:
-			saved = raw
-		if RunPlan.fix(layouts, run, saved).is_empty():
-			Log.error("the run's plan failed")
-			get_tree().quit(ExitCode.FATAL)
+	if run.phase != RunState.Phase.PITHEAD:
+		var why: String = _begin_run(_options, -1, [] as Array[int], config.variants_unlocked)
+		if not why.is_empty():
+			if why != "fatal":
+				Log.error("the run could not be created: %s" % why)
+				get_tree().quit(ExitCode.BAD_ARGUMENTS)
 			return false
-		# GEN-10: placement spawns each cell's finds and fixtures as it commits.
-		PlacementSpawner.install(run, layouts)
-		var started_gen: int = TickTimer.now_usec()
-		# A fleet server, or one on a player's machine (hosted: a private host or Night Shift;
-		# Steam sets SteamDeck=1 on a Deck), whose workers yield to the game's frame.
-		var workers: int = Tuning.i(&"mine.generation_workers_fleet")
-		if OS.get_environment("SteamDeck") == "1":
-			workers = Tuning.i(&"mine.generation_workers_deck")
-		elif hosted:
-			workers = Tuning.i(&"mine.generation_workers_host")
-		generation = Generation.new(mine, layouts, run.header.run_seed, false, workers, hosted)
-		run.add_system(generation)
-		# GEN-11: the homes' windows (the Moth's start, the Stythe's lair) commit with base camp's.
-		generation.start(PlacementSpawner.start_cells(layouts))
-		Log.info("generated mine: set %s, %d cells round base camp in %.1f ms, %d workers" % [layouts.set_version(),
-			mine.native.loaded_cells().size(), (TickTimer.now_usec() - started_gen) / 1000.0, workers])
-	# DIR-*: the Director paces the creatures of every generated run, and of a fixed map if asked.
-	if config.generated or config.director:
-		Director.install(run)
-	if run.saves != null:
-		run.saves.save_dir = config.save_dir
-	var resuming: bool = not _resume.is_empty()
-	var placed: Dictionary = {}
-	if mine != null:
-		placed = FixedMapLoader.populate(run, config.map_name, true, not resuming, not resuming)
-	if layouts != null and not resuming:
-		# CRT-18: the creatures start at their homes (a resumed run's come from its save).
-		var starts: Dictionary = CreatureStarts.spawn(run, layouts)
-		Log.info("creatures started: %s" % str(starts))
-	if resuming:
-		var restored: Dictionary = SaveResume.apply(run, net, _resume)
-		Log.info("resumed run %s at tick %d (save %d), %d journaled falls and deaths applied" % [run.header.run_uuid,
-			run.tick, run.saves.seq if run.saves != null else 0, int(Variants.number(restored["journal_applied"]))])
-	if mine != null:
-		# QA-01's minimal M1 arrival: a welcomed player's miner on base camp's cage deck (MOD-04 replaces it).
-		arrival = M1Arrival.new(run, mine)
-		arrival.adopt(net.seats)
-		net.welcomed.connect(arrival.on_welcomed)
-		Log.info("map %s placed: %d coat heaps, %d creatures, %d items, %d hooks" % [config.map_name,
-			Variants.array(placed["heaps"]).size(), Variants.dict(placed["creatures"]).size(), Variants.array(placed["items"]).size(),
-			int(Variants.number(placed["hooks"]))])
 	_start_console()
 	if not config.record_inputs_path.is_empty():
 		run.inputs.recorder = InputLog.begin(run, "", config.record_inputs_path, config.tuning_profile)
@@ -247,6 +227,123 @@ func _start_network() -> bool:
 	if steam_server == null:
 		_print_ready(0)
 	return true
+
+
+## MOD-03: the run begins: a new run created from its options and the crew seated now (RunSetup;
+## `humans` -1 when not known: a dev or fleet server's crew joins after), its plan fixed and its mine
+## generated (GEN-08, GEN-11), its creatures started (CRT-18), a resumed one restored (NET-09), and
+## the crew arrived (QA-01's arrival, MOD-04's cold open later). "" when begun; else the refusal
+## (nothing changed), or "fatal" after the server is told to quit.
+func _begin_run(options: RunOptions, humans: int, brigade_runs: Array[int], host_unlocked: bool) -> String:
+	var resuming: bool = not _resume.is_empty()
+	var created_usec: int = TickTimer.now_usec()
+	if not resuming:
+		var refused: String = RunSetup.create(run, options, humans, brigade_runs, RunSetup.unlocked_variants(host_unlocked))
+		if not refused.is_empty():
+			return refused
+	if _layouts != null:
+		# GEN-08: the plan from the seed and the list (or the save's), before any cell is derived.
+		var saved: PackedByteArray = PackedByteArray()
+		var raw: Variant = Variants.dict(_resume.get("head", {})).get("plan", null)
+		if raw is PackedByteArray:
+			saved = raw
+		if RunPlan.fix(_layouts, run, saved).is_empty():
+			Log.error("the run's plan failed")
+			get_tree().quit(ExitCode.FATAL)
+			return "fatal"
+		# GEN-10: placement spawns each cell's finds and fixtures as it commits.
+		PlacementSpawner.install(run, _layouts)
+		var started_gen: int = TickTimer.now_usec()
+		# A fleet server, or one on a player's machine (hosted: a private host or Night Shift;
+		# Steam sets SteamDeck=1 on a Deck), whose workers yield to the game's frame.
+		var hosted: bool = config.parent_pid > 0
+		var workers: int = Tuning.i(&"mine.generation_workers_fleet")
+		if OS.get_environment("SteamDeck") == "1":
+			workers = Tuning.i(&"mine.generation_workers_deck")
+		elif hosted:
+			workers = Tuning.i(&"mine.generation_workers_host")
+		generation = Generation.new(_mine, _layouts, run.header.run_seed, false, workers, hosted)
+		run.add_system(generation)
+		# GEN-11: the homes' windows (the Moth's start, the Stythe's lair) commit with base camp's.
+		generation.start(PlacementSpawner.start_cells(_layouts))
+		Log.info("generated mine: set %s, %d cells round base camp in %.1f ms, %d workers" % [_layouts.set_version(),
+			_mine.native.loaded_cells().size(), (TickTimer.now_usec() - started_gen) / 1000.0, workers])
+	# DIR-*: the Director paces the creatures of every generated run, and of a fixed map if asked.
+	if config.generated or config.director:
+		Director.install(run)
+	if run.saves != null:
+		run.saves.save_dir = config.save_dir
+	var placed: Dictionary = {}
+	if _mine != null:
+		placed = FixedMapLoader.populate(run, config.map_name, true, not resuming, not resuming)
+	if _layouts != null and not resuming:
+		# CRT-18: the creatures start at their homes (a resumed run's come from its save).
+		var starts: Dictionary = CreatureStarts.spawn(run, _layouts)
+		Log.info("creatures started: %s" % str(starts))
+	if resuming:
+		var restored: Dictionary = SaveResume.apply(run, net, _resume)
+		Log.info("resumed run %s at tick %d (save %d), %d journaled falls and deaths applied" % [run.header.run_uuid,
+			run.tick, run.saves.seq if run.saves != null else 0, int(Variants.number(restored["journal_applied"]))])
+	if not resuming:
+		# MOD-03: creation with GEN-08's plan and base camp's cells, well before 0:20 of the cold open.
+		Log.info("run created in %.1f ms: %s list, %d humans at the start%s%s" % [(TickTimer.now_usec() - created_usec) / 1000.0,
+			RunOptions.LIST_NAMES[int(run.repair.list.kind)] if run.repair != null and run.repair.list != null else "no",
+			run.header.humans_at_start, ", solo rules" if Variants.flag(run.header.rule_flags.get("solo_rules", false)) else "",
+			", Hands in empty places" if Variants.flag(run.header.rule_flags.get("hands_fill", false)) else ""])
+	if _mine != null:
+		# QA-01's minimal M1 arrival: a welcomed player's miner on base camp's cage deck (MOD-04 replaces it).
+		arrival = M1Arrival.new(run, _mine, net.crew)
+		arrival.adopt(net.seats)
+		net.welcomed.connect(arrival.on_welcomed)
+		Log.info("map %s placed: %d coat heaps, %d creatures, %d items, %d hooks" % [config.map_name,
+			Variants.array(placed["heaps"]).size(), Variants.dict(placed["creatures"]).size(), Variants.array(placed["items"]).size(),
+			int(Variants.number(placed["hooks"]))])
+		# MOD-03: the crew seated at the Pithead (a hosted run's) arrives as it begins; anyone after it,
+		# or into a resumed run, joins in progress. A dev or fleet server's crew joins after its start
+		# and arrives as the crew (on the cage deck).
+		if humans >= 0 or resuming:
+			arrival.arrive_crew(net.sessions.welcomed())
+	return ""
+
+
+## MOD-03: the host started the run (Go down), with the lobby's options: it is created from the crew
+## seated now, or the host is told why not and the crew stays at the Pithead.
+func _on_start_requested(raw: Dictionary, host_unlocked: bool) -> void:
+	if run.phase != RunState.Phase.PITHEAD:
+		return
+	var options: RunOptions = RunOptions.from_dict(raw)
+	options.mode = config.mode  # the server's mode is its launch's
+	var crew: Array[Sessions.Session] = net.sessions.welcomed()
+	var runs: Array[int] = []
+	for session: Sessions.Session in crew:
+		var seat: CrewSeating.Seat = net.crew.of_slot(session.slot)
+		runs.append(seat.brigade_runs if seat != null else -1)
+	var why: String = _begin_run(options, crew.size(), runs, host_unlocked)
+	if why == "fatal":
+		return
+	if not why.is_empty():
+		Log.info("the host's start is refused: %s" % why)
+		host_link.say_start_refused(why)
+		return
+	run.set_phase(RunState.Phase.PLAYING)
+	loop.start(TickTimer.now_usec())
+	host_link.say_started()
+	Log.info("the run begins at the host's start")
+
+
+## MOD-03: at the Pithead nothing ticks; the network seats the crew a tick's worth at a time, and a
+## place left before the start is free again.
+func _pithead() -> void:
+	net.service()
+	if rendezvous != null:
+		rendezvous.poll()
+	var now: int = TickTimer.now_usec()
+	if now >= _pithead_next_usec:
+		_pithead_next_usec = now + loop.tick_usec
+		net.pump(run)
+		for slot: int in net.dropped_slots:
+			net.crew.release_slot(slot)
+	OS.delay_usec(1000)
 
 
 ## STM-04's Path A: GodotSteam Server, loaded at run time from beside the executable (an exported
@@ -338,7 +435,7 @@ func _finish(code: int, why: String) -> void:
 	Log.info("server ending: %s" % why)
 	# The records (final state hash) first, then NET-09's last save while members are still connected.
 	_finish_records()
-	if run != null and run.saves != null:
+	if run != null and run.saves != null and run.phase != RunState.Phase.PITHEAD:
 		run.saves.end_abnormally(run, why)
 		if net != null:
 			net.service()
@@ -452,12 +549,11 @@ static func _new_run_uuid() -> String:
 	return "%s-%s-%s-%s-%s" % [h.substr(0, 8), h.substr(8, 4), h.substr(12, 4), h.substr(16, 4), h.substr(20, 12)]
 
 
-## A fixed seed (dev and QA) or a fresh one. MOD-03 owns run creation; until then the server
-## draws 64 bits from the OS's cryptographic source. The seed never leaves the server.
+## A fixed seed (dev and QA), a fixed map's, or a fresh one (MOD-03's RunSetup.new_seed). The seed
+## never leaves the server.
 func _run_seed() -> int:
 	if config.has_seed:
 		return config.run_seed
 	if not config.map_name.is_empty():
 		return FixedMapLoader.run_seed(FixedMapLoader.manifest(config.map_name))  # GEN-03: repeatable
-	var bytes: PackedByteArray = Crypto.new().generate_random_bytes(8)
-	return bytes.decode_s64(0)
+	return RunSetup.new_seed()

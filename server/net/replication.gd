@@ -11,6 +11,8 @@ extends SimSystem
 ## NET-07's run record.
 signal acked(slot: int, now: int, ack16: int, bits: int, recv_delay: int)
 
+## MOD-03: (slot) -> the cap badge its miner wears (CrewSeating.badge_of). Default: by place.
+var badge_of: Callable = func(slot: int) -> int: return slot % 6
 var net: ServerNet
 var native: LbReplication = LbReplication.new()
 var tap: StreamTap = StreamTap.new()
@@ -127,9 +129,8 @@ func tick(run: RunState) -> void:
 			if m != null:
 				native.set_entity_facing(m.entity_id, m.state.facing)
 				if run.miner_state != null:
-					# VIS-06: the cap badge rides with the cues (identity only). Proposed: by seat until
-					# the lobby assigns badges (STM-02).
-					native.set_entity_cues(m.entity_id, MinerCues.with_badge(run.miner_state.cues(m.entity_id), m.slot % 6))
+					# VIS-06: the cap badge rides with the cues (identity only), as MOD-03 seated it.
+					native.set_entity_cues(m.entity_id, MinerCues.with_badge(run.miner_state.cues(m.entity_id), int(Variants.number(badge_of.call(m.slot)))))
 				if run.inventory != null:
 					native.set_entity_held(m.entity_id, run.inventory.held_bits(m.entity_id))
 	_push_flames(run)

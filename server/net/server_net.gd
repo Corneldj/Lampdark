@@ -35,6 +35,8 @@ signal rejoined(slot: int, identity: String)
 
 ## NET-11: who holds which place, dropped players' seats included.
 var seats: SeatTable = SeatTable.new()
+## MOD-03: each place's roster miner, lamp number, cap badge and voice.
+var crew: CrewSeating = CrewSeating.new()
 ## Debug-lane messages refused from sessions without the grant (FND-08's isolation checks).
 var debug_refused: int = 0
 ## Slots dropped during this tick's pump (cleared at the next).
@@ -233,11 +235,21 @@ func _on_hello(run: RunState, session: Sessions.Session, hello: Protocol.Hello, 
 		Log.info("peer %d refused: %s" % [session.peer, Protocol.reject_name(int(Variants.number(verdict["reject"])))])
 		_reject(session, int(Variants.number(verdict["reject"])) as Protocol.Reject)
 		return
+	if hello.malformed:
+		_reject(session, Protocol.Reject.BAD_MESSAGE)
+		return
+	# MOD-03: the first offered miner whose lamp number nobody seated holds, and its badge.
+	var choice: Dictionary = crew.choose(hello.identity, hello)
+	if choice.has("reject"):
+		Log.info("peer %d refused: %s" % [session.peer, Protocol.reject_name(int(Variants.number(choice["reject"])))])
+		_reject(session, int(Variants.number(choice["reject"])) as Protocol.Reject)
+		return
 	var forced: int = int(Variants.number(verdict.get("slot", -1)))
 	if not sessions.seat(session, hello.identity, hello.seat_request, seats.held_slots(), forced):
 		_reject(session, Protocol.Reject.FULL)
 		return
 	seats.on_seated(hello.identity, session.slot, session.token, run.tick if run != null else 0)
+	var seated: CrewSeating.Seat = crew.commit(session.slot, hello.identity, hello, choice)
 	session.debug = debug_granted(hello.qa_token, transport.is_local_peer(session.peer))
 	var welcome: Protocol.Welcome = Protocol.Welcome.new()
 	welcome.slot = session.slot
@@ -248,6 +260,10 @@ func _on_hello(run: RunState, session: Sessions.Session, hello: Protocol.Hello, 
 	welcome.client_tuning_hash = Tuning.content_hash("client") if Tuning.current.entries.size() > 0 else ""
 	welcome.client_tuning = _client_tuning_if_changed(welcome.client_tuning_hash)
 	welcome.debug = session.debug
+	welcome.seated_miner = seated.miner_id
+	welcome.badge = seated.badge
+	welcome.run_uuid = run.header.run_uuid if run != null else ""
+	welcome.run_phase = run.phase if run != null else 0
 	transport.send(session.peer, Lane.Id.CONTROL, welcome.encode())
 	Log.info("slot %d welcomed: %s" % [session.slot, hello.identity])
 	welcomed.emit(session.slot, hello.identity)

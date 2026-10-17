@@ -6,13 +6,14 @@ extends RefCounted
 ## from base camp to each, and the revolver and its boxes on spine cells; spine sockets and cells
 ## then join every derive (no old fall on a spine). The header serialises canonically into
 ## run.header.plan, which every snapshot keeps (NET-09), so a resumed run keeps its plan byte for
-## byte rather than planning again. MOD-03's run setup will call fix() in place of server_main.
+## byte rather than planning again. MOD-03's run setup fixes it as the run begins (server_main's
+## _begin_run), after RunSetup.create has drawn the list and sealed the header's inputs.
 ## Server-only: no plan, site or spine reaches a client; the Manual names only kinds of place.
 
 
 ## The plan for `run` on `layouts` (configured for its seed): restored from `saved` (a snapshot's
-## header bytes) when given, else made, `overrides` replacing any of params()'s inputs (tests; MOD-03's
-## run setup will pass the staging and hard variant). Returns LbLayouts.plan_dict(), {} if it failed.
+## header bytes) when given, else made, `overrides` replacing any of params()'s inputs (tests).
+## Returns LbLayouts.plan_dict(), {} if it failed.
 static func fix(layouts: LbLayouts, run: RunState, saved: PackedByteArray = PackedByteArray(), overrides: Dictionary = {}) -> Dictionary:
 	if not saved.is_empty():
 		if not layouts.load_plan(saved):
@@ -59,8 +60,9 @@ static func _check_start(report: Dictionary) -> void:
 			str(gates["detail"])])
 
 
-## LbLayouts.plan's inputs: the list (Night Shift's solo rule), the run conditions MOD-03 will set,
-## the data version, and the numbers.
+## LbLayouts.plan's inputs: the list, the solo rule (MOD-03's rule flags; Night Shift before the
+## run is created), the draw, the staging and the hard variant (MOD-03's header), the data version,
+## and the numbers.
 static func params(run: RunState) -> Dictionary:
 	var list: RepairList = run.repair.list if run.repair != null else null
 	var jobs: PackedStringArray = PackedStringArray()
@@ -71,10 +73,10 @@ static func params(run: RunState) -> Dictionary:
 		"list_kind": list.kind if list != null else RepairList.Kind.STANDARD,
 		"jobs": jobs,
 		"cans": list.cans_required if list != null else RepairList.cans_for(RepairList.Kind.STANDARD),
-		"solo": run.header.mode == ServerConfig.Mode.NIGHTSHIFT,
-		"draw": PackedStringArray(),
-		"staging": "",
-		"hard_variant": "",
+		"solo": Variants.flag(run.header.rule_flags.get("solo_rules", run.header.mode == ServerConfig.Mode.NIGHTSHIFT)),
+		"draw": run.header.draw.duplicate(),
+		"staging": run.header.staging,
+		"hard_variant": run.header.options.hard_variant,
 		"data_version": run.header.tuning_hash,
 		"tuning": tuning(),
 	}

@@ -15,6 +15,7 @@ enum Kind { FLAG, INT, PORT, ENUM, STRING, HOST_PORT, U64 }
 const USAGE: String = ("usage: lampblack [--server] [--mode friends|public|nightshift] [--transport enet|sdr|loopback]"
 	+ " [--loopback] [--port <n>] [--offline] [--parent-pid <pid>] [--control-port <n>] [--resume <path>] [--save-dir <path>]"
 	+ " [--connect <host:port>] [--no-steam] [--name <persona>] [--sdr-fake <lag_ms,loss_pct>] [--host-relay]"
+	+ " [--list short|standard|full] [--hard <variant>] [--hands] [--unlocked]"
 	+ " [--seed <u64>] [--map <name>] [--generate] [--template-pack <path>] [--director] [--qa-token <t>] [--bot <brain>]"
 	+ " [--bot-seed <u64>] [--link <rtt_ms,loss_pct>] [--receive-log <path>] [--record-inputs <path>] [--stream-audit <path>]"
 	+ " [--stats-out <path>] [--exit-after-ticks <n>] [--tuning-profile <name>] [--tuning-hot-reload]"
@@ -34,6 +35,10 @@ const SPEC: Dictionary = {
 	"--control-port": [Kind.PORT, false, []],
 	"--resume": [Kind.STRING, false, []],
 	"--save-dir": [Kind.STRING, false, []],
+	"--list": [Kind.ENUM, false, ["short", "standard", "full"]],
+	"--hard": [Kind.STRING, false, []],
+	"--hands": [Kind.FLAG, false, []],
+	"--unlocked": [Kind.FLAG, false, []],
 	"--connect": [Kind.HOST_PORT, true, []],
 	"--no-steam": [Kind.FLAG, true, []],
 	"--name": [Kind.STRING, true, []],
@@ -191,6 +196,14 @@ func _apply(name: String, kind: Kind, value: String, options: Array) -> void:
 			server.resume_path = value
 		"--save-dir":
 			server.save_dir = value
+		"--list":
+			server.list_name = value
+		"--hard":
+			server.hard_variant = value
+		"--hands":
+			server.hands = true
+		"--unlocked":
+			server.variants_unlocked = true
 		"--connect":
 			client.connect_target = value
 		"--no-steam":

@@ -38,7 +38,7 @@ func test_release_writes_no_address_or_port() -> void:
 
 
 func test_no_forbidden_content() -> void:
-	var d: Dictionary = LobbyMetadata.lobby_data({"mode": "escape", "list": "full", "hard": "one_lamp", "hands": true}, LobbyMetadata.PITHEAD,
+	var d: Dictionary = LobbyMetadata.lobby_data({"mode": "friends", "list": "full", "hard": "one_lamp", "hands": true}, LobbyMetadata.PITHEAD,
 		"AB12CD", "", true, "4f1c", "")
 	var m: Dictionary = LobbyMetadata.member_data(true, "Ann", 3, 2, false)
 	for blob: Dictionary in [d, m]:

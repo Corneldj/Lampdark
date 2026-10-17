@@ -17,7 +17,13 @@ class_name Protocol
 ## 15: LFT-14's SHEET (the map table's ops, SheetCodec).
 ## 16: LFT-03's MANUAL, and SHEET's SELECT op (the Manual's pencil).
 ## 17: RSC-06's LAMP_CHECK (LampCheckWire).
-const PROTOCOL_VERSION: int = 17
+## 18: MOD-03's seating: Hello's candidate miners, preferred badge and New Brigade runs, Welcome's
+##     seated miner, badge and run UUID, and Reject.LAMP_NUMBERS.
+const PROTOCOL_VERSION: int = 18
+## MOD-03: the most roster miners a Hello offers (a roster's three, Gameplay §13.2).
+const MAX_CANDIDATES: int = 3
+## MOD-03: a candidate's name and each shown page are at most this long (bytes, UTF-8).
+const MAX_NAME_BYTES: int = 64
 
 enum Msg {
 	HELLO = 1,
@@ -63,6 +69,7 @@ enum Reject {
 	BAD_MESSAGE = 6,
 	FLAVOUR_MISMATCH = 7,  ## FND-08: a release build never meets a dev or QA one
 	SEAT_KEPT = 8,  ## NET-11: past the public retake window, a Hired Hand keeps the place
+	LAMP_NUMBERS = 9,  ## MOD-03: every miner the joiner offered holds a lamp number already seated
 }
 
 enum Seat { PLAYER = 0, BOT = 1 }
@@ -112,6 +119,18 @@ class Hello:
 	## and the QA token that asks for the debug channel ("" for none).
 	var flavour: int = BuildInfo.Flavour.RELEASE
 	var qa_token: String = ""
+	## MOD-03: up to three of the player's Available roster miners, in the order they would play
+	## them, as another client may know them: {id, name, lamp_number, voice_id, book_pages}. The
+	## server seats the first whose lamp number no seated miner holds. Empty for a bot, or a dev
+	## client without a profile.
+	var candidates: Array[Dictionary] = []
+	## MOD-01's preferred cap badge (0-5), -1 for none.
+	var preferred_badge: int = -1
+	## MOD-01's New Brigade runs (Profile.State.new_brigade_runs) for DIR-06's staging; -1 unknown
+	## (no profile: counted as an Old Hand).
+	var new_brigade_runs: int = -1
+	## Set by decode: more candidates than a roster holds, or a name too long.
+	var malformed: bool = false
 
 	func encode() -> PackedByteArray:
 		var b: StreamPeerBuffer = StreamPeerBuffer.new()
@@ -122,6 +141,19 @@ class Hello:
 		b.put_utf8_string(session_token)
 		b.put_u8(flavour)
 		b.put_utf8_string(qa_token)
+		var offered: Array[Dictionary] = candidates.slice(0, MAX_CANDIDATES)
+		b.put_u8(offered.size())
+		for c: Dictionary in offered:
+			b.put_u32(int(Variants.number(c.get("id", 0))))
+			b.put_utf8_string(str(c.get("name", "")))
+			b.put_u16(int(Variants.number(c.get("lamp_number", 0))))
+			b.put_u8(int(Variants.number(c.get("voice_id", 0))))
+			var pages: Array = Variants.array(c.get("book_pages", []))
+			b.put_u8(mini(pages.size(), 255))
+			for p: Variant in pages.slice(0, 255):
+				b.put_utf8_string(str(p))
+		b.put_u8(preferred_badge if preferred_badge >= 0 and preferred_badge < 255 else 255)
+		b.put_u8(new_brigade_runs if new_brigade_runs >= 0 and new_brigade_runs < 255 else 255)
 		return Protocol.frame(Msg.HELLO, b.data_array)
 
 	static func decode(payload: PackedByteArray) -> Hello:
@@ -136,6 +168,24 @@ class Hello:
 		if b.get_available_bytes() > 0:
 			hello.flavour = b.get_u8()
 			hello.qa_token = b.get_utf8_string()
+		if b.get_available_bytes() > 0:
+			var count: int = b.get_u8()
+			if count > MAX_CANDIDATES:
+				hello.malformed = true
+				return hello
+			for _i: int in count:
+				var c: Dictionary = {"id": b.get_u32(), "name": b.get_utf8_string(), "lamp_number": b.get_u16(), "voice_id": b.get_u8()}
+				var pages: Array[String] = []
+				for _p: int in b.get_u8():
+					pages.append(b.get_utf8_string())
+				c["book_pages"] = pages
+				if str(c["name"]).to_utf8_buffer().size() > MAX_NAME_BYTES or pages.any(func(p: String) -> bool: return p.to_utf8_buffer().size() > MAX_NAME_BYTES):
+					hello.malformed = true
+				hello.candidates.append(c)
+			var worn: int = b.get_u8() if b.get_available_bytes() > 0 else 255
+			hello.preferred_badge = worn if worn != 255 else -1
+			var runs: int = b.get_u8() if b.get_available_bytes() > 0 else 255
+			hello.new_brigade_runs = runs if runs != 255 else -1
 		return hello
 
 
@@ -153,6 +203,12 @@ class Welcome:
 	## FND-08: this client may use the debug channel (a dev or QA server, and its QA token or a
 	## local dev run).
 	var debug: bool = false
+	## MOD-03: the roster miner the server seated (one of the Hello's candidates, by id; -1 for none),
+	## the cap badge it wears (0-5; -1 for none), and the run's UUID (NET-09's; RSC-06 sends the
+	## miner Below for it).
+	var seated_miner: int = -1
+	var badge: int = -1
+	var run_uuid: String = ""
 
 	func encode() -> PackedByteArray:
 		var b: StreamPeerBuffer = StreamPeerBuffer.new()
@@ -165,6 +221,9 @@ class Welcome:
 		b.put_utf8_string(client_tuning_hash)
 		b.put_utf8_string(client_tuning)
 		b.put_u8(1 if debug else 0)
+		b.put_32(seated_miner)
+		b.put_u8(badge if badge >= 0 and badge < 255 else 255)
+		b.put_utf8_string(run_uuid)
 		return Protocol.frame(Msg.WELCOME, b.data_array)
 
 	static func decode(payload: PackedByteArray) -> Welcome:
@@ -180,6 +239,12 @@ class Welcome:
 		welcome.client_tuning_hash = b.get_utf8_string()
 		welcome.client_tuning = b.get_utf8_string()
 		welcome.debug = b.get_available_bytes() > 0 and b.get_u8() == 1
+		if b.get_available_bytes() >= 5:
+			welcome.seated_miner = b.get_32()
+			var worn: int = b.get_u8()
+			welcome.badge = worn if worn != 255 else -1
+		if b.get_available_bytes() >= 4:
+			welcome.run_uuid = b.get_utf8_string()
 		return welcome
 
 

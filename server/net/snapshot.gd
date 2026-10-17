@@ -45,7 +45,10 @@ static func capture(run: RunState, net: ServerNet) -> Dictionary:
 			seats[raw] = {"slot": s.slot, "miner": miner, "state": s.state, "token": s.token}
 	var head: Dictionary = {"run_seed": run.header.run_seed, "mode": run.header.mode, "offline": run.header.offline,
 		"run_uuid": run.header.run_uuid, "map_name": run.header.map_name, "tick": run.tick, "phase": run.phase,
-		"streams": run.stream_states(), "seats": seats, "plan": run.header.plan}
+		"streams": run.stream_states(), "seats": seats, "plan": run.header.plan,
+		# MOD-03: the run's setup, fixed at creation, and each place's seated miner.
+		"options": run.header.options.to_dict(), "humans_at_start": run.header.humans_at_start, "staging": run.header.staging,
+		"draw": run.header.draw, "rule_flags": run.header.rule_flags, "crew": net.crew.to_dict() if net != null else {}}
 	var state: Dictionary = {}
 	for sys: SimSystem in run.stages.all_systems():
 		var d: Dictionary = sys.save_state()
@@ -105,6 +108,16 @@ static func restore(run: RunState, net: ServerNet, sections: Dictionary, journal
 	if plan is PackedByteArray:
 		run.header.plan = plan
 	run.restore_streams(Variants.dict(head.get("streams", {})))
+	# MOD-03: the setup as created, never drawn again; the seats as they were.
+	if head.has("options"):
+		run.header.options = RunOptions.from_dict(Variants.dict(head["options"]))
+		run.header.humans_at_start = int(Variants.number(head.get("humans_at_start", 0)))
+		run.header.staging = str(head.get("staging", ""))
+		var drawn: Variant = head.get("draw", PackedStringArray())
+		run.header.draw = drawn if drawn is PackedStringArray else PackedStringArray()
+		run.header.rule_flags = Variants.dict(head.get("rule_flags", {}))
+	if net != null and head.has("crew"):
+		net.crew.from_dict(Variants.dict(head["crew"]))
 	var reader: SimStateReader = SimStateReader.new(section(sections, SECTION_REGISTRY))
 	run.registry.read_state(reader)
 	if run.diff_log != null and sections.has(SECTION_DIFF_LOG):

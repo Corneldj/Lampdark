@@ -5,8 +5,9 @@ extends RefCounted
 ## ever sent to a client; the header holds the run seed (Gameplay §5.10).
 
 ## NET-07's gate (RSC-06 drives it): the true view is served only during Lamp Check, and the run
-## record is discarded when it ends.
-enum Phase { PLAYING, LAMP_CHECK, ENDED }
+## record is discarded when it ends. MOD-03: a hosted run waits at the Pithead, seating its crew,
+## until the host starts it (nothing ticks there).
+enum Phase { PLAYING, LAMP_CHECK, ENDED, PITHEAD }
 
 signal phase_changed(phase: Phase)
 
@@ -26,6 +27,15 @@ class Header:
 	var map_name: String = ""
 	## GEN-08: a generated run's header and plan, as LbLayouts serialises it (RunPlan).
 	var plan: PackedByteArray = PackedByteArray()
+	## MOD-03: the lobby's options, the humans seated at the start (RSC-09's "began with exactly
+	## two", DIR-05's lobby kind), the staging (DIR-06's stage, "" unstaged), the draw (HAZ-07's run
+	## conditions) and the rule flags {public, saved, solo_rules, hands_fill}, fixed at creation and
+	## kept through every save. Never sent.
+	var options: RunOptions = RunOptions.new()
+	var humans_at_start: int = 0
+	var staging: String = ""
+	var draw: PackedStringArray = PackedStringArray()
+	var rule_flags: Dictionary = {}
 
 
 var header: Header = Header.new()

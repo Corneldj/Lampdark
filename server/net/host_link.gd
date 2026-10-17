@@ -8,6 +8,9 @@ extends RefCounted
 signal shutdown_requested
 signal parent_gone
 signal members_changed
+## MOD-03: the host's Go down, with the lobby's options (RunOptions as a dictionary) and whether the
+## host has unlocked the hard variants.
+signal start_requested(options: Dictionary, unlocked: bool)
 
 var transport: EnetTransport = null
 var token: String = ""
@@ -88,11 +91,30 @@ func _handle(peer: int, m: Dictionary) -> void:
 			members_changed.emit()
 		"options":
 			options = Variants.dict(m.get("options", {}))
+		"start":
+			options = Variants.dict(m.get("options", options))
+			start_requested.emit(options, Variants.flag(m.get("unlocked", false)))
 		"status":
 			_send(peer, {"t": "status"}.merged(Variants.dict(status_of.call())))
 		"shutdown":
 			Log.info("host link: shutdown asked")
 			shutdown_requested.emit()
+
+
+## MOD-03: the run began, or the host's start was refused (the plain words to show).
+func say_started() -> void:
+	_send_all({"t": "started"})
+
+
+func say_start_refused(reason: String) -> void:
+	_send_all({"t": "start_refused", "reason": reason})
+
+
+func _send_all(m: Dictionary) -> void:
+	for peer: Variant in _authed.keys():
+		_send(Variants.whole(peer), m)
+	if transport != null:
+		transport.flush()
 
 
 func say_bye(reason: String) -> void:

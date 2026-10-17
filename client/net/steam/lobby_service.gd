@@ -17,6 +17,8 @@ signal state_changed(state: State)
 signal lobby_changed
 ## Something failed; `text_key` is for UiText ("lobby.no_crew", "lobby.different_version", ...).
 signal failed(text_key: String)
+## MOD-03: the host pressed Go down (the host's own server creates the run).
+signal start_pressed
 ## M1: connect to the dev-transport server at host:port.
 signal connect_requested(address: String)
 ## STM-04 (M2): connect over SDR to the host's server (lb_server: "<SteamID>:<virtual port>").
@@ -27,6 +29,7 @@ var steam: SteamService = null
 var release: bool = false
 ## What a host writes as lb_dev_addr (dev, QA and kill-test builds; never release).
 var server_address: String = ""
+## MOD-03's RunOptions as a dictionary ({mode, list, hard, hands}; UI-04's option screens set them).
 var options: Dictionary = {}
 var state: State = State.IDLE
 var code: String = ""
@@ -208,10 +211,11 @@ func set_ready(on: bool) -> void:
 		backend.set_member_data("lb_ready", "1" if on else "0")
 
 
-## Host: the crew goes down (M1: the state only; MOD-03 starts the run).
+## Host: the crew goes down: the lobby's state, and (MOD-03) the host's server creates the run.
 func start() -> void:
 	if is_host():
 		backend.set_data("lb_state", LobbyMetadata.RUNNING)
+		start_pressed.emit()
 
 
 func leave() -> void:

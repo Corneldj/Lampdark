@@ -150,8 +150,9 @@ func test_play_in_the_client_leads_through_the_screens_to_the_lobby() -> void:
 	assert_not_null(cm.find_child("DevLobby", true, false), "the lobby once chosen")
 
 
-## In play the lobby gives way to the mine; refused or lost, it comes back to connect again; and a
-## client already in play (launched with --connect) skips it after the first-launch screens.
+## In play (MOD-03: from the run's first frame, so a host welcomed at the Pithead can still go down)
+## the lobby gives way to the mine; refused or lost, it comes back to connect again; and a client
+## already in play (launched with --connect) skips it after the first-launch screens.
 func test_the_lobby_hides_in_play_and_returns_on_a_drop() -> void:
 	var script: GDScript = load("res://client/client_main.gd")
 	var cm: Node = script.new()
@@ -165,6 +166,11 @@ func test_the_lobby_hides_in_play_and_returns_on_a_drop() -> void:
 	c.state = ClientConnection.State.CONNECTED
 	cm.set("connection", c)
 	cm.call("_report_connection")
+	cm.call("_on_run_begun")
+	await wait_physics_frames(2)
+	assert_not_null(cm.find_child("DevLobby", true, false), "welcomed at the Pithead: the lobby stays until the run begins")
+	c.frames_received = 1
+	cm.call("_on_run_begun")
 	await wait_physics_frames(2)
 	assert_null(cm.find_child("DevLobby", true, false), "hidden in play")
 	cm.call("_show_dev_lobby")

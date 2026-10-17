@@ -10,6 +10,11 @@ var state: State = State.IDLE
 var peer: int = -1
 var identity: String = "dev"
 var seat_request: int = Protocol.Seat.PLAYER
+## MOD-03: the roster miners offered (Protocol.Hello.candidates), the preferred badge and the New
+## Brigade runs, from the player's profile; none for a bot or a client without one.
+var candidates: Array[Dictionary] = []
+var preferred_badge: int = -1
+var new_brigade_runs: int = -1
 var session_token: String = ""
 ## Overridable for tests.
 var build_id: String = Protocol.build_id()
@@ -186,6 +191,9 @@ func _send_hello() -> void:
 	hello.session_token = session_token
 	hello.flavour = transport.build.flavour
 	hello.qa_token = "" if transport.build.is_release() else qa_token
+	hello.candidates = candidates
+	hello.preferred_badge = preferred_badge
+	hello.new_brigade_runs = new_brigade_runs
 	transport.send(peer, Lane.Id.CONTROL, hello.encode())
 
 

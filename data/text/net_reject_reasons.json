@@ -8,6 +8,7 @@
 		"auth_failed": "Steam could not confirm your identity.",
 		"bad_message": "The connection sent something unexpected.",
 		"flavour_mismatch": "That game is a test build, and this one is not (or the other way round).",
-		"seat_kept": "A Hired Hand has kept your place in that run."
+		"seat_kept": "A Hired Hand has kept your place in that run.",
+		"lamp_numbers": "Each of your miners has a lamp number someone in that crew already carries."
 	}
 }

@@ -20,7 +20,10 @@ extends RefCounted
 ##   control: each message's exact layout (decoded and re-encoded byte for byte) and its recipient
 ##     (Check Lamp's oil only while held; Deafened only to the deafened; knocks only after a fall);
 ##     debug-lane messages never from a release server and never off the debug lane; any unknown or
-##     client-only type fails.
+##     client-only type fails;
+##   secrets (MOD-03): no message carries the run seed (its eight bytes either way round), a run of
+##     the plan's bytes or a drawn variant's or condition's name; the staging level, a small number no
+##     byte search could tell from another, rides nothing because every layout above is checked exactly.
 ## Records are judged when first sent; frames are decoded per client against their own baselines, so a
 ## resend of a record sent earlier is judged as sent again (it reflects this tick's state).
 ## Legality is judged with the truth the production stages used: entities as mirrored at stage 6, the
@@ -408,6 +411,7 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 	var payload: PackedByteArray = message["payload"]
 	var rule: String = Rules.rule_of_message(type)
 	_count(rule if not rule.is_empty() else "registry")
+	_check_secrets(slot, type, data)
 	match rule:
 		"":
 			_fail(slot, "message %d" % type, "registry", "a record type with no audit rule")
@@ -493,6 +497,52 @@ func on_send(peer: int, lane: int, data: PackedByteArray) -> void:
 				_fail(slot, str(Protocol.Msg.find_key(type)), "debug", "a debug record off the debug lane")
 	if lane == Lane.Id.DEBUG and rule != "debug":
 		_fail(slot, str(Protocol.Msg.find_key(type)), "registry", "a game record on the debug lane")
+
+
+## MOD-03: the seed, the plan and the draw never leave the server (NET-09's saves carry the seed
+## sealed). A seed below 2^40 (a test's) or a plan run of few distinct bytes is too plain to search for.
+func _check_secrets(slot: int, type: int, data: PackedByteArray) -> void:
+	_count("secrets")
+	var hex: String = data.hex_encode()
+	var name: String = str(Protocol.Msg.find_key(type))
+	for pattern: Array in _secret_patterns():
+		if _has_aligned(hex, str(pattern[1])):
+			_fail(slot, name, "secrets", "carries the run's %s" % pattern[0])
+
+
+## [what, hex] for each secret worth a search.
+func _secret_patterns() -> Array[Array]:
+	var out: Array[Array] = []
+	var seed_value: int = run.header.run_seed
+	if seed_value < 0 or seed_value >= (1 << 40):
+		var le: PackedByteArray = PackedByteArray()
+		le.resize(8)
+		le.encode_s64(0, seed_value)
+		var be: PackedByteArray = le.duplicate()
+		be.reverse()
+		out.append(["seed", le.hex_encode()])
+		out.append(["seed", be.hex_encode()])
+	var plan: PackedByteArray = run.header.plan
+	if plan.size() >= 64:
+		var run_of: PackedByteArray = plan.slice(plan.size() / 2, plan.size() / 2 + 24)
+		var distinct: Dictionary = {}
+		for b: int in run_of:
+			distinct[b] = true
+		if distinct.size() >= 12:
+			out.append(["plan", run_of.hex_encode()])
+	for drawn: String in run.header.draw:
+		if drawn.length() >= 4:
+			out.append(["draw (%s)" % drawn, drawn.to_utf8_buffer().hex_encode()])
+	return out
+
+
+static func _has_aligned(hex: String, pattern: String) -> bool:
+	var at: int = hex.find(pattern)
+	while at >= 0:
+		if at % 2 == 0:
+			return true
+		at = hex.find(pattern, at + 1)
+	return false
 
 
 ## RSC-04: WATCH and REPLAY go only to a fallen or dead client. A watch carries frames at least
